@@ -6,6 +6,12 @@ This project is far from complete but is in a somewhat usable state...
 
 h2. Usage
 
+Install:
+
+<pre>
+gem install json-schema
+</pre>
+
 If downloading the git repo, build the gem and install it:
 
 <pre>
