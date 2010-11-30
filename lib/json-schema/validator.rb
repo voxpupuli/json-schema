@@ -498,6 +498,7 @@ module JSON
       if @schemas[uri.to_s].nil?
         begin
           schema = JSON::Schema.new(JSON.parse(open(uri.to_s).read), uri)
+          @schemas[uri.to_s] = schema
           build_schemas(schema)
         rescue
           # Failures will occur when this URI cannot be referenced yet. Don't worry about it,
