@@ -100,6 +100,5 @@ In addition, the following hyper schema attributes are not implemented at this t
 
 h2. To Do
 
-* Massive re-factoring - the whole validation process needs to be broken down into something a bit more manageable
 * (Much) More testing
-* Better interface to validator to allow for error messages in validation to propogate
+* Adding a persistence option to schemas that enables the validator to only load schemas once across multiple validations
