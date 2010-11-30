@@ -36,6 +36,16 @@ data = {
 }
 
 JSON::Validator.validate(schema, data)
+
+data = {
+  "a" => "taco"
+}
+
+begin
+  JSON::Validator.validate2(schema, data)
+rescue ValidationError
+  puts $!.message
+end
 </pre>
   
 
