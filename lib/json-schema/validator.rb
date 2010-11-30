@@ -96,7 +96,7 @@ module JSON
       
       if !types.is_a?(Array)
         types = [types]
-        union = true
+        union = false
       end
       valid = false
       
@@ -128,7 +128,7 @@ module JSON
           begin
             validate_schema(schema,data,fragments)
             valid = true
-          rescue
+          rescue ValidationError
             # We don't care that these schemas don't validate - we only care that one validated
           end
         end
@@ -427,10 +427,10 @@ module JSON
     # Validate extensions of other schemas
     def validate_extends(current_schema, data, fragments)
       schemas = current_schema.schema['extends']
-      schemas = [schemas] if !schema.is_a?(Array)
+      schemas = [schemas] if !schemas.is_a?(Array)
       schemas.each do |s|
         schema = JSON::Schema.new(s,current_schema.uri)
-        validate_schema(schema, item, fragments)
+        validate_schema(schema, data, fragments)
       end
     end
     
@@ -498,7 +498,6 @@ module JSON
       if @schemas[uri.to_s].nil?
         begin
           schema = JSON::Schema.new(JSON.parse(open(uri.to_s).read), uri)
-          @schemas[uri.to_s] = schema
           build_schemas(schema)
         rescue
           # Failures will occur when this URI cannot be referenced yet. Don't worry about it,
@@ -614,6 +613,19 @@ module JSON
           schema_uri = parent_schema.uri.clone
           schema = JSON::Schema.new(parent_schema.schema["dependencies"],schema_uri)
           if parent_schema.schema["dependencies"]['id']
+            @schemas[schema.uri.to_s] = schema
+          end
+          build_schemas(schema)
+        end
+      end
+      
+      if parent_schema.schema["extends"].is_a?(Hash)
+        if parent_schema.schema["extends"]['$ref']
+          load_ref_schema(parent_schema, parent_schema.schema["extends"]['$ref'])
+        else
+          schema_uri = parent_schema.uri.clone
+          schema = JSON::Schema.new(parent_schema.schema["extends"],schema_uri)
+          if parent_schema.schema["extends"]['id']
             @schemas[schema.uri.to_s] = schema
           end
           build_schemas(schema)

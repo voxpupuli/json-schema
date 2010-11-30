@@ -1,3 +1,6 @@
+v0.1.3:
+* Fixed a couple of extends bugs
+
 v0.1.2:
 * Added a JSON::Validator.validate2 method that returns nil on successful validation and raises an exception with an appropriate error message upon validation failure.
 * Refactored things a bit to make it a bit more readable when debugging.
