@@ -4,6 +4,17 @@ require 'pathname'
 require 'bigdecimal'
 
 module JSON
+  
+    class ValidationError < Exception
+      attr_reader :fragments, :schema
+      
+      def initialize(message, fragments, schema)
+        @fragments = fragments
+        @schema = schema
+        super(message)
+      end
+    end
+  
     class Validator
     
     ValidationMethods = [
@@ -40,8 +51,23 @@ module JSON
     end  
     
     
+    # Run a simple true/false validation of data against a schema
     def validate()
+      begin
+        validate_schema(@base_schema, @data, [])
+        return true
+      rescue ValidationError
+        return false
+      end
+    end
+    
+    
+    # Validate data against a schema, returning nil if the data is valid. If the data is invalid, 
+    # a ValidationError will be raised with links to the specific location that the first error
+    # occurred during validation 
+    def validate2()
       validate_schema(@base_schema, @data, [])
+      nil
     end
     
     
@@ -54,7 +80,6 @@ module JSON
         end
       end
       
-      fragments.pop
       data
     end
     
@@ -63,7 +88,12 @@ module JSON
     def validate_type(current_schema, data, fragments, disallow=false)
       union = true
       
-      types = current_schema.schema['type']
+      if disallow
+        types = current_schema.schema['disallow']
+      else
+        types = current_schema.schema['type']
+      end
+      
       if !types.is_a?(Array)
         types = [types]
         union = true
@@ -87,26 +117,43 @@ module JSON
             valid = data.is_a?(Array)
           when "null"
             valid = data.is_a?(NilClass)
+          when "any"
+            valid = true
           else
             valid = true
           end
         elsif type.is_a?(Hash) && union
           # Validate as a schema
           schema = JSON::Schema.new(type,current_schema.uri)
-          validate_schema(schema,data,fragments)
+          begin
+            validate_schema(schema,data,fragments)
+            valid = true
+          rescue
+            # We don't care that these schemas don't validate - we only care that one validated
+          end
         end
-      
-        return valid if valid
+
+        break if valid
       end
       
-      if (disallow && valid) || !valid
-        # Raise an error
+      if (disallow)
+        if valid
+          message = "The property '#{build_fragment(fragments)}' matched one or more of the following types:"
+          types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
+          message.chop!
+          raise ValidationError.new(message, fragments, current_schema)
+        end
+      elsif !valid
+        message = "The property '#{build_fragment(fragments)}' did not match one or more of the following types:"
+        types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
+        message.chop!
+        raise ValidationError.new(message, fragments, current_schema)
       end
     end
     
     
     # Validate the disallowed types
-    def validate_disallow
+    def validate_disallow(current_schema, data, fragments)
       validate_type(current_schema, data, fragments, true)
     end
     
@@ -115,17 +162,21 @@ module JSON
     def validate_minimum(current_schema, data, fragments)
       if data.is_a?(Numeric)
         if (current_schema.schema['exclusiveMinimum'] ? data <= current_schema.schema['minimum'] : data < current_schema.schema['minimum'])
-          # Raise an error
+          message = "The property '#{build_fragment(fragments)}' did not have a minimum value of #{current_schema.schema['minimum']}, "
+          message += current_schema.schema['exclusiveMinimum'] ? 'exclusively' : 'inclusively'
+          raise ValidationError.new(message, fragments, current_schema)
         end
       end
     end
     
     
     # Validate the maximum value of a number
-    def validate_minimum(current_schema, data, fragments)
+    def validate_maximum(current_schema, data, fragments)
       if data.is_a?(Numeric)
         if (current_schema.schema['exclusiveMaximum'] ? data >= current_schema.schema['maximum'] : data > current_schema.schema['maximum'])
-          # Raise an error
+          message = "The property '#{build_fragment(fragments)}' did not have a maximum value of #{current_schema.schema['maximum']}, "
+          message += current_schema.schema['exclusiveMaximum'] ? 'exclusively' : 'inclusively'
+          raise ValidationError.new(message, fragments, current_schema)
         end
       end
     end
@@ -134,7 +185,8 @@ module JSON
     # Validate the minimum number of items in an array
     def validate_minItems(current_schema, data, fragments)
       if data.is_a?(Array) && (data.nitems < current_schema.schema['minItems'])
-        # Raise an error
+        message = "The property '#{build_fragment(fragments)}' did not contain a minimum number of items #{current_schema.schema['minItems']}"
+        raise ValidationError.new(message, fragments, current_schema)
       end
     end
     
@@ -142,7 +194,8 @@ module JSON
     # Validate the maximum number of items in an array
     def validate_maxItems(current_schema, data, fragments)
       if data.is_a?(Array) && (data.nitems > current_schema.schema['maxItems'])
-        # Raise an error
+        message = "The property '#{build_fragment(fragments)}' did not contain a minimum number of items #{current_schema.schema['minItems']}"
+        raise ValidationError.new(message, fragments, current_schema)
       end
     end
     
@@ -153,7 +206,8 @@ module JSON
         d = data.clone
         dupes = d.uniq!
         if dupes
-          # Raise an error
+          message = "The property '#{build_fragment(fragments)}' contained duplicated array values"
+          raise ValidationError.new(message, fragments, current_schema)
         end
       end
     end
@@ -164,7 +218,8 @@ module JSON
       if data.is_a?(String)
         r = Regexp.new(current_schema.schema['pattern'])
         if (r.match(data)).nil?
-          # Raise an error
+          message = "The property '#{build_fragment(fragments)}' did not match the regex '#{current_schema.schema['pattern']}'"
+          raise ValidationError.new(message, fragments, current_schema)
         end
       end
     end
@@ -174,7 +229,8 @@ module JSON
     def validate_minLength(current_schema, data, fragments)
       if data.is_a?(String)
         if data.length < current_schema.schema['minLength']
-          # Raise an error
+          message = "The property '#{build_fragment(fragments)}' was not of a minimum string length of #{current_schema.schema['minLength']}"
+          raise ValidationError.new(message, fragments, current_schema)
         end
       end
     end
@@ -184,7 +240,8 @@ module JSON
     def validate_maxLength(current_schema, data, fragments)
       if data.is_a?(String)
         if data.length > current_schema.schema['maxLength']
-          # Raise an error
+          message = "The property '#{build_fragment(fragments)}' was not of a maximum string length of #{current_schema.schema['maxLength']}"
+          raise ValidationError.new(message, fragments, current_schema)
         end
       end
     end
@@ -196,7 +253,8 @@ module JSON
         if current_schema.schema['divisibleBy'] == 0 || 
            current_schema.schema['divisibleBy'] == 0.0 ||
            (BigDecimal.new(data.to_s) % BigDecimal.new(current_schema.schema['divisibleBy'].to_s)).to_f != 0
-           # Raise an error
+           message = "The property '#{build_fragment(fragments)}' was not divisible by #{current_schema.schema['divisibleBy']}"
+           raise ValidationError.new(message, fragments, current_schema)
         end
       end
     end
@@ -205,7 +263,20 @@ module JSON
     # Validate an item matches at least one of an array of values
     def validate_enum(current_schema, data, fragments)
       if !current_schema.schema['enum'].include?(data)
-        # Raise an error
+        message = "The property '#{build_fragment(fragments)}' did not match one of the following values:"
+        current_schema.schema['enum'].each {|val|
+          if val.is_a?(NilClass)
+            message += " null,"
+          elsif val.is_a?(Array)
+            message += " (array),"
+          elsif val.is_a?(Hash)
+            message += " (object),"
+          else
+            message += " #{val.to_s},"
+          end
+        }
+        message.chop!
+        raise ValidationError.new(message, fragments, current_schema)
       end
     end
     
@@ -215,19 +286,22 @@ module JSON
       if data.is_a?(Hash)
         current_schema.schema['properties'].each do |property,property_schema|
           if (property_schema['required'] && !data.has_key?(property))
-            # Raise an error
+            message = "The property '#{build_fragment(fragments)}' did not contain a required property of '#{property}'"
+            raise ValidationError.new(message, fragments, current_schema)
           end
           
           if data.has_key?(property)
             schema = JSON::Schema.new(property_schema,current_schema.uri)
+            fragments << property
             validate_schema(schema, data[property], fragments)
+            fragments.pop
           end
         end
       end
     end
     
     
-    # Validate property names of an object pertain to a specific pattern
+    # Validate properties of an object against a schema when the property name matches a specific regex
     def validate_patternProperties(current_schema, data, fragments)
       if data.is_a?(Hash)
         current_schema.schema['patternProperties'].each do |property,property_schema|
@@ -237,7 +311,9 @@ module JSON
           data.each do |key,value|
             if r.match(key)
               schema = JSON::Schema.new(property_schema,current_schema.uri)
+              fragments << key
               validate_schema(schema, data[key], fragments)
+              fragments.pop
             end
           end
         end
@@ -267,11 +343,14 @@ module JSON
         end
         
         if current_schema.schema['additionalProperties'] == false && !extra_properties.empty?
-          # Raise an error
+          message = "The property '#{build_fragment(fragments)}' contains additional properties outside of the schema when none are allowed"
+          raise ValidationError.new(message, fragments, current_schema)
         elsif current_schema.schema['additionalProperties'].is_a?(Hash)
           data.each do |key,value|
             schema = JSON::Schema.new(current_schema.schema['additionalProperties'],current_schema.uri)
+            fragments << key
             validate_schema(schema, value, fragments)
+            fragments.pop
           end
         end
       end
@@ -282,14 +361,18 @@ module JSON
     def validate_items(current_schema, data, fragments)
       if data.is_a?(Array)
          if current_schema.schema['items'].is_a?(Hash)
-           data.each do |item|
+           data.each_with_index do |item,i|
              schema = JSON::Schema.new(current_schema.schema['items'],current_schema.uri)
+             fragments << i.to_s
              validate_schema(schema,item,fragments)
+             fragments.pop
            end
          elsif current_schema.schema['items'].is_a?(Array)
            current_schema.schema['items'].each_with_index do |item_schema,i|
              schema = JSON::Schema.new(item_schema,current_schema.uri)
+             fragments << i.to_s
              validate_schema(schema,data[i],fragments)
+             fragments.pop
            end
          end
       end
@@ -300,11 +383,16 @@ module JSON
     def validate_additionalItems(current_schema, data, fragments)
       if data.is_a?(Array) && current_schema.schema['items'].is_a?(Array)
         if current_schema.schema['additionalItems'] == false && current_schema.schema['items'].length != data.length
-          # Raise an error
+          message = "The property '#{build_fragment(fragments)}' contains additional array elements outside of the schema when none are allowed"
+          raise ValidationError.new(message, fragments, current_schema)
         elsif current_schema.schema['additionaItems'].is_a?(Hash)
           schema = JSON::Schema.new(current_schema.schema['additionalItems'],current_schema.uri)
-          data.each do |item|
-            validate_schema(schema, item, fragments)
+          data.each_with_index do |item,i|
+            if i >= current_schema.schema['items'].length
+              fragments << i.to_s
+              validate_schema(schema, item, fragments)
+              fragments.pop
+            end
           end
         end
       end
@@ -317,11 +405,13 @@ module JSON
         current_schema.schema['dependencies'].each do |property,dependency_value|
           if data.has_key?(property)
             if dependency_value.is_a?(String) && !data.has_key?(dependency_value)
-              # Raise an error
+              message = "The property '#{build_fragment(fragments)}' has a property '#{property}' that depends on a missing property '#{dependency_value}'"
+              raise ValidationError.new(message, fragments, current_schema)
             elsif dependency_value.is_a?(Array)
               dependency_value.each do |value|
                 if !data.has_key?(value)
-                  # Raise an error
+                  message = "The property '#{build_fragment(fragments)}' has a property '#{property}' that depends on a missing property '#{value}'"
+                  raise ValidationError.new(message, fragments, current_schema)
                 end
               end
             else
@@ -385,6 +475,11 @@ module JSON
       end
     end
     
+
+    def build_fragment(fragments)
+      "#/#{fragments.join('/')}"
+    end
+
     
     def load_ref_schema(parent_schema,ref)
       uri = URI.parse(ref)
@@ -532,7 +627,13 @@ module JSON
         validator = JSON::Validator.new(schema, data)
         validator.validate
       end
+    
+      def validate2(schema, data)
+        validator = JSON::Validator.new(schema, data)
+        validator.validate2
+      end
     end
+  
     
     
     private
