@@ -73,9 +73,9 @@ module JSON
     
     # Validate the current schema
     def validate_schema(current_schema, data, fragments)
-      
+          
       ValidationMethods.each do |method|
-        if current_schema.schema[method]
+        if !current_schema.schema[method].nil?
           self.send(("validate_" + method.sub('$','')).to_sym, current_schema, data, fragments)
         end
       end
@@ -346,10 +346,10 @@ module JSON
           message = "The property '#{build_fragment(fragments)}' contains additional properties outside of the schema when none are allowed"
           raise ValidationError.new(message, fragments, current_schema)
         elsif current_schema.schema['additionalProperties'].is_a?(Hash)
-          data.each do |key,value|
+          extra_properties.each do |key|
             schema = JSON::Schema.new(current_schema.schema['additionalProperties'],current_schema.uri)
             fragments << key
-            validate_schema(schema, value, fragments)
+            validate_schema(schema, data[key], fragments)
             fragments.pop
           end
         end
@@ -385,7 +385,7 @@ module JSON
         if current_schema.schema['additionalItems'] == false && current_schema.schema['items'].length != data.length
           message = "The property '#{build_fragment(fragments)}' contains additional array elements outside of the schema when none are allowed"
           raise ValidationError.new(message, fragments, current_schema)
-        elsif current_schema.schema['additionaItems'].is_a?(Hash)
+        elsif current_schema.schema['additionalItems'].is_a?(Hash)
           schema = JSON::Schema.new(current_schema.schema['additionalItems'],current_schema.uri)
           data.each_with_index do |item,i|
             if i >= current_schema.schema['items'].length

@@ -615,6 +615,114 @@ class JSONSchemaTest < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data))
   end
   
+  def test_pattern_properties
+    # Set up the default datatype
+    schema = {
+      "patternProperties" => {
+        "\\d+ taco" => {"type" => "integer"}
+      }
+    }
+    
+    data = {
+      "a" => true,
+      "1 taco" => 1,
+      "20 tacos" => 20
+    }
+    
+    assert(JSON::Validator.validate(schema,data))
+    data["20 tacos"] = "string!"
+    assert(!JSON::Validator.validate(schema,data))
+  end
   
+  
+  def test_additional_properties
+    # Test no additional properties allowed
+    schema = {
+      "properties" => {
+        "a" => { "type" => "integer" }
+      },
+      "additionalProperties" => false
+    }
+    
+    data = {
+      "a" => 10
+    }
+    
+    assert(JSON::Validator.validate(schema,data))
+    data["b"] = 5
+    assert(!JSON::Validator.validate(schema,data))
+    
+    # Test additional properties match a schema
+    schema["additionalProperties"] = { "type" => "string" }
+    data["b"] = "taco"
+    assert(JSON::Validator.validate(schema,data))
+    data["b"] = 5
+    assert(!JSON::Validator.validate(schema,data))
+    
+    # Make sure this works with pattern properties set, too
+    schema = {
+      "patternProperties" => {
+        "\\d+ taco" => {"type" => "integer"}
+      },
+      "additionalProperties" => false
+    }
+    
+    data = {
+      "5 tacos" => 5,
+      "20 tacos" => 20
+    }
+    
+    assert(JSON::Validator.validate(schema,data))
+    data["b"] = 5
+    assert(!JSON::Validator.validate(schema,data))
+  end
+  
+  
+  def test_items
+    schema = {
+      "items" => { "type" => "integer" }
+    }
+    
+    data = [1,2,4]
+    assert(JSON::Validator.validate(schema,data))
+    data = [1,2,"string"]
+    assert(!JSON::Validator.validate(schema,data))
+    
+    schema = {
+      "items" => [
+        {"type" => "integer"},
+        {"type" => "string"}
+      ]
+    }
+    
+    data = [1,"string"]
+    assert(JSON::Validator.validate(schema,data))
+    data = [1,"string",3]
+    assert(JSON::Validator.validate(schema,data))
+    data = ["string",1]
+    assert(!JSON::Validator.validate(schema,data))
+    
+    schema = {
+      "items" => [
+        {"type" => "integer"},
+        {"type" => "string"}
+      ],
+      "additionalItems" => false
+    }
+    
+    data = [1,"string"]
+    assert(JSON::Validator.validate(schema,data))
+    data = [1,"string",3]
+    assert(!JSON::Validator.validate(schema,data))
+    
+    schema = {"items" => [{"type" => "integer"},{"type" => "string"}],"additionalItems" => {"type" => "integer"}}
+    
+    data = [1,"string"]
+    assert(JSON::Validator.validate(schema,data))
+    data = [1,"string",3]
+    assert(JSON::Validator.validate(schema,data))
+    data = [1,"string","string"]
+    assert(!JSON::Validator.validate(schema,data))
+  end
 end
 
