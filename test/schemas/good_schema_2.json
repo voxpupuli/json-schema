@@ -1,0 +1,9 @@
+{
+  "type" : "object",
+  "properties" : {
+    "b" : {
+      "required" : true,
+      "$ref" : "good_schema_1.json"
+    }
+  }
+}

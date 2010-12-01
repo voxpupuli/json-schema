@@ -33,4 +33,12 @@ class JSONSchemaTest < Test::Unit::TestCase
       assert(JSON::Validator.validate(schema,File.join(File.dirname(__FILE__),"data/invalid_data_1.json")))
     end
   end
+  
+  def test_file_ref
+    data = {"b" => {"a" => 5}}
+    assert(JSON::Validator.validate(File.join(File.dirname(__FILE__),"schemas/good_schema_2.json"),data))
+    
+    data = {"b" => {"a" => "boo"}}
+    assert(!JSON::Validator.validate(File.join(File.dirname(__FILE__),"schemas/good_schema_1.json"),data))
+  end
 end
