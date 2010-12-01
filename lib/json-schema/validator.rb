@@ -500,6 +500,9 @@ module JSON
           schema = JSON::Schema.new(JSON.parse(open(uri.to_s).read), uri)
           @schemas[uri.to_s] = schema
           build_schemas(schema)
+        rescue JSON::ParserError
+          # Don't rescue this error, we want JSON formatting issues to bubble up
+          raise $!
         rescue
           # Failures will occur when this URI cannot be referenced yet. Don't worry about it,
           # the proper error will fall out if the ref isn't ever defined
@@ -657,21 +660,17 @@ module JSON
         begin
           schema = JSON.parse(schema)
         rescue
-          begin
-            # Build a uri for it
-            schema_uri = URI.parse(schema)
-            if schema_uri.relative?
-              # Check for absolute path
-              if schema[0,1] == '/'
-                schema_uri = URI.parse("file://#{schema}")
-              else
-                schema_uri = URI.parse("file://#{Dir.pwd}/#{schema}")
-              end
+          # Build a uri for it
+          schema_uri = URI.parse(schema)
+          if schema_uri.relative?
+            # Check for absolute path
+            if schema[0,1] == '/'
+              schema_uri = URI.parse("file://#{schema}")
+            else
+              schema_uri = URI.parse("file://#{Dir.pwd}/#{schema}")
             end
-            schema = JSON.parse(open(schema_uri.to_s).read)
-          rescue            
-            raise "Invalid schema: #{schema_uri.to_s}"
           end
+          schema = JSON.parse(open(schema_uri.to_s).read)
         end
       end
       
@@ -685,19 +684,15 @@ module JSON
         begin
           data = JSON.parse(data)
         rescue
-          begin
-            json_uri = URI.parse(data)
-            if json_uri.relative?
-              if data[0,1] == '/'
-                schema_uri = URI.parse("file://#{data}")
-              else
-                schema_uri = URI.parse("file://#{Dir.pwd}/#{data}")
-              end
+          json_uri = URI.parse(data)
+          if json_uri.relative?
+            if data[0,1] == '/'
+              schema_uri = URI.parse("file://#{data}")
+            else
+              schema_uri = URI.parse("file://#{Dir.pwd}/#{data}")
             end
-            data = JSON.parse(open(json_uri.to_s).read)
-          rescue
-            raise "Invalid JSON: #{json_uri.to_s}"
           end
+          data = JSON.parse(open(json_uri.to_s).read)
         end
       end
       data
