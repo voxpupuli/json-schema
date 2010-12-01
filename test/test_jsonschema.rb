@@ -146,7 +146,22 @@ class JSONSchemaTest < Test::Unit::TestCase
     
     data["a"] = false
     assert(!JSON::Validator.validate(schema,data))
-  end
+    
+    # Test a union type with schemas
+    schema["properties"]["a"]["type"] = [{ "type" => "string" }, {"type" => "object", "properties" => {"b" => {"type" => "integer"}}}]
+  
+    data["a"] = "test"
+    assert(JSON::Validator.validate(schema,data))
+    
+    data["a"] = 5
+    assert(!JSON::Validator.validate(schema,data))
+    
+    data["a"] = {"b" => 5}
+    assert(JSON::Validator.validate(schema,data))
+    
+    data["a"] = {"b" => "taco"}
+    assert(!JSON::Validator.validate(schema,data))
+   end
   
   
   
@@ -562,6 +577,33 @@ class JSONSchemaTest < Test::Unit::TestCase
     data["a"] = false
     assert(JSON::Validator.validate(schema,data))
 
+  end
+  
+  
+  
+  def test_extends
+    schema = {
+      "properties" => {
+        "a" => { "type" => "integer"}
+      } 
+    }
+    
+    schema2 = {
+      "properties" => {
+        "a" => { "maximum" => 5 }
+      }
+    }
+    
+    data = {
+      "a" => 10
+    }
+    
+    assert(JSON::Validator.validate(schema,data))
+    assert(!JSON::Validator.validate(schema2,data))
+    
+    schema["extends"] = schema2
+    
+    assert(!JSON::Validator.validate(schema,data))
   end
   
   
