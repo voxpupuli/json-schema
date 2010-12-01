@@ -172,12 +172,21 @@ class JSONSchemaTest < Test::Unit::TestCase
         "a" => {"required" => true}
       }
     }
-    data = {
-    }
+    data = {}
     
     assert(!JSON::Validator.validate(schema,data))
     data['a'] = "Hello"
     assert(JSON::Validator.validate(schema,data))
+    
+    schema = {
+      "properties" => {
+        "a" => {"type" => "integer"}
+      }
+    }
+    
+    data = {}
+    assert(JSON::Validator.validate(schema,data))
+    
   end
   
   

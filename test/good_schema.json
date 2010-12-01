@@ -1,0 +1,12 @@
+//
+//  good_schema
+//
+//  Created by Kenneth Hoxworth on 2010-11-30.
+//  Copyright (c) 2010 __MyCompanyName__. All rights reserved.
+//
+
+class good_schema {
+	function good_schema(){
+		
+	}
+}
