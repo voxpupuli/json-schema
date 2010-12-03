@@ -14,7 +14,7 @@ If downloading the git repo, build the gem and install it:
 
 <pre>
 $ rake package
-$ gem install pkg/json-schema-0.1.0.gem
+$ gem install pkg/json-schema-0.1.6.gem
 </pre>
 
 <pre>
