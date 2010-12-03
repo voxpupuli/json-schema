@@ -5,18 +5,21 @@ require 'bigdecimal'
 
 module JSON
   
-    class ValidationError < Exception
-      attr_reader :fragments, :schema
-      
-      def initialize(message, fragments, schema)
-        @fragments = fragments
-        @schema = schema
-        super(message)
-      end
-    end
-  
-    class Validator
+  class ValidationError < Exception
+    attr_reader :fragments, :schema
     
+    def initialize(message, fragments, schema)
+      @fragments = fragments
+      @schema = schema
+      super(message)
+    end
+  end
+
+  class Validator
+
+    @@schemas = {}
+    @@cache_schemas = false
+
     ValidationMethods = [
       "type",
       "disallow",
@@ -42,10 +45,9 @@ module JSON
     
     
     def initialize(schema_data, data)
-      @schemas = {}
       @base_schema = initialize_schema(schema_data)
       @data = initialize_data(data)
-      @schemas[@base_schema.uri.to_s] = @base_schema
+      Validator.add_schema(@base_schema)
       
       build_schemas(@base_schema)
     end  
@@ -55,8 +57,10 @@ module JSON
     def validate()
       begin
         validate_schema(@base_schema, @data, [])
+        Validator.clear_cache
         return true
       rescue ValidationError
+        Validator.clear_cache
         return false
       end
     end
@@ -66,7 +70,13 @@ module JSON
     # a ValidationError will be raised with links to the specific location that the first error
     # occurred during validation 
     def validate2()
-      validate_schema(@base_schema, @data, [])
+      begin
+        validate_schema(@base_schema, @data, [])
+        Validator.clear_cache
+      rescue ValidationError
+        Validator.clear_cache
+        raise $!
+      end
       nil
     end
     
@@ -453,7 +463,7 @@ module JSON
       
       # Grab the parent schema from the schema list
       schema_key = temp_uri.to_s.split("#")[0]
-      ref_schema = @schemas[schema_key]
+      ref_schema = Validator.schemas[schema_key]
       
       if ref_schema
         # Perform fragment resolution to retrieve the appropriate level for the schema
@@ -495,10 +505,10 @@ module JSON
         uri.fragment = nil
       end
       
-      if @schemas[uri.to_s].nil?
+      if Validator.schemas[uri.to_s].nil?
         begin
           schema = JSON::Schema.new(JSON.parse(open(uri.to_s).read), uri)
-          @schemas[uri.to_s] = schema
+          Validator.add_schema(schema)
           build_schemas(schema)
         rescue JSON::ParserError
           # Don't rescue this error, we want JSON formatting issues to bubble up
@@ -513,69 +523,26 @@ module JSON
     
     # Build all schemas with IDs, mapping out the namespace
     def build_schemas(parent_schema)
-      if parent_schema.schema["type"] && parent_schema.schema["type"].is_a?(Array) # If we're dealing with a Union type, there might be schemas a-brewin'
-        parent_schema.schema["type"].each_with_index do |type,i|
-          if type.is_a?(Hash) 
-            if type['$ref']
-              load_ref_schema(parent_schema, type['$ref'])
-            else
-              schema_uri = parent_schema.uri.clone
-              schema = JSON::Schema.new(type,schema_uri)
-              if type['id']
-                @schemas[schema.uri.to_s] = schema
-              end
-              build_schemas(schema)
-            end
-          end
-        end
-      end
       
-      if parent_schema.schema["disallow"] && parent_schema.schema["disallow"].is_a?(Array) # If we're dealing with a Union type, there might be schemas a-brewin'
-        parent_schema.schema["disallow"].each_with_index do |type,i|
-          if type.is_a?(Hash)
-            if type['$ref']
-              load_ref_schema(parent_schema, type['$ref'])
-            else
-              type['id']
-              schema_uri = parent_schema.uri.clone
-              schema = JSON::Schema.new(type,schema_uri)
-              if type['id']
-                @schemas[schema.uri.to_s] = schema
-              end
-              build_schemas(schema)
+      # Check for schemas in union types
+      ["type", "disallow"].each do |key|
+        if parent_schema.schema[key] && parent_schema.schema[key].is_a?(Array)
+          parent_schema.schema[key].each_with_index do |type,i|
+            if type.is_a?(Hash) 
+              handle_schema(parent_schema, type)
             end
           end
         end
       end
         
+      # All properties are schemas
       if parent_schema.schema["properties"]
         parent_schema.schema["properties"].each do |k,v|
-          if v['$ref']
-            load_ref_schema(parent_schema, v['$ref'])
-          else
-            schema_uri = parent_schema.uri.clone
-            schema = JSON::Schema.new(v,schema_uri)
-            if v['id']
-              @schemas[schema.uri.to_s] = schema
-            end
-            build_schemas(schema)
-          end
+          handle_schema(parent_schema, v)
         end
       end
       
-      if parent_schema.schema["additionalProperties"].is_a?(Hash) 
-        if parent_schema.schema["additionalProperties"]["$ref"]
-          load_ref_schema(parent_schema, parent_schema.schema["additionalProperties"]["$ref"])
-        else
-          schema_uri = parent_schema.uri.clone
-          schema = JSON::Schema.new(parent_schema.schema["additionalProperties"],schema_uri)
-          if parent_schema.schema["additionalProperties"]['id']
-            @schemas[schema.uri.to_s] = schema
-          end
-          build_schemas(schema)
-        end
-      end
-      
+      # Items are always schemas
       if parent_schema.schema["items"]
         items = parent_schema.schema["items"].clone
         single = false
@@ -584,57 +551,31 @@ module JSON
           single = true
         end
         items.each_with_index do |item,i|
-          if item['$ref']
-            load_ref_schema(parent_schema, item['$ref'])
-          else
-            schema_uri = parent_schema.uri.clone
-            schema = JSON::Schema.new(item,schema_uri)
-            if item['id']
-              @schemas[schema.uri.to_s] = schema
-            end
-            build_schemas(schema)
-          end
+          handle_schema(parent_schema, item)
         end
       end
       
-      if parent_schema.schema["additionalItems"].is_a?(Hash)
-        if parent_schema.schema["additionalItems"]['$ref']
-          load_ref_schema(parent_schema, parent_schema.schema["additionalItems"]['$ref'])
-        else
-          schema_uri = parent_schema.uri.clone
-          schema = JSON::Schema.new(parent_schema.schema["additionalItems"],schema_uri)
-          if parent_schema.schema["additionalItems"]['id']
-            @schemas[schema.uri.to_s] = schema
-          end
-          build_schemas(schema)
+      # Each of these might be schemas
+      ["additionalProperties", "additionalItems", "dependencies", "extends"].each do |key|
+        if parent_schema.schema[key].is_a?(Hash) 
+          handle_schema(parent_schema, parent_schema.schema[key])
         end
       end
       
-      if parent_schema.schema["dependencies"].is_a?(Hash)
-        if parent_schema.schema["dependencies"]["$ref"]
-          load_ref_schema(parent_schema, parent_schema.schema["dependencies"]['$ref'])
-        else
-          schema_uri = parent_schema.uri.clone
-          schema = JSON::Schema.new(parent_schema.schema["dependencies"],schema_uri)
-          if parent_schema.schema["dependencies"]['id']
-            @schemas[schema.uri.to_s] = schema
-          end
-          build_schemas(schema)
-        end
-      end
-      
-      if parent_schema.schema["extends"].is_a?(Hash)
-        if parent_schema.schema["extends"]['$ref']
-          load_ref_schema(parent_schema, parent_schema.schema["extends"]['$ref'])
-        else
-          schema_uri = parent_schema.uri.clone
-          schema = JSON::Schema.new(parent_schema.schema["extends"],schema_uri)
-          if parent_schema.schema["extends"]['id']
-            @schemas[schema.uri.to_s] = schema
-          end
-          build_schemas(schema)
-        end
-      end
+    end
+    
+    # Either load a reference schema or create a new schema
+    def handle_schema(parent_schema, obj)
+      if obj['$ref']
+         load_ref_schema(parent_schema, obj['$ref'])
+       else
+         schema_uri = parent_schema.uri.clone
+         schema = JSON::Schema.new(obj,schema_uri)
+         if obj['id']
+           Validator.add_schema(schema)
+         end
+         build_schemas(schema)
+       end
     end
         
     
@@ -648,6 +589,23 @@ module JSON
         validator = JSON::Validator.new(schema, data)
         validator.validate2
       end
+      
+      def clear_cache
+        @@schemas = {} if @@cache_schemas == false
+      end
+      
+      def schemas
+        @@schemas
+      end
+      
+      def add_schema(schema)
+        @@schemas[schema.uri.to_s] = schema if @@schemas[schema.uri.to_s].nil?
+      end
+      
+      def cache_schemas=(val)
+        @@cache_schemas = val == true ? true : false
+      end
+        
     end
   
     

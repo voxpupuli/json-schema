@@ -1,3 +1,7 @@
+v0.1.6:
+* Refactored schema loading a bit
+* Added option to cache schemas in the validator for multiple runs
+
 v0.1.3:
 * Fixed a couple of extends bugs
 
