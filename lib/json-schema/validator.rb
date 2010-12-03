@@ -2,6 +2,7 @@ require 'uri'
 require 'open-uri'
 require 'pathname'
 require 'bigdecimal'
+require 'digest/sha1'
 
 module JSON
   
@@ -46,9 +47,7 @@ module JSON
     
     def initialize(schema_data, data)
       @base_schema = initialize_schema(schema_data)
-      @data = initialize_data(data)
-      Validator.add_schema(@base_schema)
-      
+      @data = initialize_data(data)    
       build_schemas(@base_schema)
     end  
     
@@ -613,10 +612,11 @@ module JSON
     private
     
     def initialize_schema(schema)
-      schema_uri = URI.parse("file://#{Dir.pwd}/__base_schema__.json")
       if schema.is_a?(String)
         begin
-          schema = JSON.parse(schema)
+          # Build a fake URI for this
+          schema_uri = URI.parse("file://#{Dir.pwd}/#{Digest::SHA1.hexdigest(schema)}.json")
+          schema = JSON::Schema.new(JSON.parse(schema),schema_uri)
         rescue
           # Build a uri for it
           schema_uri = URI.parse(schema)
@@ -628,11 +628,22 @@ module JSON
               schema_uri = URI.parse("file://#{Dir.pwd}/#{schema}")
             end
           end
-          schema = JSON.parse(open(schema_uri.to_s).read)
+          if Validator.schemas[schema_uri.to_s].nil?
+            schema = JSON::Schema.new(JSON.parse(open(schema_uri.to_s).read),schema_uri)
+            Validator.add_schema(schema)
+          else
+            schema = Validator.schemas[schema_uri.to_s]
+          end
         end
+      elsif schema.is_a?(Hash)
+        schema = schema.to_json
+        schema_uri = URI.parse("file://#{Dir.pwd}/#{Digest::SHA1.hexdigest(schema)}.json")
+        schema = JSON::Schema.new(JSON.parse(schema),schema_uri)
+      else
+        raise "Invalid schema - must be either a string or a hash"
       end
       
-      JSON::Schema.new(schema,schema_uri)
+      schema
     end
     
     
