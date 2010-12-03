@@ -2,8 +2,6 @@ h1. Ruby JSON Schema Validator
 
 This library is intended to provide Ruby with an interface for validating JSON objects against a JSON schema conforming to "JSON Schema Draft 3":http://tools.ietf.org/html/draft-zyp-json-schema-03. The project originally started as a fork of "Constellation's ruby-jsonschema":https://github.com/Constellation/ruby-jsonchema project, but differences in the JSON schema draft versions implemented as well as assumptions made by the ruby-jsonschema library forced this to become a new project.
 
-This project is far from complete but is in a somewhat usable state...
-
 h2. Usage
 
 Install:
@@ -85,20 +83,20 @@ h2. Not implemented
 
 The following core schema definitions are not implemented:
 
+* format - Some of the formats listed will be supported, others are fairly vague in their definition and may be left out
 * default - This library aims to solely be a validator and does not modify an object it is validating.
 * $schema - Support for this will come later, possibly with the ability to validate against other JSON Schema draft versions
 
 In addition, the following hyper schema attributes are not implemented at this time:
 
-* links (not much to do with validation...)
+* links
 * fragmentResolution (only handles default slash-delimited)
-* readonly
 * contentEncoding
 * pathStart
-* mediaType
 
 
 h2. To Do
 
 * (Much) More testing
-* Adding a persistence option to schemas that enables the validator to only load schemas once across multiple validations
+* Documentation
+* Breaking the current validator out into a subclass, acting as the foundation for supporting multiple versions of validators
