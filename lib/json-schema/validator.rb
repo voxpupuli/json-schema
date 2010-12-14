@@ -651,8 +651,9 @@ module JSON
       end
       
       if @options[:list]
-        inter_json = {:type => "array", :items => schema.schema}.to_json
+        inter_json = {:type => "array", :items => { "$ref" => schema.uri.to_s }}.to_json
         wrapper_schema = JSON::Schema.new(JSON.parse(inter_json),URI.parse("file://#{Dir.pwd}/#{Digest::SHA1.hexdigest(inter_json)}"))
+        build_schemas(schema)
         schema = wrapper_schema
       end      
       
