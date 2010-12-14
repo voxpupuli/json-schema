@@ -467,7 +467,7 @@ module JSON
       # Grab the parent schema from the schema list
       schema_key = temp_uri.to_s.split("#")[0]
       ref_schema = Validator.schemas[schema_key]
-      
+
       if ref_schema
         # Perform fragment resolution to retrieve the appropriate level for the schema
         target_schema = ref_schema.schema
@@ -485,6 +485,8 @@ module JSON
         # We have the schema finally, build it and validate!
         schema = JSON::Schema.new(target_schema,temp_uri)
         validate_schema(schema, data, fragments)
+      else
+        raise ValidationError.new("The referenced schema '#{temp_uri.to_s}' cannot be found", fragments, current_schema)
       end
     end
     
@@ -525,8 +527,7 @@ module JSON
     
     
     # Build all schemas with IDs, mapping out the namespace
-    def build_schemas(parent_schema)
-      
+    def build_schemas(parent_schema)    
       # Check for schemas in union types
       ["type", "disallow"].each do |key|
         if parent_schema.schema[key] && parent_schema.schema[key].is_a?(Array)
