@@ -24,8 +24,9 @@ require 'json-schema'
 JSON::Validator.validate('schema.json', 'data.json')
 
 schema = {
+  "type" => "object",
   "properties" => {
-    "a" => {"type" => "integer"}
+    "a" => {"type" => "integer", "required" => true}
   }
 }
 
@@ -34,6 +35,9 @@ data = {
 }
 
 JSON::Validator.validate(schema, data)
+
+data = [data,data,data]
+JSON::Validator.validate(schema, data, :list => true)
 
 data = {
   "a" => "taco"

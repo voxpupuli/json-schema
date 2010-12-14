@@ -724,5 +724,25 @@ class JSONSchemaTest < Test::Unit::TestCase
     data = [1,"string","string"]
     assert(!JSON::Validator.validate(schema,data))
   end
+  
+  
+  def test_list_option
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"type" => "integer", "required" => true} }
+    }
+    
+    data = [{"a" => 1},{"a" => 2},{"a" => 3}]
+    assert(JSON::Validator.validate(schema,data,:list => true))
+    assert(!JSON::Validator.validate(schema,data))    
+    
+    data = [{"a" => 1},{"b" => 2},{"a" => 3}]
+    assert(!JSON::Validator.validate(schema,data,:list => true))
+    
+    data = {"a" => 1}
+    assert(!JSON::Validator.validate(schema,data,:list => true))
+    
+  end
+  
 end
 

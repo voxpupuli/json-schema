@@ -1,3 +1,6 @@
+v0.1.8:
+* Added a :list option to Validator.validate and Validator.validate2 that wraps the schema in an array, validating the data as a list of schema instances.
+
 v0.1.6:
 * Refactored schema loading a bit
 * Added option to cache schemas in the validator for multiple runs

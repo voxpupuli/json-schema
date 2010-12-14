@@ -20,6 +20,9 @@ module JSON
 
     @@schemas = {}
     @@cache_schemas = false
+    @@default_opts = {
+      :list => false
+    }
 
     ValidationMethods = [
       "type",
@@ -45,7 +48,8 @@ module JSON
     ]
     
     
-    def initialize(schema_data, data)
+    def initialize(schema_data, data, opts={})
+      @options = @@default_opts.clone.merge(opts)
       @base_schema = initialize_schema(schema_data)
       @data = initialize_data(data)    
       build_schemas(@base_schema)
@@ -579,13 +583,13 @@ module JSON
         
     
     class << self
-      def validate(schema, data)
-        validator = JSON::Validator.new(schema, data)
+      def validate(schema, data,opts={})
+        validator = JSON::Validator.new(schema, data, opts)
         validator.validate
       end
     
-      def validate2(schema, data)
-        validator = JSON::Validator.new(schema, data)
+      def validate2(schema, data,opts={})
+        validator = JSON::Validator.new(schema, data, opts)
         validator.validate2
       end
       
@@ -615,8 +619,9 @@ module JSON
       if schema.is_a?(String)
         begin
           # Build a fake URI for this
-          schema_uri = URI.parse("file://#{Dir.pwd}/#{Digest::SHA1.hexdigest(schema)}.json")
+          schema_uri = URI.parse("file://#{Dir.pwd}/#{Digest::SHA1.hexdigest(schema)}")
           schema = JSON::Schema.new(JSON.parse(schema),schema_uri)
+          Validator.add_schema(schema)
         rescue
           # Build a uri for it
           schema_uri = URI.parse(schema)
@@ -637,11 +642,18 @@ module JSON
         end
       elsif schema.is_a?(Hash)
         schema = schema.to_json
-        schema_uri = URI.parse("file://#{Dir.pwd}/#{Digest::SHA1.hexdigest(schema)}.json")
+        schema_uri = URI.parse("file://#{Dir.pwd}/#{Digest::SHA1.hexdigest(schema)}")
         schema = JSON::Schema.new(JSON.parse(schema),schema_uri)
+        Validator.add_schema(schema)
       else
         raise "Invalid schema - must be either a string or a hash"
       end
+      
+      if @options[:list]
+        inter_json = {:type => "array", :items => schema.schema}.to_json
+        wrapper_schema = JSON::Schema.new(JSON.parse(inter_json),URI.parse("file://#{Dir.pwd}/#{Digest::SHA1.hexdigest(inter_json)}"))
+        schema = wrapper_schema
+      end      
       
       schema
     end
