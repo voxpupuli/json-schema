@@ -15,6 +15,9 @@ module JSON
       super(message)
     end
   end
+  
+  class SchemaError < Exception
+  end
 
   class Validator
 
@@ -472,12 +475,17 @@ module JSON
         # Perform fragment resolution to retrieve the appropriate level for the schema
         target_schema = ref_schema.schema
         fragments = temp_uri.fragment.split("/")
+        fragment_path = ''
         fragments.each do |fragment|
           if fragment && fragment != ''
             if target_schema.is_a?(Array)
               target_schema = target_schema[fragment.to_i]
             else
               target_schema = target_schema[fragment]
+            end
+            fragment_path = fragment_path + "/#{fragment}"
+            if target_schema.nil?
+              raise SchemaError.new("The fragment '#{fragment_path}' does not exist on schema #{ref_schema.uri.to_s}")
             end
           end
         end
