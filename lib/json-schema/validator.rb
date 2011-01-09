@@ -200,7 +200,7 @@ module JSON
     
     # Validate the minimum number of items in an array
     def validate_minItems(current_schema, data, fragments)
-      if data.is_a?(Array) && (data.nitems < current_schema.schema['minItems'])
+      if data.is_a?(Array) && (data.compact.size < current_schema.schema['minItems'])
         message = "The property '#{build_fragment(fragments)}' did not contain a minimum number of items #{current_schema.schema['minItems']}"
         raise ValidationError.new(message, fragments, current_schema)
       end
@@ -209,7 +209,7 @@ module JSON
     
     # Validate the maximum number of items in an array
     def validate_maxItems(current_schema, data, fragments)
-      if data.is_a?(Array) && (data.nitems > current_schema.schema['maxItems'])
+      if data.is_a?(Array) && (data.compact.size > current_schema.schema['maxItems'])
         message = "The property '#{build_fragment(fragments)}' did not contain a minimum number of items #{current_schema.schema['minItems']}"
         raise ValidationError.new(message, fragments, current_schema)
       end
@@ -459,9 +459,9 @@ module JSON
         # Check for absolute path
         path = current_schema.schema['$ref'].split("#")[0]
         if path[0,1] == "/"
-          temp_uri.path = Pathname.new(path).cleanpath
+          temp_uri.path = Pathname.new(path).cleanpath.to_s
         else
-          temp_uri.path = (Pathname.new(current_schema.uri.path).parent + path).cleanpath
+          temp_uri.path = (Pathname.new(current_schema.uri.path).parent + path).cleanpath.to_s
         end
         temp_uri.fragment = current_schema.schema['$ref'].split("#")[1]
       end
@@ -511,9 +511,9 @@ module JSON
         # Check for absolute path
         path = ref.split("#")[0]
         if path[0,1] == '/'
-          uri.path = Pathname.new(path).cleanpath
+          uri.path = Pathname.new(path).cleanpath.to_s
         else
-          uri.path = (Pathname.new(parent_schema.uri.path).parent + path).cleanpath
+          uri.path = (Pathname.new(parent_schema.uri.path).parent + path).cleanpath.to_s
         end
         uri.fragment = nil
       end
