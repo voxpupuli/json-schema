@@ -1,3 +1,6 @@
+v0.1.10:
+* Added in a few minor changes from jarib for Ruby 1.9 compliance.
+
 v0.1.8:
 * Added a :list option to Validator.validate and Validator.validate2 that wraps the schema in an array, validating the data as a list of schema instances.
 
