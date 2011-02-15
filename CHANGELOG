@@ -1,3 +1,7 @@
+v.0.1.12:
+* Added the schema to error output messsages
+* Allowed self-referencing of schemas
+
 v0.1.10:
 * Added in a few minor changes from jarib for Ruby 1.9 compliance.
 

@@ -12,6 +12,7 @@ module JSON
     def initialize(message, fragments, schema)
       @fragments = fragments
       @schema = schema
+      message = "#{message} in schema #{schema.uri}"
       super(message)
     end
   end
@@ -458,7 +459,9 @@ module JSON
         temp_uri = current_schema.uri.clone
         # Check for absolute path
         path = current_schema.schema['$ref'].split("#")[0]
-        if path[0,1] == "/"
+        if path.nil? || path == ''
+          temp_uri.path = current_schema.uri.path
+        elsif path[0,1] == "/"
           temp_uri.path = Pathname.new(path).cleanpath.to_s
         else
           temp_uri.path = (Pathname.new(current_schema.uri.path).parent + path).cleanpath.to_s
@@ -508,9 +511,16 @@ module JSON
       uri = URI.parse(ref)
       if uri.relative?
         uri = parent_schema.uri.clone
+        
         # Check for absolute path
         path = ref.split("#")[0]
-        if path[0,1] == '/'
+        
+        # This is a self reference and thus the schema does not need to be re-loaded
+        if path.nil? || path == ''
+          return
+        end
+        
+        if path && path[0,1] == '/'
           uri.path = Pathname.new(path).cleanpath.to_s
         else
           uri.path = (Pathname.new(parent_schema.uri.path).parent + path).cleanpath.to_s
