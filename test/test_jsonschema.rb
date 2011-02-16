@@ -744,5 +744,206 @@ class JSONSchemaTest < Test::Unit::TestCase
     
   end
   
+  
+  def test_self_reference
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"type" => "integer"}, "b" => {"$ref" => "#"}}
+    }
+    
+    data = {"a" => 5, "b" => {"b" => {"a" => 1}}}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => 5, "b" => {"b" => {"a" => 'taco'}}}
+    assert(!JSON::Validator.validate(schema,data))
+  end
+  
+  
+  def test_format_ipv4
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"type" => "string", "format" => "ip-address"}}
+    }
+    
+    data = {"a" => "1.1.1.1"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "1.1.1"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "1.1.1.300"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => 5}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "1.1.1"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "1.1.1.1b"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "b1.1.1.1"}
+  end
+  
+  
+  def test_format_ipv6
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"type" => "string", "format" => "ipv6"}}
+    }
+    
+    data = {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "1111:0:8888:0:0:0:eeee:ffff"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "1111:2222:8888::eeee:ffff"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "1111:2222:8888:99999:aaaa:cccc:eeee:ffff"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:gggg"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "1111:2222::9999::cccc:eeee:ffff"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff:bbbb"}
+    assert(!JSON::Validator.validate(schema,data))
+  end
+  
+  def test_format_time
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"type" => "string", "format" => "time"}}
+    }
+    
+    data = {"a" => "12:00:00"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "12:00"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "12:00:60"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "12:60:00"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "24:00:00"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "0:00:00"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "-12:00:00"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "12:00:00b"}
+    assert(!JSON::Validator.validate(schema,data))
+  end
+  
+  
+  def test_format_date
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"type" => "string", "format" => "date"}}
+    }
+    
+    data = {"a" => "2010-01-01"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-32"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "n2010-01-01"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-1-01"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-1"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01n"}
+    assert(!JSON::Validator.validate(schema,data))
+  end
+  
+  def test_format_datetime
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"type" => "string", "format" => "date-time"}}
+    }
+    
+    data = {"a" => "2010-01-01T12:00:00Z"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-32T12:00:00Z"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-13-01T12:00:00Z"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T24:00:00Z"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:60:00Z"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:60Z"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00z"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-0112:00:00Z"}
+    assert(!JSON::Validator.validate(schema,data))
+  end
+  
+  
+  def test_format_strings
+    data1 = {"a" => "boo"}
+    data2 = {"a" => 5}
+    
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"format" => "regex"}}
+    }
+    assert(JSON::Validator.validate(schema,data1))
+    assert(!JSON::Validator.validate(schema,data2))
+    
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"format" => "color"}}
+    }
+    assert(JSON::Validator.validate(schema,data1))
+    assert(!JSON::Validator.validate(schema,data2))
+    
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"format" => "style"}}
+    }
+    assert(JSON::Validator.validate(schema,data1))
+    assert(!JSON::Validator.validate(schema,data2))
+    
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"format" => "phone"}}
+    }
+    assert(JSON::Validator.validate(schema,data1))
+    assert(!JSON::Validator.validate(schema,data2))
+    
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"format" => "uri"}}
+    }
+    assert(JSON::Validator.validate(schema,data1))
+    assert(!JSON::Validator.validate(schema,data2))
+    
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"format" => "email"}}
+    }
+    assert(JSON::Validator.validate(schema,data1))
+    assert(!JSON::Validator.validate(schema,data2))
+    
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"format" => "host-name"}}
+    }
+    assert(JSON::Validator.validate(schema,data1))
+    assert(!JSON::Validator.validate(schema,data2))
+  end
+  
+  
+  def test_format_numeric
+    data1 = {"a" => "boo"}
+    data2 = {"a" => 5}
+    data3 = {"a" => 5.4}
+    
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"format" => "utc-millisec"}}
+    }
+    assert(!JSON::Validator.validate(schema,data1))
+    assert(JSON::Validator.validate(schema,data2))
+    assert(JSON::Validator.validate(schema,data3))
+  end
+  
+  
+  
 end
 
