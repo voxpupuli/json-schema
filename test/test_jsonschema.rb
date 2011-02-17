@@ -429,12 +429,12 @@ class JSONSchemaTest < Test::Unit::TestCase
     data["a"] = "156 taco bell"
     assert(JSON::Validator.validate(schema,data))
     
-    data["a"] = "taco"
-    assert(!JSON::Validator.validate(schema,data))
-    
     # Test a non-string
     data["a"] = 5
     assert(JSON::Validator.validate(schema,data))
+    
+    data["a"] = "taco"
+    assert(!JSON::Validator.validate(schema,data))
   end
   
   
