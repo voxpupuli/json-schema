@@ -100,21 +100,6 @@ module JSON
       end
       nil
     end
-    
-
-    # Validate data against a schema, returning nil if the data is valid. If the data is invalid, 
-    # a ValidationError will be raised with links to the specific location that the first error
-    # occurred during validation 
-    def validate2()
-      begin
-        @base_schema.validate(@data,[])
-        Validator.clear_cache
-      rescue JSON::Schema::ValidationError
-        Validator.clear_cache
-        raise $!
-      end
-      nil
-    end
 
     
     def load_ref_schema(parent_schema,ref)
@@ -217,10 +202,11 @@ module JSON
         validator.validate
       end
     
-      def validate2(schema, data,opts={})
+      def validate!(schema, data,opts={})
         validator = JSON::Validator.new(schema, data, opts)
-        validator.validate2
+        validator.validate!
       end
+      alias_method 'validate2', 'validate!'
       
       def clear_cache
         @@schemas = {} if @@cache_schemas == false
@@ -253,7 +239,6 @@ module JSON
       def register_default_validator(v)
         @@default_validator = v
       end
-        
     end
   
     
