@@ -79,26 +79,10 @@ module JSON
       begin
         @base_schema.validate(@data,[])
         Validator.clear_cache
-        return true
-      rescue JSON::Schema::ValidationError
-        Validator.clear_cache
-        return false
-      end
-    end
-    
-    
-    # Validate data against a schema, returning nil if the data is valid. If the data is invalid, 
-    # a ValidationError will be raised with links to the specific location that the first error
-    # occurred during validation 
-    def validate!()
-      begin
-        @base_schema.validate(@data,[])
-        Validator.clear_cache
       rescue JSON::Schema::ValidationError
         Validator.clear_cache
         raise $!
       end
-      nil
     end
 
     
@@ -198,13 +182,18 @@ module JSON
     
     class << self
       def validate(schema, data,opts={})
-        validator = JSON::Validator.new(schema, data, opts)
-        validator.validate
+        begin
+          validator = JSON::Validator.new(schema, data, opts)
+          validator.validate
+          return true
+        rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
+          return false
+        end
       end
     
       def validate!(schema, data,opts={})
         validator = JSON::Validator.new(schema, data, opts)
-        validator.validate!
+        validator.validate
       end
       alias_method 'validate2', 'validate!'
       

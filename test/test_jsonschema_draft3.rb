@@ -5,6 +5,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   def test_types
     # Set up the default datatype
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {}
       }
@@ -168,6 +169,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   def test_required
     # Set up the default datatype
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {"required" => true}
       }
@@ -179,6 +181,7 @@ class JSONSchemaTest < Test::Unit::TestCase
     assert(JSON::Validator.validate(schema,data))
     
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {"type" => "integer"}
       }
@@ -194,6 +197,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   def test_minimum
     # Set up the default datatype
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {"minimum" => 5}
       }
@@ -244,6 +248,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   def test_maximum
     # Set up the default datatype
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {"maximum" => 5}
       }
@@ -293,6 +298,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   def test_min_items
     # Set up the default datatype
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {"minItems" => 1}
       }
@@ -319,6 +325,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   def test_max_items
     # Set up the default datatype
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {"maxItems" => 1}
       }
@@ -345,6 +352,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   def test_unique_items
     # Set up the default datatype
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {"uniqueItems" => true}
       }
@@ -416,6 +424,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   def test_pattern
     # Set up the default datatype
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {"pattern" => "\\d+ taco"}
       }
@@ -441,6 +450,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   def test_min_length
     # Set up the default datatype
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {"minLength" => 1}
       }
@@ -466,6 +476,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   def test_max_length
     # Set up the default datatype
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {"maxLength" => 1}
       }
@@ -491,6 +502,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   def test_enum
     # Set up the default datatype
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {"enum" => [1,'boo',[1,2,3],{"a" => "b"}]}
       }
@@ -526,6 +538,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   def test_divisible_by
     # Set up the default datatype
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {"divisibleBy" => 1.1}
       }
@@ -559,6 +572,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   def test_disallow
     # Set up the default datatype
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {"disallow" => "integer"}
       }
@@ -592,12 +606,14 @@ class JSONSchemaTest < Test::Unit::TestCase
   
   def test_extends
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => { "type" => "integer"}
       } 
     }
     
     schema2 = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => { "maximum" => 5 }
       }
@@ -618,6 +634,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   def test_pattern_properties
     # Set up the default datatype
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "patternProperties" => {
         "\\d+ taco" => {"type" => "integer"}
       }
@@ -638,6 +655,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   def test_additional_properties
     # Test no additional properties allowed
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => { "type" => "integer" }
       },
@@ -661,6 +679,7 @@ class JSONSchemaTest < Test::Unit::TestCase
     
     # Make sure this works with pattern properties set, too
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "patternProperties" => {
         "\\d+ taco" => {"type" => "integer"}
       },
@@ -680,6 +699,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   
   def test_items
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "items" => { "type" => "integer" }
     }
     
@@ -689,6 +709,7 @@ class JSONSchemaTest < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data))
     
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "items" => [
         {"type" => "integer"},
         {"type" => "string"}
@@ -703,6 +724,7 @@ class JSONSchemaTest < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data))
     
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "items" => [
         {"type" => "integer"},
         {"type" => "string"}
@@ -715,7 +737,7 @@ class JSONSchemaTest < Test::Unit::TestCase
     data = [1,"string",3]
     assert(!JSON::Validator.validate(schema,data))
     
-    schema = {"items" => [{"type" => "integer"},{"type" => "string"}],"additionalItems" => {"type" => "integer"}}
+    schema = {"$schema" => "http://json-schema.org/draft-03/schema#","items" => [{"type" => "integer"},{"type" => "string"}],"additionalItems" => {"type" => "integer"}}
     
     data = [1,"string"]
     assert(JSON::Validator.validate(schema,data))
@@ -728,6 +750,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   
   def test_list_option
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => { "a" => {"type" => "integer", "required" => true} }
     }
@@ -747,6 +770,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   
   def test_self_reference
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => { "a" => {"type" => "integer"}, "b" => {"$ref" => "#"}}
     }
@@ -760,6 +784,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   
   def test_format_ipv4
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => { "a" => {"type" => "string", "format" => "ip-address"}}
     }
@@ -782,6 +807,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   
   def test_format_ipv6
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => { "a" => {"type" => "string", "format" => "ipv6"}}
     }
@@ -804,6 +830,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   
   def test_format_time
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => { "a" => {"type" => "string", "format" => "time"}}
     }
@@ -829,6 +856,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   
   def test_format_date
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => { "a" => {"type" => "string", "format" => "date"}}
     }
@@ -849,6 +877,7 @@ class JSONSchemaTest < Test::Unit::TestCase
   
   def test_format_datetime
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => { "a" => {"type" => "string", "format" => "date-time"}}
     }
@@ -879,6 +908,7 @@ class JSONSchemaTest < Test::Unit::TestCase
     data2 = {"a" => 5}
     
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => { "a" => {"format" => "regex"}}
     }
@@ -886,6 +916,7 @@ class JSONSchemaTest < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data2))
     
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => { "a" => {"format" => "color"}}
     }
@@ -893,6 +924,7 @@ class JSONSchemaTest < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data2))
     
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => { "a" => {"format" => "style"}}
     }
@@ -900,6 +932,7 @@ class JSONSchemaTest < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data2))
     
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => { "a" => {"format" => "phone"}}
     }
@@ -907,6 +940,7 @@ class JSONSchemaTest < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data2))
     
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => { "a" => {"format" => "uri"}}
     }
@@ -914,6 +948,7 @@ class JSONSchemaTest < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data2))
     
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => { "a" => {"format" => "email"}}
     }
@@ -921,6 +956,7 @@ class JSONSchemaTest < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data2))
     
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => { "a" => {"format" => "host-name"}}
     }
@@ -935,6 +971,7 @@ class JSONSchemaTest < Test::Unit::TestCase
     data3 = {"a" => 5.4}
     
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => { "a" => {"format" => "utc-millisec"}}
     }
@@ -943,6 +980,23 @@ class JSONSchemaTest < Test::Unit::TestCase
     assert(JSON::Validator.validate(schema,data3))
   end
   
+  
+  
+  def test_schema
+    schema = {
+      "$schema" => "http://json-schema.org/THIS-IS-NOT-A-SCHEMA",
+      "type" => "object"
+    }
+    
+    data = {"a" => "taco"}
+    assert(!JSON::Validator.validate(schema,data))
+    
+    schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
+      "type" => "object"
+    }
+    assert(JSON::Validator.validate(schema,data))
+  end
   
   
 end
