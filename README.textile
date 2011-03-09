@@ -56,7 +56,7 @@ h3. Validate a JSON string against a JSON schema file
 require 'rubygems'
 require 'json-schema'
   
-JSON::Validator.validate('schema.json', "{'a' : 5}")
+JSON::Validator.validate('schema.json', '{"a" : 5}')
 </pre>
 
 h3. Validate a list of objects against a schema that represents the individual objects
