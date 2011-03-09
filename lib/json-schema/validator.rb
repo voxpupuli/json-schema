@@ -22,6 +22,9 @@ module JSON
     class SchemaError < Exception
     end
     
+    class JsonParseError < Exception
+    end
+    
     class Attribute
       def self.validate(current_schema, data, fragments, validator, options = {})
       end
@@ -54,8 +57,8 @@ module JSON
       
       def validate(current_schema, data, fragments)
         current_schema.schema.each do |attr_name,attribute|
-          if @attributes.has_key?(attr_name)
-            @attributes[attr_name].validate(current_schema, data, fragments, self)
+          if @attributes.has_key?(attr_name.to_s)
+            @attributes[attr_name.to_s].validate(current_schema, data, fragments, self)
           end
         end
         data
@@ -73,6 +76,8 @@ module JSON
     }
     @@validators = {}
     @@default_validator = nil
+    @@available_json_backends = []
+    @@json_backend = nil
     
     def initialize(schema_data, data, opts={})
       @options = @@default_opts.clone.merge(opts)
@@ -117,7 +122,7 @@ module JSON
       
       if Validator.schemas[uri.to_s].nil?
         begin
-          schema = JSON::Schema.new(JSON.parse(open(uri.to_s).read), uri)
+          schema = JSON::Schema.new(JSON::Validator.parse(open(uri.to_s).read), uri)
           Validator.add_schema(schema)
           build_schemas(schema)
         rescue JSON::ParserError
@@ -236,8 +241,45 @@ module JSON
       def register_default_validator(v)
         @@default_validator = v
       end
+      
+      def json_backend
+        @@json_backend
+      end
+      
+      def json_backend=(backend)
+        backend = backend.to_s
+        if @@available_json_backend.include?(backend)
+          @@json_backend = backend
+        else
+          raise JSON::Schema::JsonParseError.new("The JSON backend '#{backend}' could not be found.")
+        end
+      end
+      
+      def parse(s)
+        case @@json_backend.to_s
+        when 'json'
+          JSON.parse(s)
+        when 'yajl'
+          json = StringIO.new(s)
+          parser = Yajl::Parser.new
+          parser.parse(json)
+        else
+          raise JSON::Schema::JsonParseError.new("No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json")
+        end
+      end
     end
   
+    if Gem.available?('json')
+      require 'json'
+      @@available_json_backends << 'json'
+      @@json_backend = 'json'
+    end
+    
+    if Gem.available?('yajl-ruby')
+      require 'yajl'
+      @@available_json_backends << 'yajl'
+      @@json_backend = 'yajl'
+    end
     
     
     private
@@ -247,7 +289,11 @@ module JSON
         begin
           # Build a fake URI for this
           schema_uri = URI.parse("file://#{Dir.pwd}/#{Digest::SHA1.hexdigest(schema)}")
-          schema = JSON::Schema.new(JSON.parse(schema),schema_uri)
+          schema = JSON::Validator.parse(schema)
+          if @options[:list]
+            schema = {"type" => "array", "items" => schema}
+          end
+          schema = JSON::Schema.new(schema,schema_uri)
           Validator.add_schema(schema)
         rescue
           # Build a uri for it
@@ -261,27 +307,26 @@ module JSON
             end
           end
           if Validator.schemas[schema_uri.to_s].nil?
-            schema = JSON::Schema.new(JSON.parse(open(schema_uri.to_s).read),schema_uri)
+            schema = JSON::Validator.parse(open(schema_uri.to_s).read)
+            if @options[:list]
+              schema = {"type" => "array", "items" => schema}
+            end
+            schema = JSON::Schema.new(schema,schema_uri)
             Validator.add_schema(schema)
           else
             schema = Validator.schemas[schema_uri.to_s]
           end
         end
       elsif schema.is_a?(Hash)
-        schema = schema.to_json
-        schema_uri = URI.parse("file://#{Dir.pwd}/#{Digest::SHA1.hexdigest(schema)}")
-        schema = JSON::Schema.new(JSON.parse(schema),schema_uri)
+        if @options[:list]
+          schema = {"type" => "array", "items" => schema}
+        end
+        schema_uri = URI.parse("file://#{Dir.pwd}/#{Digest::SHA1.hexdigest(schema.inspect)}")
+        schema = JSON::Schema.new(schema,schema_uri)
         Validator.add_schema(schema)
       else
         raise "Invalid schema - must be either a string or a hash"
-      end
-      
-      if @options[:list]
-        inter_json = {:type => "array", :items => { "$ref" => schema.uri.to_s }}.to_json
-        wrapper_schema = JSON::Schema.new(JSON.parse(inter_json),URI.parse("file://#{Dir.pwd}/#{Digest::SHA1.hexdigest(inter_json)}"))
-        build_schemas(schema)
-        schema = wrapper_schema
-      end      
+      end   
       
       schema
     end
@@ -291,7 +336,7 @@ module JSON
       # Parse the data, if any
       if data.is_a?(String)
         begin
-          data = JSON.parse(data)
+          data = JSON::Validator.parse(data)
         rescue
           json_uri = URI.parse(data)
           if json_uri.relative?
@@ -301,7 +346,7 @@ module JSON
               schema_uri = URI.parse("file://#{Dir.pwd}/#{data}")
             end
           end
-          data = JSON.parse(open(json_uri.to_s).read)
+          data = JSON::Validator.parse(open(json_uri.to_s).read)
         end
       end
       data

@@ -1,7 +1,7 @@
 module JSON
   class Schema
     class RefAttribute < Attribute
-      def self.validate(current_schema, data, fragments, validator, options = {})
+      def self.validate(current_schema, data, fragments, validator, options = {})        
         temp_uri = URI.parse(current_schema.schema['$ref'])
         if temp_uri.relative?
           temp_uri = current_schema.uri.clone

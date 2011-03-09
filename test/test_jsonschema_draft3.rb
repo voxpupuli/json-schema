@@ -759,12 +759,11 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     assert(JSON::Validator.validate(schema,data,:list => true))
     assert(!JSON::Validator.validate(schema,data))    
     
-    data = [{"a" => 1},{"b" => 2},{"a" => 3}]
-    assert(!JSON::Validator.validate(schema,data,:list => true))
-    
     data = {"a" => 1}
     assert(!JSON::Validator.validate(schema,data,:list => true))
     
+    data = [{"a" => 1},{"b" => 2},{"a" => 3}]
+    assert(!JSON::Validator.validate(schema,data,:list => true))
   end
   
   
