@@ -39,15 +39,23 @@ module JSON
         @uri = nil
       end
       
+      def extend_schema_definition(schema_uri)
+        u = URI.parse(schema_uri)
+        validator = JSON::Validator.validators["#{u.scheme}://#{u.host}#{u.path}"]
+        if validator.nil?
+          raise SchemaError.new("Schema not found: #{u.scheme}://#{u.host}#{u.path}")
+        end
+        @attributes.merge!(validator.attributes)
+      end
+      
       def to_s
         "#{@uri.scheme}://#{uri.host}#{uri.path}"
       end
       
-      
       def validate(current_schema, data, fragments)
-        @attributes.each do |attr_name,attribute|
-          if !current_schema.schema[attr_name].nil?
-            attribute.validate(current_schema, data, fragments, self)
+        current_schema.schema.each do |attr_name,attribute|
+          if @attributes.has_key?(attr_name)
+            @attributes[attr_name].validate(current_schema, data, fragments, self)
           end
         end
         data
