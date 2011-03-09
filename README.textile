@@ -2,26 +2,39 @@ h1. Ruby JSON Schema Validator
 
 This library is intended to provide Ruby with an interface for validating JSON objects against a JSON schema conforming to "JSON Schema Draft 3":http://tools.ietf.org/html/draft-zyp-json-schema-03. 
 
-h2. Usage
+h2. Dependencies
 
-Install:
+The JSON::Schema library depends on the ruby JSON gem (json). Support for YAJL and other Ruby parsers is planned.
+
+h2. Installation
+
+From rubygems.org:
 
 <pre>
 gem install json-schema
 </pre>
 
-If downloading the git repo, build the gem and install it:
+From the git repo:
 
 <pre>
 $ gem build json-schema.gemspec
 $ gem install json-schema-0.1.13.gem
 </pre>
 
+
+h2. Basic Usage
+
+Two base validation methods exist: <code>validate</code> and <code>validate!</code>. The first returns a boolean on whether a validation attempt passes and the latter will throw a <code>JSON::Schema::ValidationError</code> with an appropriate message/trace on where the validation failed.
+
+Both methods take two arguments, which can be either a JSON string, a file containing JSON, or a Ruby object representing JSON data. The first argument to these methods is always the schema, the second is always the data to validate.
+
+By default, the validator uses (and only supports) the "JSON Schema Draft 3":http://tools.ietf.org/html/draft-zyp-json-schema-03 specification for validation; however, the user is free to specify additional specifications or extend existing ones.
+
+h3. Validate Ruby objects against a Ruby schema
+
 <pre>
 require 'rubygems'
 require 'json-schema'
-
-JSON::Validator.validate('schema.json', 'data.json')
 
 schema = {
   "type" => "object",
@@ -35,19 +48,100 @@ data = {
 }
 
 JSON::Validator.validate(schema, data)
+</pre>
 
-data = [data,data,data]
-JSON::Validator.validate(schema, data, :list => true)
+h3. Validate a JSON string against a JSON schema file
 
+<pre>
+require 'rubygems'
+require 'json-schema'
+  
+JSON::Validator.validate('schema.json', "{'a' : 5}")
+</pre>
+
+h3. Validate a list of objects against a schema that represents the individual objects
+
+<pre>
+require 'rubygems'
+require 'json-schema'
+
+data = ['user','user','user']
+JSON::Validator.validate('user.json', data, :list => true)
+</pre>
+
+h3. Catch a validation error and print it out
+require 'rubygems'
+require 'json-schema'
+
+<pre>
+schema = {
+  "type" => "object",
+  "properties" => {
+    "a" => {"type" => "integer", "required" => true}
+  }
+}
+  
 data = {
   "a" => "taco"
 }
 
 begin
-  JSON::Validator.validate2(schema, data)
-rescue ValidationError
+  JSON::Validator.validate!(schema, data)
+rescue JSON::Schema::ValidationError
   puts $!.message
 end
+</pre>
+
+h3. Extend an existing schema and validating against it
+
+For this example, we are going to extend the "JSON Schema Draft 3":http://tools.ietf.org/html/draft-zyp-json-schema-03 specification by adding a 'bitwise-and' property for validation.
+
+<pre>
+require 'rubygems'
+require 'json-schema'
+  
+class BitwiseAndAttribute < JSON::Schema::Attribute
+  def self.validate(current_schema, data, fragments, validator, options = {})
+    if data.is_a?(Integer) && data & current_schema.schema['bitwise-and'].to_i == 0
+      message = "The property '#{build_fragment(fragments)}' did not evaluate  to true when bitwise-AND'd with  #{current_schema.schema['bitwise-or']}"
+      raise JSON::Schema::ValidationError.new(message, fragments, current_schema)
+    end
+  end
+end
+
+class ExtendedSchema < JSON::Schema::Validator
+  def initialize
+    super
+    extend_schema_definition("http://json-schema.org/draft-03/schema#")
+    @attributes["bitwise-and"] = BitwiseAndAttribute
+    @uri = URI.parse("http://test.com/test.json")
+  end
+  
+  JSON::Validator.register_validator(self.new)
+end
+
+schema = {
+  "$schema" => "http://test.com/test.json",
+  "properties" => {
+    "a" => {
+      "bitwise-and" => 1
+    },
+    "b" => {
+      "type" => "string"
+    }
+  }
+}
+
+data = {
+  "a" => 0
+}
+
+data = {"a" => 1, "b" => "taco"}
+JSON::Validator.validate(schema,data) # => true
+data = {"a" => 1, "b" => 5}
+JSON::Validator.validate(schema,data) # => false
+data = {"a" => 0, "b" => "taco"}
+JSON::Validator.validate(schema,data) # => false
 </pre>
   
 
@@ -56,7 +150,6 @@ h2. Notes
 The following core schema attributes are not implemented:
 
 * default - This library aims to solely be a validator and does not modify an object it is validating.
-* $schema - Support for this will come later, possibly with the ability to validate against other JSON Schema draft versions
 
 The 'format' attribute is only validated for the following values:
 
