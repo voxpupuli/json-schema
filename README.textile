@@ -4,7 +4,7 @@ This library is intended to provide Ruby with an interface for validating JSON o
 
 h2. Dependencies
 
-The JSON::Schema library depends on the ruby JSON gem (json). Support for YAJL and other Ruby parsers is planned.
+The JSON::Schema library has no dependencies if the validation methods are called using Ruby objects. However, either the <code>json</code> or the <code>yajl-ruby</code> gem needs to be installed to validate JSON strings or files containing JSON data.
 
 h2. Installation
 
@@ -18,11 +18,11 @@ From the git repo:
 
 <pre>
 $ gem build json-schema.gemspec
-$ gem install json-schema-0.1.14.gem
+$ gem install json-schema-0.2.0.gem
 </pre>
 
 
-h2. Basic Usage
+h2. Usage
 
 Two base validation methods exist: <code>validate</code> and <code>validate!</code>. The first returns a boolean on whether a validation attempt passes and the latter will throw a <code>JSON::Schema::ValidationError</code> with an appropriate message/trace on where the validation failed.
 
@@ -143,6 +143,16 @@ data = {"a" => 1, "b" => 5}
 JSON::Validator.validate(schema,data) # => false
 data = {"a" => 0, "b" => "taco"}
 JSON::Validator.validate(schema,data) # => false
+</pre>
+
+h2. JSON Backends
+
+The JSON::Schema library currently supports the <code>json</code> and <code>yajl-ruby</code> backend JSON parsers. If either of these libraries are installed, they will be automatically loaded and used to parse any JSON strings supplied by the user.
+
+If more than one of the supported JSON backends are installed, the <code>yajl-ruby</code> parser is used by default. This can be changed by issuing the following before validation:
+
+<pre>
+JSON::Validator.json_backend = :json
 </pre>
   
 
