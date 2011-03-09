@@ -70,10 +70,11 @@ JSON::Validator.validate('user.json', data, :list => true)
 </pre>
 
 h3. Catch a validation error and print it out
-require 'rubygems'
-require 'json-schema'
 
 <pre>
+require 'rubygems'
+require 'json-schema'
+  
 schema = {
   "type" => "object",
   "properties" => {
