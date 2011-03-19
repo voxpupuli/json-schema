@@ -91,8 +91,10 @@ module JSON
           "draft-03"
         when "draft2"
           "draft-02"
+        when "draft1"
+          "draft-01"
         else
-          "unknown"
+          raise JSON::Schema::SchemaError.new("The requested JSON schema version is not supported")
         end
         u = URI.parse("http://json-schema.org/#{@options[:version]}/schema#")
         validator = JSON::Validator.validators["#{u.scheme}://#{u.host}#{u.path}"]
@@ -145,7 +147,7 @@ module JSON
         rescue JSON::ParserError
           # Don't rescue this error, we want JSON formatting issues to bubble up
           raise $!
-        rescue
+        rescue Exception
           # Failures will occur when this URI cannot be referenced yet. Don't worry about it,
           # the proper error will fall out if the ref isn't ever defined
         end
