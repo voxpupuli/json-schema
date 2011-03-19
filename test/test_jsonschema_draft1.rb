@@ -1,7 +1,7 @@
 require 'test/unit'
 require File.dirname(__FILE__) + '/../lib/json-schema'
 
-class JSONSchemaDraft2Test < Test::Unit::TestCase
+class JSONSchemaDraft1Test < Test::Unit::TestCase
   def test_types
     # Set up the default datatype
     schema = {
