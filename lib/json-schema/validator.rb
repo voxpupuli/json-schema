@@ -57,6 +57,7 @@ module JSON
       
       def validate(current_schema, data, fragments)
         current_schema.schema.each do |attr_name,attribute|
+          
           if @attributes.has_key?(attr_name.to_s)
             @attributes[attr_name.to_s].validate(current_schema, data, fragments, self)
           end
@@ -288,7 +289,7 @@ module JSON
       if schema.is_a?(String)
         begin
           # Build a fake URI for this
-          schema_uri = URI.parse("file://#{Dir.pwd}/#{Digest::SHA1.hexdigest(schema)}")
+          schema_uri = URI.parse(UUID.create_v5(schema,UUID::Nil).to_s)
           schema = JSON::Validator.parse(schema)
           if @options[:list]
             schema = {"type" => "array", "items" => schema}
@@ -321,7 +322,7 @@ module JSON
         if @options[:list]
           schema = {"type" => "array", "items" => schema}
         end
-        schema_uri = URI.parse("file://#{Dir.pwd}/#{Digest::SHA1.hexdigest(schema.inspect)}")
+        schema_uri = URI.parse(UUID.create_v5(schema.inspect,UUID::Nil).to_s)
         schema = JSON::Schema.new(schema,schema_uri)
         Validator.add_schema(schema)
       else
