@@ -83,6 +83,8 @@ module JSON
     
     def initialize(schema_data, data, opts={})
       @options = @@default_opts.clone.merge(opts)
+      
+      # I'm not a fan of this, but it's quick and dirty to get it working for now
       if @options[:version]
         @options[:version] = case @options[:version].to_s
         when "draft3"
