@@ -1,6 +1,6 @@
 h1. Ruby JSON Schema Validator
 
-This library is intended to provide Ruby with an interface for validating JSON objects against a JSON schema conforming to "JSON Schema Draft 3":http://tools.ietf.org/html/draft-zyp-json-schema-03. 
+This library is intended to provide Ruby with an interface for validating JSON objects against a JSON schema conforming to "JSON Schema Draft 3":http://tools.ietf.org/html/draft-zyp-json-schema-03. Legacy support for "JSON Schema Draft 2":http://tools.ietf.org/html/draft-zyp-json-schema-02 and "JSON Schema Draft 1":http://tools.ietf.org/html/draft-zyp-json-schema-01 is also included.
 
 h2. Dependencies
 
@@ -18,7 +18,7 @@ From the git repo:
 
 <pre>
 $ gem build json-schema.gemspec
-$ gem install json-schema-0.2.0.gem
+$ gem install json-schema-0.9.0.gem
 </pre>
 
 
@@ -26,9 +26,9 @@ h2. Usage
 
 Two base validation methods exist: <code>validate</code> and <code>validate!</code>. The first returns a boolean on whether a validation attempt passes and the latter will throw a <code>JSON::Schema::ValidationError</code> with an appropriate message/trace on where the validation failed.
 
-Both methods take two arguments, which can be either a JSON string, a file containing JSON, or a Ruby object representing JSON data. The first argument to these methods is always the schema, the second is always the data to validate.
+Both methods take two arguments, which can be either a JSON string, a file containing JSON, or a Ruby object representing JSON data. The first argument to these methods is always the schema, the second is always the data to validate. An optional third options argument is also accepted; available options are used in the examples below.
 
-By default, the validator uses (and only supports) the "JSON Schema Draft 3":http://tools.ietf.org/html/draft-zyp-json-schema-03 specification for validation; however, the user is free to specify additional specifications or extend existing ones.
+By default, the validator uses the "JSON Schema Draft 3":http://tools.ietf.org/html/draft-zyp-json-schema-03 specification for validation; however, the user is free to specify additional specifications or extend existing ones. Legacy support for Draft 1 and Draft 2 is included by either passing an optional <code>:version</code> parameter to the <code>validate</code> method (set either as <code>:draft1</code> or <code>draft2</code>), or by declaring the <code>$schema</code> attribute in the schema and referencing the appropriate specification URI. Note that the <code>$schema</code> attribute takes precedence over the <code>:version</code> option during parsing and validation.
 
 h3. Validate Ruby objects against a Ruby schema
 
@@ -92,6 +92,26 @@ rescue JSON::Schema::ValidationError
   puts $!.message
 end
 </pre>
+
+h3. Validate an object against a JSON Schema Draft 2 schema
+<pre>
+require 'rubygems'
+require 'json-schema'
+
+schema = {
+  "type" => "object",
+  "properties" => {
+    "a" => {"type" => "integer", "optional" => true}
+  }
+}
+
+data = {
+  "a" => 5
+}
+
+JSON::Validator.validate(schema, data, :version => :draft2)
+</pre>
+
 
 h3. Extend an existing schema and validating against it
 
