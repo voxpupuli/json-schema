@@ -57,7 +57,7 @@ module JSON
       
       def validate(current_schema, data, fragments)
         current_schema.schema.each do |attr_name,attribute|
-          
+
           if @attributes.has_key?(attr_name.to_s)
             @attributes[attr_name.to_s].validate(current_schema, data, fragments, self)
           end
@@ -83,7 +83,7 @@ module JSON
     
     def initialize(schema_data, data, opts={})
       @options = @@default_opts.clone.merge(opts)
-      
+
       # I'm not a fan of this, but it's quick and dirty to get it working for now
       if @options[:version]
         @options[:version] = case @options[:version].to_s
@@ -302,12 +302,24 @@ module JSON
     
     
     private
-    
+
+    if Gem.available?('uuidtools')
+      require 'uuidtools'
+      @@fake_uri_generator = lambda{|s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
+    else
+      require 'uri/uuid'
+      @@fake_uri_generator = lambda{|s| UUID.create_v5(s,UUID::Nil).to_s }
+    end
+
+    def fake_uri schema
+      @@fake_uri_generator.call(schema)
+    end
+
     def initialize_schema(schema)
       if schema.is_a?(String)
         begin
           # Build a fake URI for this
-          schema_uri = URI.parse(UUID.create_v5(schema,UUID::Nil).to_s)
+          schema_uri = URI.parse(fake_uri(schema))
           schema = JSON::Validator.parse(schema)
           if @options[:list]
             schema = {"type" => "array", "items" => schema}
@@ -340,7 +352,7 @@ module JSON
         if @options[:list]
           schema = {"type" => "array", "items" => schema}
         end
-        schema_uri = URI.parse(UUID.create_v5(schema.inspect,UUID::Nil).to_s)
+        schema_uri = URI.parse(fake_uri(schema.inspect))
         schema = JSON::Schema.new(schema,schema_uri,@options[:version])
         Validator.add_schema(schema)
       else
