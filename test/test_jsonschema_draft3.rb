@@ -902,81 +902,16 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
   end
   
   
-  def test_format_strings
+  def test_format_union
     data1 = {"a" => "boo"}
-    data2 = {"a" => 5}
+    data2 = {"a" => nil}
     
     schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
-      "properties" => { "a" => {"format" => "regex"}}
+      "properties" => { "a" => {"type" => ["string","null"], "format" => "ip-address"}}
     }
-    assert(JSON::Validator.validate(schema,data1))
-    assert(!JSON::Validator.validate(schema,data2))
-    
-    schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
-      "type" => "object",
-      "properties" => { "a" => {"format" => "color"}}
-    }
-    assert(JSON::Validator.validate(schema,data1))
-    assert(!JSON::Validator.validate(schema,data2))
-    
-    schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
-      "type" => "object",
-      "properties" => { "a" => {"format" => "style"}}
-    }
-    assert(JSON::Validator.validate(schema,data1))
-    assert(!JSON::Validator.validate(schema,data2))
-    
-    schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
-      "type" => "object",
-      "properties" => { "a" => {"format" => "phone"}}
-    }
-    assert(JSON::Validator.validate(schema,data1))
-    assert(!JSON::Validator.validate(schema,data2))
-    
-    schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
-      "type" => "object",
-      "properties" => { "a" => {"format" => "uri"}}
-    }
-    assert(JSON::Validator.validate(schema,data1))
-    assert(!JSON::Validator.validate(schema,data2))
-    
-    schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
-      "type" => "object",
-      "properties" => { "a" => {"format" => "email"}}
-    }
-    assert(JSON::Validator.validate(schema,data1))
-    assert(!JSON::Validator.validate(schema,data2))
-    
-    schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
-      "type" => "object",
-      "properties" => { "a" => {"format" => "host-name"}}
-    }
-    assert(JSON::Validator.validate(schema,data1))
-    assert(!JSON::Validator.validate(schema,data2))
-  end
-  
-  
-  def test_format_numeric
-    data1 = {"a" => "boo"}
-    data2 = {"a" => 5}
-    data3 = {"a" => 5.4}
-    
-    schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
-      "type" => "object",
-      "properties" => { "a" => {"format" => "utc-millisec"}}
-    }
-    assert(!JSON::Validator.validate(schema,data1))
-    assert(JSON::Validator.validate(schema,data2))
-    assert(JSON::Validator.validate(schema,data3))
+    assert(!JSON::Validator.validate(schema,data1,:version => :draft3))
+    assert(JSON::Validator.validate(schema,data2,:version => :draft3))
   end
   
   
