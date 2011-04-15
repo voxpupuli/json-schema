@@ -190,6 +190,7 @@ The 'format' attribute is only validated for the following values:
 * time
 * ip-address
 * ipv6
+* utc-millisec
 
 All other 'format' attribute values are simply checked to ensure the instance value is of the correct datatype (e.g., an instance value is validated to be an integer or a float in the case of 'utc-millisec').
 

@@ -98,6 +98,16 @@ module JSON
               raise ValidationError.new(error_message, fragments, current_schema)
             end
           end
+        # IPv6 in standard format (including abbreviations)
+        when 'utc-millisec'
+          if data.is_a?(String)
+            error_message = "The property '#{build_fragment(fragments)}' must be a timestamp in milliseconds (float or integer)"
+            raise ValidationError.new(error_message, fragments, current_schema) if !data.is_a?(String)
+            r = Regexp.new('^\d+(\.\d{1,3})?$')
+            if !r.match(data)
+              raise ValidationError.new(error_message, fragments, current_schema)
+            end
+          end
         end
       end
     end

@@ -900,6 +900,21 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     data = {"a" => "2010-01-0112:00:00Z"}
     assert(!JSON::Validator.validate(schema,data))
   end
+
+  def test_format_utc_mullisec
+    schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
+      "type" => "object",
+      "properties" => { "a" => {"type" => "string", "format" => "utc-millisec"}}
+    }
+
+    data = {"a" => "2010-01-01T12:00:00Z"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "123.123"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "123"}
+    assert(JSON::Validator.validate(schema,data))
+  end
   
   
   def test_format_union
