@@ -12,14 +12,15 @@ module JSON
           elsif path[0,1] == "/"
             temp_uri.path = Pathname.new(path).cleanpath.to_s
           else
-            temp_uri.path = (Pathname.new(current_schema.uri.path).parent + path).cleanpath.to_s
+            temp_uri.path = (Pathname.new(current_schema.uri.path) + path).cleanpath.to_s
           end
           temp_uri.fragment = current_schema.schema['$ref'].split("#")[1]
         end
         temp_uri.fragment = "" if temp_uri.fragment.nil?
 
         # Grab the parent schema from the schema list
-        schema_key = temp_uri.to_s.split("#")[0]
+        schema_key = temp_uri.to_s.split("#")[0] + "#"
+
         ref_schema = JSON::Validator.schemas[schema_key]
 
         if ref_schema

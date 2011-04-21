@@ -134,9 +134,9 @@ module JSON
         if path && path[0,1] == '/'
           uri.path = Pathname.new(path).cleanpath.to_s
         else
-          uri.path = (Pathname.new(parent_schema.uri.path).parent + path).cleanpath.to_s
+          uri.path = (Pathname.new(parent_schema.uri.path) + path).cleanpath.to_s
         end
-        uri.fragment = nil
+        uri.fragment = ''
       end
       
       if Validator.schemas[uri.to_s].nil?
@@ -156,7 +156,12 @@ module JSON
     
     
     # Build all schemas with IDs, mapping out the namespace
-    def build_schemas(parent_schema)    
+    def build_schemas(parent_schema)  
+      # Build ref schemas if they exist
+      if parent_schema.schema["$ref"]
+        load_ref_schema(parent_schema, parent_schema.schema["$ref"])
+      end
+      
       # Check for schemas in union types
       ["type", "disallow"].each do |key|
         if parent_schema.schema[key] && parent_schema.schema[key].is_a?(Array)
@@ -199,16 +204,12 @@ module JSON
     
     # Either load a reference schema or create a new schema
     def handle_schema(parent_schema, obj)
-      if obj['$ref']
-         load_ref_schema(parent_schema, obj['$ref'])
-       else
-         schema_uri = parent_schema.uri.clone
-         schema = JSON::Schema.new(obj,schema_uri,@options[:version])
-         if obj['id']
-           Validator.add_schema(schema)
-         end
-         build_schemas(schema)
-       end
+      schema_uri = parent_schema.uri.clone
+      schema = JSON::Schema.new(obj,schema_uri,@options[:version])
+      if obj['id']
+        Validator.add_schema(schema)
+      end
+      build_schemas(schema)
     end
         
     
@@ -226,6 +227,7 @@ module JSON
       def validate!(schema, data,opts={})
         validator = JSON::Validator.new(schema, data, opts)
         validator.validate
+        return true
       end
       alias_method 'validate2', 'validate!'
       
