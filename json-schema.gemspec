@@ -14,6 +14,5 @@ spec = Gem::Specification.new do |s|
   s.files = Dir.glob("{lib}/**/*")
   s.require_path = "lib"
   s.test_files = Dir.glob("{test}/**/test*")
-  s.has_rdoc = true
   s.extra_rdoc_files = ["README.textile"]
 end
