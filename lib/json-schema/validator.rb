@@ -269,7 +269,7 @@ module JSON
       
       def json_backend=(backend)
         backend = backend.to_s
-        if @@available_json_backend.include?(backend)
+        if @@available_json_backends.include?(backend)
           @@json_backend = backend
         else
           raise JSON::Schema::JsonParseError.new("The JSON backend '#{backend}' could not be found.")
