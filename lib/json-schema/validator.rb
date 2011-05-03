@@ -310,7 +310,7 @@ module JSON
       @@fake_uri_generator = lambda{|s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
     else
       require 'uri/uuid'
-      @@fake_uri_generator = lambda{|s| UUID.create_v5(s,UUID::Nil).to_s }
+      @@fake_uri_generator = lambda{|s| SimpleUUID::UUID.create_v5(s,SimpleUUID::UUID::Nil).to_s }
     end
 
     def fake_uri schema
