@@ -134,7 +134,7 @@ module JSON
         if path && path[0,1] == '/'
           uri.path = Pathname.new(path).cleanpath.to_s
         else
-          uri.path = (Pathname.new(parent_schema.uri.path) + path).cleanpath.to_s
+          uri = parent_schema.uri.merge(path)
         end
         uri.fragment = ''
       end

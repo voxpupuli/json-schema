@@ -6,10 +6,6 @@ h2. Dependencies
 
 The JSON::Schema library has no dependencies if the validation methods are called using Ruby objects. However, either the <code>json</code> or the <code>yajl-ruby</code> gem needs to be installed to validate JSON strings or files containing JSON data.
 
-h2. 0.9.3 Notes
-
-For those upgrading to version 0.9.3 and above and use external file references, the library changed how files are referenced. The JSON Schema spec clearly states that relative URIs are to be referenced against the parent schema's URI, and not the parent schema's 'parent' URI, as the library previously assumed. 
-
 h2. Installation
 
 From rubygems.org:
@@ -22,7 +18,7 @@ From the git repo:
 
 <pre>
 $ gem build json-schema.gemspec
-$ gem install json-schema-0.9.4.gem
+$ gem install json-schema-0.9.5.gem
 </pre>
 
 

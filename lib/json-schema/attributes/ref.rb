@@ -12,7 +12,7 @@ module JSON
           elsif path[0,1] == "/"
             temp_uri.path = Pathname.new(path).cleanpath.to_s
           else
-            temp_uri.path = (Pathname.new(current_schema.uri.path) + path).cleanpath.to_s
+            temp_uri = current_schema.uri.merge(path)
           end
           temp_uri.fragment = current_schema.schema['$ref'].split("#")[1]
         end

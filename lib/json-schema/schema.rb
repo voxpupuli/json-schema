@@ -13,7 +13,7 @@ module JSON
       if @schema['id']
         temp_uri = URI.parse(@schema['id'])
         if temp_uri.relative?
-          uri.path = (Pathname.new(uri.path) + @schema['id']).cleanpath.to_s
+          uri = uri.merge(@schema['id'])
           temp_uri = uri
         end
         @uri = temp_uri
