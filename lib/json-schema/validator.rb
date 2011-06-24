@@ -6,7 +6,7 @@ require 'digest/sha1'
 require 'date'
 
 module JSON
-  
+
   class Schema
     class ValidationError < Exception
       attr_reader :fragments, :schema
@@ -18,30 +18,30 @@ module JSON
         super(message)
       end
     end
-    
+
     class SchemaError < Exception
     end
-    
+
     class JsonParseError < Exception
     end
-    
+
     class Attribute
       def self.validate(current_schema, data, fragments, validator, options = {})
       end
-      
+
       def self.build_fragment(fragments)
         "#/#{fragments.join('/')}"
       end
     end
-    
+
     class Validator
       attr_accessor :attributes, :uri
-      
+
       def initialize()
         @attributes = {}
         @uri = nil
       end
-      
+
       def extend_schema_definition(schema_uri)
         u = URI.parse(schema_uri)
         validator = JSON::Validator.validators["#{u.scheme}://#{u.host}#{u.path}"]
@@ -50,11 +50,11 @@ module JSON
         end
         @attributes.merge!(validator.attributes)
       end
-      
+
       def to_s
         "#{@uri.scheme}://#{uri.host}#{uri.path}"
       end
-      
+
       def validate(current_schema, data, fragments)
         current_schema.schema.each do |attr_name,attribute|
 
@@ -66,7 +66,7 @@ module JSON
       end
     end
   end
-  
+
 
   class Validator
 
@@ -80,7 +80,7 @@ module JSON
     @@default_validator = nil
     @@available_json_backends = []
     @@json_backend = nil
-    
+
     def initialize(schema_data, data, opts={})
       @options = @@default_opts.clone.merge(opts)
 
@@ -101,11 +101,11 @@ module JSON
         @options[:version] = validator
       end
       @base_schema = initialize_schema(schema_data)
-      @data = initialize_data(data)    
+      @data = initialize_data(data)
       build_schemas(@base_schema)
-    end  
-    
-    
+    end
+
+
     # Run a simple true/false validation of data against a schema
     def validate()
       begin
@@ -117,20 +117,20 @@ module JSON
       end
     end
 
-    
+
     def load_ref_schema(parent_schema,ref)
       uri = URI.parse(ref)
       if uri.relative?
         uri = parent_schema.uri.clone
-        
+
         # Check for absolute path
         path = ref.split("#")[0]
-        
+
         # This is a self reference and thus the schema does not need to be re-loaded
         if path.nil? || path == ''
           return
         end
-        
+
         if path && path[0,1] == '/'
           uri.path = Pathname.new(path).cleanpath.to_s
         else
@@ -138,7 +138,7 @@ module JSON
         end
         uri.fragment = ''
       end
-      
+
       if Validator.schemas[uri.to_s].nil?
         begin
           schema = JSON::Schema.new(JSON::Validator.parse(open(uri.to_s).read), uri, @options[:version])
@@ -153,33 +153,33 @@ module JSON
         end
       end
     end
-    
-    
+
+
     # Build all schemas with IDs, mapping out the namespace
-    def build_schemas(parent_schema)  
+    def build_schemas(parent_schema)
       # Build ref schemas if they exist
       if parent_schema.schema["$ref"]
         load_ref_schema(parent_schema, parent_schema.schema["$ref"])
       end
-      
+
       # Check for schemas in union types
       ["type", "disallow"].each do |key|
         if parent_schema.schema[key] && parent_schema.schema[key].is_a?(Array)
           parent_schema.schema[key].each_with_index do |type,i|
-            if type.is_a?(Hash) 
+            if type.is_a?(Hash)
               handle_schema(parent_schema, type)
             end
           end
         end
       end
-        
+
       # All properties are schemas
       if parent_schema.schema["properties"]
         parent_schema.schema["properties"].each do |k,v|
           handle_schema(parent_schema, v)
         end
       end
-      
+
       # Items are always schemas
       if parent_schema.schema["items"]
         items = parent_schema.schema["items"].clone
@@ -192,16 +192,16 @@ module JSON
           handle_schema(parent_schema, item)
         end
       end
-      
+
       # Each of these might be schemas
       ["additionalProperties", "additionalItems", "dependencies", "extends"].each do |key|
-        if parent_schema.schema[key].is_a?(Hash) 
+        if parent_schema.schema[key].is_a?(Hash)
           handle_schema(parent_schema, parent_schema.schema[key])
         end
       end
-      
+
     end
-    
+
     # Either load a reference schema or create a new schema
     def handle_schema(parent_schema, obj)
       schema_uri = parent_schema.uri.clone
@@ -211,8 +211,8 @@ module JSON
       end
       build_schemas(schema)
     end
-        
-    
+
+
     class << self
       def validate(schema, data,opts={})
         begin
@@ -223,50 +223,50 @@ module JSON
           return false
         end
       end
-    
+
       def validate!(schema, data,opts={})
         validator = JSON::Validator.new(schema, data, opts)
         validator.validate
         return true
       end
       alias_method 'validate2', 'validate!'
-      
+
       def clear_cache
         @@schemas = {} if @@cache_schemas == false
       end
-      
+
       def schemas
         @@schemas
       end
-      
+
       def add_schema(schema)
         @@schemas[schema.uri.to_s] = schema if @@schemas[schema.uri.to_s].nil?
       end
-      
+
       def cache_schemas=(val)
         @@cache_schemas = val == true ? true : false
       end
-      
+
       def validators
         @@validators
       end
-      
+
       def default_validator
         @@default_validator
       end
-      
+
       def register_validator(v)
         @@validators[v.to_s] = v
       end
-      
+
       def register_default_validator(v)
         @@default_validator = v
       end
-      
+
       def json_backend
         @@json_backend
       end
-      
+
       def json_backend=(backend)
         backend = backend.to_s
         if @@available_json_backends.include?(backend)
@@ -275,7 +275,7 @@ module JSON
           raise JSON::Schema::JsonParseError.new("The JSON backend '#{backend}' could not be found.")
         end
       end
-      
+
       def parse(s)
         case @@json_backend.to_s
         when 'json'
@@ -289,23 +289,37 @@ module JSON
         end
       end
     end
-  
-    if Gem.available?('json')
+
+
+    if begin
+        Gem::Specification::find_by_name('json')
+      rescue
+        Gem.available?('json')
+      end
       require 'json'
       @@available_json_backends << 'json'
       @@json_backend = 'json'
     end
-    
-    if Gem.available?('yajl-ruby')
+
+
+    if begin
+        Gem::Specification::find_by_name('yajl-ruby')
+      rescue
+        Gem.available?('yajl-ruby')
+      end
       require 'yajl'
       @@available_json_backends << 'yajl'
       @@json_backend = 'yajl'
     end
-    
-    
+
+
     private
 
-    if Gem.available?('uuidtools')
+    if begin
+        Gem::Specification::find_by_name('uuidtools')
+      rescue
+        Gem.available?('uuidtools')
+      end
       require 'uuidtools'
       @@fake_uri_generator = lambda{|s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
     else
@@ -359,12 +373,12 @@ module JSON
         Validator.add_schema(schema)
       else
         raise "Invalid schema - must be either a string or a hash"
-      end   
-      
+      end
+
       schema
     end
-    
-    
+
+
     def initialize_data(data)
       # Parse the data, if any
       if data.is_a?(String)
@@ -384,6 +398,6 @@ module JSON
       end
       data
     end
-    
+
   end
 end
