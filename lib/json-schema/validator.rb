@@ -293,6 +293,8 @@ module JSON
 
     if begin
         Gem::Specification::find_by_name('json')
+      rescue Gem::LoadError
+        false
       rescue
         Gem.available?('json')
       end
@@ -304,6 +306,8 @@ module JSON
 
     if begin
         Gem::Specification::find_by_name('yajl-ruby')
+      rescue Gem::LoadError
+        false
       rescue
         Gem.available?('yajl-ruby')
       end
@@ -317,6 +321,8 @@ module JSON
 
     if begin
         Gem::Specification::find_by_name('uuidtools')
+      rescue Gem::LoadError
+        false
       rescue
         Gem.available?('uuidtools')
       end
