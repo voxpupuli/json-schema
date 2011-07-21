@@ -15,4 +15,6 @@ spec = Gem::Specification.new do |s|
   s.require_path = "lib"
   s.test_files = Dir.glob("{test}/**/test*")
   s.extra_rdoc_files = ["README.textile"]
+
+  s.add_dependency('json', ['> 0'])
 end
