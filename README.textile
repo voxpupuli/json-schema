@@ -93,6 +93,26 @@ rescue JSON::Schema::ValidationError
 end
 </pre>
 
+h3. Validate a JSON object against a JSON schema object, while also validating the schema itself
+
+<pre>
+require 'rubygems'
+require 'json-schema'
+
+schema = {
+  "type" => "object",
+  "properties" => {
+    "a" => {"type" => "integer", "required" => "true"}  # This will fail schema validation!
+  }
+}
+
+data = {
+  "a" => 5
+}
+
+JSON::Validator.validate(schema, data, :validate_schema => false)
+</pre>
+
 h3. Validate an object against a JSON Schema Draft 2 schema
 
 <pre>
