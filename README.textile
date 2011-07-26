@@ -110,7 +110,7 @@ data = {
   "a" => 5
 }
 
-JSON::Validator.validate(schema, data, :validate_schema => false)
+JSON::Validator.validate(schema, data, :validate_schema => true)
 </pre>
 
 h3. Validate an object against a JSON Schema Draft 2 schema
