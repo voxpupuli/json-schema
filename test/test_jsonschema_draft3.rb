@@ -932,6 +932,41 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     assert(JSON::Validator.validate(schema,data))
   end
   
+  def test_dependency
+    schema = {
+      "type" => "object",
+      "properties" => {
+        "a" => {"type" => "integer"},
+        "b" => {"type" => "integer"}
+      },
+      "dependencies" => {
+        "a" => "b"
+      }
+    }
+    
+    data = {"a" => 1, "b" => 2}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => 1}
+    assert(!JSON::Validator.validate(schema,data))
+    
+    schema = {
+      "type" => "object",
+      "properties" => {
+        "a" => {"type" => "integer"},
+        "b" => {"type" => "integer"},
+        "c" => {"type" => "integer"}
+      },
+      "dependencies" => {
+        "a" => ["b","c"]
+      }
+    }
+    
+    data = {"a" => 1, "c" => 2}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => 1, "b" => 2, "c" => 3}
+    assert(JSON::Validator.validate(schema,data))
+  end
+  
   
 end
 
