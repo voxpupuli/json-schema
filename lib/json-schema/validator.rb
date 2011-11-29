@@ -348,6 +348,17 @@ module JSON
       @@fake_uri_generator = lambda{|s| JSON::Util::UUID.create_v5(s,JSON::Util::UUID::Nil).to_s }
     end
 
+    if @@json_backend == 'yajl'
+      @@serializer = lambda{|o| Yajl::Encoder.encode(o) }
+    else
+      @@serializer = lambda{|o| Marshal.dump(o) }
+    end
+
+    def serialize schema
+      @@serializer.call(schema)
+    end
+
+
     def fake_uri schema
       @@fake_uri_generator.call(schema)
     end
@@ -389,7 +400,7 @@ module JSON
         if @options[:list]
           schema = {"type" => "array", "items" => schema}
         end
-        schema_uri = URI.parse(fake_uri(schema.inspect))
+        schema_uri = URI.parse(fake_uri(serialize(schema)))
         schema = JSON::Schema.new(schema,schema_uri,@options[:version])
         Validator.add_schema(schema)
       else
