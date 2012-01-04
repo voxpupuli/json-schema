@@ -23,7 +23,7 @@ module JSON
 
           if current_schema.schema['additionalProperties'] == false && !extra_properties.empty?
             message = "The property '#{build_fragment(fragments)}' contains additional properties outside of the schema when none are allowed"
-            raise ValidationError.new(message, fragments, current_schema)
+            validation_error(message, fragments, current_schema, options[:record_options])
           elsif current_schema.schema['additionalProperties'].is_a?(Hash)
             extra_properties.each do |key|
               schema = JSON::Schema.new(current_schema.schema['additionalProperties'],current_schema.uri,validator)

@@ -57,13 +57,13 @@ module JSON
             message = "The property '#{build_fragment(fragments)}' matched one or more of the following types:"
             types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
             message.chop!
-            raise ValidationError.new(message, fragments, current_schema)
+            validation_error(message, fragments, current_schema, options[:record_options])
           end
         elsif !valid
           message = "The property '#{build_fragment(fragments)}' did not match one or more of the following types:"
           types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
           message.chop!
-          raise ValidationError.new(message, fragments, current_schema)
+          validation_error(message, fragments, current_schema, options[:record_options])
         end
       end
     end

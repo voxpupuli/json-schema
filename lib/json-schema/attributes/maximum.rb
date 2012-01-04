@@ -6,7 +6,7 @@ module JSON
           if (current_schema.schema['exclusiveMaximum'] ? data >= current_schema.schema['maximum'] : data > current_schema.schema['maximum'])
             message = "The property '#{build_fragment(fragments)}' did not have a maximum value of #{current_schema.schema['maximum']}, "
             message += current_schema.schema['exclusiveMaximum'] ? 'exclusively' : 'inclusively'
-            raise ValidationError.new(message, fragments, current_schema)
+            validation_error(message, fragments, current_schema, options[:record_options])
           end
         end
       end

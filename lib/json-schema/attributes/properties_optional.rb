@@ -6,7 +6,7 @@ module JSON
           current_schema.schema['properties'].each do |property,property_schema|
             if ((property_schema['optional'].nil? || property_schema['optional'] == false) && !data.has_key?(property))
               message = "The property '#{build_fragment(fragments)}' did not contain a required property of '#{property}'"
-              raise ValidationError.new(message, fragments, current_schema)
+              validation_error(message, fragments, current_schema, options[:record_options])
             end
           
             if data.has_key?(property)

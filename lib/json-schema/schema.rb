@@ -34,8 +34,8 @@ module JSON
       end  
     end
     
-    def validate(data, fragments)
-      @validator.validate(self, data, fragments)
+    def validate(data, fragments, options = {})
+      @validator.validate(self, data, fragments, options)
     end
     
     def base_uri

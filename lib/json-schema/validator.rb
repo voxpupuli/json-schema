@@ -32,6 +32,14 @@ module JSON
       def self.build_fragment(fragments)
         "#/#{fragments.join('/')}"
       end
+
+      def self.validation_error(message, fragments, current_schema, record_errors)
+        if record_errors
+
+        else
+          raise ValidationError.new(message, fragments, current_schema)
+        end
+      end
     end
 
     class Validator
@@ -55,11 +63,11 @@ module JSON
         "#{@uri.scheme}://#{uri.host}#{uri.path}"
       end
 
-      def validate(current_schema, data, fragments)
+      def validate(current_schema, data, fragments, options = {})
         current_schema.schema.each do |attr_name,attribute|
 
           if @attributes.has_key?(attr_name.to_s)
-            @attributes[attr_name.to_s].validate(current_schema, data, fragments, self)
+            @attributes[attr_name.to_s].validate(current_schema, data, fragments, self, options)
           end
         end
         data
@@ -75,7 +83,8 @@ module JSON
     @@default_opts = {
       :list => false,
       :version => nil,
-      :validate_schema => false
+      :validate_schema => false,
+      :record_errors => false
     }
     @@validators = {}
     @@default_validator = nil
@@ -103,6 +112,8 @@ module JSON
         validator = JSON::Validator.validators["#{u.scheme}://#{u.host}#{u.path}"]
         @options[:version] = validator
       end
+
+      @validation_options = @options[:record_errors] ? {:record_errors => true} : {}
       
       # validate the schema, if requested
       if @options[:validate_schema]
@@ -124,7 +135,7 @@ module JSON
     # Run a simple true/false validation of data against a schema
     def validate()
       begin
-        @base_schema.validate(@data,[])
+        @base_schema.validate(@data,[],@validation_options)
         Validator.clear_cache
       rescue JSON::Schema::ValidationError
         Validator.clear_cache

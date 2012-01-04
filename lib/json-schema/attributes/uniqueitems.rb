@@ -7,7 +7,7 @@ module JSON
           dupes = d.uniq!
           if dupes
             message = "The property '#{build_fragment(fragments)}' contained duplicated array values"
-            raise ValidationError.new(message, fragments, current_schema)
+            validation_error(message, fragments, current_schema, options[:record_options])
           end
         end
       end

@@ -46,7 +46,8 @@ module JSON
           schema = JSON::Schema.new(target_schema,temp_uri,validator)
           schema.validate(data, fragments)
         else
-          raise ValidationError.new("The referenced schema '#{temp_uri.to_s}' cannot be found", fragments, current_schema)
+          message = "The referenced schema '#{temp_uri.to_s}' cannot be found"
+          validation_error(message, fragments, current_schema, options[:record_options])
         end
       end
     end

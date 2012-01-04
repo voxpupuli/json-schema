@@ -6,7 +6,7 @@ module JSON
           r = Regexp.new(current_schema.schema['pattern'])
           if (r.match(data)).nil?
             message = "The property '#{build_fragment(fragments)}' did not match the regex '#{current_schema.schema['pattern']}'"
-            raise ValidationError.new(message, fragments, current_schema)
+            validation_error(message, fragments, current_schema, options[:record_options])
           end
         end
       end

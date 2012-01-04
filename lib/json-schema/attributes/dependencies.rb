@@ -8,13 +8,13 @@ module JSON
               if dependency_value.is_a?(String)
                 if !data.has_key?(dependency_value)
                   message = "The property '#{build_fragment(fragments)}' has a property '#{property}' that depends on a missing property '#{dependency_value}'"
-                  raise ValidationError.new(message, fragments, current_schema)
+                  validation_error(message, fragments, current_schema, options[:record_options])
                 end
               elsif dependency_value.is_a?(Array)
                 dependency_value.each do |value|
                   if !data.has_key?(value)
                     message = "The property '#{build_fragment(fragments)}' has a property '#{property}' that depends on a missing property '#{value}'"
-                    raise ValidationError.new(message, fragments, current_schema)
+                    validation_error(message, fragments, current_schema, options[:record_options])
                   end
                 end
               else

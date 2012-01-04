@@ -6,7 +6,7 @@ module JSON
           if (current_schema.schema['exclusiveMinimum'] ? data <= current_schema.schema['minimum'] : data < current_schema.schema['minimum'])
             message = "The property '#{build_fragment(fragments)}' did not have a minimum value of #{current_schema.schema['minimum']}, "
             message += current_schema.schema['exclusiveMinimum'] ? 'exclusively' : 'inclusively'
-            raise ValidationError.new(message, fragments, current_schema)
+            validation_error(message, fragments, current_schema, options[:record_options])
           end
         end
       end
