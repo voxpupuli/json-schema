@@ -8,7 +8,7 @@ module JSON
         when 'date-time'
           if data.is_a?(String)
             error_message = "The property '#{build_fragment(fragments)}' must be a date/time in the ISO-8601 format of YYYY-MM-DDThh:mm:ssZ"
-            validation_error(error_message, fragments, current_schema, options[:record_options]) if !data.is_a?(String)
+            validation_error(error_message, fragments, current_schema, options[:record_options]) and return if !data.is_a?(String)
             r = Regexp.new('^\d\d\d\d-\d\d-\d\dT(\d\d):(\d\d):(\d\d)Z$')
             if (m = r.match(data))
               parts = data.split("T")
@@ -16,16 +16,19 @@ module JSON
                 Date.parse(parts[0])
               rescue Exception
                 validation_error(error_message, fragments, current_schema, options[:record_options])
+                return
               end
               begin
-                validation_error(error_message, fragments, current_schema, options[:record_options]) if m[1].to_i > 23
-                validation_error(error_message, fragments, current_schema, options[:record_options]) if m[2].to_i > 59
-                validation_error(error_message, fragments, current_schema, options[:record_options]) if m[3].to_i > 59
+                validation_error(error_message, fragments, current_schema, options[:record_options]) and return if m[1].to_i > 23
+                validation_error(error_message, fragments, current_schema, options[:record_options]) and return if m[2].to_i > 59
+                validation_error(error_message, fragments, current_schema, options[:record_options]) and return if m[3].to_i > 59
               rescue Exception
                 validation_error(error_message, fragments, current_schema, options[:record_options])
+                return
               end
             else
               validation_error(error_message, fragments, current_schema, options[:record_options])
+              return
             end
           end
 
@@ -33,16 +36,18 @@ module JSON
         when 'date'
           if data.is_a?(String)
             error_message = "The property '#{build_fragment(fragments)}' must be a date in the format of YYYY-MM-DD"
-            validation_error(error_message, fragments, current_schema, options[:record_options]) if !data.is_a?(String)
+            validation_error(error_message, fragments, current_schema, options[:record_options]) and return if !data.is_a?(String)
             r = Regexp.new('^\d\d\d\d-\d\d-\d\d$')
             if (m = r.match(data))
               begin
                 Date.parse(data)
               rescue Exception
                 validation_error(error_message, fragments, current_schema, options[:record_options])
+                return
               end
             else
               validation_error(error_message, fragments, current_schema, options[:record_options])
+              return
             end
           end
 
@@ -50,14 +55,15 @@ module JSON
         when 'time'
           if data.is_a?(String)
             error_message = "The property '#{build_fragment(fragments)}' must be a time in the format of hh:mm:ss"
-            raise ValidationError.new(error_message, fragments, current_schema) if !data.is_a?(String)
+            validation_error(error_message, fragments, current_schema, options[:record_options]) and return if !data.is_a?(String)
             r = Regexp.new('^(\d\d):(\d\d):(\d\d)$')
             if (m = r.match(data))
-              validation_error(error_message, fragments, current_schema, options[:record_options]) if m[1].to_i > 23
-              validation_error(error_message, fragments, current_schema, options[:record_options]) if m[2].to_i > 59
-              validation_error(error_message, fragments, current_schema, options[:record_options]) if m[3].to_i > 59
+              validation_error(error_message, fragments, current_schema, options[:record_options]) and return if m[1].to_i > 23
+              validation_error(error_message, fragments, current_schema, options[:record_options]) and return if m[2].to_i > 59
+              validation_error(error_message, fragments, current_schema, options[:record_options]) and return if m[3].to_i > 59
             else
               validation_error(error_message, fragments, current_schema, options[:record_options])
+              return
             end
           end
 
@@ -65,14 +71,15 @@ module JSON
         when 'ip-address', 'ipv4'
           if data.is_a?(String)
             error_message = "The property '#{build_fragment(fragments)}' must be a valid IPv4 address"
-            validation_error(error_message, fragments, current_schema, options[:record_options]) if !data.is_a?(String)
+            validation_error(error_message, fragments, current_schema, options[:record_options]) and return if !data.is_a?(String)
             r = Regexp.new('^(\d+){1,3}\.(\d+){1,3}\.(\d+){1,3}\.(\d+){1,3}$')
             if (m = r.match(data))
               1.upto(4) do |x|
-                validation_error(error_message, fragments, current_schema, options[:record_options]) if m[x].to_i > 255
+                validation_error(error_message, fragments, current_schema, options[:record_options]) and return if m[x].to_i > 255
               end
             else
               validation_error(error_message, fragments, current_schema, options[:record_options])
+              return
             end
           end
 
@@ -80,22 +87,23 @@ module JSON
         when 'ipv6'
           if data.is_a?(String)
             error_message = "The property '#{build_fragment(fragments)}' must be a valid IPv6 address"
-            validation_error(error_message, fragments, current_schema, options[:record_options]) if !data.is_a?(String)
+            validation_error(error_message, fragments, current_schema, options[:record_options]) and return if !data.is_a?(String)
             r = Regexp.new('^[a-f0-9:]+$')
             if (m = r.match(data))
               # All characters are valid, now validate structure
               parts = data.split(":")
-              validation_error(error_message, fragments, current_schema, options[:record_options]) if parts.length > 8
+              validation_error(error_message, fragments, current_schema, options[:record_options]) and return if parts.length > 8
               condensed_zeros = false
               parts.each do |part|
                 if part.length == 0
-                  validation_error(error_message, fragments, current_schema, options[:record_options]) if condensed_zeros
+                  validation_error(error_message, fragments, current_schema, options[:record_options]) and return if condensed_zeros
                   condensed_zeros = true
                 end
-                validation_error(error_message, fragments, current_schema, options[:record_options]) if part.length > 4
+                validation_error(error_message, fragments, current_schema, options[:record_options]) and return if part.length > 4
               end
             else
               validation_error(error_message, fragments, current_schema, options[:record_options])
+              return
             end
           end
         end
