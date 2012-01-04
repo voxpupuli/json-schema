@@ -34,10 +34,11 @@ module JSON
       end
 
       def self.validation_error(message, fragments, current_schema, record_errors)
+        error = ValidationError.new(message, fragments, current_schema)
         if record_errors
-
+          ::JSON::Validator.validation_error(error.message)
         else
-          raise ValidationError.new(message, fragments, current_schema)
+          raise error
         end
       end
     end
@@ -65,7 +66,6 @@ module JSON
 
       def validate(current_schema, data, fragments, options = {})
         current_schema.schema.each do |attr_name,attribute|
-
           if @attributes.has_key?(attr_name.to_s)
             @attributes[attr_name.to_s].validate(current_schema, data, fragments, self, options)
           end
@@ -90,6 +90,7 @@ module JSON
     @@default_validator = nil
     @@available_json_backends = []
     @@json_backend = nil
+    @@errors = []
 
     def initialize(schema_data, data, opts={})
       @options = @@default_opts.clone.merge(opts)
@@ -135,8 +136,10 @@ module JSON
     # Run a simple true/false validation of data against a schema
     def validate()
       begin
+        Validator.clear_errors
         @base_schema.validate(@data,[],@validation_options)
         Validator.clear_cache
+        @@errors
       rescue JSON::Schema::ValidationError
         Validator.clear_cache
         raise $!
@@ -257,8 +260,24 @@ module JSON
       end
       alias_method 'validate2', 'validate!'
 
+
+      def fully_validate(schema, data, opts={})
+        opts[:record_errors] = true
+        validator = JSON::Validator.new(schema, data, opts)
+        validator.validate
+      end
+
+
       def clear_cache
         @@schemas = {} if @@cache_schemas == false
+      end
+
+      def clear_errors
+        @@errors = []
+      end
+
+      def validation_error(error)
+        @@errors.push(error)
       end
 
       def schemas

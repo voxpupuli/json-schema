@@ -11,7 +11,7 @@ module JSON
               if r.match(key)
                 schema = JSON::Schema.new(property_schema,current_schema.uri,validator)
                 fragments << key
-                schema.validate(data[key],fragments)
+                schema.validate(data[key],fragments,options)
                 fragments.pop
               end
             end

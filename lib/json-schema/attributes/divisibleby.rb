@@ -7,7 +7,7 @@ module JSON
              current_schema.schema['divisibleBy'] == 0.0 ||
              (BigDecimal.new(data.to_s) % BigDecimal.new(current_schema.schema['divisibleBy'].to_s)).to_f != 0
              message = "The property '#{build_fragment(fragments)}' was not divisible by #{current_schema.schema['divisibleBy']}"
-             validation_error(message, fragments, current_schema, options[:record_options])
+             validation_error(message, fragments, current_schema, options[:record_errors])
           end
         end
       end

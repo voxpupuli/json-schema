@@ -6,7 +6,7 @@ module JSON
         schemas = [schemas] if !schemas.is_a?(Array)
         schemas.each do |s|
           schema = JSON::Schema.new(s,current_schema.uri,validator)
-          schema.validate(data, fragments)
+          schema.validate(data, fragments, options)
         end
       end
     end

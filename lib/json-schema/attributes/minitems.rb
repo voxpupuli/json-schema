@@ -4,7 +4,7 @@ module JSON
       def self.validate(current_schema, data, fragments, validator, options = {})
         if data.is_a?(Array) && (data.compact.size < current_schema.schema['minItems'])
           message = "The property '#{build_fragment(fragments)}' did not contain a minimum number of items #{current_schema.schema['minItems']}"
-          validation_error(message, fragments, current_schema, options[:record_options])
+          validation_error(message, fragments, current_schema, options[:record_errors])
         end
       end
     end

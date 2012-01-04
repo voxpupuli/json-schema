@@ -42,7 +42,7 @@ module JSON
             # Validate as a schema
             schema = JSON::Schema.new(type,current_schema.uri,validator)
             begin
-              schema.validate(data,fragments)
+              schema.validate(data,fragments,options)
               valid = true
             rescue ValidationError
               # We don't care that these schemas don't validate - we only care that one validated
@@ -57,13 +57,13 @@ module JSON
             message = "The property '#{build_fragment(fragments)}' matched one or more of the following types:"
             types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
             message.chop!
-            validation_error(message, fragments, current_schema, options[:record_options])
+            validation_error(message, fragments, current_schema, options[:record_errors])
           end
         elsif !valid
           message = "The property '#{build_fragment(fragments)}' did not match one or more of the following types:"
           types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
           message.chop!
-          validation_error(message, fragments, current_schema, options[:record_options])
+          validation_error(message, fragments, current_schema, options[:record_errors])
         end
       end
     end

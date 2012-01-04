@@ -16,7 +16,7 @@ module JSON
             end
           }
           message.chop!
-          validation_error(message, fragments, current_schema, options[:record_options])
+          validation_error(message, fragments, current_schema, options[:record_errors])
         end
       end
     end
