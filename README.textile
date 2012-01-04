@@ -18,15 +18,15 @@ From the git repo:
 
 <pre>
 $ gem build json-schema.gemspec
-$ gem install json-schema-0.9.12.gem
+$ gem install json-schema-1.0.0.gem
 </pre>
 
 
 h2. Usage
 
-Two base validation methods exist: <code>validate</code> and <code>validate!</code>. The first returns a boolean on whether a validation attempt passes and the latter will throw a <code>JSON::Schema::ValidationError</code> with an appropriate message/trace on where the validation failed.
+Three base validation methods exist: <code>validate</code>, <code>validate!</code>, and <code>fully_validate</code>. The first returns a boolean on whether a validation attempt passes and the second will throw a <code>JSON::Schema::ValidationError</code> with an appropriate message/trace on where the validation failed. The third validation method does not immediately fail upon a validation error and instead builds an array of validation errors return when validation is complete.
 
-Both methods take two arguments, which can be either a JSON string, a file containing JSON, or a Ruby object representing JSON data. The first argument to these methods is always the schema, the second is always the data to validate. An optional third options argument is also accepted; available options are used in the examples below.
+All methods take two arguments, which can be either a JSON string, a file containing JSON, or a Ruby object representing JSON data. The first argument to these methods is always the schema, the second is always the data to validate. An optional third options argument is also accepted; available options are used in the examples below.
 
 By default, the validator uses the "JSON Schema Draft 3":http://tools.ietf.org/html/draft-zyp-json-schema-03 specification for validation; however, the user is free to specify additional specifications or extend existing ones. Legacy support for Draft 1 and Draft 2 is included by either passing an optional <code>:version</code> parameter to the <code>validate</code> method (set either as <code>:draft1</code> or <code>draft2</code>), or by declaring the <code>$schema</code> attribute in the schema and referencing the appropriate specification URI. Note that the <code>$schema</code> attribute takes precedence over the <code>:version</code> option during parsing and validation.
 
