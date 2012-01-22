@@ -8,7 +8,7 @@ require 'date'
 module JSON
 
   class Schema
-    class ValidationError < Exception
+    class ValidationError < StandardError
       attr_reader :fragments, :schema
 
       def initialize(message, fragments, schema)
@@ -19,10 +19,10 @@ module JSON
       end
     end
 
-    class SchemaError < Exception
+    class SchemaError < StandardError
     end
 
-    class JsonParseError < Exception
+    class JsonParseError < StandardError
     end
 
     class Attribute
