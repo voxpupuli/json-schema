@@ -22,7 +22,7 @@ module JSON
           end
 
           if current_schema.schema['additionalProperties'] == false && !extra_properties.empty?
-            message = "The property '#{build_fragment(fragments)}' contains additional properties outside of the schema when none are allowed"
+            message = "The property '#{build_fragment(fragments)}' contains additional properties #{extra_properties.inspect} outside of the schema when none are allowed"
             validation_error(message, fragments, current_schema, options[:record_errors])
           elsif current_schema.schema['additionalProperties'].is_a?(Hash)
             extra_properties.each do |key|
