@@ -10,6 +10,9 @@ module JSON
       @uri = uri
       
       # If there is an ID on this schema, use it to generate the URI
+      if @schema.is_a? String
+        @schema = JSON.parse(open(@schema).read)
+      end
       if @schema['id']
         temp_uri = URI.parse(@schema['id'])
         if temp_uri.relative?
