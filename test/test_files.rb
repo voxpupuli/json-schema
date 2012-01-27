@@ -16,13 +16,13 @@ class JSONSchemaTest < Test::Unit::TestCase
   
   def test_data_from_file
     schema = {"type" => "object", "properties" => {"a" => {"type" => "integer"}}}
-    assert(JSON::Validator.validate(schema,File.join(File.dirname(__FILE__),"data/good_data_1.json")))
-    assert(!JSON::Validator.validate(schema,File.join(File.dirname(__FILE__),"data/bad_data_1.json")))
+    assert(JSON::Validator.validate_uri(schema,File.join(File.dirname(__FILE__),"data/good_data_1.json")))
+    assert(!JSON::Validator.validate_uri(schema,File.join(File.dirname(__FILE__),"data/bad_data_1.json")))
   end
   
   def test_both_from_file
-    assert(JSON::Validator.validate(File.join(File.dirname(__FILE__),"schemas/good_schema_1.json"),File.join(File.dirname(__FILE__),"data/good_data_1.json")))
-    assert(!JSON::Validator.validate(File.join(File.dirname(__FILE__),"schemas/good_schema_1.json"),File.join(File.dirname(__FILE__),"data/bad_data_1.json")))
+    assert(JSON::Validator.validate_uri(File.join(File.dirname(__FILE__),"schemas/good_schema_1.json"),File.join(File.dirname(__FILE__),"data/good_data_1.json")))
+    assert(!JSON::Validator.validate_uri(File.join(File.dirname(__FILE__),"schemas/good_schema_1.json"),File.join(File.dirname(__FILE__),"data/bad_data_1.json")))
   end
     
   def test_file_ref
