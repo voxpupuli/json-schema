@@ -90,23 +90,32 @@ module JSON
     @@default_validator = nil
     @@errors = []
 
+    def self.version_string_for(version)
+      # I'm not a fan of this, but it's quick and dirty to get it working for now
+      return "draft-03" unless version
+      case version.to_s
+      when "draft3"
+        "draft-03"
+      when "draft2"
+        "draft-02"
+      when "draft1"
+        "draft-01"
+      else
+        raise JSON::Schema::SchemaError.new("The requested JSON schema version is not supported")
+      end
+    end
+
+    def self.metaschema_for(version_string)
+      File.join(Pathname.new(File.dirname(__FILE__)).parent.parent, "resources", "#{version_string}.json").to_s
+    end
+
     def initialize(schema_data, data, opts={})
       @options = @@default_opts.clone.merge(opts)
 
       # I'm not a fan of this, but it's quick and dirty to get it working for now
       version_string = "draft-03"
       if @options[:version]
-        @options[:version] = case @options[:version].to_s
-        when "draft3"
-          "draft-03"
-        when "draft2"
-          "draft-02"
-        when "draft1"
-          "draft-01"
-        else
-          raise JSON::Schema::SchemaError.new("The requested JSON schema version is not supported")
-        end
-        version_string = @options[:version]
+        version_string = @options[:version] = self.class.version_string_for(@options[:version])
         u = URI.parse("http://json-schema.org/#{@options[:version]}/schema#")
         validator = JSON::Validator.validators["#{u.scheme}://#{u.host}#{u.path}"]
         @options[:version] = validator
@@ -117,8 +126,7 @@ module JSON
       # validate the schema, if requested
       if @options[:validate_schema]
         begin
-          metaschema_file = File.join(Pathname.new(File.dirname(__FILE__)).parent.parent, "resources", "#{version_string}.json").to_s          
-          meta_validator = JSON::Validator.new(metaschema_file, schema_data)
+          meta_validator = JSON::Validator.new(self.class.metaschema_for(version_string), schema_data)
           meta_validator.validate
         rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
           raise $!
