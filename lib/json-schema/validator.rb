@@ -273,6 +273,12 @@ module JSON
         validator.validate
       end
 
+      def fully_validate_schema(schema, opts={})
+        data = schema
+        schema = metaschema_for(version_string_for(opts[:version]))
+        fully_validate(schema, data, opts)
+      end
+
 
       def clear_cache
         @@schemas = {} if @@cache_schemas == false
