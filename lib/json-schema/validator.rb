@@ -88,9 +88,26 @@ module JSON
     }
     @@validators = {}
     @@default_validator = nil
-    @@available_json_backends = []
-    @@json_backend = nil
     @@errors = []
+
+    def self.version_string_for(version)
+      # I'm not a fan of this, but it's quick and dirty to get it working for now
+      return "draft-03" unless version
+      case version.to_s
+      when "draft3"
+        "draft-03"
+      when "draft2"
+        "draft-02"
+      when "draft1"
+        "draft-01"
+      else
+        raise JSON::Schema::SchemaError.new("The requested JSON schema version is not supported")
+      end
+    end
+
+    def self.metaschema_for(version_string)
+      File.join(Pathname.new(File.dirname(__FILE__)).parent.parent, "resources", "#{version_string}.json").to_s
+    end
 
     def initialize(schema_data, data, opts={})
       @options = @@default_opts.clone.merge(opts)
@@ -98,17 +115,7 @@ module JSON
       # I'm not a fan of this, but it's quick and dirty to get it working for now
       version_string = "draft-03"
       if @options[:version]
-        @options[:version] = case @options[:version].to_s
-        when "draft3"
-          "draft-03"
-        when "draft2"
-          "draft-02"
-        when "draft1"
-          "draft-01"
-        else
-          raise JSON::Schema::SchemaError.new("The requested JSON schema version is not supported")
-        end
-        version_string = @options[:version]
+        version_string = @options[:version] = self.class.version_string_for(@options[:version])
         u = URI.parse("http://json-schema.org/#{@options[:version]}/schema#")
         validator = JSON::Validator.validators["#{u.scheme}://#{u.host}#{u.path}"]
         @options[:version] = validator
@@ -119,8 +126,7 @@ module JSON
       # validate the schema, if requested
       if @options[:validate_schema]
         begin
-          metaschema_file = File.join(Pathname.new(File.dirname(__FILE__)).parent.parent, "resources", "#{version_string}.json").to_s          
-          meta_validator = JSON::Validator.new(metaschema_file, schema_data)
+          meta_validator = JSON::Validator.new(self.class.metaschema_for(version_string), schema_data)
           meta_validator.validate
         rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
           raise $!
@@ -267,6 +273,12 @@ module JSON
         validator.validate
       end
 
+      def fully_validate_schema(schema, opts={})
+        data = schema
+        schema = metaschema_for(version_string_for(opts[:version]))
+        fully_validate(schema, data, opts)
+      end
+
 
       def clear_cache
         @@schemas = {} if @@cache_schemas == false
@@ -308,59 +320,14 @@ module JSON
         @@default_validator = v
       end
 
-      def json_backend
-        @@json_backend
-      end
-
       def json_backend=(backend)
-        backend = backend.to_s
-        if @@available_json_backends.include?(backend)
-          @@json_backend = backend
-        else
-          raise JSON::Schema::JsonParseError.new("The JSON backend '#{backend}' could not be found.")
-        end
+        warn "json_backend= is deprecated. Use MultiJson.engine= instead"
       end
 
       def parse(s)
-        case @@json_backend.to_s
-        when 'json'
-          JSON.parse(s)
-        when 'yajl'
-          json = StringIO.new(s)
-          parser = Yajl::Parser.new
-          parser.parse(json)
-        else
-          raise JSON::Schema::JsonParseError.new("No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json")
-        end
+        MultiJson.decode(s)
       end
     end
-
-
-    if begin
-        Gem::Specification::find_by_name('json')
-      rescue Gem::LoadError
-        false
-      rescue
-        Gem.available?('json')
-      end
-      require 'json'
-      @@available_json_backends << 'json'
-      @@json_backend = 'json'
-    end
-
-
-    if begin
-        Gem::Specification::find_by_name('yajl-ruby')
-      rescue Gem::LoadError
-        false
-      rescue
-        Gem.available?('yajl-ruby')
-      end
-      require 'yajl'
-      @@available_json_backends << 'yajl'
-      @@json_backend = 'yajl'
-    end
-
 
     private
 
@@ -378,16 +345,9 @@ module JSON
       @@fake_uri_generator = lambda{|s| JSON::Util::UUID.create_v5(s,JSON::Util::UUID::Nil).to_s }
     end
 
-    if @@json_backend == 'yajl'
-      @@serializer = lambda{|o| Yajl::Encoder.encode(o) }
-    else
-      @@serializer = lambda{|o| Marshal.dump(o) }
-    end
-
     def serialize schema
-      @@serializer.call(schema)
+      MultiJson.encode(schema)
     end
-
 
     def fake_uri schema
       @@fake_uri_generator.call(schema)

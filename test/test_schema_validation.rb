@@ -2,32 +2,42 @@ require 'test/unit'
 require File.dirname(__FILE__) + '/../lib/json-schema'
 
 class JSONSchemaValidation < Test::Unit::TestCase
-    
-  def test_draft03_validation
-    if JSON::Validator.json_backend != nil
-      data = {"b" => {"a" => 5}}
-      schema = {
-        "$schema" => "http://json-schema.org/draft-03/schema#",
-        "type" => "object",
-        "properties" => {
-          "b" => {
-            "required" => true
-          }
+  def valid_schema
+    {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
+      "type" => "object",
+      "properties" => {
+        "b" => {
+          "required" => true
         }
       }
-      
-      assert(JSON::Validator.validate(schema,data,:validate_schema => true))
-    
-      schema = {
-        "$schema" => "http://json-schema.org/draft-03/schema#",
-        "type" => "object",
-        "properties" => {
-          "b" => {
-            "required" => "true"
-          }
+    }
+  end
+
+  def invalid_schema
+    {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
+      "type" => "object",
+      "properties" => {
+        "b" => {
+          "required" => "true"
         }
-      }     
-      assert(!JSON::Validator.validate(schema,data,:validate_schema => true))
-    end
+      }
+    }
+  end
+
+  def test_draft03_validation
+    data = {"b" => {"a" => 5}}
+    assert(JSON::Validator.validate(valid_schema,data,:validate_schema => true))
+    assert(!JSON::Validator.validate(invalid_schema,data,:validate_schema => true))
+  end
+
+  def test_validate_just_schema
+    errors = JSON::Validator.fully_validate_schema(valid_schema)
+    assert_equal [], errors
+
+    errors = JSON::Validator.fully_validate_schema(invalid_schema)
+    assert_equal 1, errors.size
+    assert_match /the property .*required.*did not match/i, errors.first
   end
 end
