@@ -88,8 +88,6 @@ module JSON
     }
     @@validators = {}
     @@default_validator = nil
-    @@available_json_backends = []
-    @@json_backend = nil
     @@errors = []
 
     def initialize(schema_data, data, opts={})
@@ -308,59 +306,14 @@ module JSON
         @@default_validator = v
       end
 
-      def json_backend
-        @@json_backend
-      end
-
       def json_backend=(backend)
-        backend = backend.to_s
-        if @@available_json_backends.include?(backend)
-          @@json_backend = backend
-        else
-          raise JSON::Schema::JsonParseError.new("The JSON backend '#{backend}' could not be found.")
-        end
+        warn "json_backend= is deprecated. Use MultiJson.engine= instead"
       end
 
       def parse(s)
-        case @@json_backend.to_s
-        when 'json'
-          JSON.parse(s)
-        when 'yajl'
-          json = StringIO.new(s)
-          parser = Yajl::Parser.new
-          parser.parse(json)
-        else
-          raise JSON::Schema::JsonParseError.new("No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json")
-        end
+        MultiJson.decode(s)
       end
     end
-
-
-    if begin
-        Gem::Specification::find_by_name('json')
-      rescue Gem::LoadError
-        false
-      rescue
-        Gem.available?('json')
-      end
-      require 'json'
-      @@available_json_backends << 'json'
-      @@json_backend = 'json'
-    end
-
-
-    if begin
-        Gem::Specification::find_by_name('yajl-ruby')
-      rescue Gem::LoadError
-        false
-      rescue
-        Gem.available?('yajl-ruby')
-      end
-      require 'yajl'
-      @@available_json_backends << 'yajl'
-      @@json_backend = 'yajl'
-    end
-
 
     private
 
@@ -378,16 +331,9 @@ module JSON
       @@fake_uri_generator = lambda{|s| JSON::Util::UUID.create_v5(s,JSON::Util::UUID::Nil).to_s }
     end
 
-    if @@json_backend == 'yajl'
-      @@serializer = lambda{|o| Yajl::Encoder.encode(o) }
-    else
-      @@serializer = lambda{|o| Marshal.dump(o) }
-    end
-
     def serialize schema
-      @@serializer.call(schema)
+      MultiJson.encode(schema)
     end
-
 
     def fake_uri schema
       @@fake_uri_generator.call(schema)
