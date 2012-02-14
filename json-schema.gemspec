@@ -14,6 +14,5 @@ spec = Gem::Specification.new do |s|
   s.files = Dir[ "lib/**/*", "resources/*.json" ]
   s.require_path = "lib"
   s.test_files = Dir[ "test/**/test*", "test/{data,schemas}/*.json" ]
-  s.extra_rdoc_files = ["README.textile"]
-  s.add_dependency 'multi_json', '~> 1.0.4'
+  s.extra_rdoc_files = ["README.textile","LICENSE.md","LICENSE-multi_json.md"]
 end

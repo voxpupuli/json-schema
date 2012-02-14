@@ -320,8 +320,13 @@ module JSON
         @@default_validator = v
       end
 
+      def json_backend
+        MultiJson.engine
+      end
+      
       def json_backend=(backend)
-        warn "json_backend= is deprecated. Use MultiJson.engine= instead"
+        backend = 'json_gem' if backend.to_s == 'json'
+        MultiJson.engine = backend
       end
 
       def parse(s)
