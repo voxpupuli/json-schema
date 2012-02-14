@@ -18,7 +18,7 @@ From the git repo:
 
 <pre>
 $ gem build json-schema.gemspec
-$ gem install json-schema-1.0.3.gem
+$ gem install json-schema-1.0.4.gem
 </pre>
 
 
@@ -91,6 +91,54 @@ begin
 rescue JSON::Schema::ValidationError
   puts $!.message
 end
+</pre>
+
+
+h3. Fully validate against a schema and catch all errors
+
+<pre>
+require 'rubygems'
+require 'json-schema'
+  
+schema = {
+  "type" => "object",
+  "properties" => {
+    "a" => {"type" => "integer", "required" => true},
+    "b" => {"type" => "string", "required" => "true"}
+  }
+}
+  
+data = {
+  "a" => "taco"
+}
+
+errors = JSON::Validator.fully_validate(schema, data)
+
+# ["The property '#/a' of type String did not match the following type: integer in schema 03179a21-197e-5414-9611-e9f63e8324cd#", "The property '#/' did not contain a required property of 'b' in schema 03179a21-197e-5414-9611-e9f63e8324cd#"] 
+</pre>
+
+h3. Fully validate against a schema and catch all errors as objects
+
+<pre>
+require 'rubygems'
+require 'json-schema'
+  
+schema = {
+  "type" => "object",
+  "properties" => {
+    "a" => {"type" => "integer", "required" => true},
+    "b" => {"type" => "string", "required" => "true"}
+  }
+}
+  
+data = {
+  "a" => "taco"
+}
+
+errors = JSON::Validator.fully_validate(schema, data, :errors_as_objects => true)
+
+# [{:message=>"The property '#/a' of type String did not match the following type: integer in schema 03179a21-197e-5414-9611-e9f63e8324cd#", :schema=>#<URI::Generic:0x103a76198 URL:03179a21-197e-5414-9611-e9f63e8324cd#>, :failed_attribute=>"Type", :fragment=>"#/a"}, {:message=>"The property '#/' did not contain a required property of 'b' in schema 03179a21-197e-5414-9611-e9f63e8324cd#", :schema=>#<URI::Generic:0x103a76198 URL:03179a21-197e-5414-9611-e9f63e8324cd#>, :failed_attribute=>"Properties", :fragment=>"#/"}]
+
 </pre>
 
 h3. Validate a JSON object against a JSON schema object, while also validating the schema itself

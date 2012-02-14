@@ -9,13 +9,33 @@ module JSON
 
   class Schema
     class ValidationError < StandardError
-      attr_reader :fragments, :schema
+      attr_accessor :fragments, :schema, :failed_attribute, :sub_errors
 
-      def initialize(message, fragments, schema)
-        @fragments = fragments
+      def initialize(message, fragments, failed_attribute, schema)
+        @fragments = fragments.clone
         @schema = schema
+        @sub_errors = []
+        @failed_attribute = failed_attribute
         message = "#{message} in schema #{schema.uri}"
         super(message)
+      end
+      
+      def to_string
+        if @sub_errors.empty?
+          message
+        else
+          full_message = message + "\n The schema specific errors were:\n"
+          @sub_errors.each{|e| full_message = full_message + " - " + e.to_string + "\n"}
+          full_message
+        end
+      end
+      
+      def to_hash
+        base = {:schema => @schema.uri, :fragment => ::JSON::Schema::Attribute.build_fragment(fragments), :message => message, :failed_attribute => @failed_attribute.to_s.split(":").last.split("Attribute").first}
+        if !@sub_errors.empty?
+          base[:errors] = @sub_errors.map{|e| e.to_hash}
+        end
+        base
       end
     end
 
@@ -33,13 +53,17 @@ module JSON
         "#/#{fragments.join('/')}"
       end
 
-      def self.validation_error(message, fragments, current_schema, record_errors)
-        error = ValidationError.new(message, fragments, current_schema)
+      def self.validation_error(message, fragments, current_schema, failed_attribute, record_errors)
+        error = ValidationError.new(message, fragments, failed_attribute, current_schema)
         if record_errors
-          ::JSON::Validator.validation_error(error.message)
+          ::JSON::Validator.validation_error(error)
         else
           raise error
         end
+      end
+      
+      def self.validation_errors
+        ::JSON::Validator.validation_errors
       end
     end
 
@@ -84,7 +108,8 @@ module JSON
       :list => false,
       :version => nil,
       :validate_schema => false,
-      :record_errors => false
+      :record_errors => false,
+      :errors_as_objects => false
     }
     @@validators = {}
     @@default_validator = nil
@@ -148,7 +173,11 @@ module JSON
         Validator.clear_errors
         @base_schema.validate(@data,[],@validation_options)
         Validator.clear_cache
-        @@errors
+        if @options[:errors_as_objects]
+          @@errors.map{|e| e.to_hash}
+        else
+          @@errors.map{|e| e.to_string}
+        end
       rescue JSON::Schema::ValidationError
         Validator.clear_cache
         raise $!
@@ -293,6 +322,10 @@ module JSON
 
       def validation_error(error)
         @@errors.push(error)
+      end
+      
+      def validation_errors
+        @@errors
       end
 
       def schemas

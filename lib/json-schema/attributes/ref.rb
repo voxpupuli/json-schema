@@ -47,7 +47,7 @@ module JSON
           schema.validate(data, fragments, options)
         else
           message = "The referenced schema '#{temp_uri.to_s}' cannot be found"
-          validation_error(message, fragments, current_schema, options[:record_errors])
+          validation_error(message, fragments, current_schema, self, options[:record_errors])
         end
       end
     end

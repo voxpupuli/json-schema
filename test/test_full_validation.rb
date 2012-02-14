@@ -35,4 +35,114 @@ class JSONFullValidation < Test::Unit::TestCase
     errors = JSON::Validator.fully_validate(schema,data)
     assert(errors.length == 2)
   end
+  
+  def test_full_validation_with_union_types
+    data = {"b" => 5}
+    schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
+      "type" => "object",
+      "properties" => {
+        "b" => {
+          "type" => ["null","integer"]
+        }
+      }
+    }
+    
+    errors = JSON::Validator.fully_validate(schema,data)
+    assert(errors.empty?)
+    
+    schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
+      "type" => "object",
+      "properties" => {
+        "b" => {
+          "type" => ["integer","null"]
+        }
+      }
+    }
+    
+    errors = JSON::Validator.fully_validate(schema,data)
+    assert(errors.empty?)
+    
+    data = {"b" => "a string"}
+    
+    errors = JSON::Validator.fully_validate(schema,data)
+    assert(errors.length == 1)
+   
+    schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
+      "type" => "object",
+      "properties" => {
+        "b" => {
+          "type" => [
+            {
+              "type" => "object",
+              "properties" => {
+                "c" => {"type" => "string"}
+              }
+            },
+            {
+              "type" => "object",
+              "properties" => {
+                "d" => {"type" => "integer"}
+              }
+            }
+          ]
+        }
+      }
+    }
+    
+    data = {"b" => {"c" => "taco"}}
+    
+    errors = JSON::Validator.fully_validate(schema,data)
+    assert(errors.empty?)
+    
+    data = {"b" => {"d" => 6}}
+    
+    errors = JSON::Validator.fully_validate(schema,data)
+    assert(errors.empty?)
+    
+    data = {"b" => {"c" => 6, "d" => "OH GOD"}}
+    
+    errors = JSON::Validator.fully_validate(schema,data)
+    assert(errors.length == 1)
+  end
+  
+  
+  def test_full_validation_with_object_errors
+    data = {"b" => {"a" => 5}}
+    schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
+      "type" => "object",
+      "properties" => {
+        "b" => {
+          "required" => true
+        }
+      }
+    }
+    
+    errors = JSON::Validator.fully_validate(schema,data,:errors_as_objects => true)
+    assert(errors.empty?)
+
+    data = {"c" => 5}
+    schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
+      "type" => "object",
+      "properties" => {
+        "b" => {
+          "required" => true
+        },
+        "c" => {
+          "type" => "string"
+        }
+      }
+    }
+
+    errors = JSON::Validator.fully_validate(schema,data,:errors_as_objects => true)
+    assert(errors.length == 2)
+    assert(errors[0][:failed_attribute] == "Properties")
+    assert(errors[0][:fragment] == "#/")
+    assert(errors[1][:failed_attribute] == "Type")
+    assert(errors[1][:fragment] == "#/c")
+  end
 end

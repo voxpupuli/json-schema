@@ -44,7 +44,9 @@ module JSON
       parts.join('/') + '/'
     end
 
-    
+    def to_s
+      @schema.to_json
+    end
   end
 end
 

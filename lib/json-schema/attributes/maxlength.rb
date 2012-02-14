@@ -5,7 +5,7 @@ module JSON
         if data.is_a?(String)
           if data.length > current_schema.schema['maxLength']
             message = "The property '#{build_fragment(fragments)}' was not of a maximum string length of #{current_schema.schema['maxLength']}"
-            validation_error(message, fragments, current_schema, options[:record_errors])
+            validation_error(message, fragments, current_schema, self, options[:record_errors])
           end
         end
       end
