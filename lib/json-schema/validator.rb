@@ -88,7 +88,10 @@ module JSON
     }
     @@validators = {}
     @@default_validator = nil
+    @@available_json_backends = []
+    @@json_backend = nil
     @@errors = []
+    @@serializer = nil
 
     def self.version_string_for(version)
       # I'm not a fan of this, but it's quick and dirty to get it working for now
@@ -321,16 +324,74 @@ module JSON
       end
 
       def json_backend
-        MultiJson.engine
+        if defined?(MultiJson)
+          MultiJson.engine
+        else
+          @@json_backend
+        end
       end
       
       def json_backend=(backend)
-        backend = 'json_gem' if backend.to_s == 'json'
-        MultiJson.engine = backend
+        if defined?(MultiJson)
+          backend = backend == 'json' ? 'json_gem' : backend
+          MultiJson.engine = backend
+        else
+          backend = backend.to_s
+          if @@available_json_backends.include?(backend)
+            @@json_backend = backend
+          else
+            raise JSON::Schema::JsonParseError.new("The JSON backend '#{backend}' could not be found.")
+          end
+        end
       end
 
       def parse(s)
-        MultiJson.decode(s)
+        if defined?(MultiJson)
+          MultiJson.decode(s)
+        else
+          case @@json_backend.to_s
+          when 'json'
+            JSON.parse(s)
+          when 'yajl'
+            json = StringIO.new(s)
+            parser = Yajl::Parser.new
+            parser.parse(json)
+          else
+            raise JSON::Schema::JsonParseError.new("No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json")
+          end
+        end
+      end
+      
+      if !defined?(MultiJson)
+        if begin
+            Gem::Specification::find_by_name('json')
+          rescue Gem::LoadError
+            false
+          rescue
+            Gem.available?('json')
+          end
+          require 'json'
+          @@available_json_backends << 'json'
+          @@json_backend = 'json'
+        end
+
+        if begin
+            Gem::Specification::find_by_name('yajl-ruby')
+          rescue Gem::LoadError
+            false
+          rescue
+            Gem.available?('yajl-ruby')
+          end
+          require 'yajl'
+          @@available_json_backends << 'yajl'
+          @@json_backend = 'yajl'
+        end
+        
+        if @@json_backend == 'yajl'
+          @@serializer = lambda{|o| Yajl::Encoder.encode(o) }
+        else
+          @@serializer = lambda{|o| Marshal.dump(o) }  	  
+        end
       end
     end
 
@@ -351,7 +412,11 @@ module JSON
     end
 
     def serialize schema
-      MultiJson.encode(schema)
+      if defined?(MultiJson)
+        MultiJson.encode(schema)
+      else
+        @@serializer.call(schema)
+      end
     end
 
     def fake_uri schema
