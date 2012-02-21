@@ -228,6 +228,9 @@ module JSON
       if parent_schema.schema["$ref"]
         load_ref_schema(parent_schema, parent_schema.schema["$ref"])
       end
+      if parent_schema.schema["extends"] && parent_schema.schema["extends"].is_a?(String)
+        load_ref_schema(parent_schema, parent_schema.schema["extends"])
+      end
 
       # Check for schemas in union types
       ["type", "disallow"].each do |key|
@@ -271,12 +274,14 @@ module JSON
 
     # Either load a reference schema or create a new schema
     def handle_schema(parent_schema, obj)
-      schema_uri = parent_schema.uri.clone
-      schema = JSON::Schema.new(obj,schema_uri,@options[:version])
-      if obj['id']
-        Validator.add_schema(schema)
+      if obj.is_a?(Hash)
+        schema_uri = parent_schema.uri.clone
+        schema = JSON::Schema.new(obj,schema_uri,@options[:version])
+        if obj['id']
+          Validator.add_schema(schema)
+        end
+        build_schemas(schema)
       end
-      build_schemas(schema)
     end
 
 
