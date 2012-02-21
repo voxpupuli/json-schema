@@ -89,6 +89,9 @@ module JSON
       end
 
       def validate(current_schema, data, fragments, options = {})
+        if current_schema.schema.is_a?(String)
+          current_schema.schema = Yajl::Parser.new.parse(open(current_schema.schema))
+        end
         current_schema.schema.each do |attr_name,attribute|
           if @attributes.has_key?(attr_name.to_s)
             @attributes[attr_name.to_s].validate(current_schema, data, fragments, self, options)
