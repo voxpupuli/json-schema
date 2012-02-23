@@ -153,11 +153,14 @@ class JSONFullValidation < Test::Unit::TestCase
       "properties" => {
         "x" => {
           "required" => true,
-          "a" => {"type"=>"integer","required"=>true},
-          "b" => {"type"=>"integer","required"=>true},
-          "c" => {"type"=>"integer","required"=>false},
-          "d" => {"type"=>"integer","required"=>false},
-          "e" => {"type"=>"integer","required"=>false},
+          "type" => "object",
+          "properties" => {
+            "a" => {"type"=>"integer","required"=>true},
+            "b" => {"type"=>"integer","required"=>true},
+            "c" => {"type"=>"integer","required"=>false},
+            "d" => {"type"=>"integer","required"=>false},
+            "e" => {"type"=>"integer","required"=>false},
+          }
         }
       }
     }
@@ -180,11 +183,14 @@ class JSONFullValidation < Test::Unit::TestCase
           "required" => true,
           "type" => "array",
           "items" => {
-            "a" => {"type"=>"integer","required"=>true},
-            "b" => {"type"=>"integer","required"=>true},
-            "c" => {"type"=>"integer","required"=>false},
-            "d" => {"type"=>"integer","required"=>false},
-            "e" => {"type"=>"integer","required"=>false},
+            "type" => "object",
+            "properties" => {
+              "a" => {"type"=>"integer","required"=>true},
+              "b" => {"type"=>"integer","required"=>true},
+              "c" => {"type"=>"integer","required"=>false},
+              "d" => {"type"=>"integer","required"=>false},
+              "e" => {"type"=>"integer","required"=>false},
+            }
           }
         }
       }
@@ -195,9 +201,9 @@ class JSONFullValidation < Test::Unit::TestCase
     
     errors = JSON::Validator.fully_validate(schema,data,:errors_as_objects => true)
     assert_equal 2, errors.length
-    assert_equal '#/x[0]', errors[0][:fragment]
+    assert_equal '#/x/0', errors[0][:fragment]
     assert_equal 'Properties', errors[0][:failed_attribute]
-    assert_equal '#/x[1]/e', errors[1][:fragment]
+    assert_equal '#/x/1/e', errors[1][:fragment]
     assert_equal 'Type', errors[1][:failed_attribute]
   end
 end
