@@ -28,6 +28,8 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     data['a'] = true
     assert(!JSON::Validator.validate(schema,data))
     
+    assert(JSON::Validator.validate({'type' => 'integer'}, 3))
+    assert(!JSON::Validator.validate({'type' => 'integer'}, "hello"))
     
     # Test numbers
     schema["properties"]["a"]["type"] = "number"
@@ -43,6 +45,10 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     data['a'] = true
     assert(!JSON::Validator.validate(schema,data))
     
+    assert(JSON::Validator.validate({'type' => 'number'}, 3))
+    assert(JSON::Validator.validate({'type' => 'number'}, 3.14159265358979))
+    assert(!JSON::Validator.validate({'type' => 'number'}, "hello"))
+    
     
     # Test strings
     schema["properties"]["a"]["type"] = "string"
@@ -57,6 +63,10 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     
     data['a'] = true
     assert(!JSON::Validator.validate(schema,data))
+    
+    assert(JSON::Validator.validate({'type' => 'string'}, 'hello'))
+    assert(!JSON::Validator.validate({'type' => 'string'}, 3.14159265358979))
+    assert(!JSON::Validator.validate({'type' => 'string'}, []))
     
     
     # Test booleans
@@ -76,6 +86,12 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     data['a'] = false
     assert(JSON::Validator.validate(schema,data))
     
+    assert(JSON::Validator.validate({'type' => 'boolean'}, true))
+    assert(JSON::Validator.validate({'type' => 'boolean'}, false))
+    assert(!JSON::Validator.validate({'type' => 'boolean'}, nil))
+    assert(!JSON::Validator.validate({'type' => 'boolean'}, 3))
+    assert(!JSON::Validator.validate({'type' => 'boolean'}, "hello"))
+    
     
     # Test object
     schema["properties"]["a"]["type"] = "object"
@@ -90,6 +106,12 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     
     data['a'] = true
     assert(!JSON::Validator.validate(schema,data))
+    
+    assert(JSON::Validator.validate({'type' => 'objec'}, {'a' => true}))
+    assert(JSON::Validator.validate({'type' => 'object'}, {}))
+    assert(!JSON::Validator.validate({'type' => 'object'}, []))
+    assert(!JSON::Validator.validate({'type' => 'object'}, 3))
+    assert(!JSON::Validator.validate({'type' => 'object'}, "hello"))
     
     
     # Test array
@@ -106,6 +128,12 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     data['a'] = true
     assert(!JSON::Validator.validate(schema,data))
     
+    assert(JSON::Validator.validate({'type' => 'array'}, ['a']))
+    assert(JSON::Validator.validate({'type' => 'array'}, []))
+    assert(!JSON::Validator.validate({'type' => 'array'}, {}))
+    assert(!JSON::Validator.validate({'type' => 'array'}, 3))
+    assert(!JSON::Validator.validate({'type' => 'array'}, "hello"))
+    
     
     # Test null
     schema["properties"]["a"]["type"] = "null"
@@ -120,6 +148,11 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     
     data['a'] = true
     assert(!JSON::Validator.validate(schema,data))
+    
+    assert(JSON::Validator.validate({'type' => 'null'}, nil))
+    assert(!JSON::Validator.validate({'type' => 'null'}, false))
+    assert(!JSON::Validator.validate({'type' => 'null'}, []))
+    assert(!JSON::Validator.validate({'type' => 'null'}, "hello"))
     
     
     # Test any
@@ -136,6 +169,12 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     data['a'] = true
     assert(JSON::Validator.validate(schema,data))
     
+    assert(JSON::Validator.validate({'type' => 'any'}, true))
+    assert(JSON::Validator.validate({'type' => 'any'}, nil))
+    assert(JSON::Validator.validate({'type' => 'any'}, {}))
+    assert(JSON::Validator.validate({'type' => 'any'}, 3))
+    assert(JSON::Validator.validate({'type' => 'any'}, "hello"))
+    
     
     # Test a union type
     schema["properties"]["a"]["type"] = ["integer","string"]
@@ -147,6 +186,9 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     
     data["a"] = false
     assert(!JSON::Validator.validate(schema,data))
+    
+    assert(JSON::Validator.validate({'type' => ['string', 'null']}, "hello"))
+    assert(!JSON::Validator.validate({'type' => ['integer', 'object']}, "hello"))
     
     # Test a union type with schemas
     schema["properties"]["a"]["type"] = [{ "type" => "string" }, {"type" => "object", "properties" => {"b" => {"type" => "integer"}}}]

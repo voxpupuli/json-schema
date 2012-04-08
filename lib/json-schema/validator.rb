@@ -296,6 +296,14 @@ module JSON
         end
       end
 
+      def validate_json(schema, data, opts={})
+        validate(schema, data, opts.merge(:json => true))
+      end
+
+      def validate_uri(schema, data, opts={})
+        validate(schema, data, opts.merge(:uri => true))
+      end
+
       def validate!(schema, data,opts={})
         validator = JSON::Validator.new(schema, data, opts)
         validator.validate
@@ -303,6 +311,13 @@ module JSON
       end
       alias_method 'validate2', 'validate!'
 
+      def validate_json!(schema, data, opts={})
+        validate!(schema, data, opts.merge(:json => true))
+      end
+
+      def validate_uri!(schema, data, opts={})
+        validate!(schema, data, opts.merge(:uri => true))
+      end
 
       def fully_validate(schema, data, opts={})
         opts[:record_errors] = true
@@ -316,6 +331,13 @@ module JSON
         fully_validate(schema, data, opts)
       end
 
+      def fully_validate_json(schema, data, opts={})
+        fully_validate(schema, data, opts.merge(:json => true))
+      end
+
+      def fully_validate_uri(schema, data, opts={})
+        fully_validate(schema, data, opts.merge(:uri => true))
+      end
 
       def clear_cache
         @@schemas = {} if @@cache_schemas == false
@@ -510,21 +532,18 @@ module JSON
 
 
     def initialize_data(data)
-      # Parse the data, if any
-      if data.is_a?(String)
-        begin
-          data = JSON::Validator.parse(data)
-        rescue
-          json_uri = URI.parse(data)
-          if json_uri.relative?
-            if data[0,1] == '/'
-              schema_uri = URI.parse("file://#{data}")
-            else
-              schema_uri = URI.parse("file://#{Dir.pwd}/#{data}")
-            end
+      if @options[:json]
+        data = JSON::Validator.parse(data)
+      elsif @options[:uri]
+        json_uri = URI.parse(data)
+        if json_uri.relative?
+          if data[0,1] == '/'
+            schema_uri = URI.parse("file://#{data}")
+          else
+            schema_uri = URI.parse("file://#{Dir.pwd}/#{data}")
           end
-          data = JSON::Validator.parse(open(json_uri.to_s).read)
         end
+        data = JSON::Validator.parse(open(json_uri.to_s).read)
       end
       data
     end
