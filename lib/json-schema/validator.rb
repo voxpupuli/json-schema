@@ -363,7 +363,7 @@ module JSON
 
       def json_backend
         if defined?(MultiJson)
-          MultiJson.engine
+          MultiJson.respond_to?(:adapter) ? MultiJson.adapter : MultiJson.engine
         else
           @@json_backend
         end
@@ -372,7 +372,7 @@ module JSON
       def json_backend=(backend)
         if defined?(MultiJson)
           backend = backend == 'json' ? 'json_gem' : backend
-          MultiJson.engine = backend
+          MultiJson.respond_to?(:use) ? MultiJson.use(backend) : MultiJson.engine = backend
         else
           backend = backend.to_s
           if @@available_json_backends.include?(backend)
@@ -385,7 +385,7 @@ module JSON
 
       def parse(s)
         if defined?(MultiJson)
-          MultiJson.decode(s)
+          MultiJson.respond_to?(:load) ? MultiJson.load(s) : MultiJson.decode(s)
         else
           case @@json_backend.to_s
           when 'json'
@@ -451,7 +451,7 @@ module JSON
 
     def serialize schema
       if defined?(MultiJson)
-        MultiJson.encode(schema)
+        MultiJson.respond_to?(:dump) ? MultiJson.dump(schema) : MultiJson.encode(schema)
       else
         @@serializer.call(schema)
       end

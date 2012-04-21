@@ -145,4 +145,65 @@ class JSONFullValidation < Test::Unit::TestCase
     assert(errors[1][:failed_attribute] == "Type")
     assert(errors[1][:fragment] == "#/c")
   end
+  
+  def test_full_validation_with_nested_required_properties
+    schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
+      "type" => "object",
+      "properties" => {
+        "x" => {
+          "required" => true,
+          "type" => "object",
+          "properties" => {
+            "a" => {"type"=>"integer","required"=>true},
+            "b" => {"type"=>"integer","required"=>true},
+            "c" => {"type"=>"integer","required"=>false},
+            "d" => {"type"=>"integer","required"=>false},
+            "e" => {"type"=>"integer","required"=>false},
+          }
+        }
+      }
+    }
+    data = {"x" => {"a"=>5, "d"=>5, "e"=>"what?"}}
+    
+    errors = JSON::Validator.fully_validate(schema,data,:errors_as_objects => true)
+    assert_equal 2, errors.length
+    assert_equal '#/x', errors[0][:fragment]
+    assert_equal 'Properties', errors[0][:failed_attribute]
+    assert_equal '#/x/e', errors[1][:fragment]
+    assert_equal 'Type', errors[1][:failed_attribute]
+  end
+  
+  def test_full_validation_with_nested_required_propertiesin_array
+    schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
+      "type" => "object",
+      "properties" => {
+        "x" => {
+          "required" => true,
+          "type" => "array",
+          "items" => {
+            "type" => "object",
+            "properties" => {
+              "a" => {"type"=>"integer","required"=>true},
+              "b" => {"type"=>"integer","required"=>true},
+              "c" => {"type"=>"integer","required"=>false},
+              "d" => {"type"=>"integer","required"=>false},
+              "e" => {"type"=>"integer","required"=>false},
+            }
+          }
+        }
+      }
+    }
+    missing_b= {"a"=>5}
+    e_is_wrong_type= {"a"=>5,"b"=>5,"e"=>"what?"}
+    data = {"x" => [missing_b, e_is_wrong_type]}
+    
+    errors = JSON::Validator.fully_validate(schema,data,:errors_as_objects => true)
+    assert_equal 2, errors.length
+    assert_equal '#/x/0', errors[0][:fragment]
+    assert_equal 'Properties', errors[0][:failed_attribute]
+    assert_equal '#/x/1/e', errors[1][:fragment]
+    assert_equal 'Type', errors[1][:failed_attribute]
+  end
 end
