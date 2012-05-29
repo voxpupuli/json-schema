@@ -4,12 +4,12 @@ module JSON
       def self.validate(current_schema, data, fragments, validator, options = {})
         case current_schema.schema['format']
 
-        # Timestamp in restricted ISO-8601 YYYY-MM-DDThh:mm:ssZ
+        # Timestamp in restricted ISO-8601 YYYY-MM-DDThh:mm:ssZ with optional decimal fraction of the second
         when 'date-time'
           if data.is_a?(String)
-            error_message = "The property '#{build_fragment(fragments)}' must be a date/time in the ISO-8601 format of YYYY-MM-DDThh:mm:ssZ"
+            error_message = "The property '#{build_fragment(fragments)}' must be a date/time in the ISO-8601 format of YYYY-MM-DDThh:mm:ssZ or YYYY-MM-DDThh:mm:ss.ssZ"
             validation_error(error_message, fragments, current_schema, self, options[:record_errors]) and return if !data.is_a?(String)
-            r = Regexp.new('^\d\d\d\d-\d\d-\d\dT(\d\d):(\d\d):(\d\d)Z$')
+            r = Regexp.new('^\d\d\d\d-\d\d-\d\dT(\d\d):(\d\d):(\d\d)([\.,]\d+)?Z$')
             if (m = r.match(data))
               parts = data.split("T")
               begin
