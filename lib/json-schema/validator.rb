@@ -434,6 +434,14 @@ module JSON
           @@available_json_backends << 'json'
           @@json_backend = 'json'
         end
+        
+        # Try force-loading json for rubies > 1.9.2
+        begin
+          require 'json'
+          @@available_json_backends << 'json'
+          @@json_backend = 'json'
+        rescue LoadError
+        end
 
         if begin
             Gem::Specification::find_by_name('yajl-ruby')
