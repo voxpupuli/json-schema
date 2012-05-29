@@ -538,12 +538,30 @@ module JSON
         json_uri = URI.parse(data)
         if json_uri.relative?
           if data[0,1] == '/'
-            schema_uri = URI.parse("file://#{data}")
+            json_uri = URI.parse("file://#{data}")
           else
-            schema_uri = URI.parse("file://#{Dir.pwd}/#{data}")
+            json_uri = URI.parse("file://#{Dir.pwd}/#{data}")
           end
         end
         data = JSON::Validator.parse(open(json_uri.to_s).read)
+      elsif data.is_a?(String)
+        begin
+          data = JSON::Validator.parse(data)
+        rescue
+          begin
+            json_uri = URI.parse(data)
+            if json_uri.relative?
+              if data[0,1] == '/'
+                json_uri = URI.parse("file://#{data}")
+              else
+                json_uri = URI.parse("file://#{Dir.pwd}/#{data}")
+              end
+            end
+            data = JSON::Validator.parse(open(json_uri.to_s).read)
+          rescue
+            # Silently discard the error - the data will not change
+          end
+        end
       end
       data
     end
