@@ -13,6 +13,11 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     data = {
       "a" => nil
     }
+
+    # Test fat-fingered types
+    schema["properties"]["a"]["type"] = "intger"
+    data["a"] = 5
+    assert(!JSON::Validator.validate(schema,data))
     
     # Test integers
     schema["properties"]["a"]["type"] = "integer"
@@ -107,7 +112,7 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     data['a'] = true
     assert(!JSON::Validator.validate(schema,data))
     
-    assert(JSON::Validator.validate({'type' => 'objec'}, {'a' => true}))
+    assert(JSON::Validator.validate({'type' => 'object'}, {'a' => true}))
     assert(JSON::Validator.validate({'type' => 'object'}, {}))
     assert(!JSON::Validator.validate({'type' => 'object'}, []))
     assert(!JSON::Validator.validate({'type' => 'object'}, 3))

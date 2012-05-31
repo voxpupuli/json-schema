@@ -39,7 +39,7 @@ module JSON
             when "any"
               valid = true
             else
-              valid = true
+              valid = false
             end
           elsif type.is_a?(Hash) && union
             # Validate as a schema
