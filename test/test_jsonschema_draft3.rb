@@ -107,7 +107,7 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     data['a'] = true
     assert(!JSON::Validator.validate(schema,data))
     
-    assert(JSON::Validator.validate({'type' => 'objec'}, {'a' => true}))
+    assert(JSON::Validator.validate({'type' => 'object'}, {'a' => true}))
     assert(JSON::Validator.validate({'type' => 'object'}, {}))
     assert(!JSON::Validator.validate({'type' => 'object'}, []))
     assert(!JSON::Validator.validate({'type' => 'object'}, 3))
