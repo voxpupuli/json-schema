@@ -21,26 +21,7 @@ module JSON
         
         types.each do |type|
           if type.is_a?(String)
-            case type
-            when "string"
-              valid = data.is_a?(String)
-            when "number"
-              valid = data.is_a?(Numeric)
-            when "integer"
-              valid = data.is_a?(Integer)
-            when "boolean"
-              valid = (data.is_a?(TrueClass) || data.is_a?(FalseClass))
-            when "object"
-              valid = data.is_a?(Hash)
-            when "array"
-              valid = data.is_a?(Array)
-            when "null"
-              valid = data.is_a?(NilClass)
-            when "any"
-              valid = true
-            else
-              valid = true
-            end
+            valid = data_valid_for_type?(data, type)
           elsif type.is_a?(Hash) && union
             # Validate as a schema
             schema = JSON::Schema.new(type,current_schema.uri,validator)
@@ -88,6 +69,22 @@ module JSON
             validation_error(message, fragments, current_schema, self, options[:record_errors])            
           end
         end
+      end
+
+      TYPE_CLASS_MAPPINGS = {
+        "string" => String,
+        "number" => Numeric,
+        "integer" => Integer,
+        "boolean" => [TrueClass, FalseClass],
+        "object" => Hash,
+        "array" => Array,
+        "null" => NilClass,
+        "any" => Object
+      }
+
+      def self.data_valid_for_type?(data, type)
+        valid_classes = TYPE_CLASS_MAPPINGS.fetch(type) { return true }
+        Array(valid_classes).any? { |c| data.is_a?(c) }
       end
     end
   end
