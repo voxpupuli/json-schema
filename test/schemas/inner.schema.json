@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-03/schema#",
+  "type": "object",
+  "properties": {
+    "innerA": {
+      "description": "blah",
+      "type":"boolean",
+      "required": false
+    },
+    "innerB": {
+      "description": "blah",
+      "type":"boolean",
+      "required": false
+    },
+    "innerC": {
+      "description": "blah",
+      "required": false,
+      "type": "boolean"
+    }
+  }
+}
