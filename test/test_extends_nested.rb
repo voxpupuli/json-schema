@@ -14,29 +14,37 @@ class ExtendsNestedTest < Test::Unit::TestCase
   def assert_valid(schema_name, data, msg=nil) assert_validity true, schema_name, data, msg end
   def refute_valid(schema_name, data, msg=nil) assert_validity false, schema_name, data, msg end
 
-  %w[extends_nested-filename extends_nested-ref].each do |schema_name|
+  %w[
+    extends_nested-1-filename extends_nested-1-ref
+    extends_nested-2-filename extends_nested-2-ref
+  ].each do |schema_name|
+    test_prefix= 'test_' + schema_name.gsub('-','_')
     class_eval <<-EOB
 
-      def test_#{schema_name.sub /^.+-/,''}_valid_outer
+      def #{test_prefix}_valid_outer
         assert_valid '#{schema_name}', {"outerC"=>true}, "Outer defn is broken, maybe the outer extends overrode it?"
       end
 
-      def test_#{schema_name.sub /^.+-/,''}_valid_outer_extended
+      def #{test_prefix}_valid_outer_extended
         assert_valid '#{schema_name}', {"innerA"=>true}, "Extends at the root level isn't working."
       end
 
-      def test_#{schema_name.sub /^.+-/,''}_valid_inner
+      def #{test_prefix}_valid_inner
         assert_valid '#{schema_name}', {"outerB"=>[{"innerA"=>true}]}, "Extends isn't working in the array element defn."
       end
 
-      def test_#{schema_name.sub /^.+-/,''}_invalid_outer
-        refute_valid '#{schema_name}', {"whaaaaat"=>true}, "Outer defn allowing anything when it shouldn't."
-      end
-
-      def test_#{schema_name.sub /^.+-/,''}_invalid_inner
+      def #{test_prefix}_invalid_inner
         refute_valid '#{schema_name}', {"outerB"=>[{"whaaaaat"=>true}]}, "Array element defn allowing anything when it should only allow what's in inner.schema"
       end
-
     EOB
+
+    if schema_name['extends_nested-1']
+      class_eval <<-EOB
+        def #{test_prefix}_invalid_outer
+          refute_valid '#{schema_name}', {"whaaaaat"=>true}, "Outer defn allowing anything when it shouldn't."
+        end
+      EOB
+    end
+
   end
 end
