@@ -15,8 +15,8 @@ class ExtendsNestedTest < Test::Unit::TestCase
   def refute_valid(schema_name, data, msg=nil) assert_validity false, schema_name, data, msg end
 
   %w[
-    extends_nested-1-filename extends_nested-1-ref
-    extends_nested-2-filename extends_nested-2-ref
+    extends_and_additionalProperties-1-filename extends_and_additionalProperties-1-ref
+    extends_and_additionalProperties-2-filename extends_and_additionalProperties-2-ref
   ].each do |schema_name|
     test_prefix= 'test_' + schema_name.gsub('-','_')
     class_eval <<-EOB
@@ -38,7 +38,7 @@ class ExtendsNestedTest < Test::Unit::TestCase
       end
     EOB
 
-    if schema_name['extends_nested-1']
+    if schema_name['extends_and_additionalProperties-1']
       class_eval <<-EOB
         def #{test_prefix}_invalid_outer
           refute_valid '#{schema_name}', {"whaaaaat"=>true}, "Outer defn allowing anything when it shouldn't."
