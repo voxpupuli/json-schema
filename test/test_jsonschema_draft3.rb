@@ -915,20 +915,20 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     data = {"a" => "2010-01-01n"}
     assert(!JSON::Validator.validate(schema,data))
   end
-  
+
   def test_format_datetime
     schema = {
       "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => { "a" => {"type" => "string", "format" => "date-time"}}
     }
-    
+
     data = {"a" => "2010-01-01T12:00:00Z"}
     assert(JSON::Validator.validate(schema,data))
-  data = {"a" => "2010-01-01T12:00:00.1Z"}
+    data = {"a" => "2010-01-01T12:00:00.1Z"}
     assert(JSON::Validator.validate(schema,data))
-	data = {"a" => "2010-01-01T12:00:00,1Z"}
-    assert(JSON::Validator.validate(schema,data))	
+    data = {"a" => "2010-01-01T12:00:00,1Z"}
+    assert(JSON::Validator.validate(schema,data))
     data = {"a" => "2010-01-32T12:00:00Z"}
     assert(!JSON::Validator.validate(schema,data))
     data = {"a" => "2010-13-01T12:00:00Z"}
@@ -939,19 +939,50 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data))
     data = {"a" => "2010-01-01T12:00:60Z"}
     assert(!JSON::Validator.validate(schema,data))
-    data = {"a" => "2010-01-01T12:00:00"}
-    assert(!JSON::Validator.validate(schema,data))
     data = {"a" => "2010-01-01T12:00:00z"}
     assert(!JSON::Validator.validate(schema,data))
     data = {"a" => "2010-01-0112:00:00Z"}
     assert(!JSON::Validator.validate(schema,data))
+
+    # test with a specific timezone
+    data = {"a" => "2010-01-01T12:00:00+01"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00+01:00"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00+01:30"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00+0234"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00+01:"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00+0"}
+    assert(!JSON::Validator.validate(schema,data))
+    # do not allow mixing Z and specific timezone
+    data = {"a" => "2010-01-01T12:00:00Z+01"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00+01Z"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00+01:30Z"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00+0Z"}
+    assert(!JSON::Validator.validate(schema,data))
+
+    # test without any timezone
+    data = {"a" => "2010-01-01T12:00:00"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00.12345"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00,12345"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00.12345"}
+    assert(JSON::Validator.validate(schema,data))
   end
-  
-  
+
+
   def test_format_union
     data1 = {"a" => "boo"}
     data2 = {"a" => nil}
-    
+
     schema = {
       "type" => "object",
       "properties" => { "a" => {"type" => ["string","null"], "format" => "ip-address"}}
