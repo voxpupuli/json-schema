@@ -407,7 +407,7 @@ module JSON
 
       def parse(s)
         if defined?(MultiJson)
-          MultiJson.respond_to?(:load) ? MultiJson.load(s) : MultiJson.decode(s)
+          MultiJson.respond_to?(:adapter) ? MultiJson.load(s) : MultiJson.decode(s)
         else
           case @@json_backend.to_s
           when 'json'
