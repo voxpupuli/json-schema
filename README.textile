@@ -18,7 +18,7 @@ From the git repo:
 
 <pre>
 $ gem build json-schema.gemspec
-$ gem install json-schema-1.0.8.gem
+$ gem install json-schema-1.0.9.gem
 </pre>
 
 
