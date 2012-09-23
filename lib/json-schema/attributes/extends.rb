@@ -1,4 +1,4 @@
-require_relative 'ref'
+require 'json-schema/attributes/ref'
 
 module JSON
   class Schema
