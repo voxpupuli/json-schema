@@ -1,4 +1,4 @@
-require_relative 'extends'
+require 'json-schema/attributes/extends'
 
 module JSON
   class Schema
