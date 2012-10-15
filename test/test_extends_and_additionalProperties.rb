@@ -7,7 +7,7 @@ class ExtendsNestedTest < Test::Unit::TestCase
     file = File.expand_path("../schemas/#{schema_name}.schema.json",__FILE__)
     errors = JSON::Validator.fully_validate file, data
     msg.sub! /\.$/, '' if msg
-    send (valid ? :assert_equal : :refute_equal), [], errors, \
+    send (valid ? :assert_equal : :assert_not_equal), [], errors, \
       "Schema should be #{valid ? :valid : :invalid}#{msg ? ".\n[#{schema_name}] #{msg}" : ''}"
   end
 
