@@ -4,7 +4,12 @@ module JSON
       def self.validate(current_schema, data, fragments, validator, options = {})
         if data.is_a?(Hash)
           current_schema.schema['properties'].each do |property,property_schema|
-            if (property_schema['required'] && !data.has_key?(property))
+            if !data.has_key?(property) and property_schema['default'] and !property_schema['readonly'] and options[:insert_defaults]
+              default = property_schema['default']
+              data[property] = (default.is_a?(Hash) ? default.clone : default)
+            end
+
+            if property_schema['required'] and !data.has_key?(property)
               message = "The property '#{build_fragment(fragments)}' did not contain a required property of '#{property}'"
               validation_error(message, fragments, current_schema, self, options[:record_errors])
             end
