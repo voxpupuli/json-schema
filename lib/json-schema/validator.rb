@@ -109,7 +109,8 @@ module JSON
       :version => nil,
       :validate_schema => false,
       :record_errors => false,
-      :errors_as_objects => false
+      :errors_as_objects => false,
+      :insert_defaults => false
     }
     @@validators = {}
     @@default_validator = nil
@@ -150,6 +151,7 @@ module JSON
       end
 
       @validation_options = @options[:record_errors] ? {:record_errors => true} : {}
+      @validation_options[:insert_defaults] = true if @options[:insert_defaults]
       
       # validate the schema, if requested
       if @options[:validate_schema]
