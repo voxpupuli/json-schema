@@ -1012,6 +1012,74 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     data = {"a" => 1, "b" => 2, "c" => 3}
     assert(JSON::Validator.validate(schema,data))
   end
+
+  def test_default
+    schema = {
+      "type" => "object",
+      "properties" => {
+        "a" => {"type" => "integer", "default" => 42},
+        "b" => {"type" => "integer"}
+      }
+    }
+    
+    data = {"b" => 2}
+    assert(JSON::Validator.validate(schema,data))
+    assert_nil(data["a"])
+    assert(JSON::Validator.validate(schema,data, :insert_defaults => true))
+    assert_equal(42, data["a"])
+
+    schema = {
+      "type" => "object",
+      "properties" => {
+        "a" => {"type" => "integer", "default" => 42, "required" => true},
+        "b" => {"type" => "integer"}
+      }
+    }
+    
+    data = {"b" => 2}
+    assert(!JSON::Validator.validate(schema,data))
+    assert_nil(data["a"])
+    assert(JSON::Validator.validate(schema,data, :insert_defaults => true))
+    assert_equal(42, data["a"])
+
+    schema = {
+      "type" => "object",
+      "properties" => {
+        "a" => {"type" => "integer", "default" => 42, "required" => true},
+        "b" => {"type" => "integer"}
+      }
+    }
+    
+
+    schema = {
+      "type" => "object",
+      "properties" => {
+        "a" => {"type" => "integer", "default" => 42, "required" => true, "readonly" => true},
+        "b" => {"type" => "integer"}
+      }
+    }
+    
+    data = {"b" => 2}
+    assert(!JSON::Validator.validate(schema,data))
+    assert_nil(data["a"])
+    assert(!JSON::Validator.validate(schema,data, :insert_defaults => true))
+    assert_nil(data["a"])
+
+    schema = {
+      "type" => "object",
+      "properties" => {
+        "a" => {"type" => "integer", "default" => "42"},
+        "b" => {"type" => "integer"}
+      }
+    }
+    
+    data = {"b" => 2}
+    assert(JSON::Validator.validate(schema,data))
+    assert_nil(data["a"])
+    assert(!JSON::Validator.validate(schema,data, :insert_defaults => true))
+    assert_equal("42",data["a"])
+
+  end
   
   
 end
