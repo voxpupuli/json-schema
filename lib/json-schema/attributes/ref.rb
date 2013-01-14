@@ -1,17 +1,17 @@
 module JSON
   class Schema
     class RefAttribute < Attribute
-      def self.validate(current_schema, data, fragments, validator, options = {})
+      def self.validate(current_schema, data, fragments, processor, validator, options = {})
         uri,schema = get_referenced_uri_and_schema(current_schema.schema, current_schema, validator)
 
         if schema
-          schema.validate(data, fragments, options)
+          schema.validate(data, fragments, processor, options)
         elsif uri
           message = "The referenced schema '#{uri.to_s}' cannot be found"
-          validation_error(message, fragments, current_schema, self, options[:record_errors])
+          validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
         else
           message = "The property '#{build_fragment(fragments)}' was not a valid schema"
-          validation_error(message, fragments, current_schema, self, options[:record_errors])
+          validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
         end
       end
 

@@ -1,7 +1,7 @@
 module JSON
   class Schema
     class PatternPropertiesAttribute < Attribute
-      def self.validate(current_schema, data, fragments, validator, options = {})
+      def self.validate(current_schema, data, fragments, processor, validator, options = {})
         if data.is_a?(Hash)
           current_schema.schema['patternProperties'].each do |property,property_schema|
             r = Regexp.new(property)
@@ -11,7 +11,7 @@ module JSON
               if r.match(key)
                 schema = JSON::Schema.new(property_schema,current_schema.uri,validator)
                 fragments << key
-                schema.validate(data[key],fragments,options)
+                schema.validate(data[key],fragments,processor,options)
                 fragments.pop
               end
             end

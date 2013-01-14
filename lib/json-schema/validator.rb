@@ -4,6 +4,7 @@ require 'pathname'
 require 'bigdecimal'
 require 'digest/sha1'
 require 'date'
+require 'thread'
 
 module JSON
 
@@ -46,24 +47,24 @@ module JSON
     end
 
     class Attribute
-      def self.validate(current_schema, data, fragments, validator, options = {})
+      def self.validate(current_schema, data, fragments, processor, validator, options = {})
       end
 
       def self.build_fragment(fragments)
         "#/#{fragments.join('/')}"
       end
 
-      def self.validation_error(message, fragments, current_schema, failed_attribute, record_errors)
+      def self.validation_error(processor, message, fragments, current_schema, failed_attribute, record_errors)
         error = ValidationError.new(message, fragments, failed_attribute, current_schema)
         if record_errors
-          ::JSON::Validator.validation_error(error)
+          processor.validation_error(error)
         else
           raise error
         end
       end
       
-      def self.validation_errors
-        ::JSON::Validator.validation_errors
+      def self.validation_errors(validator)
+        validator.validation_errors
       end
     end
 
@@ -88,10 +89,10 @@ module JSON
         "#{@uri.scheme}://#{uri.host}#{uri.path}"
       end
 
-      def validate(current_schema, data, fragments, options = {})
+      def validate(current_schema, data, fragments, processor, options = {})
         current_schema.schema.each do |attr_name,attribute|
           if @attributes.has_key?(attr_name.to_s)
-            @attributes[attr_name.to_s].validate(current_schema, data, fragments, self, options)
+            @attributes[attr_name.to_s].validate(current_schema, data, fragments, processor, self, options)
           end
         end
         data
@@ -116,9 +117,9 @@ module JSON
     @@default_validator = nil
     @@available_json_backends = []
     @@json_backend = nil
-    @@errors = []
     @@serializer = nil
-
+    @@mutex = Mutex.new
+    
     def self.version_string_for(version)
       # I'm not a fan of this, but it's quick and dirty to get it working for now
       return "draft-03" unless version
@@ -140,6 +141,7 @@ module JSON
 
     def initialize(schema_data, data, opts={})
       @options = @@default_opts.clone.merge(opts)
+      @errors = []
 
       # I'm not a fan of this, but it's quick and dirty to get it working for now
       version_string = "draft-03"
@@ -163,22 +165,21 @@ module JSON
         end
       end
       
-      @base_schema = initialize_schema(schema_data)
+      @@mutex.synchronize { @base_schema = initialize_schema(schema_data) }
       @data = initialize_data(data)
-      build_schemas(@base_schema)
+      @@mutex.synchronize { build_schemas(@base_schema) }
     end
 
 
     # Run a simple true/false validation of data against a schema
     def validate()
       begin
-        Validator.clear_errors
-        @base_schema.validate(@data,[],@validation_options)
+        @base_schema.validate(@data,[],self,@validation_options)
         Validator.clear_cache
         if @options[:errors_as_objects]
-          @@errors.map{|e| e.to_hash}
+          return @errors.map{|e| e.to_hash}
         else
-          @@errors.map{|e| e.to_string}
+          return @errors.map{|e| e.to_string}
         end
       rescue JSON::Schema::ValidationError
         Validator.clear_cache
@@ -286,6 +287,14 @@ module JSON
       end
     end
 
+    def validation_error(error)
+      @errors.push(error)
+    end
+    
+    def validation_errors
+      @errors
+    end
+
 
     class << self
       def validate(schema, data,opts={})
@@ -343,18 +352,6 @@ module JSON
 
       def clear_cache
         @@schemas = {} if @@cache_schemas == false
-      end
-
-      def clear_errors
-        @@errors = []
-      end
-
-      def validation_error(error)
-        @@errors.push(error)
-      end
-      
-      def validation_errors
-        @@errors
       end
 
       def schemas

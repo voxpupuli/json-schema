@@ -3,19 +3,19 @@ require 'json-schema/attributes/ref'
 module JSON
   class Schema
     class ExtendsAttribute < Attribute
-      def self.validate(current_schema, data, fragments, validator, options = {})
+      def self.validate(current_schema, data, fragments, processor, validator, options = {})
         schemas = current_schema.schema['extends']
         schemas = [schemas] if !schemas.is_a?(Array)
         schemas.each do |s|
           uri,schema = get_extended_uri_and_schema(s, current_schema, validator)
           if schema
-            schema.validate(data, fragments, options)
+            schema.validate(data, fragments, processor, options)
           elsif uri
             message = "The extended schema '#{uri.to_s}' cannot be found"
-            validation_error(message, fragments, current_schema, self, options[:record_errors])
+            validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
           else
             message = "The property '#{build_fragment(fragments)}' was not a valid schema"
-            validation_error(message, fragments, current_schema, self, options[:record_errors])
+            validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
           end
         end
       end
