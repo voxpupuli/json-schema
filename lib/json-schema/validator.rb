@@ -252,6 +252,11 @@ module JSON
           handle_schema(parent_schema, v)
         end
       end
+      if parent_schema.schema["patternProperties"]
+        parent_schema.schema["patternProperties"].each do |k,v|
+          handle_schema(parent_schema, v)
+        end
+      end
 
       # Items are always schemas
       if parent_schema.schema["items"]
