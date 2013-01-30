@@ -10,7 +10,7 @@ module JSON
       @uri = uri
       
       # If there is an ID on this schema, use it to generate the URI
-      if @schema['id']
+      if @schema['id'] && @schema['id'].kind_of?(String)
         temp_uri = URI.parse(@schema['id'])
         if temp_uri.relative?
           uri = uri.merge(@schema['id'])
