@@ -206,24 +206,25 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data))
 
     # Test an array of unioned-type objects that prevent additionalProperties
-    schema["properties"]["a"]["type"] = {
+    schema["properties"]["a"] = {
       'type' => 'array',
       'items' => {
         'type' => [
-          { 'type' => 'object', 'properties' => { "b" => { "type" => "integer" } }, 'additionalProperties' => false },
-          { 'type' => 'object', 'properties' => { "c" => { "type" => "string" } }, 'additionalProperties' => false }
-        ]
+          { 'type' => 'object', 'properties' => { "b" => { "type" => "integer" } } },
+          { 'type' => 'object', 'properties' => { "c" => { "type" => "string" } } }
+        ],
+        'additionalProperties' => false
       }
     }
 
     data["a"] = [{"b" => 5}, {"c" => "foo"}]
-    assert(JSON::Validator.validate(schema,data))
+    errors = JSON::Validator.fully_validate(schema, data)
+    assert(errors.empty?, errors.join("\n"))
+
     data["a"] << {"c" => false}
     assert(!JSON::Validator.validate(schema,data))
-   end
-  
-  
-  
+  end
+
   def test_required
     # Set up the default datatype
     schema = {
