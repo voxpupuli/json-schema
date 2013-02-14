@@ -231,8 +231,14 @@ module JSON
       if parent_schema.schema["$ref"]
         load_ref_schema(parent_schema, parent_schema.schema["$ref"])
       end
-      if parent_schema.schema["extends"] && parent_schema.schema["extends"].is_a?(String)
-        load_ref_schema(parent_schema, parent_schema.schema["extends"])
+      if parent_schema.schema["extends"]
+        if parent_schema.schema["extends"].is_a?(String)
+          load_ref_schema(parent_schema, parent_schema.schema["extends"])
+        elsif parent_schema.schema["extends"].is_a?(Array)
+          parent_schema.schema["extends"].each do |type|
+            handle_schema(parent_schema, type)
+          end
+        end
       end
 
       # Check for schemas in union types
