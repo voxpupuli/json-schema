@@ -1,0 +1,13 @@
+{
+  "$schema" : "http://json-schema.org/draft-03/schema#",
+  "type" : "object",
+  "extends": [
+    {"$ref": "good_schema_1.json"},
+    {"$ref": "good_schema_2.json"}
+  ],
+  "properties" : {
+    "c" : {
+      "required" : false
+    }
+  }
+}
