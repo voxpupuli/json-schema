@@ -9,7 +9,6 @@ module JSON
           schema.validate(data,fragments,processor,options)
           message = "The property '#{build_fragment(fragments)}' of type #{data.class} matched the disallowed schema"
           validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
-          validation_errors(processor).last.sub_errors = errors
         rescue
           # Yay, we failed validation
         end
