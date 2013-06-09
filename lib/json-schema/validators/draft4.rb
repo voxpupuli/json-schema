@@ -16,6 +16,8 @@ module JSON
           "minimum" => JSON::Schema::MinimumAttribute,
           "minItems" => JSON::Schema::MinItemsAttribute,
           "maxItems" => JSON::Schema::MaxItemsAttribute,
+          "minProperties" => JSON::Schema::MinPropertiesAttribute,
+          "maxProperties" => JSON::Schema::MaxPropertiesAttribute,
           "uniqueItems" => JSON::Schema::UniqueItemsAttribute,
           "minLength" => JSON::Schema::MinLengthAttribute,
           "maxLength" => JSON::Schema::MaxLengthAttribute,
