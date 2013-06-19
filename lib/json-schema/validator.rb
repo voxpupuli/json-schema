@@ -20,7 +20,7 @@ module JSON
         message = "#{message} in schema #{schema.uri}"
         super(message)
       end
-      
+
       def to_string
         if @sub_errors.empty?
           message
@@ -30,7 +30,7 @@ module JSON
           full_message
         end
       end
-      
+
       def to_hash
         base = {:schema => @schema.uri, :fragment => ::JSON::Schema::Attribute.build_fragment(fragments), :message => message, :failed_attribute => @failed_attribute.to_s.split(":").last.split("Attribute").first}
         if !@sub_errors.empty?
@@ -62,7 +62,7 @@ module JSON
           raise error
         end
       end
-      
+
       def self.validation_errors(validator)
         validator.validation_errors
       end
@@ -119,11 +119,13 @@ module JSON
     @@json_backend = nil
     @@serializer = nil
     @@mutex = Mutex.new
-    
+
     def self.version_string_for(version)
       # I'm not a fan of this, but it's quick and dirty to get it working for now
-      return "draft-03" unless version
+      return "draft-04" unless version
       case version.to_s
+      when "draft4"
+        "draft-04"
       when "draft3"
         "draft-03"
       when "draft2"
@@ -144,7 +146,7 @@ module JSON
       @errors = []
 
       # I'm not a fan of this, but it's quick and dirty to get it working for now
-      version_string = "draft-03"
+      version_string = "draft-04"
       if @options[:version]
         version_string = @options[:version] = self.class.version_string_for(@options[:version])
         u = URI.parse("http://json-schema.org/#{@options[:version]}/schema#")
@@ -154,7 +156,7 @@ module JSON
 
       @validation_options = @options[:record_errors] ? {:record_errors => true} : {}
       @validation_options[:insert_defaults] = true if @options[:insert_defaults]
-      
+
       # validate the schema, if requested
       if @options[:validate_schema]
         begin
@@ -164,7 +166,7 @@ module JSON
           raise $!
         end
       end
-      
+
       @@mutex.synchronize { @base_schema = initialize_schema(schema_data) }
       @data = initialize_data(data)
       @@mutex.synchronize { build_schemas(@base_schema) }
@@ -295,7 +297,7 @@ module JSON
     def validation_error(error)
       @errors.push(error)
     end
-    
+
     def validation_errors
       @errors
     end
@@ -394,7 +396,7 @@ module JSON
           @@json_backend
         end
       end
-      
+
       def json_backend=(backend)
         if defined?(MultiJson)
           backend = backend == 'json' ? 'json_gem' : backend
@@ -425,7 +427,7 @@ module JSON
           end
         end
       end
-      
+
       if !defined?(MultiJson)
         if begin
             Gem::Specification::find_by_name('json')
@@ -438,7 +440,7 @@ module JSON
           @@available_json_backends << 'json'
           @@json_backend = 'json'
         end
-        
+
         # Try force-loading json for rubies > 1.9.2
         begin
           require 'json'
@@ -458,11 +460,11 @@ module JSON
           @@available_json_backends << 'yajl'
           @@json_backend = 'yajl'
         end
-        
+
         if @@json_backend == 'yajl'
           @@serializer = lambda{|o| Yajl::Encoder.encode(o) }
         else
-          @@serializer = lambda{|o| Marshal.dump(o) }  	  
+          @@serializer = lambda{|o| Marshal.dump(o) }
         end
       end
     end
