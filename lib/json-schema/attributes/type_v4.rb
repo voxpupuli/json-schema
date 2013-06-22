@@ -17,6 +17,13 @@ module JSON
           valid = data_valid_for_type?(data, type)
           break if valid
         end
+
+        if !valid
+          message = "The property '#{build_fragment(fragments)}' of type #{data.class} did not match the following type:"
+          types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
+          message.chop!
+          validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+        end
       end
 
       TYPE_CLASS_MAPPINGS = {
