@@ -980,6 +980,7 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
 
   def test_dependency
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer"},
@@ -996,6 +997,7 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data))
 
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer"},
@@ -1015,6 +1017,7 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
 
   def test_default
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer", "default" => 42},
@@ -1029,6 +1032,7 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     assert_equal(42, data["a"])
 
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer", "default" => 42, "required" => true},
@@ -1043,6 +1047,7 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     assert_equal(42, data["a"])
 
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer", "default" => 42, "required" => true},
@@ -1052,6 +1057,7 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
 
 
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer", "default" => 42, "required" => true, "readonly" => true},
@@ -1066,6 +1072,7 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     assert_nil(data["a"])
 
     schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer", "default" => "42"},

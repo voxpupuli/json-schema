@@ -1,6 +1,6 @@
 module JSON
   class Schema
-    class PropertiesAttribute < Attribute
+    class PropertiesV4Attribute < Attribute
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         if data.is_a?(Hash)
           current_schema.schema['properties'].each do |property,property_schema|

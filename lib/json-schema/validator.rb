@@ -286,7 +286,7 @@ module JSON
     def handle_schema(parent_schema, obj)
       if obj.is_a?(Hash)
         schema_uri = parent_schema.uri.clone
-        schema = JSON::Schema.new(obj,schema_uri,@options[:version])
+        schema = JSON::Schema.new(obj,schema_uri,parent_schema.validator)
         if obj['id']
           Validator.add_schema(schema)
         end

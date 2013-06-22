@@ -3,7 +3,7 @@ module JSON
     class TypeV4Attribute < Attribute
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         union = true
-
+        types = current_schema.schema['type']
         if !types.is_a?(Array)
           types = [types]
           union = false

@@ -4,11 +4,11 @@ module JSON
   class Schema
 
     attr_accessor :schema, :uri, :validator
-    
+
     def initialize(schema,uri,parent_validator=nil)
       @schema = schema
       @uri = uri
-      
+
       # If there is an ID on this schema, use it to generate the URI
       if @schema['id']
         temp_uri = URI.parse(@schema['id'])
@@ -19,7 +19,7 @@ module JSON
         @uri = temp_uri
       end
       @uri.fragment = ''
-      
+
       # If there is a $schema on this schema, use it to determine which validator to use
       if @schema['$schema']
         u = URI.parse(@schema['$schema'])
@@ -31,13 +31,13 @@ module JSON
         @validator = parent_validator
       else
         @validator = JSON::Validator.default_validator
-      end  
+      end
     end
-    
+
     def validate(data, fragments, processor, options = {})
       @validator.validate(self, data, fragments, processor, options)
     end
-    
+
     def base_uri
       parts = @uri.to_s.split('/')
       parts.pop

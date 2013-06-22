@@ -3,7 +3,6 @@ module JSON
     class TypeAttribute < Attribute
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         union = true
-
         if options[:disallow]
           types = current_schema.schema['disallow']
         else
