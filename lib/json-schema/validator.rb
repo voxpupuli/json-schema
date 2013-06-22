@@ -504,7 +504,11 @@ module JSON
           schema_uri = URI.parse(fake_uri(schema))
           schema = JSON::Validator.parse(schema)
           if @options[:list]
-            schema = {"type" => "array", "items" => schema}
+            new_schema = {"type" => "array", "items" => schema}
+            if !schema["$schema"].nil?
+              new_schema["$schema"] = schema["$schema"]
+            end
+            schema = new_schema
           end
           schema = JSON::Schema.new(schema,schema_uri,@options[:version])
           Validator.add_schema(schema)
@@ -522,7 +526,11 @@ module JSON
           if Validator.schemas[schema_uri.to_s].nil?
             schema = JSON::Validator.parse(open(schema_uri.to_s).read)
             if @options[:list]
-              schema = {"type" => "array", "items" => schema}
+              new_schema = {"type" => "array", "items" => schema}
+              if !schema["$schema"].nil?
+                new_schema["$schema"] = schema["$schema"]
+              end
+              schema = new_schema
             end
             schema = JSON::Schema.new(schema,schema_uri,@options[:version])
             Validator.add_schema(schema)
@@ -532,7 +540,11 @@ module JSON
         end
       elsif schema.is_a?(Hash)
         if @options[:list]
-          schema = {"type" => "array", "items" => schema}
+          new_schema = {"type" => "array", "items" => schema}
+          if !schema["$schema"].nil?
+            new_schema["$schema"] = schema["$schema"]
+          end
+          schema = new_schema
         end
         schema_uri = URI.parse(fake_uri(serialize(schema)))
         schema = JSON::Schema.new(schema,schema_uri,@options[:version])
