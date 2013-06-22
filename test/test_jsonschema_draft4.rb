@@ -28,8 +28,8 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     data['a'] = true
     assert(!JSON::Validator.validate(schema,data))
 
-    assert(JSON::Validator.validate({'type' => 'integer'}, 3))
-    assert(!JSON::Validator.validate({'type' => 'integer'}, "hello"))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'integer'}, 3))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'integer'}, "hello"))
 
     # Test numbers
     schema["properties"]["a"]["type"] = "number"
@@ -45,9 +45,9 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     data['a'] = true
     assert(!JSON::Validator.validate(schema,data))
 
-    assert(JSON::Validator.validate({'type' => 'number'}, 3))
-    assert(JSON::Validator.validate({'type' => 'number'}, 3.14159265358979))
-    assert(!JSON::Validator.validate({'type' => 'number'}, "hello"))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'number'}, 3))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'number'}, 3.14159265358979))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'number'}, "hello"))
 
 
     # Test strings
@@ -64,9 +64,9 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     data['a'] = true
     assert(!JSON::Validator.validate(schema,data))
 
-    assert(JSON::Validator.validate({'type' => 'string'}, 'hello'))
-    assert(!JSON::Validator.validate({'type' => 'string'}, 3.14159265358979))
-    assert(!JSON::Validator.validate({'type' => 'string'}, []))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'string'}, 'hello'))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'string'}, 3.14159265358979))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'string'}, []))
 
 
     # Test booleans
@@ -86,11 +86,11 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     data['a'] = false
     assert(JSON::Validator.validate(schema,data))
 
-    assert(JSON::Validator.validate({'type' => 'boolean'}, true))
-    assert(JSON::Validator.validate({'type' => 'boolean'}, false))
-    assert(!JSON::Validator.validate({'type' => 'boolean'}, nil))
-    assert(!JSON::Validator.validate({'type' => 'boolean'}, 3))
-    assert(!JSON::Validator.validate({'type' => 'boolean'}, "hello"))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'boolean'}, true))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'boolean'}, false))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'boolean'}, nil))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'boolean'}, 3))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'boolean'}, "hello"))
 
 
     # Test object
@@ -107,11 +107,11 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     data['a'] = true
     assert(!JSON::Validator.validate(schema,data))
 
-    assert(JSON::Validator.validate({'type' => 'object'}, {'a' => true}))
-    assert(JSON::Validator.validate({'type' => 'object'}, {}))
-    assert(!JSON::Validator.validate({'type' => 'object'}, []))
-    assert(!JSON::Validator.validate({'type' => 'object'}, 3))
-    assert(!JSON::Validator.validate({'type' => 'object'}, "hello"))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'object'}, {'a' => true}))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'object'}, {}))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'object'}, []))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'object'}, 3))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'object'}, "hello"))
 
 
     # Test array
@@ -128,11 +128,11 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     data['a'] = true
     assert(!JSON::Validator.validate(schema,data))
 
-    assert(JSON::Validator.validate({'type' => 'array'}, ['a']))
-    assert(JSON::Validator.validate({'type' => 'array'}, []))
-    assert(!JSON::Validator.validate({'type' => 'array'}, {}))
-    assert(!JSON::Validator.validate({'type' => 'array'}, 3))
-    assert(!JSON::Validator.validate({'type' => 'array'}, "hello"))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'array'}, ['a']))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'array'}, []))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'array'}, {}))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'array'}, 3))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'array'}, "hello"))
 
 
     # Test null
@@ -149,10 +149,10 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     data['a'] = true
     assert(!JSON::Validator.validate(schema,data))
 
-    assert(JSON::Validator.validate({'type' => 'null'}, nil))
-    assert(!JSON::Validator.validate({'type' => 'null'}, false))
-    assert(!JSON::Validator.validate({'type' => 'null'}, []))
-    assert(!JSON::Validator.validate({'type' => 'null'}, "hello"))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'null'}, nil))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'null'}, false))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'null'}, []))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'null'}, "hello"))
 
 
     # Test any
@@ -169,11 +169,11 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     data['a'] = true
     assert(JSON::Validator.validate(schema,data))
 
-    assert(JSON::Validator.validate({'type' => 'any'}, true))
-    assert(JSON::Validator.validate({'type' => 'any'}, nil))
-    assert(JSON::Validator.validate({'type' => 'any'}, {}))
-    assert(JSON::Validator.validate({'type' => 'any'}, 3))
-    assert(JSON::Validator.validate({'type' => 'any'}, "hello"))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'any'}, true))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'any'}, nil))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'any'}, {}))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'any'}, 3))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'any'}, "hello"))
 
 
     # Test a union type
@@ -187,8 +187,8 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     data["a"] = false
     assert(!JSON::Validator.validate(schema,data))
 
-    assert(JSON::Validator.validate({'type' => ['string', 'null']}, "hello"))
-    assert(!JSON::Validator.validate({'type' => ['integer', 'object']}, "hello"))
+    assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => ['string', 'null']}, "hello"))
+    assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => ['integer', 'object']}, "hello"))
 
     # Test a union type with schemas
     schema["properties"]["a"]["type"] = [{ "type" => "string" }, {"type" => "object", "properties" => {"b" => {"type" => "integer"}}}]
@@ -953,6 +953,7 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     data2 = {"a" => nil}
 
     schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
       "properties" => { "a" => {"type" => ["string","null"], "format" => "ip-address"}}
     }
@@ -980,6 +981,7 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
 
   def test_dependency
     schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer"},
@@ -996,6 +998,7 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data))
 
     schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer"},
@@ -1015,6 +1018,7 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
 
   def test_default
     schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer", "default" => 42},
@@ -1029,6 +1033,7 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert_equal(42, data["a"])
 
     schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer", "default" => 42, "required" => true},
@@ -1043,6 +1048,7 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert_equal(42, data["a"])
 
     schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer", "default" => 42, "required" => true},
@@ -1052,6 +1058,7 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
 
 
     schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer", "default" => 42, "required" => true, "readonly" => true},
@@ -1066,6 +1073,7 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert_nil(data["a"])
 
     schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer", "default" => "42"},
