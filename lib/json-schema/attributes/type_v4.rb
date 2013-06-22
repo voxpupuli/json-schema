@@ -19,10 +19,18 @@ module JSON
         end
 
         if !valid
-          message = "The property '#{build_fragment(fragments)}' of type #{data.class} did not match the following type:"
-          types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
-          message.chop!
-          validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+          if union
+            message = "The property '#{build_fragment(fragments)}' of type #{data.class} did not match one or more of the following types:"
+            types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
+            message.chop!
+            validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+            validation_errors(processor).last.sub_errors = union_errors
+          else
+            message = "The property '#{build_fragment(fragments)}' of type #{data.class} did not match the following type:"
+            types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
+            message.chop!
+            validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+          end
         end
       end
 
