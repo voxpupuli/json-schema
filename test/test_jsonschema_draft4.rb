@@ -189,21 +189,6 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
 
     assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => ['string', 'null']}, "hello"))
     assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => ['integer', 'object']}, "hello"))
-
-    # Test a union type with schemas
-    schema["properties"]["a"]["type"] = [{ "type" => "string" }, {"type" => "object", "properties" => {"b" => {"type" => "integer"}}}]
-
-    data["a"] = "test"
-    assert(JSON::Validator.validate(schema,data))
-
-    data["a"] = 5
-    assert(!JSON::Validator.validate(schema,data))
-
-    data["a"] = {"b" => 5}
-    assert(JSON::Validator.validate(schema,data))
-
-    data["a"] = {"b" => "taco"}
-    assert(!JSON::Validator.validate(schema,data))
    end
 
 
