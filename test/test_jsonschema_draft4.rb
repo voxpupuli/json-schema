@@ -375,6 +375,47 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
   end
 
 
+  def test_min_properties
+    # Set up the default datatype
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "minProperties" => 2,
+      "properties" => {
+      }
+    }
+
+    data = {"a" => nil}
+    assert(!JSON::Validator.validate(schema,data))
+
+    data = {"a" => nil, "b" => nil}
+    assert(JSON::Validator.validate(schema,data))
+
+    data = {"a" => nil, "b" => nil, "c" => nil}
+    assert(JSON::Validator.validate(schema,data))
+  end
+
+
+
+  def test_max_properties
+    # Set up the default datatype
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "maxProperties" => 2,
+      "properties" => {
+      }
+    }
+
+    data = {"a" => nil}
+    assert(JSON::Validator.validate(schema,data))
+
+    data = {"a" => nil, "b" => nil}
+    assert(JSON::Validator.validate(schema,data))
+
+    data = {"a" => nil, "b" => nil, "c" => nil}
+    assert(!JSON::Validator.validate(schema,data))
+  end
+
+
 
   def test_unique_items
     # Set up the default datatype
