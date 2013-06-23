@@ -1200,6 +1200,28 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     data = {"a" => {"b" => 5}}
     assert(JSON::Validator.validate(schema,data))
   end
+
+
+  def test_definitions
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "type" => "array",
+      "items" => { "$ref" => "#/definitions/positiveInteger"},
+      "definitions" => {
+        "positiveInteger" => {
+          "type" => "integer",
+          "minimum" => 0,
+          "exclusiveMinimum" => true
+        }
+      }
+    }
+
+    data = [1,2,3]
+    assert(JSON::Validator.validate(schema,data))
+
+    data = [-1,2,3]
+    assert(!JSON::Validator.validate(schema,data))
+  end
 end
 
 

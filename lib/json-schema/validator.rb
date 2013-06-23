@@ -248,6 +248,13 @@ module JSON
         end
       end
 
+      # "definitions" are schemas in V4
+      if parent_schema.schema["definitions"]
+        parent_schema.schema["definitions"].each do |k,v|
+          handle_schema(parent_schema, v)
+        end
+      end
+
       # All properties are schemas
       if parent_schema.schema["properties"]
         parent_schema.schema["properties"].each do |k,v|
