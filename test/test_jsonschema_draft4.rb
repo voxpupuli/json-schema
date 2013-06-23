@@ -1116,6 +1116,38 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
   end
 
 
+  def test_one_of
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "oneOf" => [
+        {
+          "properties" => {"a" => {"type" => "string"}},
+          "required" => ["a"]
+        },
+        {
+          "properties" => {"b" => {"type" => "integer"}}
+        }
+      ]
+    }
+
+    data = {"a" => "hello", "b" => 5}
+    assert(!JSON::Validator.validate(schema,data))
+
+    # This passes because b is not required, thus matches both schemas
+    data = {"a" => "hello"}
+    assert(!JSON::Validator.validate(schema,data))
+
+    data = {"a" => "hello", "b" => "taco"}
+    assert(JSON::Validator.validate(schema,data))
+
+    data = {"b" => 5}
+    assert(JSON::Validator.validate(schema,data))
+
+    data = {"a" => 5, "b" => "taco"}
+    assert(!JSON::Validator.validate(schema,data))
+  end
+
+
   def test_not
     # Start with a simple not
     schema = {
