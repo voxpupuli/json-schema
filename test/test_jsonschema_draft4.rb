@@ -562,12 +562,12 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
   end
 
 
-  def test_divisible_by
+  def test_multiple_of
     # Set up the default datatype
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "properties" => {
-        "a" => {"divisibleBy" => 1.1}
+        "a" => {"multipleOf" => 1.1}
       }
     }
 
@@ -581,7 +581,7 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     data["a"] = 3.4
     assert(!JSON::Validator.validate(schema,data))
 
-    schema["properties"]["a"]["divisibleBy"] = 2.0
+    schema["properties"]["a"]["multipleOf"] = 2.0
 
     data["a"] = 4.0
     assert(JSON::Validator.validate(schema,data))
@@ -590,7 +590,7 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(JSON::Validator.validate(schema,data))
 
     data["a"] = 5
-    schema["properties"]["a"]["divisibleBy"] = 0
+    schema["properties"]["a"]["multipleOf"] = 0
     assert(!JSON::Validator.validate(schema,data))
   end
 

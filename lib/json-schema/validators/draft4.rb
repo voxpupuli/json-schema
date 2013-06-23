@@ -21,7 +21,7 @@ module JSON
           "uniqueItems" => JSON::Schema::UniqueItemsAttribute,
           "minLength" => JSON::Schema::MinLengthAttribute,
           "maxLength" => JSON::Schema::MaxLengthAttribute,
-          "multipleOf" => JSON::Schema::DivisibleByAttribute,
+          "multipleOf" => JSON::Schema::MultipleOfAttribute,
           "enum" => JSON::Schema::EnumAttribute,
           "properties" => JSON::Schema::PropertiesV4Attribute,
           "required" => JSON::Schema::RequiredAttribute,
