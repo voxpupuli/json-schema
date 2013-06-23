@@ -595,42 +595,6 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
   end
 
 
-
-  def test_disallow
-    # Set up the default datatype
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "properties" => {
-        "a" => {"disallow" => "integer"}
-      }
-    }
-
-    data = {
-      "a" => nil
-    }
-
-
-    data["a"] = 'string'
-    assert(JSON::Validator.validate(schema,data))
-
-    data["a"] = 5
-    assert(!JSON::Validator.validate(schema,data))
-
-
-    schema["properties"]["a"]["disallow"] = ["integer","string"]
-    data["a"] = 'string'
-    assert(!JSON::Validator.validate(schema,data))
-
-    data["a"] = 5
-    assert(!JSON::Validator.validate(schema,data))
-
-    data["a"] = false
-    assert(JSON::Validator.validate(schema,data))
-
-  end
-
-
-
   def test_extends
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
