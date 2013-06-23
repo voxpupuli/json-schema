@@ -595,33 +595,6 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
   end
 
 
-  def test_extends
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "properties" => {
-        "a" => { "type" => "integer"}
-      }
-    }
-
-    schema2 = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "properties" => {
-        "a" => { "maximum" => 5 }
-      }
-    }
-
-    data = {
-      "a" => 10
-    }
-
-    assert(JSON::Validator.validate(schema,data))
-    assert(!JSON::Validator.validate(schema2,data))
-
-    schema["extends"] = schema2
-
-    assert(!JSON::Validator.validate(schema,data))
-  end
-
   def test_pattern_properties
     # Set up the default datatype
     schema = {
