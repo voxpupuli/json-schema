@@ -1,6 +1,6 @@
 h1. Ruby JSON Schema Validator
 
-This library is intended to provide Ruby with an interface for validating JSON objects against a JSON schema conforming to "JSON Schema Draft 3":http://tools.ietf.org/html/draft-zyp-json-schema-03. Legacy support for "JSON Schema Draft 2":http://tools.ietf.org/html/draft-zyp-json-schema-02 and "JSON Schema Draft 1":http://tools.ietf.org/html/draft-zyp-json-schema-01 is also included.
+This library is intended to provide Ruby with an interface for validating JSON objects against a JSON schema conforming to "JSON Schema Draft 4":http://tools.ietf.org/html/draft-zyp-json-schema-04. Legacy support for "JSON Schema Draft 3":http://tools.ietf.org/html/draft-zyp-json-schema-03, "JSON Schema Draft 2":http://tools.ietf.org/html/draft-zyp-json-schema-02, and "JSON Schema Draft 1":http://tools.ietf.org/html/draft-zyp-json-schema-01 is also included.
 
 h2. Dependencies
 
@@ -18,7 +18,7 @@ From the git repo:
 
 <pre>
 $ gem build json-schema.gemspec
-$ gem install json-schema-1.1.1.gem
+$ gem install json-schema-2.0.0.gem
 </pre>
 
 
@@ -28,7 +28,7 @@ Three base validation methods exist: <code>validate</code>, <code>validate!</cod
 
 All methods take two arguments, which can be either a JSON string, a file containing JSON, or a Ruby object representing JSON data. The first argument to these methods is always the schema, the second is always the data to validate. An optional third options argument is also accepted; available options are used in the examples below.
 
-By default, the validator uses the "JSON Schema Draft 3":http://tools.ietf.org/html/draft-zyp-json-schema-03 specification for validation; however, the user is free to specify additional specifications or extend existing ones. Legacy support for Draft 1 and Draft 2 is included by either passing an optional <code>:version</code> parameter to the <code>validate</code> method (set either as <code>:draft1</code> or <code>draft2</code>), or by declaring the <code>$schema</code> attribute in the schema and referencing the appropriate specification URI. Note that the <code>$schema</code> attribute takes precedence over the <code>:version</code> option during parsing and validation.
+By default, the validator uses the "JSON Schema Draft 4":http://tools.ietf.org/html/draft-zyp-json-schema-04 specification for validation; however, the user is free to specify additional specifications or extend existing ones. Legacy support for Draft 1, Draft 2, and Draft 3 is included by either passing an optional <code>:version</code> parameter to the <code>validate</code> method (set either as <code>:draft1</code> or <code>draft2</code>), or by declaring the <code>$schema</code> attribute in the schema and referencing the appropriate specification URI. Note that the <code>$schema</code> attribute takes precedence over the <code>:version</code> option during parsing and validation.
 
 h3. Validate Ruby objects against a Ruby schema
 
@@ -38,8 +38,9 @@ require 'json-schema'
 
 schema = {
   "type" => "object",
+  "required" => ["a"],
   "properties" => {
-    "a" => {"type" => "integer", "required" => true}
+    "a" => {"type" => "integer"}
   }
 }
 
@@ -55,7 +56,7 @@ h3. Validate a JSON string against a JSON schema file
 <pre>
 require 'rubygems'
 require 'json-schema'
-  
+
 JSON::Validator.validate('schema.json', '{"a" : 5}')
 </pre>
 
@@ -74,14 +75,15 @@ h3. Catch a validation error and print it out
 <pre>
 require 'rubygems'
 require 'json-schema'
-  
+
 schema = {
   "type" => "object",
+  "required" => ["a"],
   "properties" => {
-    "a" => {"type" => "integer", "required" => true}
+    "a" => {"type" => "integer"}
   }
 }
-  
+
 data = {
   "a" => "taco"
 }
@@ -99,22 +101,23 @@ h3. Fully validate against a schema and catch all errors
 <pre>
 require 'rubygems'
 require 'json-schema'
-  
+
 schema = {
   "type" => "object",
+  "required" => ["a","b"],
   "properties" => {
-    "a" => {"type" => "integer", "required" => true},
-    "b" => {"type" => "string", "required" => "true"}
+    "a" => {"type" => "integer"},
+    "b" => {"type" => "string"}
   }
 }
-  
+
 data = {
   "a" => "taco"
 }
 
 errors = JSON::Validator.fully_validate(schema, data)
 
-# ["The property '#/a' of type String did not match the following type: integer in schema 03179a21-197e-5414-9611-e9f63e8324cd#", "The property '#/' did not contain a required property of 'b' in schema 03179a21-197e-5414-9611-e9f63e8324cd#"] 
+# ["The property '#/a' of type String did not match the following type: integer in schema 03179a21-197e-5414-9611-e9f63e8324cd#", "The property '#/' did not contain a required property of 'b' in schema 03179a21-197e-5414-9611-e9f63e8324cd#"]
 </pre>
 
 h3. Fully validate against a schema and catch all errors as objects
@@ -122,15 +125,16 @@ h3. Fully validate against a schema and catch all errors as objects
 <pre>
 require 'rubygems'
 require 'json-schema'
-  
+
 schema = {
   "type" => "object",
+  "required" => ["a","b"],
   "properties" => {
-    "a" => {"type" => "integer", "required" => true},
-    "b" => {"type" => "string", "required" => "true"}
+    "a" => {"type" => "integer"},
+    "b" => {"type" => "string"}
   }
 }
-  
+
 data = {
   "a" => "taco"
 }
@@ -149,8 +153,9 @@ require 'json-schema'
 
 schema = {
   "type" => "object",
+  "required" => ["a"],
   "properties" => {
-    "a" => {"type" => "integer", "required" => "true"}  # This will fail schema validation!
+    "a" => {"type" => "integer"}  # This will fail schema validation!
   }
 }
 
@@ -163,7 +168,7 @@ JSON::Validator.validate(schema, data, :validate_schema => true)
 
 h3. Validate a JSON object against a JSON schema object, while inserting default values from the schema
 
-With the :insert_defaults option set to true any missing property that has a 
+With the :insert_defaults option set to true any missing property that has a
 default value specified in the schema will be inserted into the validated data. The inserted default value is validated hence catching a schema that specifies an invalid default value.
 
 <pre>
@@ -172,13 +177,14 @@ require 'json-schema'
 
 schema = {
   "type" => "object",
-  "properties" => { 
-    "a" => {"type" => "integer", "default" => 42, "required" => "true"},
+  "required" => ["a"],
+  "properties" => {
+    "a" => {"type" => "integer", "default" => 42},
     "b" => {"type" => "integer"}
   }
 }
 
-# Would not normally validate because "a" is missing and required by schema, 
+# Would not normally validate because "a" is missing and required by schema,
 # but "default" option allows insertion of valid default.
 data = {
   "b" => 5
@@ -189,9 +195,9 @@ JSON::Validator.validate(schema, data)
 
 JSON::Validator.validate(schema, data, :insert_defaults => true)
 # true
-# data = { 
-#   "a" => 42, 
-#   "b" => 5 
+# data = {
+#   "a" => 42,
+#   "b" => 5
 # }
 
 </pre>
@@ -223,7 +229,7 @@ For this example, we are going to extend the "JSON Schema Draft 3":http://tools.
 <pre>
 require 'rubygems'
 require 'json-schema'
-  
+
 class BitwiseAndAttribute < JSON::Schema::Attribute
   def self.validate(current_schema, data, fragments, processor, validator, options = {})
     if data.is_a?(Integer) && data & current_schema.schema['bitwise-and'].to_i == 0
@@ -240,7 +246,7 @@ class ExtendedSchema < JSON::Schema::Validator
     @attributes["bitwise-and"] = BitwiseAndAttribute
     @uri = URI.parse("http://test.com/test.json")
   end
-  
+
   JSON::Validator.register_validator(self.new)
 end
 
@@ -277,7 +283,7 @@ If more than one of the supported JSON backends are installed, the <code>yajl-ru
 <pre>
 JSON::Validator.json_backend = :json
 </pre>
-  
+
 Optionally, the JSON Schema library supports using the MultiJSON library for selecting JSON backends. If the MultiJSON library is installed, it will be autoloaded.
 
 h2. Notes
