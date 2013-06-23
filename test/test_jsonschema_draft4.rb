@@ -1057,6 +1057,34 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
   end
 
 
+  def test_all_of
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "allOf" => [
+        {
+          "properties" => {"a" => {"type" => "string"}},
+          "required" => ["a"]
+        },
+        {
+          "properties" => {"b" => {"type" => "integer"}}
+        }
+      ]
+    }
+
+    data = {"a" => "hello", "b" => 5}
+    assert(JSON::Validator.validate(schema,data))
+
+    data = {"a" => "hello"}
+    assert(JSON::Validator.validate(schema,data))
+
+    data = {"a" => "hello", "b" => "taco"}
+    assert(!JSON::Validator.validate(schema,data))
+
+    data = {"b" => 5}
+    assert(!JSON::Validator.validate(schema,data))
+  end
+
+
   def test_not
     # Start with a simple not
     schema = {
