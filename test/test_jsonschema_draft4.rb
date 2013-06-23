@@ -1055,6 +1055,26 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert_equal("42",data["a"])
 
   end
+
+
+  def test_not
+    # Start with a simple not
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "properties" => {
+        "a" => {"not" => { "type" => ["string", "boolean"]}}
+      }
+    }
+
+    data = {"a" => 1}
+    assert(JSON::Validator.validate(schema,data))
+
+    data = {"a" => "hi!"}
+    assert(!JSON::Validator.validate(schema,data))
+
+    data = {"a" => true}
+    assert(!JSON::Validator.validate(schema,data))
+  end
 end
 
 
