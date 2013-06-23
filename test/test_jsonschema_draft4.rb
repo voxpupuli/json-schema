@@ -196,8 +196,9 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     # Set up the default datatype
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
+      "required" => ["a"],
       "properties" => {
-        "a" => {"required" => true}
+        "a" => {}
       }
     }
     data = {}
@@ -778,7 +779,8 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
-      "properties" => { "a" => {"type" => "integer", "required" => true} }
+      "required" => ["a"],
+      "properties" => { "a" => {"type" => "integer"} }
     }
 
     data = [{"a" => 1},{"a" => 2},{"a" => 3}]
@@ -1019,8 +1021,9 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
+      "required" => ["a"],
       "properties" => {
-        "a" => {"type" => "integer", "default" => 42, "required" => true},
+        "a" => {"type" => "integer", "default" => 42},
         "b" => {"type" => "integer"}
       }
     }
@@ -1034,8 +1037,9 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
+      "required" => ["a"],
       "properties" => {
-        "a" => {"type" => "integer", "default" => 42, "required" => true},
+        "a" => {"type" => "integer", "default" => 42},
         "b" => {"type" => "integer"}
       }
     }
@@ -1044,8 +1048,9 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
+      "required" => ["a"],
       "properties" => {
-        "a" => {"type" => "integer", "default" => 42, "required" => true, "readonly" => true},
+        "a" => {"type" => "integer", "default" => 42, "readonly" => true},
         "b" => {"type" => "integer"}
       }
     }
