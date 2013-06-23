@@ -92,7 +92,6 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'boolean'}, 3))
     assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => 'boolean'}, "hello"))
 
-
     # Test object
     schema["properties"]["a"]["type"] = "object"
     data["a"] = {}
@@ -973,7 +972,7 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
         "b" => {"type" => "integer"}
       },
       "dependencies" => {
-        "a" => "b"
+        "a" => ["b"]
       }
     }
 
