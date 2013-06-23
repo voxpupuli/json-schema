@@ -4,7 +4,7 @@ This library is intended to provide Ruby with an interface for validating JSON o
 
 h2. Version 2.0.0 Upgrade Notes
 
-Please be aware that the upgrade to version 2.0.0 will use Draft-04 *by default*, so schemas that do not declare a validator using the `$schema` keyword will use Draft-04 now instead of Draft-03. This is the reason for the major version upgrade.
+Please be aware that the upgrade to version 2.0.0 will use Draft-04 *by default*, so schemas that do not declare a validator using the <code>$schema</code> keyword will use Draft-04 now instead of Draft-03. This is the reason for the major version upgrade.
 
 h2. Dependencies
 
