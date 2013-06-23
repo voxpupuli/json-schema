@@ -1133,6 +1133,40 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
 
     data = {"a" => true}
     assert(!JSON::Validator.validate(schema,data))
+
+    # Sub-schema not
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "properties" => {
+        "a" => {"not" => {"anyOf" => [
+            {
+              "type" => ["string","boolean"]
+            },
+            {
+              "type" => "object",
+              "properties" => {
+                "b" => {"type" => "boolean"}
+              }
+            }
+          ]}
+        }
+      }
+    }
+
+    data = {"a" => 1}
+    assert(JSON::Validator.validate(schema,data))
+
+    data = {"a" => "hi!"}
+    assert(!JSON::Validator.validate(schema,data))
+
+    data = {"a" => true}
+    assert(!JSON::Validator.validate(schema,data))
+
+    data = {"a" => {"b" => true}}
+    assert(!JSON::Validator.validate(schema,data))
+
+    data = {"a" => {"b" => 5}}
+    assert(JSON::Validator.validate(schema,data))
   end
 end
 
