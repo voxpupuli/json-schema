@@ -292,10 +292,6 @@ Optionally, the JSON Schema library supports using the MultiJSON library for sel
 
 h2. Notes
 
-The following core schema attributes are not implemented:
-
-* default - This library aims to solely be a validator and does not modify an object it is validating.
-
 The 'format' attribute is only validated for the following values:
 
 * date-time
