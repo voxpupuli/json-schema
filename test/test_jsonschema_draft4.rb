@@ -889,9 +889,9 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
 
     data = {"a" => "2010-01-01T12:00:00Z"}
     assert(JSON::Validator.validate(schema,data))
-  data = {"a" => "2010-01-01T12:00:00.1Z"}
+    data = {"a" => "2010-01-01T12:00:00.1Z"}
     assert(JSON::Validator.validate(schema,data))
-  data = {"a" => "2010-01-01T12:00:00,1Z"}
+    data = {"a" => "2010-01-01T12:00:00,1Z"}
     assert(JSON::Validator.validate(schema,data))
     data = {"a" => "2010-01-32T12:00:00Z"}
     assert(!JSON::Validator.validate(schema,data))
@@ -902,8 +902,6 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     data = {"a" => "2010-01-01T12:60:00Z"}
     assert(!JSON::Validator.validate(schema,data))
     data = {"a" => "2010-01-01T12:00:60Z"}
-    assert(!JSON::Validator.validate(schema,data))
-    data = {"a" => "2010-01-01T12:00:00"}
     assert(!JSON::Validator.validate(schema,data))
     data = {"a" => "2010-01-01T12:00:00z"}
     assert(!JSON::Validator.validate(schema,data))
