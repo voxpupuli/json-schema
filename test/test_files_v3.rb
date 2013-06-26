@@ -40,4 +40,13 @@ class JSONSchemaTest < Test::Unit::TestCase
     data = {"b" => {"a" => "boo"}}
     assert(!JSON::Validator.validate(File.join(File.dirname(__FILE__),"schemas/good_schema_1.json"),data))
   end
+
+  def test_file_extends
+    data = {"a" => 5}
+    assert(JSON::Validator.validate(File.join(File.dirname(__FILE__),"schemas/good_schema_extends1.json"),data))
+
+    data = {"a" => 5, "b" => {"a" => 5}}
+    assert(JSON::Validator.validate(File.join(File.dirname(__FILE__),"schemas/good_schema_extends2.json"),data))
+  end
+
 end
