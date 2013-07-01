@@ -56,13 +56,13 @@ module JSON
           end
         elsif !valid
           if union
-            message = "The property '#{build_fragment(fragments)}' of type #{data.class} did not match one or more of the following types:"
+            message = "The property '#{build_fragment(fragments)}' of type #{type_of_data(data)} did not match one or more of the following types:"
             types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
             message.chop!
             validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
             validation_errors(processor).last.sub_errors = union_errors
           else
-            message = "The property '#{build_fragment(fragments)}' of type #{data.class} did not match the following type:"
+            message = "The property '#{build_fragment(fragments)}' of type #{type_of_data(data)} did not match the following type:"
             types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
             message.chop!
             validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
@@ -84,6 +84,18 @@ module JSON
       def self.data_valid_for_type?(data, type)
         valid_classes = TYPE_CLASS_MAPPINGS.fetch(type) { return true }
         Array(valid_classes).any? { |c| data.is_a?(c) }
+      end
+
+      # Lookup Schema type of given class instance
+      def self.type_of_data(data)
+        type, klass = TYPE_CLASS_MAPPINGS.map { |k,v| [k,v] }.sort_by { |i|
+          k,v = i
+          -Array(v).map { |klass| klass.ancestors.size }.max
+        }.find { |i|
+          k,v = i
+          Array(v).any? { |klass| data.kind_of?(klass) }
+        }
+        type
       end
     end
   end
