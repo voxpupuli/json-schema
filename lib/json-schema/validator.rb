@@ -170,8 +170,39 @@ module JSON
       @@mutex.synchronize { @base_schema = initialize_schema(schema_data) }
       @data = initialize_data(data)
       @@mutex.synchronize { build_schemas(@base_schema) }
+
+      # If the :fragment option is set, try and validate against the fragment
+      if opts[:fragment]
+        @base_schema = schema_from_fragment(@base_schema, opts[:fragment])
+      end
     end
 
+    def schema_from_fragment(base_schema, fragment)
+      fragments = fragment.split("/")
+
+      # ensure the first element was a hash, per the fragment spec
+      if fragments.shift != "#"
+        raise JSON::Schema::SchemaError.new("Invalid fragment syntax in :fragment option")
+      end
+
+      fragments.each do |f|
+        if base_schema.is_a?(Hash)
+          if !base_schema.has_key?(f)
+            raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
+          end
+          base_schema = base_schema[f]
+        elsif base_schema.is_a?(Array)
+          if base_schema[f.to_i].nil?
+            raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
+          end
+          base_schema = base_schema[f.to_i]
+        else
+          raise JSON::Schema::SchemaError.new("Invalid schema encountered when resolving :fragment option")
+        end
+      end
+
+      base_schema
+    end
 
     # Run a simple true/false validation of data against a schema
     def validate()
