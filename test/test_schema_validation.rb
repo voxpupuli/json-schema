@@ -76,4 +76,10 @@ class JSONSchemaValidation < Test::Unit::TestCase
     assert_equal 1, errors.size
     assert_match /the property .*required.*did not match/i, errors.first
   end
+
+  def test_validate_schema_3_without_version_option
+    data = {"b" => {"a" => 5}}
+    assert(JSON::Validator.validate(valid_schema_v3,data,:validate_schema => true))
+    assert(!JSON::Validator.validate(invalid_schema_v3,data,:validate_schema => true))
+  end
 end

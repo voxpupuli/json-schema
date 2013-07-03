@@ -124,9 +124,9 @@ module JSON
       # I'm not a fan of this, but it's quick and dirty to get it working for now
       return "draft-04" unless version
       case version.to_s
-      when "draft4"
+      when "draft4", "http://json-schema.org/draft-04/schema#"
         "draft-04"
-      when "draft3"
+      when "draft3", "http://json-schema.org/draft-03/schema#"
         "draft-03"
       when "draft2"
         "draft-02"
@@ -157,19 +157,22 @@ module JSON
       @validation_options = @options[:record_errors] ? {:record_errors => true} : {}
       @validation_options[:insert_defaults] = true if @options[:insert_defaults]
 
+      @@mutex.synchronize { @base_schema = initialize_schema(schema_data) }
+      @data = initialize_data(data)
+      @@mutex.synchronize { build_schemas(@base_schema) }
+
       # validate the schema, if requested
       if @options[:validate_schema]
         begin
-          meta_validator = JSON::Validator.new(self.class.metaschema_for(version_string), schema_data)
+          if @base_schema.schema["$schema"]
+            version_string = @options[:version] = self.class.version_string_for(@base_schema.schema["$schema"])
+          end
+          meta_validator = JSON::Validator.new(self.class.metaschema_for(version_string), @base_schema.schema)
           meta_validator.validate
         rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
           raise $!
         end
       end
-
-      @@mutex.synchronize { @base_schema = initialize_schema(schema_data) }
-      @data = initialize_data(data)
-      @@mutex.synchronize { build_schemas(@base_schema) }
 
       # If the :fragment option is set, try and validate against the fragment
       if opts[:fragment]
