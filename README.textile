@@ -149,6 +149,34 @@ errors = JSON::Validator.fully_validate(schema, data, :errors_as_objects => true
 
 </pre>
 
+h3. Validate against a fragment of a supplied schema
+
+<pre>
+  require 'rubygems'
+  require 'json-schema'
+
+  schema = {
+    "type" => "object",
+    "required" => ["a","b"],
+    "properties" => {
+      "a" => {"type" => "integer"},
+      "b" => {"type" => "string"},
+      "c" => {
+        "type" => "object",
+        "properties" => {
+          "z" => {"type" => "integer"}
+        }
+      }
+    }
+  }
+
+  data = {
+    "z" => 1
+  }
+
+  JSON::Validator.validate(schema, data, :fragment => "#/properties/c")
+</pre>
+
 h3. Validate a JSON object against a JSON schema object, while also validating the schema itself
 
 <pre>
