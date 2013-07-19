@@ -9,6 +9,8 @@ module JSON
       @schema = schema
       @uri = uri
 
+      self.class.add_indifferent_access(@schema)
+
       # If there is an ID on this schema, use it to generate the URI
       if @schema['id'] && @schema['id'].kind_of?(String)
         temp_uri = URI.parse(@schema['id'])
@@ -36,6 +38,25 @@ module JSON
 
     def validate(data, fragments, processor, options = {})
       @validator.validate(self, data, fragments, processor, options)
+    end
+
+    def self.add_indifferent_access(schema)
+      if schema.is_a?(Hash)
+        schema.default_proc = proc do |hash,key|
+          if hash.has_key?(key)
+            hash[key]
+          else
+            key = case key
+            when Symbol then key.to_s
+            when String then key.to_sym
+            end
+            hash.has_key?(key) ? hash[key] : nil
+          end
+        end
+        schema.keys.each do |key|
+          add_indifferent_access(schema[key])
+        end
+      end
     end
 
     def base_uri

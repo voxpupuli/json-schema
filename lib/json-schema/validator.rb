@@ -636,6 +636,7 @@ module JSON
           end
         end
       end
+      JSON::Schema.add_indifferent_access(data)
       data
     end
 
