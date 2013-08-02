@@ -277,6 +277,15 @@ module JSON
         end
       end
 
+      # handle validations that always contain schemas
+      ["allOf", "anyOf", "oneOf", "not"].each do |key|
+        if parent_schema.schema.has_key?(key)
+          validations = parent_schema.schema[key]
+          validations = [validations] unless validations.is_a?(Array)
+          validations.each {|v| handle_schema(parent_schema, v) }
+        end
+      end
+
       # Check for schemas in union types
       ["type", "disallow"].each do |key|
         if parent_schema.schema[key] && parent_schema.schema[key].is_a?(Array)
