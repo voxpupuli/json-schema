@@ -1,0 +1,15 @@
+{ "$schema" : "http://json-schema.org/draft-04/schema#"
+, "type" : "object"
+, "properties" :
+  { "names" :
+    { "type" : "array"
+    , "items" :
+      { "anyOf" :
+        [ { "$ref" : "any_of_ref_john_schema.json" }
+        , { "$ref" : "any_of_ref_jane_schema.json" }
+        , { "$ref" : "any_of_ref_jimmy_schema.json" }
+        ]
+      }
+    }
+  }
+}
