@@ -1146,6 +1146,36 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
   end
 
 
+  def test_one_of_with_string_patterns
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "oneOf" => [
+        {
+          "properties" => {"a" => {"type" => "string", "pattern" => "foo"}},
+        },
+        {
+          "properties" => {"a" => {"type" => "string", "pattern" => "bar"}},
+        },
+        {
+          "properties" => {"a" => {"type" => "string", "pattern" => "baz"}},
+        }
+      ]
+    }
+
+    data = {"a" => "foo"}
+    assert(JSON::Validator.validate(schema,data))
+
+    data = {"a" => "foobar"}
+    assert(!JSON::Validator.validate(schema,data))
+
+    data = {"a" => "baz"}
+    assert(JSON::Validator.validate(schema,data))
+
+    data = {"a" => 5}
+    assert(!JSON::Validator.validate(schema,data))
+  end
+
+
   def test_not
     # Start with a simple not
     schema = {
