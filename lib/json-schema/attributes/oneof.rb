@@ -7,11 +7,10 @@ module JSON
           schema = JSON::Schema.new(element,current_schema.uri,validator)
 
           begin
-            valid = schema.validate(data,fragments,processor,options)
-            # handle when option[;record_errors] => true
-            validation_errors += 1 unless valid
+            # need to raise exceptions on error because
+            # schema.validate doesn't reliably return true/false
+            schema.validate(data,fragments,processor,options.merge(:record_errors => false))
           rescue ValidationError
-            # handle when option[;record_errors] => false
             validation_errors += 1
           end
 
