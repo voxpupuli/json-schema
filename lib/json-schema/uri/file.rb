@@ -1,3 +1,4 @@
+require 'rbconfig'
 require 'uri'
 
 module URI
@@ -14,7 +15,10 @@ module URI
         ].freeze
 
     def initialize(*arg)
-      arg[2] = ""
+      # arg[2] is the 'host'; this logic to set it to "" causes file schemes with UNC to break
+      # so don't do it on windows platforms
+      is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
+      arg[2] = "" unless is_windows
       super(*arg)
     end
 
