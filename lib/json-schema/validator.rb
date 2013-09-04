@@ -189,16 +189,21 @@ module JSON
       end
 
       fragments.each do |f|
-        if base_schema.is_a?(Hash)
+        if base_schema.is_a?(JSON::Schema) #test if fragment(e.g. #) is a JSON:Schema instance
+          if !base_schema.schema().has_key?(f)
+            raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
+          end
+        base_schema = base_schema.schema()[f]        
+        elsif base_schema.is_a?(Hash)
           if !base_schema.has_key?(f)
             raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
           end
-          base_schema = base_schema[f]
+        base_schema = initialize_schema(base_schema[f]) #need to return a Schema instance for validation to work
         elsif base_schema.is_a?(Array)
           if base_schema[f.to_i].nil?
             raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
           end
-          base_schema = base_schema[f.to_i]
+        base_schema = initialize_schema(base_schema[f.to_i])
         else
           raise JSON::Schema::SchemaError.new("Invalid schema encountered when resolving :fragment option")
         end
