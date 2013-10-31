@@ -969,8 +969,6 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     assert(JSON::Validator.validate(schema,data))
     data = {"a" => "2010-01-01T12:00:00+01:30"}
     assert(JSON::Validator.validate(schema,data))
-    data = {"a" => "2010-01-01T12:00:00+0234"}
-    assert(!JSON::Validator.validate(schema,data))
     data = {"a" => "2010-01-01T12:00:00+01:"}
     assert(!JSON::Validator.validate(schema,data))
     data = {"a" => "2010-01-01T12:00:00+0"}
