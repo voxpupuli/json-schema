@@ -1,0 +1,17 @@
+{ "$schema": "http://json-schema.org/draft-04/schema#"
+, "type": "object"
+, "properties" :
+  { "rel" :
+    { "type" : "array"
+    , "items" :
+      [ { "type" : "string"
+        , "pattern" : "up"
+        }
+      ]
+    }
+  , "href" :
+    { "type" : "string"
+    }
+  }
+}
+
