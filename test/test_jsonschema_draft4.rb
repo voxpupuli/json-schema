@@ -1137,6 +1137,8 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
 
     data = {"a" => "hello", "b" => "taco"}
     assert(JSON::Validator.validate(schema,data))
+    errors = JSON::Validator.fully_validate(schema,data, :errors_as_objects => true)
+    assert(errors.empty?, errors.map{|e| e[:message] }.join("\n"))
 
     data = {"b" => 5}
     assert(JSON::Validator.validate(schema,data))
