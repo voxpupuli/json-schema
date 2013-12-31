@@ -189,21 +189,28 @@ module JSON
       end
 
       fragments.each do |f|
-        if base_schema.is_a?(Hash)
+        if base_schema.is_a?(JSON::Schema) #test if fragment is a JSON:Schema instance
+          if !base_schema.schema.has_key?(f)
+            raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
+          end
+        base_schema = base_schema.schema[f]
+        elsif base_schema.is_a?(Hash)
           if !base_schema.has_key?(f)
             raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
           end
-          base_schema = base_schema[f]
+        base_schema = initialize_schema(base_schema[f]) #need to return a Schema instance for validation to work
         elsif base_schema.is_a?(Array)
           if base_schema[f.to_i].nil?
             raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
           end
-          base_schema = base_schema[f.to_i]
+        base_schema = initialize_schema(base_schema[f.to_i])
         else
           raise JSON::Schema::SchemaError.new("Invalid schema encountered when resolving :fragment option")
         end
       end
-
+      if @options[:list] #check if the schema is validating a list
+        base_schema.schema = schema_to_list(base_schema.schema)
+      end
       base_schema
     end
 
@@ -553,18 +560,23 @@ module JSON
       @@fake_uri_generator.call(schema)
     end
 
+    def schema_to_list(schema)
+      new_schema = {"type" => "array", "items" => schema}
+      if !schema["$schema"].nil?
+        new_schema["$schema"] = schema["$schema"]
+      end
+
+      new_schema
+    end
+
     def initialize_schema(schema)
       if schema.is_a?(String)
         begin
           # Build a fake URI for this
           schema_uri = URI.parse(fake_uri(schema))
           schema = JSON::Validator.parse(schema)
-          if @options[:list]
-            new_schema = {"type" => "array", "items" => schema}
-            if !schema["$schema"].nil?
-              new_schema["$schema"] = schema["$schema"]
-            end
-            schema = new_schema
+          if @options[:list] && @options[:fragment].nil?
+            schema = schema_to_list(schema)
           end
           schema = JSON::Schema.new(schema,schema_uri,@options[:version])
           Validator.add_schema(schema)
@@ -581,12 +593,8 @@ module JSON
           end
           if Validator.schemas[schema_uri.to_s].nil?
             schema = JSON::Validator.parse(open(schema_uri.to_s).read)
-            if @options[:list]
-              new_schema = {"type" => "array", "items" => schema}
-              if !schema["$schema"].nil?
-                new_schema["$schema"] = schema["$schema"]
-              end
-              schema = new_schema
+            if @options[:list] && @options[:fragment].nil?
+              schema = schema_to_list(schema)
             end
             schema = JSON::Schema.new(schema,schema_uri,@options[:version])
             Validator.add_schema(schema)
@@ -595,12 +603,8 @@ module JSON
           end
         end
       elsif schema.is_a?(Hash)
-        if @options[:list]
-          new_schema = {"type" => "array", "items" => schema}
-          if !schema["$schema"].nil?
-            new_schema["$schema"] = schema["$schema"]
-          end
-          schema = new_schema
+        if @options[:list] && @options[:fragment].nil?
+          schema = schema_to_list(schema)
         end
         schema_uri = URI.parse(fake_uri(serialize(schema)))
         schema = JSON::Schema.new(schema,schema_uri,@options[:version])
