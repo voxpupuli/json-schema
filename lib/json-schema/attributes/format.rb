@@ -9,7 +9,7 @@ module JSON
           if data.is_a?(String)
             error_message = "The property '#{build_fragment(fragments)}' must be a date/time in the ISO-8601 format of YYYY-MM-DDThh:mm:ssZ or YYYY-MM-DDThh:mm:ss.ssZ"
             validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors]) and return if !data.is_a?(String)
-            r = Regexp.new('^\d\d\d\d-\d\d-\d\dT(\d\d):(\d\d):(\d\d)([\.,]\d+)?(Z|[+-](\d\d)(:\d\d)?)?$')
+            r = Regexp.new('^\d\d\d\d-\d\d-\d\dT(\d\d):(\d\d):(\d\d)([\.,]\d+)?(Z|[+-](\d\d)(:?\d\d)?)?$')
             if (m = r.match(data))
               parts = data.split("T")
               begin
