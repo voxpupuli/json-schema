@@ -1,3 +1,4 @@
 .*.swp
 pkg
 *.gem
+/Gemfile.lock
