@@ -1203,6 +1203,24 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(JSON::Validator.validate(schema,data))
   end
 
+  def test_not_fully_validate
+    # Start with a simple not
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "properties" => {
+        "a" => {"not" => { "type" => ["string", "boolean"]}}
+      }
+    }
+
+    data = {"a" => 1}
+    errors = JSON::Validator.fully_validate(schema,data)
+    puts errors
+    assert_equal(0, errors.length)
+
+    data = {"a" => "taco"}
+    errors = JSON::Validator.fully_validate(schema,data)
+    assert_equal(1, errors.length)
+  end
 
   def test_definitions
     schema = {
