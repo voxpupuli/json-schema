@@ -10,13 +10,13 @@ module JSON
                !property_schema['readonly'] &&
                options[:insert_defaults]
               default = property_schema['default']
-              data[property] = (default.is_a?(Hash) ? default.clone : default)
+              data[property.to_s] = (default.is_a?(Hash) ? default.clone : default)
             end
 
-            if data.has_key?(property.to_s)
+            if data.has_key?(property.to_s) || data.has_key?(property.to_sym)
               schema = JSON::Schema.new(property_schema,current_schema.uri,validator)
-              fragments << property
-              schema.validate(data[property],fragments,processor,options)
+              fragments << property.to_s
+              schema.validate(data[property.to_s],fragments,processor,options)
               fragments.pop
             end
           end
