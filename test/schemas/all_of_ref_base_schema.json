@@ -1,4 +1,6 @@
-{"type": "object",
- "properties" : {
-   "name" : { "type": "integer" }
- }
+{
+	"type": "object",
+	"properties" : {
+   		"name" : { "type": "integer" }
+ 	}
+}

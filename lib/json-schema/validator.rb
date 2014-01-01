@@ -5,6 +5,7 @@ require 'bigdecimal'
 require 'digest/sha1'
 require 'date'
 require 'thread'
+require 'yaml'
 
 module JSON
 
@@ -527,7 +528,9 @@ module JSON
         if @@json_backend == 'yajl'
           @@serializer = lambda{|o| Yajl::Encoder.encode(o) }
         else
-          @@serializer = lambda{|o| Marshal.dump(o) }
+          @@serializer = lambda{|o|
+            YAML.dump(o)
+          }
         end
       end
     end
