@@ -337,6 +337,15 @@ module JSON
         end
       end
 
+      # Convert enum to a hash
+      if parent_schema.schema["enum"] && parent_schema.schema["enum"].is_a?(Array)
+        enum_hash = {}
+        parent_schema.schema["enum"].each do |item|
+          enum_hash[item] = true
+        end
+        parent_schema.schema["enum"] = enum_hash
+      end
+
       # Each of these might be schemas
       ["additionalProperties", "additionalItems", "dependencies", "extends"].each do |key|
         if parent_schema.schema[key].is_a?(Hash)
