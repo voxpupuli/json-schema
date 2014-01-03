@@ -602,6 +602,23 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(JSON::Validator.validate(schema,data))
   end
 
+  def test_enum_with_schema_validation
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "properties" => {
+        "a" => {"enum" => [1,'boo',[1,2,3],{"a" => "b"}]}
+      }
+    }
+
+    data = {
+      "a" => nil
+    }
+
+    # Make sure all of the above are valid...
+    data["a"] = 1
+    assert(JSON::Validator.validate(schema,data,:validate_schema => true))
+  end
+
 
   def test_multiple_of
     # Set up the default datatype

@@ -337,13 +337,9 @@ module JSON
         end
       end
 
-      # Convert enum to a hash
+      # Convert enum to a ArraySet
       if parent_schema.schema["enum"] && parent_schema.schema["enum"].is_a?(Array)
-        enum_hash = {}
-        parent_schema.schema["enum"].each do |item|
-          enum_hash[item] = true
-        end
-        parent_schema.schema["enum"] = enum_hash
+        parent_schema.schema["enum"] = ArraySet.new(parent_schema.schema["enum"])
       end
 
       # Each of these might be schemas

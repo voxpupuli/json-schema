@@ -18,6 +18,7 @@ $LOAD_PATH.unshift "#{File.dirname(__FILE__)}/json-schema"
 
 require 'rubygems'
 require 'util/hash'
+require 'util/array_set'
 require 'schema'
 require 'validator'
 Dir[File.join(File.dirname(__FILE__), "json-schema/attributes/*.rb")].each {|file| require file }
