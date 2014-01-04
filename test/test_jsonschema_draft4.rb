@@ -930,6 +930,20 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data))
   end
 
+  def test_format_uri
+    data1 = {"a" => "http://gitbuh.com"}
+    data2 = {"a" => "::boo"}
+
+    schema = {
+        "$schema" => "http://json-schema.org/draft-04/schema#",
+        "type" => "object",
+        "properties" => { "a" => {"type" => "string", "format" => "uri"}}
+    }
+
+    assert(JSON::Validator.validate(schema,data1))
+    assert(!JSON::Validator.validate(schema,data2))
+  end
+
 
   def test_format_union
     data1 = {"a" => "boo"}
@@ -940,8 +954,8 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
       "type" => "object",
       "properties" => { "a" => {"type" => ["string","null"], "format" => "ip-address"}}
     }
-    assert(!JSON::Validator.validate(schema,data1,:version => :draft3))
-    assert(JSON::Validator.validate(schema,data2,:version => :draft3))
+    assert(!JSON::Validator.validate(schema,data1))
+    assert(JSON::Validator.validate(schema,data2))
   end
 
 

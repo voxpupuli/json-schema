@@ -1,3 +1,5 @@
+require 'uri'
+
 module JSON
   class Schema
     class FormatAttribute < Attribute
@@ -100,6 +102,20 @@ module JSON
               return
             end
           end
+
+        when 'uri'
+          if data.is_a?(String)
+            error_message = "The property '#{build_fragment(fragments)}' must be a valid URI"
+            begin
+              URI.parse(data)
+            rescue URI::InvalidURIError
+              validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors])
+            end
+          end
+
+        when 'hostname'
+
+        when 'email'
         end
       end
     end
