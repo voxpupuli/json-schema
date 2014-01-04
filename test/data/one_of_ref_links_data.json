@@ -1,0 +1,5 @@
+{ "links":
+  [{ "rel" : ["self"] , "href":"http://api.example.com/api/object/3" }
+  ,{ "rel" : ["up"] , "href":"http://api.example.com/api/object" }
+  ]
+}

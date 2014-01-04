@@ -602,6 +602,23 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(JSON::Validator.validate(schema,data))
   end
 
+  def test_enum_with_schema_validation
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "properties" => {
+        "a" => {"enum" => [1,'boo',[1,2,3],{"a" => "b"}]}
+      }
+    }
+
+    data = {
+      "a" => nil
+    }
+
+    # Make sure all of the above are valid...
+    data["a"] = 1
+    assert(JSON::Validator.validate(schema,data,:validate_schema => true))
+  end
+
 
   def test_multiple_of
     # Set up the default datatype
@@ -892,6 +909,10 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     data = {"a" => "2010-01-01T12:00:00.1Z"}
     assert(JSON::Validator.validate(schema,data))
     data = {"a" => "2010-01-01T12:00:00,1Z"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00+0000"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00+00:00"}
     assert(JSON::Validator.validate(schema,data))
     data = {"a" => "2010-01-32T12:00:00Z"}
     assert(!JSON::Validator.validate(schema,data))
@@ -1199,6 +1220,24 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(JSON::Validator.validate(schema,data))
   end
 
+  def test_not_fully_validate
+    # Start with a simple not
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "properties" => {
+        "a" => {"not" => { "type" => ["string", "boolean"]}}
+      }
+    }
+
+    data = {"a" => 1}
+    errors = JSON::Validator.fully_validate(schema,data)
+    puts errors
+    assert_equal(0, errors.length)
+
+    data = {"a" => "taco"}
+    errors = JSON::Validator.fully_validate(schema,data)
+    assert_equal(1, errors.length)
+  end
 
   def test_definitions
     schema = {

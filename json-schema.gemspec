@@ -15,4 +15,5 @@ spec = Gem::Specification.new do |s|
   s.require_path = "lib"
   s.test_files = Dir[ "test/**/test*", "test/{data,schemas}/*.json" ]
   s.extra_rdoc_files = ["README.textile","LICENSE.md"]
+  s.license = 'MIT'
 end
