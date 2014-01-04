@@ -3,3 +3,5 @@
 pkg
 *.gem
 /Gemfile.lock
+.bundle
+.idea
