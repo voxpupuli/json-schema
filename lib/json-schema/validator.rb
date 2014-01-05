@@ -437,6 +437,7 @@ module JSON
       end
 
       def cache_schemas=(val)
+        warn "[DEPRECATION NOTICE] Schema caching is now a validation option. Schemas will still be cached if this is set to true, but this method will be removed in version >= 3. Please use the :clear_cache validation option instead."
         @@cache_schemas = val == true ? true : false
       end
 
