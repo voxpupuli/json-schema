@@ -112,7 +112,8 @@ module JSON
       :validate_schema => false,
       :record_errors => false,
       :errors_as_objects => false,
-      :insert_defaults => false
+      :insert_defaults => false,
+      :clear_cache => true
     }
     @@validators = {}
     @@default_validator = nil
@@ -168,7 +169,8 @@ module JSON
           if @base_schema.schema["$schema"]
             version_string = @options[:version] = self.class.version_string_for(@base_schema.schema["$schema"])
           end
-          meta_validator = JSON::Validator.new(self.class.metaschema_for(version_string), @base_schema.schema)
+          # Don't clear the cache during metaschema validation!
+          meta_validator = JSON::Validator.new(self.class.metaschema_for(version_string), @base_schema.schema, {:clear_cache => false})
           meta_validator.validate
         rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
           raise $!
@@ -219,14 +221,18 @@ module JSON
     def validate()
       begin
         @base_schema.validate(@data,[],self,@validation_options)
-        Validator.clear_cache
+        if @validation_options[:clear_cache] == true
+          Validator.clear_cache
+        end
         if @options[:errors_as_objects]
           return @errors.map{|e| e.to_hash}
         else
           return @errors.map{|e| e.to_string}
         end
       rescue JSON::Schema::ValidationError
-        Validator.clear_cache
+        if @validation_options[:clear_cache] == true
+          Validator.clear_cache
+        end
         raise $!
       end
     end
