@@ -254,17 +254,9 @@ module JSON
       end
 
       if Validator.schemas[uri.to_s].nil?
-        begin
-          schema = JSON::Schema.new(JSON::Validator.parse(open(uri.to_s).read), uri, @options[:version])
-          Validator.add_schema(schema)
-          build_schemas(schema)
-        rescue JSON::ParserError
-          # Don't rescue this error, we want JSON formatting issues to bubble up
-          raise $!
-        rescue Exception
-          # Failures will occur when this URI cannot be referenced yet. Don't worry about it,
-          # the proper error will fall out if the ref isn't ever defined
-        end
+        schema = JSON::Schema.new(JSON::Validator.parse(open(uri.to_s).read), uri, @options[:version])
+        Validator.add_schema(schema)
+        build_schemas(schema)
       end
     end
 
