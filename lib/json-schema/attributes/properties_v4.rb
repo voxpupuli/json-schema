@@ -30,7 +30,20 @@ module JSON
         # When strict is true, ensure no undefined properties exist in the data
         if (options[:strict] == true && !current_schema.schema.has_key?('additionalProperties'))
           diff = data.select do |k,v|
-            !current_schema.schema['properties'].has_key?(k.to_s) && !current_schema.schema['properties'].has_key?(k.to_sym)
+            if current_schema.schema.has_key?('patternProperties')
+              match = false
+              current_schema.schema['patternProperties'].each do |property,property_schema|
+                r = Regexp.new(property)
+                if r.match(k)
+                  match = true
+                  break
+                end
+              end
+
+              !current_schema.schema['properties'].has_key?(k.to_s) && !current_schema.schema['properties'].has_key?(k.to_sym) && !match
+            else
+              !current_schema.schema['properties'].has_key?(k.to_s) && !current_schema.schema['properties'].has_key?(k.to_sym)
+            end
           end
 
           if diff.size > 0
