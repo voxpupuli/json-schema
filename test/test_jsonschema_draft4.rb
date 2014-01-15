@@ -415,6 +415,54 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data))
   end
 
+    def test_strict_properties
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "properties" => {
+        "a" => {"type" => "string"},
+        "b" => {"type" => "string"}
+      }
+    }
+
+    data = {"a" => "a"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"b" => "b"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b"}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "c" => "c"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+  end
+
+  def test_strict_properties_additional_props
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "properties" => {
+        "a" => {"type" => "string"},
+        "b" => {"type" => "string"}
+      },
+      "additionalProperties" => {"type" => "integer"}
+    }
+
+    data = {"a" => "a"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"b" => "b"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b"}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "c" => "c"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "c" => 3}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
+  end
+
 
 
   def test_unique_items

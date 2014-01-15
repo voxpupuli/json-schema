@@ -15,7 +15,7 @@ module JSON
 
           addprop = current_schema.schema['additionalProperties']
           if addprop.is_a?(Hash)
-            matching_properties= extra_properties # & addprop.keys
+            matching_properties = extra_properties # & addprop.keys
             matching_properties.each do |key|
               schema = JSON::Schema.new(addprop[key] || addprop, current_schema.uri, validator)
               fragments << key
