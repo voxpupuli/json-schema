@@ -90,9 +90,9 @@ schema = {
   }
 }
 
-JSON::Validator.validate(schema, {"a" => 1, "b" => 2})             # ==> true
-JSON::Validator.validate(schema, {"a" => 1, "b" => 2, "c" => 3})   # ==> false
-JSON::Validator.validate(schema, {"a" => 1})                       # ==> false
+JSON::Validator.validate(schema, {"a" => 1, "b" => 2}, :strict => true)            # ==> true
+JSON::Validator.validate(schema, {"a" => 1, "b" => 2, "c" => 3}, :strict => true)  # ==> false
+JSON::Validator.validate(schema, {"a" => 1}, :strict => true)                      # ==> false
 </pre>
 
 h3. Catch a validation error and print it out
