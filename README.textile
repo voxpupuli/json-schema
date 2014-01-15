@@ -18,7 +18,7 @@ From the git repo:
 
 <pre>
 $ gem build json-schema.gemspec
-$ gem install json-schema-1.1.1.gem
+$ gem install json-schema-1.2.0.gem
 </pre>
 
 
@@ -55,11 +55,23 @@ h3. Validate a JSON string against a JSON schema file
 <pre>
 require 'rubygems'
 require 'json-schema'
-  
+
 JSON::Validator.validate('schema.json', '{"a" : 5}')
 </pre>
 
 h3. Validate a list of objects against a schema that represents the individual objects
+
+<pre>
+require 'rubygems'
+require 'json-schema'
+
+data = ['user','user','user']
+JSON::Validator.validate('user.json', data, :list => true)
+</pre>
+
+h3. Strictly validate an object's properties
+
+With the <code>:strict</code>code> option, validation fails when an object contains properties that are not defined in the schema's property list or doesn't match the <code>additionalProperties</code> property. Furthermore, all properties are treated as <code>required</code> by default.
 
 <pre>
 require 'rubygems'
@@ -74,14 +86,14 @@ h3. Catch a validation error and print it out
 <pre>
 require 'rubygems'
 require 'json-schema'
-  
+
 schema = {
   "type" => "object",
   "properties" => {
     "a" => {"type" => "integer", "required" => true}
   }
 }
-  
+
 data = {
   "a" => "taco"
 }
@@ -99,7 +111,7 @@ h3. Fully validate against a schema and catch all errors
 <pre>
 require 'rubygems'
 require 'json-schema'
-  
+
 schema = {
   "type" => "object",
   "properties" => {
@@ -107,14 +119,14 @@ schema = {
     "b" => {"type" => "string", "required" => "true"}
   }
 }
-  
+
 data = {
   "a" => "taco"
 }
 
 errors = JSON::Validator.fully_validate(schema, data)
 
-# ["The property '#/a' of type String did not match the following type: integer in schema 03179a21-197e-5414-9611-e9f63e8324cd#", "The property '#/' did not contain a required property of 'b' in schema 03179a21-197e-5414-9611-e9f63e8324cd#"] 
+# ["The property '#/a' of type String did not match the following type: integer in schema 03179a21-197e-5414-9611-e9f63e8324cd#", "The property '#/' did not contain a required property of 'b' in schema 03179a21-197e-5414-9611-e9f63e8324cd#"]
 </pre>
 
 h3. Fully validate against a schema and catch all errors as objects
@@ -122,7 +134,7 @@ h3. Fully validate against a schema and catch all errors as objects
 <pre>
 require 'rubygems'
 require 'json-schema'
-  
+
 schema = {
   "type" => "object",
   "properties" => {
@@ -130,7 +142,7 @@ schema = {
     "b" => {"type" => "string", "required" => "true"}
   }
 }
-  
+
 data = {
   "a" => "taco"
 }
@@ -163,7 +175,7 @@ JSON::Validator.validate(schema, data, :validate_schema => true)
 
 h3. Validate a JSON object against a JSON schema object, while inserting default values from the schema
 
-With the :insert_defaults option set to true any missing property that has a 
+With the :insert_defaults option set to true any missing property that has a
 default value specified in the schema will be inserted into the validated data. The inserted default value is validated hence catching a schema that specifies an invalid default value.
 
 <pre>
@@ -172,13 +184,13 @@ require 'json-schema'
 
 schema = {
   "type" => "object",
-  "properties" => { 
+  "properties" => {
     "a" => {"type" => "integer", "default" => 42, "required" => "true"},
     "b" => {"type" => "integer"}
   }
 }
 
-# Would not normally validate because "a" is missing and required by schema, 
+# Would not normally validate because "a" is missing and required by schema,
 # but "default" option allows insertion of valid default.
 data = {
   "b" => 5
@@ -189,9 +201,9 @@ JSON::Validator.validate(schema, data)
 
 JSON::Validator.validate(schema, data, :insert_defaults => true)
 # true
-# data = { 
-#   "a" => 42, 
-#   "b" => 5 
+# data = {
+#   "a" => 42,
+#   "b" => 5
 # }
 
 </pre>
@@ -223,7 +235,7 @@ For this example, we are going to extend the "JSON Schema Draft 3":http://tools.
 <pre>
 require 'rubygems'
 require 'json-schema'
-  
+
 class BitwiseAndAttribute < JSON::Schema::Attribute
   def self.validate(current_schema, data, fragments, processor, validator, options = {})
     if data.is_a?(Integer) && data & current_schema.schema['bitwise-and'].to_i == 0
@@ -240,7 +252,7 @@ class ExtendedSchema < JSON::Schema::Validator
     @attributes["bitwise-and"] = BitwiseAndAttribute
     @uri = URI.parse("http://test.com/test.json")
   end
-  
+
   JSON::Validator.register_validator(self.new)
 end
 
@@ -277,7 +289,7 @@ If more than one of the supported JSON backends are installed, the <code>yajl-ru
 <pre>
 JSON::Validator.json_backend = :json
 </pre>
-  
+
 Optionally, the JSON Schema library supports using the MultiJSON library for selecting JSON backends. If the MultiJSON library is installed, it will be autoloaded.
 
 h2. Notes
