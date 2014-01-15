@@ -82,8 +82,17 @@ With the <code>:strict</code>code> option, validation fails when an object conta
 require 'rubygems'
 require 'json-schema'
 
-data = ['user','user','user']
-JSON::Validator.validate('user.json', data, :list => true)
+schema = {
+  "type" => "object",
+  "properties" => {
+    "a" => {"type" => "integer"},
+    "b" => {"type" => "integer"}
+  }
+}
+
+JSON::Validator.validate(schema, {"a" => 1, "b" => 2})             # ==> true
+JSON::Validator.validate(schema, {"a" => 1, "b" => 2, "c" => 3})   # ==> false
+JSON::Validator.validate(schema, {"a" => 1})                       # ==> false
 </pre>
 
 h3. Catch a validation error and print it out
