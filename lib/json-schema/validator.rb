@@ -553,7 +553,7 @@ module JSON
       require 'uuidtools'
       @@fake_uri_generator = lambda{|s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
     else
-      require 'uri/uuid'
+      require 'json-schema/uri/uuid'
       @@fake_uri_generator = lambda{|s| JSON::Util::UUID.create_v5(s,JSON::Util::UUID::Nil).to_s }
     end
 
