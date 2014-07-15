@@ -56,6 +56,10 @@ module JSON
         schema.keys.each do |key|
           add_indifferent_access(schema[key])
         end
+      elsif schema.is_a?(Array)
+        schema.each do |schema_item|
+          add_indifferent_access(schema_item)
+        end
       end
     end
 
