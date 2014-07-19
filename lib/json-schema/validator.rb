@@ -609,6 +609,13 @@ module JSON
             Validator.add_schema(schema)
           else
             schema = Validator.schemas[schema_uri.to_s]
+            if @options[:list] && @options[:fragment].nil?
+              schema = schema_to_list(schema.schema)
+              schema_uri = URI.parse(fake_uri(serialize(schema)))
+              schema = JSON::Schema.new(schema, schema_uri, @options[:version])
+              Validator.add_schema(schema)
+            end
+            schema
           end
         end
       elsif schema.is_a?(Hash)
