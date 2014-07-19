@@ -25,3 +25,4 @@ CONTRIBUTORS
 * Nick Recobra - @oruen
 * Vasily Fedoseyev - @Vasfed
 * Jari Bakken - @jarib
+* Kyle Hargraves - @pd
