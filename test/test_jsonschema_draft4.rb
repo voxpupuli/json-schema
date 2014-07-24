@@ -415,7 +415,85 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data))
   end
 
+    def test_strict_properties
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "properties" => {
+        "a" => {"type" => "string"},
+        "b" => {"type" => "string"}
+      }
+    }
 
+    data = {"a" => "a"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"b" => "b"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b"}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "c" => "c"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+  end
+
+  def test_strict_properties_additional_props
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "properties" => {
+        "a" => {"type" => "string"},
+        "b" => {"type" => "string"}
+      },
+      "additionalProperties" => {"type" => "integer"}
+    }
+
+    data = {"a" => "a"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"b" => "b"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b"}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "c" => "c"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "c" => 3}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
+  end
+
+  def test_strict_properties_pattern_props
+    schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
+      "properties" => {
+        "a" => {"type" => "string"},
+        "b" => {"type" => "string"}
+      },
+      "patternProperties" => {"\\d+ taco" => {"type" => "integer"}}
+    }
+
+    data = {"a" => "a"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"b" => "b"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b"}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "c" => "c"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "c" => 3}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "23 taco" => 3}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "23 taco" => "cheese"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+  end
 
   def test_unique_items
     # Set up the default datatype
@@ -600,6 +678,23 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     # Try it without the key
     data = {}
     assert(JSON::Validator.validate(schema,data))
+  end
+
+  def test_enum_with_schema_validation
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "properties" => {
+        "a" => {"enum" => [1,'boo',[1,2,3],{"a" => "b"}]}
+      }
+    }
+
+    data = {
+      "a" => nil
+    }
+
+    # Make sure all of the above are valid...
+    data["a"] = 1
+    assert(JSON::Validator.validate(schema,data,:validate_schema => true))
   end
 
 
@@ -893,6 +988,10 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(JSON::Validator.validate(schema,data))
     data = {"a" => "2010-01-01T12:00:00,1Z"}
     assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00+0000"}
+    assert(JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00+00:00"}
+    assert(JSON::Validator.validate(schema,data))
     data = {"a" => "2010-01-32T12:00:00Z"}
     assert(!JSON::Validator.validate(schema,data))
     data = {"a" => "2010-13-01T12:00:00Z"}
@@ -909,6 +1008,20 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data))
   end
 
+  def test_format_uri
+    data1 = {"a" => "http://gitbuh.com"}
+    data2 = {"a" => "::boo"}
+
+    schema = {
+        "$schema" => "http://json-schema.org/draft-04/schema#",
+        "type" => "object",
+        "properties" => { "a" => {"type" => "string", "format" => "uri"}}
+    }
+
+    assert(JSON::Validator.validate(schema,data1))
+    assert(!JSON::Validator.validate(schema,data2))
+  end
+
 
   def test_format_union
     data1 = {"a" => "boo"}
@@ -919,8 +1032,8 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
       "type" => "object",
       "properties" => { "a" => {"type" => ["string","null"], "format" => "ip-address"}}
     }
-    assert(!JSON::Validator.validate(schema,data1,:version => :draft3))
-    assert(JSON::Validator.validate(schema,data2,:version => :draft3))
+    assert(!JSON::Validator.validate(schema,data1))
+    assert(JSON::Validator.validate(schema,data2))
   end
 
 
@@ -1199,6 +1312,24 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(JSON::Validator.validate(schema,data))
   end
 
+  def test_not_fully_validate
+    # Start with a simple not
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "properties" => {
+        "a" => {"not" => { "type" => ["string", "boolean"]}}
+      }
+    }
+
+    data = {"a" => 1}
+    errors = JSON::Validator.fully_validate(schema,data)
+    puts errors
+    assert_equal(0, errors.length)
+
+    data = {"a" => "taco"}
+    errors = JSON::Validator.fully_validate(schema,data)
+    assert_equal(1, errors.length)
+  end
 
   def test_definitions
     schema = {

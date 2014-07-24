@@ -1,0 +1,7 @@
+{ "$schema" : "http://json-schema.org/draft-04/schema#",
+  "type" : "object",
+  "allOf" :
+  [ { "$ref" : "all_of_ref_base_schema.json" }
+  ]
+
+}

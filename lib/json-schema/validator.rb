@@ -5,6 +5,7 @@ require 'bigdecimal'
 require 'digest/sha1'
 require 'date'
 require 'thread'
+require 'yaml'
 
 module JSON
 
@@ -111,7 +112,9 @@ module JSON
       :validate_schema => false,
       :record_errors => false,
       :errors_as_objects => false,
-      :insert_defaults => false
+      :insert_defaults => false,
+      :clear_cache => true,
+      :strict => false
     }
     @@validators = {}
     @@default_validator = nil
@@ -156,6 +159,7 @@ module JSON
 
       @validation_options = @options[:record_errors] ? {:record_errors => true} : {}
       @validation_options[:insert_defaults] = true if @options[:insert_defaults]
+      @validation_options[:strict] = true if @options[:strict] == true
 
       @@mutex.synchronize { @base_schema = initialize_schema(schema_data) }
       @data = initialize_data(data)
@@ -167,7 +171,8 @@ module JSON
           if @base_schema.schema["$schema"]
             version_string = @options[:version] = self.class.version_string_for(@base_schema.schema["$schema"])
           end
-          meta_validator = JSON::Validator.new(self.class.metaschema_for(version_string), @base_schema.schema)
+          # Don't clear the cache during metaschema validation!
+          meta_validator = JSON::Validator.new(self.class.metaschema_for(version_string), @base_schema.schema, {:clear_cache => false})
           meta_validator.validate
         rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
           raise $!
@@ -218,14 +223,18 @@ module JSON
     def validate()
       begin
         @base_schema.validate(@data,[],self,@validation_options)
-        Validator.clear_cache
+        if @validation_options[:clear_cache] == true
+          Validator.clear_cache
+        end
         if @options[:errors_as_objects]
           return @errors.map{|e| e.to_hash}
         else
           return @errors.map{|e| e.to_string}
         end
       rescue JSON::Schema::ValidationError
-        Validator.clear_cache
+        if @validation_options[:clear_cache] == true
+          Validator.clear_cache
+        end
         raise $!
       end
     end
@@ -253,17 +262,9 @@ module JSON
       end
 
       if Validator.schemas[uri.to_s].nil?
-        begin
-          schema = JSON::Schema.new(JSON::Validator.parse(open(uri.to_s).read), uri, @options[:version])
-          Validator.add_schema(schema)
-          build_schemas(schema)
-        rescue JSON::ParserError
-          # Don't rescue this error, we want JSON formatting issues to bubble up
-          raise $!
-        rescue Exception
-          # Failures will occur when this URI cannot be referenced yet. Don't worry about it,
-          # the proper error will fall out if the ref isn't ever defined
-        end
+        schema = JSON::Schema.new(JSON::Validator.parse(open(uri.to_s).read), uri, @options[:version])
+        Validator.add_schema(schema)
+        build_schemas(schema)
       end
     end
 
@@ -334,6 +335,11 @@ module JSON
         items.each_with_index do |item,i|
           handle_schema(parent_schema, item)
         end
+      end
+
+      # Convert enum to a ArraySet
+      if parent_schema.schema["enum"] && parent_schema.schema["enum"].is_a?(Array)
+        parent_schema.schema["enum"] = ArraySet.new(parent_schema.schema["enum"])
       end
 
       # Each of these might be schemas
@@ -433,6 +439,7 @@ module JSON
       end
 
       def cache_schemas=(val)
+        warn "[DEPRECATION NOTICE] Schema caching is now a validation option. Schemas will still be cached if this is set to true, but this method will be removed in version >= 3. Please use the :clear_cache validation option instead."
         @@cache_schemas = val == true ? true : false
       end
 
@@ -527,7 +534,9 @@ module JSON
         if @@json_backend == 'yajl'
           @@serializer = lambda{|o| Yajl::Encoder.encode(o) }
         else
-          @@serializer = lambda{|o| Marshal.dump(o) }
+          @@serializer = lambda{|o|
+            YAML.dump(o)
+          }
         end
       end
     end
@@ -544,7 +553,7 @@ module JSON
       require 'uuidtools'
       @@fake_uri_generator = lambda{|s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
     else
-      require 'uri/uuid'
+      require 'json-schema/uri/uuid'
       @@fake_uri_generator = lambda{|s| JSON::Util::UUID.create_v5(s,JSON::Util::UUID::Nil).to_s }
     end
 
@@ -600,6 +609,13 @@ module JSON
             Validator.add_schema(schema)
           else
             schema = Validator.schemas[schema_uri.to_s]
+            if @options[:list] && @options[:fragment].nil?
+              schema = schema_to_list(schema.schema)
+              schema_uri = URI.parse(fake_uri(serialize(schema)))
+              schema = JSON::Schema.new(schema, schema_uri, @options[:version])
+              Validator.add_schema(schema)
+            end
+            schema
           end
         end
       elsif schema.is_a?(Hash)

@@ -35,4 +35,34 @@ class RubySchemaTest < Test::Unit::TestCase
 
     assert(JSON::Validator.validate(schema, data))
   end
+
+  def test_symbol_keys_in_hash_within_array
+    schema = {
+      type: 'object',
+      properties: {
+        a: {
+          type: "array",
+          items: [
+            {
+              properties: {
+                b: {
+                  type: "integer"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+
+    data = {
+      a: [
+        {
+          b: 1
+        }
+      ]
+    }
+
+    assert(JSON::Validator.validate(schema, data, :validate_schema => true))
+  end
 end

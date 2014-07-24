@@ -1,0 +1,3 @@
+The Ruby JSON Schema library is meant to be a community effort, and as such, there are no strict guidelines for contributing.
+
+We are trying out a system where all individuals that have a pull request merged will receive collaborator access to the repository. Due to the restrictions on RubyGems authentication, permissions to release a gem must be requested along with the email desired to be associated with the release credentials.

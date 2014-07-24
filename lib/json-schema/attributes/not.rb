@@ -5,12 +5,18 @@ module JSON
 
         schema = JSON::Schema.new(current_schema.schema['not'],current_schema.uri,validator)
         failed = true
+        errors_copy = processor.validation_errors.clone
         begin
           schema.validate(data,fragments,processor,options)
-          message = "The property '#{build_fragment(fragments)}' of type #{data.class} matched the disallowed schema"
-          failed = false
+          # If we're recording errors, we don't throw an exception. Instead, check the errors array length
+          if options[:record_errors] && errors_copy.length != processor.validation_errors.length
+            processor.validation_errors.replace(errors_copy)
+          else
+            message = "The property '#{build_fragment(fragments)}' of type #{data.class} matched the disallowed schema"
+            failed = false
+          end
         rescue
-          # Yay, we failed validation
+          # Yay, we failed validation.
         end
 
         unless failed
