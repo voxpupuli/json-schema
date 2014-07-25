@@ -26,3 +26,4 @@ CONTRIBUTORS
 * Vasily Fedoseyev - @Vasfed
 * Jari Bakken - @jarib
 * Kyle Hargraves - @pd
+* Jamie Cobbett - @jamiecobbett
