@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'test/unit'
 require File.dirname(__FILE__) + '/../lib/json-schema'
 
@@ -1011,6 +1012,7 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
   def test_format_uri
     data1 = {"a" => "http://gitbuh.com"}
     data2 = {"a" => "::boo"}
+    data3 = {"a" => "http://ja.wikipedia.org/wiki/メインページ"}
 
     schema = {
         "$schema" => "http://json-schema.org/draft-04/schema#",
@@ -1020,6 +1022,7 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
 
     assert(JSON::Validator.validate(schema,data1))
     assert(!JSON::Validator.validate(schema,data2))
+    assert(JSON::Validator.validate(schema,data3))
   end
 
 
