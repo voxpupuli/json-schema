@@ -27,3 +27,4 @@ CONTRIBUTORS
 * Jari Bakken - @jarib
 * Kyle Hargraves - @pd
 * Jamie Cobbett - @jamiecobbett
+* Iain Beeston - @iainbeeston
