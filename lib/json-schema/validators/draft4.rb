@@ -37,7 +37,7 @@ module JSON
           "$ref" => JSON::Schema::RefAttribute
         }
         @default_formats = {
-          'date-time' => DateTimeFormat,
+          'date-time' => DateTimeV4Format,
           'ipv4' => IP4Format,
           'ipv6' => IP6Format,
           'uri' => UriFormat
