@@ -11,12 +11,13 @@ class CommonTestSuiteTest < Test::Unit::TestCase
     "draft3/disallow.json",
     "draft3/optional/format.json",
     "draft3/optional/jsregex.json",
+    "draft3/ref.json",
     "draft3/refRemote.json",
     "draft4/dependencies.json",
     "draft4/optional/format.json",
-    "draft4/refRemote.json"
+    "draft4/ref.json",
+    "draft4/refRemote.json",
   ]
-
 
   Dir["#{TEST_DIR}/*"].each do |suite|
     version = File.basename(suite).to_sym
@@ -36,14 +37,14 @@ class CommonTestSuiteTest < Test::Unit::TestCase
 
           define_method("test_#{err_id}") do
             assert_nothing_raised("Exception raised running #{err_id}") do
-              v = JSON::Validator.validate(schema,
-                                  t["data"],
-                                  :validate_schema => true,
-                                  :version => version
-                                 )
+              v = JSON::Validator.fully_validate(schema,
+                                                 t["data"],
+                                                 :validate_schema => true,
+                                                 :version => version
+                                                )
             end
 
-            assert !!v == t["valid"], "Common test suite case failed: #{err_id}"
+            assert v.empty? == t["valid"], "Common test suite case failed: #{err_id}\n#{v}"
           end
         end
       end
