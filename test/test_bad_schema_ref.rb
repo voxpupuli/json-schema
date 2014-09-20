@@ -25,7 +25,7 @@ class BadSchemaRefTest < Test::Unit::TestCase
     }
 
     data = [1,2,3]
-    assert_raise(SocketError) do
+    assert_raise(SocketError, OpenURI::HTTPError) do
       JSON::Validator.validate(schema,data)
     end
   end
