@@ -1,3 +1,4 @@
+require 'json-schema/attribute'
 require 'uri'
 
 module JSON

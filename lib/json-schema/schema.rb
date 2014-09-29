@@ -24,11 +24,7 @@ module JSON
 
       # If there is a $schema on this schema, use it to determine which validator to use
       if @schema['$schema']
-        u = URI.parse(@schema['$schema'])
-        @validator = JSON::Validator.validators["#{u.scheme}://#{u.host}#{u.path}"]
-        if @validator.nil?
-          raise SchemaError.new("This library does not have support for schemas defined by #{u.scheme}://#{u.host}#{u.path}")
-        end
+        @validator = JSON::Validator.validator_for(@schema['$schema'])
       elsif parent_validator
         @validator = parent_validator
       else

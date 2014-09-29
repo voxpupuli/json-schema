@@ -7,100 +7,10 @@ require 'date'
 require 'thread'
 require 'yaml'
 
+require 'json-schema/errors/schema_error'
+require 'json-schema/errors/json_parse_error'
+
 module JSON
-
-  class Schema
-    class ValidationError < StandardError
-      attr_accessor :fragments, :schema, :failed_attribute, :sub_errors
-
-      def initialize(message, fragments, failed_attribute, schema)
-        @fragments = fragments.clone
-        @schema = schema
-        @sub_errors = []
-        @failed_attribute = failed_attribute
-        message = "#{message} in schema #{schema.uri}"
-        super(message)
-      end
-
-      def to_string
-        if @sub_errors.empty?
-          message
-        else
-          full_message = message + "\n The schema specific errors were:\n"
-          @sub_errors.each{|e| full_message = full_message + " - " + e.to_string + "\n"}
-          full_message
-        end
-      end
-
-      def to_hash
-        base = {:schema => @schema.uri, :fragment => ::JSON::Schema::Attribute.build_fragment(fragments), :message => message, :failed_attribute => @failed_attribute.to_s.split(":").last.split("Attribute").first}
-        if !@sub_errors.empty?
-          base[:errors] = @sub_errors.map{|e| e.to_hash}
-        end
-        base
-      end
-    end
-
-    class SchemaError < StandardError
-    end
-
-    class JsonParseError < StandardError
-    end
-
-    class Attribute
-      def self.validate(current_schema, data, fragments, processor, validator, options = {})
-      end
-
-      def self.build_fragment(fragments)
-        "#/#{fragments.join('/')}"
-      end
-
-      def self.validation_error(processor, message, fragments, current_schema, failed_attribute, record_errors)
-        error = ValidationError.new(message, fragments, failed_attribute, current_schema)
-        if record_errors
-          processor.validation_error(error)
-        else
-          raise error
-        end
-      end
-
-      def self.validation_errors(validator)
-        validator.validation_errors
-      end
-    end
-
-    class Validator
-      attr_accessor :attributes, :uri
-
-      def initialize()
-        @attributes = {}
-        @uri = nil
-      end
-
-      def extend_schema_definition(schema_uri)
-        u = URI.parse(schema_uri)
-        validator = JSON::Validator.validators["#{u.scheme}://#{u.host}#{u.path}"]
-        if validator.nil?
-          raise SchemaError.new("Schema not found: #{u.scheme}://#{u.host}#{u.path}")
-        end
-        @attributes.merge!(validator.attributes)
-      end
-
-      def to_s
-        "#{@uri.scheme}://#{uri.host}#{uri.path}"
-      end
-
-      def validate(current_schema, data, fragments, processor, options = {})
-        current_schema.schema.each do |attr_name,attribute|
-          if @attributes.has_key?(attr_name.to_s)
-            @attributes[attr_name.to_s].validate(current_schema, data, fragments, processor, self, options)
-          end
-        end
-        data
-      end
-    end
-  end
-
 
   class Validator
 
@@ -123,39 +33,12 @@ module JSON
     @@serializer = nil
     @@mutex = Mutex.new
 
-    def self.version_string_for(version)
-      # I'm not a fan of this, but it's quick and dirty to get it working for now
-      return "draft-04" unless version
-      case version.to_s
-      when "draft4", "http://json-schema.org/draft-04/schema#"
-        "draft-04"
-      when "draft3", "http://json-schema.org/draft-03/schema#"
-        "draft-03"
-      when "draft2"
-        "draft-02"
-      when "draft1"
-        "draft-01"
-      else
-        raise JSON::Schema::SchemaError.new("The requested JSON schema version is not supported")
-      end
-    end
-
-    def self.metaschema_for(version_string)
-      File.join(Pathname.new(File.dirname(__FILE__)).parent.parent, "resources", "#{version_string}.json").to_s
-    end
-
     def initialize(schema_data, data, opts={})
       @options = @@default_opts.clone.merge(opts)
       @errors = []
 
-      # I'm not a fan of this, but it's quick and dirty to get it working for now
-      version_string = "draft-04"
-      if @options[:version]
-        version_string = @options[:version] = self.class.version_string_for(@options[:version])
-        u = URI.parse("http://json-schema.org/#{@options[:version]}/schema#")
-        validator = JSON::Validator.validators["#{u.scheme}://#{u.host}#{u.path}"]
-        @options[:version] = validator
-      end
+      validator = JSON::Validator.validator_for_name(@options[:version])
+      @options[:version] = validator
 
       @validation_options = @options[:record_errors] ? {:record_errors => true} : {}
       @validation_options[:insert_defaults] = true if @options[:insert_defaults]
@@ -169,10 +52,11 @@ module JSON
       if @options[:validate_schema]
         begin
           if @base_schema.schema["$schema"]
-            version_string = @options[:version] = self.class.version_string_for(@base_schema.schema["$schema"])
+            base_validator = JSON::Validator.validator_for_name(@base_schema.schema["$schema"])
           end
+          metaschema = base_validator ? base_validator.metaschema : validator.metaschema
           # Don't clear the cache during metaschema validation!
-          meta_validator = JSON::Validator.new(self.class.metaschema_for(version_string), @base_schema.schema, {:clear_cache => false})
+          meta_validator = JSON::Validator.new(metaschema, @base_schema.schema, {:clear_cache => false})
           meta_validator.validate
         rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
           raise $!
@@ -414,7 +298,7 @@ module JSON
 
       def fully_validate_schema(schema, opts={})
         data = schema
-        schema = metaschema_for(version_string_for(opts[:version]))
+        schema = JSON::Validator.validator_for_name(opts[:version]).metaschema
         fully_validate(schema, data, opts)
       end
 
@@ -451,8 +335,33 @@ module JSON
         @@default_validator
       end
 
+      def validator_for_uri(schema_uri)
+        return default_validator unless schema_uri
+        u = URI.parse(schema_uri)
+        validator = validators["#{u.scheme}://#{u.host}#{u.path}"]
+        if validator.nil?
+          raise JSON::Schema::SchemaError.new("Schema not found: #{schema_uri}")
+        else
+          validator
+        end
+      end
+
+      def validator_for_name(schema_name)
+        return default_validator unless schema_name
+        validator = validators.values.find do |v|
+          v.names.include?(schema_name.to_s)
+        end
+        if validator.nil?
+          raise JSON::Schema::SchemaError.new("The requested JSON schema version is not supported")
+        else
+          validator
+        end
+      end
+
+      alias_method :validator_for, :validator_for_uri
+
       def register_validator(v)
-        @@validators[v.to_s] = v
+        @@validators["#{v.uri.scheme}://#{v.uri.host}#{v.uri.path}"] = v
       end
 
       def register_default_validator(v)
