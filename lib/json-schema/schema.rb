@@ -1,4 +1,5 @@
 require 'pathname'
+require 'json-schema/errors/schema_error'
 
 module JSON
   class Schema

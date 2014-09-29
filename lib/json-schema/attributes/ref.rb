@@ -1,3 +1,6 @@
+require 'json-schema/attribute'
+require 'json-schema/errors/schema_error'
+
 module JSON
   class Schema
     class RefAttribute < Attribute

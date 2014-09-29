@@ -1,3 +1,5 @@
+require 'json-schema/schema/validator'
+
 module JSON
   class Schema
     

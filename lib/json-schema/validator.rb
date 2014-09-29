@@ -7,100 +7,10 @@ require 'date'
 require 'thread'
 require 'yaml'
 
+require 'json-schema/errors/schema_error'
+require 'json-schema/errors/json_parse_error'
+
 module JSON
-
-  class Schema
-    class ValidationError < StandardError
-      attr_accessor :fragments, :schema, :failed_attribute, :sub_errors
-
-      def initialize(message, fragments, failed_attribute, schema)
-        @fragments = fragments.clone
-        @schema = schema
-        @sub_errors = []
-        @failed_attribute = failed_attribute
-        message = "#{message} in schema #{schema.uri}"
-        super(message)
-      end
-
-      def to_string
-        if @sub_errors.empty?
-          message
-        else
-          full_message = message + "\n The schema specific errors were:\n"
-          @sub_errors.each{|e| full_message = full_message + " - " + e.to_string + "\n"}
-          full_message
-        end
-      end
-
-      def to_hash
-        base = {:schema => @schema.uri, :fragment => ::JSON::Schema::Attribute.build_fragment(fragments), :message => message, :failed_attribute => @failed_attribute.to_s.split(":").last.split("Attribute").first}
-        if !@sub_errors.empty?
-          base[:errors] = @sub_errors.map{|e| e.to_hash}
-        end
-        base
-      end
-    end
-
-    class SchemaError < StandardError
-    end
-
-    class JsonParseError < StandardError
-    end
-
-    class Attribute
-      def self.validate(current_schema, data, fragments, processor, validator, options = {})
-      end
-
-      def self.build_fragment(fragments)
-        "#/#{fragments.join('/')}"
-      end
-
-      def self.validation_error(processor, message, fragments, current_schema, failed_attribute, record_errors)
-        error = ValidationError.new(message, fragments, failed_attribute, current_schema)
-        if record_errors
-          processor.validation_error(error)
-        else
-          raise error
-        end
-      end
-
-      def self.validation_errors(validator)
-        validator.validation_errors
-      end
-    end
-
-    class Validator
-      attr_accessor :attributes, :uri
-
-      def initialize()
-        @attributes = {}
-        @uri = nil
-      end
-
-      def extend_schema_definition(schema_uri)
-        u = URI.parse(schema_uri)
-        validator = JSON::Validator.validators["#{u.scheme}://#{u.host}#{u.path}"]
-        if validator.nil?
-          raise SchemaError.new("Schema not found: #{u.scheme}://#{u.host}#{u.path}")
-        end
-        @attributes.merge!(validator.attributes)
-      end
-
-      def to_s
-        "#{@uri.scheme}://#{uri.host}#{uri.path}"
-      end
-
-      def validate(current_schema, data, fragments, processor, options = {})
-        current_schema.schema.each do |attr_name,attribute|
-          if @attributes.has_key?(attr_name.to_s)
-            @attributes[attr_name.to_s].validate(current_schema, data, fragments, processor, self, options)
-          end
-        end
-        data
-      end
-    end
-  end
-
 
   class Validator
 

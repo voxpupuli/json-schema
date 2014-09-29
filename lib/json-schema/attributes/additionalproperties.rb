@@ -1,3 +1,4 @@
+require 'json-schema/attribute'
 require 'json-schema/attributes/extends'
 
 module JSON

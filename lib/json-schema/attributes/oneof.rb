@@ -1,3 +1,5 @@
+require 'json-schema/attribute'
+
 module JSON
   class Schema
     class OneOfAttribute < Attribute
