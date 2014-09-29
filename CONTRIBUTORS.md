@@ -28,3 +28,5 @@ CONTRIBUTORS
 * Kyle Hargraves - @pd
 * Jamie Cobbett - @jamiecobbett
 * Iain Beeston - @iainbeeston
+* Matt Palmer - @mpalmer
+
