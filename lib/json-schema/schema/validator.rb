@@ -1,5 +1,3 @@
-require 'json-schema/errors/schema_error'
-
 module JSON
   class Schema
     class Validator
@@ -11,16 +9,8 @@ module JSON
       end
 
       def extend_schema_definition(schema_uri)
-        u = URI.parse(schema_uri)
-        validator = JSON::Validator.validators["#{u.scheme}://#{u.host}#{u.path}"]
-        if validator.nil?
-          raise SchemaError.new("Schema not found: #{u.scheme}://#{u.host}#{u.path}")
-        end
+        validator = JSON::Validator.validator_for(schema_uri)
         @attributes.merge!(validator.attributes)
-      end
-
-      def to_s
-        "#{@uri.scheme}://#{uri.host}#{uri.path}"
       end
 
       def validate(current_schema, data, fragments, processor, options = {})

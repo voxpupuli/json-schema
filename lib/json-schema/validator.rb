@@ -62,8 +62,7 @@ module JSON
       version_string = "draft-04"
       if @options[:version]
         version_string = @options[:version] = self.class.version_string_for(@options[:version])
-        u = URI.parse("http://json-schema.org/#{@options[:version]}/schema#")
-        validator = JSON::Validator.validators["#{u.scheme}://#{u.host}#{u.path}"]
+        validator = JSON::Validator.validator_for("http://json-schema.org/#{@options[:version]}/schema#")
         @options[:version] = validator
       end
 
@@ -361,8 +360,18 @@ module JSON
         @@default_validator
       end
 
+      def validator_for(schema_uri)
+        u = URI.parse(schema_uri)
+        validator = validators["#{u.scheme}://#{u.host}#{u.path}"]
+        if validator.nil?
+          raise JSON::Schema::SchemaError.new("Schema not found: #{schema_uri}")
+        else
+          validator
+        end
+      end
+
       def register_validator(v)
-        @@validators[v.to_s] = v
+        @@validators["#{v.uri.scheme}://#{v.uri.host}#{v.uri.path}"] = v
       end
 
       def register_default_validator(v)
