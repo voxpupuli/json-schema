@@ -33,38 +33,12 @@ module JSON
     @@serializer = nil
     @@mutex = Mutex.new
 
-    def self.version_string_for(version)
-      # I'm not a fan of this, but it's quick and dirty to get it working for now
-      return "draft-04" unless version
-      case version.to_s
-      when "draft4", "http://json-schema.org/draft-04/schema#"
-        "draft-04"
-      when "draft3", "http://json-schema.org/draft-03/schema#"
-        "draft-03"
-      when "draft2"
-        "draft-02"
-      when "draft1"
-        "draft-01"
-      else
-        raise JSON::Schema::SchemaError.new("The requested JSON schema version is not supported")
-      end
-    end
-
-    def self.metaschema_for(version_string)
-      File.join(Pathname.new(File.dirname(__FILE__)).parent.parent, "resources", "#{version_string}.json").to_s
-    end
-
     def initialize(schema_data, data, opts={})
       @options = @@default_opts.clone.merge(opts)
       @errors = []
 
-      # I'm not a fan of this, but it's quick and dirty to get it working for now
-      version_string = "draft-04"
-      if @options[:version]
-        version_string = @options[:version] = self.class.version_string_for(@options[:version])
-        validator = JSON::Validator.validator_for("http://json-schema.org/#{@options[:version]}/schema#")
-        @options[:version] = validator
-      end
+      validator = JSON::Validator.validator_for_name(@options[:version])
+      @options[:version] = validator
 
       @validation_options = @options[:record_errors] ? {:record_errors => true} : {}
       @validation_options[:insert_defaults] = true if @options[:insert_defaults]
@@ -78,10 +52,11 @@ module JSON
       if @options[:validate_schema]
         begin
           if @base_schema.schema["$schema"]
-            version_string = @options[:version] = self.class.version_string_for(@base_schema.schema["$schema"])
+            base_validator = JSON::Validator.validator_for_name(@base_schema.schema["$schema"])
           end
+          metaschema = base_validator ? base_validator.metaschema : validator.metaschema
           # Don't clear the cache during metaschema validation!
-          meta_validator = JSON::Validator.new(self.class.metaschema_for(version_string), @base_schema.schema, {:clear_cache => false})
+          meta_validator = JSON::Validator.new(metaschema, @base_schema.schema, {:clear_cache => false})
           meta_validator.validate
         rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
           raise $!
@@ -323,7 +298,7 @@ module JSON
 
       def fully_validate_schema(schema, opts={})
         data = schema
-        schema = metaschema_for(version_string_for(opts[:version]))
+        schema = JSON::Validator.validator_for_name(opts[:version]).metaschema
         fully_validate(schema, data, opts)
       end
 
@@ -360,7 +335,8 @@ module JSON
         @@default_validator
       end
 
-      def validator_for(schema_uri)
+      def validator_for_uri(schema_uri)
+        return default_validator unless schema_uri
         u = URI.parse(schema_uri)
         validator = validators["#{u.scheme}://#{u.host}#{u.path}"]
         if validator.nil?
@@ -369,6 +345,20 @@ module JSON
           validator
         end
       end
+
+      def validator_for_name(schema_name)
+        return default_validator unless schema_name
+        validator = validators.values.find do |v|
+          v.names.include?(schema_name.to_s)
+        end
+        if validator.nil?
+          raise JSON::Schema::SchemaError.new("The requested JSON schema version is not supported")
+        else
+          validator
+        end
+      end
+
+      alias_method :validator_for, :validator_for_uri
 
       def register_validator(v)
         @@validators["#{v.uri.scheme}://#{v.uri.host}#{v.uri.path}"] = v

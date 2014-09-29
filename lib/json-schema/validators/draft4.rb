@@ -37,6 +37,8 @@ module JSON
           "$ref" => JSON::Schema::RefAttribute
         }
         @uri = URI.parse("http://json-schema.org/draft-04/schema#")
+        @names = ["draft4", "http://json-schema.org/draft-04/schema#"]
+        @metaschema = File.join("resources", "draft-04.json")
       end
 
       JSON::Validator.register_validator(self.new)

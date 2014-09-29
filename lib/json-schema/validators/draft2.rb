@@ -26,6 +26,8 @@ module JSON
           "extends" => JSON::Schema::ExtendsAttribute
         }
         @uri = URI.parse("http://json-schema.org/draft-02/schema#")
+        @names = ["draft2"]
+        @metaschema = File.join("resources", "draft-02.json")
       end
       
       JSON::Validator.register_validator(self.new)
