@@ -1095,6 +1095,18 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     assert(JSON::Validator.validate(schema,data))
   end
 
+  def test_format_unknown
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"type" => "string", "format" => "unknown"}}
+    }
+
+    data = {"a" => "I can write what I want here"}
+    assert(JSON::Validator.validate(schema,data,:version => :draft3))
+    data = {"a" => ""}
+    assert(JSON::Validator.validate(schema,data,:version => :draft3))
+  end
+
 
   def test_format_union
     data1 = {"a" => "boo"}
