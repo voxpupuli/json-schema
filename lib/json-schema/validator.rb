@@ -368,6 +368,18 @@ module JSON
         @@default_validator = v
       end
 
+      def register_format_validator(format, format_validator, versions = ["draft1", "draft2", "draft3", "draft4"])
+        add_to_validators = validators.reduce([]) do |memo, (_, v)|
+          memo.tap do |m|
+            m << v if v.names.any? { |name| versions.include? name }
+          end
+        end
+        if add_to_validators.any?
+          custom_format_validator = JSON::Schema::CustomFormat.new(format_validator)
+          add_to_validators.each { |v| v.formats[format.to_s] = custom_format_validator }
+        end
+      end
+
       def json_backend
         if defined?(MultiJson)
           MultiJson.respond_to?(:adapter) ? MultiJson.adapter : MultiJson.engine
