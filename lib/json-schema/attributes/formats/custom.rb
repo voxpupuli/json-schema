@@ -13,7 +13,8 @@ module JSON
         begin
           @validation_proc.call data
         rescue JSON::Schema::CustomFormatError => e
-          self.class.validation_error(processor, e.message, fragments, current_schema, self, options[:record_errors])
+          message = "The property '#{self.class.build_fragment(fragments)}' #{e.message}"
+          self.class.validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
         end
       end
     end
