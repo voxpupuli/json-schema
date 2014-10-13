@@ -5,7 +5,7 @@ require File.dirname(__FILE__) + '/../lib/json-schema'
 class JSONSchemaCustomFormatTest < Test::Unit::TestCase
   def setup
     @all_versions = ['draft1', 'draft2', 'draft3', 'draft4']
-    @format_proc = -> (value) { raise JSON::Schema::CustomFormatError.new "must be 42" unless value == "42" }
+    @format_proc = -> value { raise JSON::Schema::CustomFormatError.new("must be 42") unless value == "42" }
     @schema_4 = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "properties" => {
