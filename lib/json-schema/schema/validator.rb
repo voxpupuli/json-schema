@@ -1,11 +1,13 @@
 module JSON
   class Schema
     class Validator
-      attr_accessor :attributes, :formats, :custom_formats, :uri, :names, :metaschema
+      attr_accessor :attributes, :formats, :uri, :names, :metaschema
+      attr_reader :default_formats
 
       def initialize()
         @attributes = {}
-        @custom_formats = {}
+        @formats = {}
+        @default_formats = {}
         @uri = nil
         @names = []
         @metaschema = ''

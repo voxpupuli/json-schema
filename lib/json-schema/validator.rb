@@ -369,13 +369,19 @@ module JSON
       def register_format_validator(format, validation_proc, versions = ["draft1", "draft2", "draft3", "draft4"])
         custom_format_validator = JSON::Schema::CustomFormat.new(validation_proc)
         validators_for_names(versions).each do |validator|
-          validator.custom_formats[format.to_s] = custom_format_validator
+          validator.formats[format.to_s] = custom_format_validator
         end
       end
 
       def deregister_format_validator(format, versions = ["draft1", "draft2", "draft3", "draft4"])
         validators_for_names(versions).each do |validator|
-          validator.custom_formats.delete format.to_s
+          validator.formats[format.to_s] = validator.default_formats[format.to_s]
+        end
+      end
+
+      def restore_default_formats(versions = ["draft1", "draft2", "draft3", "draft4"])
+        validators_for_names(versions).each do |validator|
+          validator.formats = validator.default_formats.clone
         end
       end
 

@@ -29,7 +29,7 @@ module JSON
           "extends" => JSON::Schema::ExtendsAttribute,
           "$ref" => JSON::Schema::RefAttribute
         }
-        @formats = {
+        @default_formats = {
           'date-time' => DateTimeFormat,
           'date' => DateFormat,
           'ip-address' => IP4Format,
@@ -37,6 +37,7 @@ module JSON
           'time' => TimeFormat,
           'uri' => UriFormat
         }
+        @formats = @default_formats.clone
         @uri = URI.parse("http://json-schema.org/draft-03/schema#")
         @names = ["draft3", "http://json-schema.org/draft-03/schema#"]
         @metaschema = File.join("resources", "draft-03.json")
