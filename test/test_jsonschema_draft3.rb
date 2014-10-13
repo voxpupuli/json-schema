@@ -503,6 +503,25 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data,:strict => true))
   end
 
+  def test_strict_properties_required_props
+    schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
+      "properties" => {
+        "a" => {"type" => "string", "required" => true},
+        "b" => {"type" => "string", "required" => false}
+      }
+    }
+
+    data = {"a" => "a"}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"b" => "b"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b"}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
+  end
+
   def test_strict_properties_additional_props
     schema = {
       "$schema" => "http://json-schema.org/draft-03/schema#",

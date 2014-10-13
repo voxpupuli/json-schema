@@ -15,8 +15,8 @@ module JSON
               data[property.to_s] = (default.is_a?(Hash) ? default.clone : default)
             end
 
-
-            if (property_schema['required'] || options[:strict] == true) && !data.has_key?(property.to_s) && !data.has_key?(property.to_sym)
+            if property_schema.fetch('required') { options[:strict] } &&
+               !data.has_key?(property.to_s) && !data.has_key?(property.to_sym)
               message = "The property '#{build_fragment(fragments)}' did not contain a required property of '#{property}'"
               validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
             end
