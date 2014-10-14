@@ -1,13 +1,13 @@
 module JSON
   class Schema
     class Validator
-      attr_accessor :attributes, :uri, :names, :metaschema
+      attr_accessor :attributes, :uri, :names
 
       def initialize()
         @attributes = {}
         @uri = nil
         @names = []
-        @metaschema = ''
+        @metaschema_name = ''
       end
 
       def extend_schema_definition(schema_uri)
@@ -22,6 +22,13 @@ module JSON
           end
         end
         data
+      end
+
+      def metaschema
+        gem_root = Gem::Specification.find_by_name("json-schema").gem_dir
+        File.join(
+          gem_root, 'resources', @metaschema_name
+        )
       end
     end
   end
