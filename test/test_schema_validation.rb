@@ -1,4 +1,5 @@
 require 'test/unit'
+require 'tmpdir'
 require File.dirname(__FILE__) + '/../lib/json-schema'
 
 class JSONSchemaValidation < Test::Unit::TestCase
@@ -81,5 +82,15 @@ class JSONSchemaValidation < Test::Unit::TestCase
     data = {"b" => {"a" => 5}}
     assert(JSON::Validator.validate(valid_schema_v3,data,:validate_schema => true))
     assert(!JSON::Validator.validate(invalid_schema_v3,data,:validate_schema => true))
+  end
+
+  def test_schema_validation_from_different_directory
+    Dir.mktmpdir do |tmpdir|
+      Dir.chdir(tmpdir) do
+        data = {"b" => {"a" => 5}}
+        assert(JSON::Validator.validate(valid_schema_v4,data,:validate_schema => true, :version => :draft4))
+        assert(!JSON::Validator.validate(invalid_schema_v4,data,:validate_schema => true, :version => :draft4))
+      end
+    end
   end
 end
