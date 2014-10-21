@@ -4,11 +4,11 @@ module JSON
   class Schema
     class AllOfAttribute < Attribute
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
-        # Create an array to hold errors that are generated during validation
-        errors = []
+        # Create an hash to hold errors that are generated during validation
+        errors = Hash.new { |hsh, k| hsh[k] = [] }
         valid = true
 
-        current_schema.schema['allOf'].each do |element|
+        current_schema.schema['allOf'].each_with_index do |element, schema_index|
           schema = JSON::Schema.new(element,current_schema.uri,validator)
 
           # We're going to add a little cruft here to try and maintain any validation errors that occur in the allOf
@@ -24,7 +24,7 @@ module JSON
           diff = validation_errors(processor).count - pre_validation_error_count
           while diff > 0
             diff = diff - 1
-            errors.push(validation_errors(processor).pop)
+            errors["subschema ##{schema_index}"].push(validation_errors(processor).pop)
           end
         end
 
