@@ -24,7 +24,7 @@ module JSON
           diff = validation_errors(processor).count - pre_validation_error_count
           while diff > 0
             diff = diff - 1
-            errors["subschema ##{schema_index}"].push(validation_errors(processor).pop)
+            errors["allOf ##{schema_index}"].push(validation_errors(processor).pop)
           end
         end
 

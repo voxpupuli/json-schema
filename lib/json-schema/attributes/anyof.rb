@@ -26,7 +26,7 @@ module JSON
           valid = false if diff > 0
           while diff > 0
             diff = diff - 1
-            errors["subschema ##{schema_index}"].push(validation_errors(processor).pop)
+            errors["anyOf ##{schema_index}"].push(validation_errors(processor).pop)
           end
 
           break if valid
