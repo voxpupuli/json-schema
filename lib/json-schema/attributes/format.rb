@@ -117,6 +117,12 @@ module JSON
         when 'hostname'
 
         when 'email'
+          if data.is_a?(String)
+            error_message = "The property '#{build_fragment(fragments)}' must be a valid email"
+            unless data.match(/^([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})$/i)
+              validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors])
+            end
+          end
         end
       end
     end

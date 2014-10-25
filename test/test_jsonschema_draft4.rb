@@ -1025,6 +1025,22 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(JSON::Validator.validate(schema,data3))
   end
 
+  def test_format_email
+    data1 = {"a" => "example@example.com"}
+    data2 = {"a" => "example@example"}
+    data3 = {"a" => "example"}
+
+    schema = {
+        "$schema" => "http://json-schema.org/draft-04/schema#",
+        "type" => "object",
+        "properties" => { "a" => {"type" => "string", "format" => "email"}}
+    }
+
+    assert(JSON::Validator.validate(schema,data1))
+    assert(!JSON::Validator.validate(schema,data2))
+    assert(!JSON::Validator.validate(schema,data3))
+  end
+
 
   def test_format_union
     data1 = {"a" => "boo"}
