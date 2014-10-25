@@ -25,8 +25,6 @@ class CommonTestSuiteTest < Test::Unit::TestCase
       test_list = JSON::Validator.parse(File.read(tfile))
       rel_file = tfile[TEST_DIR.length+1..-1]
 
-      next if IGNORED_TESTS.include?(rel_file)
-
       test_list.each do |test|
         schema = test["schema"]
         base_description = test["description"]
@@ -36,6 +34,8 @@ class CommonTestSuiteTest < Test::Unit::TestCase
           err_id = "#{rel_file}, '#{base_description}'/'#{t['description']}'"
 
           define_method("test_#{err_id}") do
+            skip "Known incompatibility with common test suite" if IGNORED_TESTS.include?(rel_file)
+
             assert_nothing_raised("Exception raised running #{err_id}") do
               v = JSON::Validator.fully_validate(schema,
                                                  t["data"],
