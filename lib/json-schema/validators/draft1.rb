@@ -26,7 +26,7 @@ module JSON
         }
         @uri = URI.parse("http://json-schema.org/draft-01/schema#")
         @names = ["draft1"]
-        @metaschema = File.join("resources", "draft-01.json")
+        @metaschema_name = "draft-01.json"
       end
       
       JSON::Validator.register_validator(self.new)
