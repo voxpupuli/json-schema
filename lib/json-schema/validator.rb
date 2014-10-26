@@ -107,23 +107,16 @@ module JSON
 
     # Run a simple true/false validation of data against a schema
     def validate()
-      begin
-        @base_schema.validate(@data,[],self,@validation_options)
-        if @validation_options[:clear_cache] == true
-          Validator.clear_cache
-        end
-        if @options[:errors_as_objects]
-          return @errors.map{|e| e.to_hash}
-        else
-          return @errors.map{|e| e.to_string}
-        end
-      rescue JSON::Schema::ValidationError
-        if @validation_options[:clear_cache] == true
-          Validator.clear_cache
-        end
-        raise $!
+      @base_schema.validate(@data,[],self,@validation_options)
+      if @options[:errors_as_objects]
+        return @errors.map{|e| e.to_hash}
+      else
+        return @errors.map{|e| e.to_string}
       end
     ensure
+      if @validation_options[:clear_cache] == true
+        Validator.clear_cache
+      end
       if @validation_options[:insert_defaults] && @original_data.kind_of?(Enumerable)
         @original_data.replace(@data)
       end
