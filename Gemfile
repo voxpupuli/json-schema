@@ -4,5 +4,4 @@ gemspec
 
 group :development do
   gem "rake"
-  gem "byebug"
 end
