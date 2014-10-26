@@ -348,9 +348,7 @@ module JSON
 
       def validator_for_name(schema_name)
         return default_validator unless schema_name
-        validator = validators.values.find do |v|
-          v.names.include?(schema_name.to_s)
-        end
+        validator = validators_for_names([schema_name]).first
         if validator.nil?
           raise JSON::Schema::SchemaError.new("The requested JSON schema version is not supported")
         else
@@ -366,6 +364,25 @@ module JSON
 
       def register_default_validator(v)
         @@default_validator = v
+      end
+
+      def register_format_validator(format, validation_proc, versions = ["draft1", "draft2", "draft3", "draft4"])
+        custom_format_validator = JSON::Schema::CustomFormat.new(validation_proc)
+        validators_for_names(versions).each do |validator|
+          validator.formats[format.to_s] = custom_format_validator
+        end
+      end
+
+      def deregister_format_validator(format, versions = ["draft1", "draft2", "draft3", "draft4"])
+        validators_for_names(versions).each do |validator|
+          validator.formats[format.to_s] = validator.default_formats[format.to_s]
+        end
+      end
+
+      def restore_default_formats(versions = ["draft1", "draft2", "draft3", "draft4"])
+        validators_for_names(versions).each do |validator|
+          validator.formats = validator.default_formats.clone
+        end
       end
 
       def json_backend
@@ -446,6 +463,15 @@ module JSON
           @@serializer = lambda{|o|
             YAML.dump(o)
           }
+        end
+      end
+
+      private
+
+      def validators_for_names(names)
+        names.map! { |name| name.to_s }
+        validators.reduce([]) do |memo, (_, validator)|
+          memo.tap { |m| m << validator if (validator.names & names).any? }
         end
       end
     end

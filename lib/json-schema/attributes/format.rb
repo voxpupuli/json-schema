@@ -6,8 +6,11 @@ module JSON
     class FormatAttribute < Attribute
 
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
-        validator = validator.formats[current_schema.schema['format'].to_s]
-        validator.validate(current_schema, data, fragments, processor, validator, options = {}) unless validator.nil?
+        if self.data_valid_for_type?(data, current_schema.schema['type'])
+          format = current_schema.schema['format'].to_s
+          validator = validator.formats[format]
+          validator.validate(current_schema, data, fragments, processor, validator, options) unless validator.nil?
+        end
       end
     end
   end

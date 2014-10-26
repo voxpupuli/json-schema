@@ -72,22 +72,6 @@ module JSON
         end
       end
 
-      TYPE_CLASS_MAPPINGS = {
-        "string" => String,
-        "number" => Numeric,
-        "integer" => Integer,
-        "boolean" => [TrueClass, FalseClass],
-        "object" => Hash,
-        "array" => Array,
-        "null" => NilClass,
-        "any" => Object
-      }
-
-      def self.data_valid_for_type?(data, type)
-        valid_classes = TYPE_CLASS_MAPPINGS.fetch(type) { return true }
-        Array(valid_classes).any? { |c| data.is_a?(c) }
-      end
-
       # Lookup Schema type of given class instance
       def self.type_of_data(data)
         type, klass = TYPE_CLASS_MAPPINGS.map { |k,v| [k,v] }.sort_by { |i|
