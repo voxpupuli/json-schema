@@ -887,7 +887,7 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
-      "properties" => { "a" => {"type" => "string", "format" => "ip-address"}}
+      "properties" => { "a" => {"type" => "string", "format" => "ipv4"}}
     }
 
     data = {"a" => "1.1.1.1"}
@@ -929,52 +929,6 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data))
   end
 
-  def test_format_time
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "type" => "object",
-      "properties" => { "a" => {"type" => "string", "format" => "time"}}
-    }
-
-    data = {"a" => "12:00:00"}
-    assert(JSON::Validator.validate(schema,data))
-    data = {"a" => "12:00"}
-    assert(!JSON::Validator.validate(schema,data))
-    data = {"a" => "12:00:60"}
-    assert(!JSON::Validator.validate(schema,data))
-    data = {"a" => "12:60:00"}
-    assert(!JSON::Validator.validate(schema,data))
-    data = {"a" => "24:00:00"}
-    assert(!JSON::Validator.validate(schema,data))
-    data = {"a" => "0:00:00"}
-    assert(!JSON::Validator.validate(schema,data))
-    data = {"a" => "-12:00:00"}
-    assert(!JSON::Validator.validate(schema,data))
-    data = {"a" => "12:00:00b"}
-    assert(!JSON::Validator.validate(schema,data))
-  end
-
-
-  def test_format_date
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "type" => "object",
-      "properties" => { "a" => {"type" => "string", "format" => "date"}}
-    }
-
-    data = {"a" => "2010-01-01"}
-    assert(JSON::Validator.validate(schema,data))
-    data = {"a" => "2010-01-32"}
-    assert(!JSON::Validator.validate(schema,data))
-    data = {"a" => "n2010-01-01"}
-    assert(!JSON::Validator.validate(schema,data))
-    data = {"a" => "2010-1-01"}
-    assert(!JSON::Validator.validate(schema,data))
-    data = {"a" => "2010-01-1"}
-    assert(!JSON::Validator.validate(schema,data))
-    data = {"a" => "2010-01-01n"}
-    assert(!JSON::Validator.validate(schema,data))
-  end
 
   def test_format_datetime
     schema = {
@@ -1025,6 +979,18 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(JSON::Validator.validate(schema,data3))
   end
 
+  def test_format_unknown
+    schema = {
+      "type" => "object",
+      "properties" => { "a" => {"type" => "string", "format" => "unknown"}}
+    }
+
+    data = {"a" => "I can write what I want here"}
+    assert(JSON::Validator.validate(schema,data,:version => :draft4))
+    data = {"a" => ""}
+    assert(JSON::Validator.validate(schema,data,:version => :draft4))
+  end
+
 
   def test_format_union
     data1 = {"a" => "boo"}
@@ -1033,7 +999,7 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
-      "properties" => { "a" => {"type" => ["string","null"], "format" => "ip-address"}}
+      "properties" => { "a" => {"type" => ["string","null"], "format" => "ipv4"}}
     }
     assert(!JSON::Validator.validate(schema,data1))
     assert(JSON::Validator.validate(schema,data2))
