@@ -189,9 +189,7 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
 
     assert(JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => ['string', 'null']}, "hello"))
     assert(!JSON::Validator.validate({"$schema" => "http://json-schema.org/draft-04/schema#",'type' => ['integer', 'object']}, "hello"))
-   end
-
-
+  end
 
   def test_required
     # Set up the default datatype
@@ -1058,6 +1056,32 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data))
     data = {"a" => 1, "b" => 2, "c" => 3}
     assert(JSON::Validator.validate(schema,data))
+  end
+
+  def test_schema_dependency
+    schema = {
+      "type"=> "object",
+      "properties"=> {
+        "name"=> { "type"=> "string" },
+        "credit_card"=> { "type"=> "number" }
+      },
+      "required"=> ["name"],
+      "dependencies"=> {
+        "credit_card"=> {
+          "properties"=> {
+            "billing_address"=> { "type"=> "string" }
+          },
+          "required"=> ["billing_address"]
+        }
+      }
+    }
+    data = {
+      "name" => "John Doe",
+      "credit_card" => 5555555555555555
+    }
+    assert(!JSON::Validator.validate(schema,data), 'test schema dependency with invalid data')
+    data['billing_address'] = "Somewhere over the rainbow"
+    assert(JSON::Validator.validate(schema,data), 'test schema dependency with valid data')
   end
 
   def test_default
