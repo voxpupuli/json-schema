@@ -17,10 +17,10 @@ module JSON
         end
         valid = false
 
-        # Create an array to hold errors that are generated during union validation
-        union_errors = []
+        # Create a hash to hold errors that are generated during union validation
+        union_errors = Hash.new { |hsh, k| hsh[k] = [] }
 
-        types.each do |type|
+        types.each_with_index do |type, type_index|
           if type.is_a?(String)
             valid = data_valid_for_type?(data, type)
           elsif type.is_a?(Hash) && union
@@ -42,7 +42,7 @@ module JSON
             valid = false if diff > 0
             while diff > 0
               diff = diff - 1
-              union_errors.push(validation_errors(processor).pop)
+              union_errors["type ##{type_index}"].push(validation_errors(processor).pop)
             end
           end
 

@@ -4,11 +4,11 @@ module JSON
   class Schema
     class AnyOfAttribute < Attribute
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
-        # Create an array to hold errors that are generated during validation
-        errors = []
+        # Create a hash to hold errors that are generated during validation
+        errors = Hash.new { |hsh, k| hsh[k] = [] }
         valid = false
 
-        current_schema.schema['anyOf'].each do |element|
+        current_schema.schema['anyOf'].each_with_index do |element, schema_index|
           schema = JSON::Schema.new(element,current_schema.uri,validator)
 
           # We're going to add a little cruft here to try and maintain any validation errors that occur in the anyOf
@@ -26,7 +26,7 @@ module JSON
           valid = false if diff > 0
           while diff > 0
             diff = diff - 1
-            errors.push(validation_errors(processor).pop)
+            errors["anyOf ##{schema_index}"].push(validation_errors(processor).pop)
           end
 
           break if valid
