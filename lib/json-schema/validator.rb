@@ -70,6 +70,7 @@ module JSON
     end
 
     def schema_from_fragment(base_schema, fragment)
+      schema_uri = base_schema.uri
       fragments = fragment.split("/")
 
       # ensure the first element was a hash, per the fragment spec
@@ -82,17 +83,17 @@ module JSON
           if !base_schema.schema.has_key?(f)
             raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
           end
-        base_schema = base_schema.schema[f]
+          base_schema = base_schema.schema[f]
         elsif base_schema.is_a?(Hash)
           if !base_schema.has_key?(f)
             raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
           end
-        base_schema = initialize_schema(base_schema[f]) #need to return a Schema instance for validation to work
+          base_schema = JSON::Schema.new(base_schema[f],schema_uri,@options[:version])
         elsif base_schema.is_a?(Array)
           if base_schema[f.to_i].nil?
             raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
           end
-        base_schema = initialize_schema(base_schema[f.to_i])
+          base_schema = JSON::Schema.new(base_schema[f.to_i],schema_uri,@options[:version])
         else
           raise JSON::Schema::SchemaError.new("Invalid schema encountered when resolving :fragment option")
         end
