@@ -984,6 +984,8 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data))
     data = {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff:bbbb"}
     assert(!JSON::Validator.validate(schema,data))
+    assert(JSON::Validator.validate(schema, {"a" => "::1"}), 'validate with shortcut')
+    assert(!JSON::Validator.validate(schema, {"a" => "42"}), 'not validate a simple number')
   end
 
   def test_format_time
