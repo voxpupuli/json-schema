@@ -1318,7 +1318,6 @@ class JSONSchemaDraft4Test < Test::Unit::TestCase
 
     data = {"a" => 1}
     errors = JSON::Validator.fully_validate(schema,data)
-    puts errors
     assert_equal(0, errors.length)
 
     data = {"a" => "taco"}
