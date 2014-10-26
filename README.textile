@@ -329,6 +329,46 @@ data = {"a" => 0, "b" => "taco"}
 JSON::Validator.validate(schema,data) # => false
 </pre>
 
+h3. Custom format validation
+
+The JSON schema standard allows custom formats in schema definitions which should be ignored by validators that do not support them. JSON::Schema allows registering procs as custom format validators which receive the value to be checked as parameter and must raise a <code>JSON::Schema::CustomFormatError</code> to indicate a format violation. The error message will be prepended by the property namne, e.g. "The property '#a'":
+
+<pre>
+require 'rubygems'
+require 'json-schema'
+
+format_proc = -> value {
+  raise JSON::Schema::CustomFormatError.new("must be 42") unless value == "42"
+}
+
+# register the proc for format 'the-answer' for draft4 schema
+JSON::Validator.register_format_validator("the-answer", format_proc, ["draft4"])
+
+# omitting the version parameter uses ["draft1", "draft2", "draft3", "draft4"] as default
+JSON::Validator.register_format_validator("the-answer", format_proc)
+
+# deregistering the custom validator
+# (also ["draft1", "draft2", "draft3", "draft4"] as default version)
+JSON::Validator.deregister_format_validator('the-answer', ["draft4"])
+
+# shortcut to restore the default formats for validators (same default as before)
+JSON::Validator.restore_default_formats(["draft4"])
+
+# with the validator registered as above, the following results in
+# ["The property '#a' must be 42"] as returned errors
+schema = {
+  "$schema" => "http://json-schema.org/draft-04/schema#",
+  "properties" => {
+    "a" => {
+      "type" => "string",
+      "format" => "the-answer",
+    }
+  }
+}
+errors = JSON::Validator.fully_validate(schema, {"a" => "23"})
+
+</pre>
+
 h2. JSON Backends
 
 The JSON Schema library currently supports the <code>json</code> and <code>yajl-ruby</code> backend JSON parsers. If either of these libraries are installed, they will be automatically loaded and used to parse any JSON strings supplied by the user.
@@ -348,8 +388,10 @@ The 'format' attribute is only validated for the following values:
 * date-time
 * date
 * time
-* ip-address
+* ip-address (IPv4 address in draft1, draft2 and draft3)
+* ipv4 (IPv4 address in draft4)
 * ipv6
+* uri
 
 All other 'format' attribute values are simply checked to ensure the instance value is of the correct datatype (e.g., an instance value is validated to be an integer or a float in the case of 'utc-millisec').
 
