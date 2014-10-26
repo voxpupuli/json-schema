@@ -1,5 +1,6 @@
 require 'json-schema/attribute'
 require 'ipaddr'
+
 module JSON
   class Schema
     class IP4Format < FormatAttribute
