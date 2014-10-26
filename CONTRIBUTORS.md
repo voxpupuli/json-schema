@@ -30,3 +30,4 @@ CONTRIBUTORS
 * Iain Beeston - @iainbeeston
 * Matt Palmer - @mpalmer
 * Ben Kirzhner - @benkirzhner
+* RST-J - @RST-J
