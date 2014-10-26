@@ -1,5 +1,5 @@
 require 'json-schema/attribute'
-require 'uri'
+
 module JSON
   class Schema
     class IP4Format < FormatAttribute

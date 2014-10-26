@@ -1,7 +1,6 @@
 require 'json-schema/attribute'
 require 'json-schema/errors/custom_format_error'
 
-require 'uri'
 module JSON
   class Schema
     class CustomFormat < FormatAttribute
