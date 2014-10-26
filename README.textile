@@ -383,8 +383,10 @@ The 'format' attribute is only validated for the following values:
 * date-time
 * date
 * time
-* ip-address
+* ip-address (IPv4 address in draft1, draft2 and draft3)
+* ipv4 (IPv4 address in draft4)
 * ipv6
+* uri
 
 All other 'format' attribute values are simply checked to ensure the instance value is of the correct datatype (e.g., an instance value is validated to be an integer or a float in the case of 'utc-millisec').
 
