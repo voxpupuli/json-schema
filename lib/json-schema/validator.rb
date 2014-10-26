@@ -45,6 +45,7 @@ module JSON
       @validation_options[:strict] = true if @options[:strict] == true
 
       @@mutex.synchronize { @base_schema = initialize_schema(schema_data) }
+      @original_data = data
       @data = initialize_data(data)
       @@mutex.synchronize { build_schemas(@base_schema) }
 
@@ -121,6 +122,10 @@ module JSON
           Validator.clear_cache
         end
         raise $!
+      end
+    ensure
+      if @validation_options[:insert_defaults] && @original_data.kind_of?(Enumerable)
+        @original_data.replace(@data)
       end
     end
 
@@ -560,8 +565,7 @@ module JSON
           end
         end
       end
-      JSON::Schema.add_indifferent_access(data)
-      data
+      JSON::Schema.stringify(data)
     end
 
     def normalized_uri(data)

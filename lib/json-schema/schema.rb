@@ -6,10 +6,8 @@ module JSON
     attr_accessor :schema, :uri, :validator
 
     def initialize(schema,uri,parent_validator=nil)
-      @schema = schema
+      @schema = self.class.stringify(schema)
       @uri = uri
-
-      self.class.add_indifferent_access(@schema)
 
       # If there is an ID on this schema, use it to generate the URI
       if @schema['id'] && @schema['id'].kind_of?(String)
@@ -36,26 +34,18 @@ module JSON
       @validator.validate(self, data, fragments, processor, options)
     end
 
-    def self.add_indifferent_access(schema)
-      if schema.is_a?(Hash)
-        schema.default_proc = proc do |hash,key|
-          if hash.has_key?(key)
-            hash[key]
-          else
-            key = case key
-            when Symbol then key.to_s
-            when String then key.to_sym
-            end
-            hash.has_key?(key) ? hash[key] : nil
-          end
+    def self.stringify(schema)
+      case schema
+      when Hash then
+        Hash[schema.map { |key, value| [key.to_s, stringify(schema[key])] }]
+      when Array then
+        schema.map do |schema_item|
+          stringify(schema_item)
         end
-        schema.keys.each do |key|
-          add_indifferent_access(schema[key])
-        end
-      elsif schema.is_a?(Array)
-        schema.each do |schema_item|
-          add_indifferent_access(schema_item)
-        end
+      when Symbol then
+        schema.to_s
+      else
+        schema
       end
     end
 
