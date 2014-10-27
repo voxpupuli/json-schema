@@ -15,3 +15,5 @@ matrix:
       gemfile: "gemfiles/Gemfile.yajl-ruby.x"
     - rvm: "2.1"
       gemfile: "gemfiles/Gemfile.uuidtools.x"
+  allow_failures:
+    - rvm: "1.8"
