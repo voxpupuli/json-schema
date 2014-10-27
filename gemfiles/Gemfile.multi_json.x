@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gemspec
+gemspec :path => "../"
 
 gem "multi_json"
 
