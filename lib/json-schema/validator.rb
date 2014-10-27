@@ -487,10 +487,10 @@ module JSON
         Gem.available?('uuidtools')
       end
       require 'uuidtools'
-      @@fake_uri_generator = lambda{|s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
+      @@fake_uuid_generator = lambda{|s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
     else
       require 'json-schema/uri/uuid'
-      @@fake_uri_generator = lambda{|s| JSON::Util::UUID.create_v5(s,JSON::Util::UUID::Nil).to_s }
+      @@fake_uuid_generator = lambda{|s| JSON::Util::UUID.create_v5(s,JSON::Util::UUID::Nil).to_s }
     end
 
     def serialize schema
@@ -501,8 +501,8 @@ module JSON
       end
     end
 
-    def fake_uri schema
-      @@fake_uri_generator.call(schema)
+    def fake_uuid schema
+      @@fake_uuid_generator.call(schema)
     end
 
     def schema_to_list(schema)
@@ -518,7 +518,7 @@ module JSON
       if schema.is_a?(String)
         begin
           # Build a fake URI for this
-          schema_uri = URI.parse(fake_uri(schema))
+          schema_uri = URI.parse(fake_uuid(schema))
           schema = JSON::Validator.parse(schema)
           if @options[:list] && @options[:fragment].nil?
             schema = schema_to_list(schema)
@@ -547,7 +547,7 @@ module JSON
             schema = Validator.schemas[schema_uri.to_s]
             if @options[:list] && @options[:fragment].nil?
               schema = schema_to_list(schema.schema)
-              schema_uri = URI.parse(fake_uri(serialize(schema)))
+              schema_uri = URI.parse(fake_uuid(serialize(schema)))
               schema = JSON::Schema.new(schema, schema_uri, @options[:version])
               Validator.add_schema(schema)
             end
@@ -558,7 +558,7 @@ module JSON
         if @options[:list] && @options[:fragment].nil?
           schema = schema_to_list(schema)
         end
-        schema_uri = URI.parse(fake_uri(serialize(schema)))
+        schema_uri = URI.parse(fake_uuid(serialize(schema)))
         schema = JSON::Schema.new(schema,schema_uri,@options[:version])
         Validator.add_schema(schema)
       else
