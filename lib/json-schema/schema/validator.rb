@@ -28,10 +28,8 @@ module JSON
       end
 
       def metaschema
-        gem_root = Gem::Specification.find_by_name("json-schema").gem_dir
-        File.join(
-          gem_root, 'resources', @metaschema_name
-        )
+        resources = File.expand_path('../../../../resources', __FILE__)
+        File.join(resources, @metaschema_name)
       end
     end
   end
