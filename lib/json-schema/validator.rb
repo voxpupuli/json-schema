@@ -418,7 +418,7 @@ module JSON
           when 'yajl'
             json = StringIO.new(s)
             parser = Yajl::Parser.new
-            parser.parse(json)
+            parser.parse(json) or raise JSON::Schema::JsonParseError.new("The JSON could not be parsed by yajl")
           else
             raise JSON::Schema::JsonParseError.new("No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json")
           end
