@@ -18,4 +18,8 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 1.8.7"
   s.license = "MIT"
   s.required_rubygems_version = ">= 1.8"
+
+  if RUBY_VERSION.start_with?("1.8")
+    s.add_dependency "json"
+  end
 end
