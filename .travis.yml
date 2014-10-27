@@ -6,5 +6,12 @@ rvm:
   - "2.1.2"
   - "jruby"
   - "rbx"
-# uncomment this line if your project needs to run something other than `rake`:
-# script: bundle exec rspec spec
+gemfile:
+  - "Gemfile"
+  - "gemfiles/Gemfile.multi_json.x"
+  - "gemfiles/Gemfile.yajl-ruby.x"
+  - "gemfiles/Gemfile.uuidtools.x"
+matrix:
+  exclude:
+    - rvm: "jruby"
+      gemfile: "gemfiles/Gemfile.yajl-ruby.x"
