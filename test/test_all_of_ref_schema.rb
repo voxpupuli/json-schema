@@ -1,5 +1,4 @@
-require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/json-schema'
+require_relative 'test_helper'
 
 class AllOfRefSchemaTest < Test::Unit::TestCase
   def test_all_of_ref_schema_fails

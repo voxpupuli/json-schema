@@ -1,5 +1,4 @@
-require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/json-schema'
+require_relative 'test_helper'
 
 class MinItemsTest < Test::Unit::TestCase
   def test_minitems_nils
@@ -8,7 +7,6 @@ class MinItemsTest < Test::Unit::TestCase
       "minItems" => 1,
       "items" => { "type" => "object" }
     }
-    data = [nil]
 
     errors = JSON::Validator.fully_validate(schema, [nil])
     assert_equal(errors.length, 1)

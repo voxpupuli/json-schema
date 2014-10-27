@@ -1,5 +1,4 @@
-require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/json-schema'
+require_relative 'test_helper'
 
 class ListOptionTest < Test::Unit::TestCase
   def test_list_option_reusing_schemas

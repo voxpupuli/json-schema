@@ -1,5 +1,4 @@
-require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/json-schema'
+require_relative 'test_helper'
 
 class JSONFullValidation < Test::Unit::TestCase
     

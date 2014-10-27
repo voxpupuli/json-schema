@@ -1,6 +1,5 @@
-require 'test/unit'
+require_relative 'test_helper'
 require 'socket'
-require File.dirname(__FILE__) + '/../lib/json-schema'
 
 class BadSchemaRefTest < Test::Unit::TestCase
 
