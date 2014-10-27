@@ -1,9 +1,11 @@
 language: "ruby"
 rvm:
+  - "1.8"
   - "1.9"
   - "2.0"
   - "2.1"
-  - "jruby"
+  - "jruby-18mode"
+  - "jruby-19mode"
   - "rbx"
 matrix:
   include:
