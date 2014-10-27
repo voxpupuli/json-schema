@@ -8,7 +8,6 @@ if Gem::Specification::find_all_by_name('multi_json').any?
   MultiJson.respond_to?(:adapter) ? MultiJson.adapter : MultiJson.engine
 end
 
-require 'json-schema/util/hash'
 require 'json-schema/util/array_set'
 require 'json-schema/schema'
 require 'json-schema/validator'
