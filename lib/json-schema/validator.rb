@@ -426,33 +426,22 @@ module JSON
       end
 
       if !defined?(MultiJson)
-        if begin
-            Gem::Specification::find_by_name('json')
-          rescue Gem::LoadError
-            false
-          rescue
-            Gem.available?('json')
-          end
+        if Gem::Specification::find_all_by_name('json').any?
           require 'json'
           @@available_json_backends << 'json'
           @@json_backend = 'json'
-        end
-
-        # Try force-loading json for rubies > 1.9.2
-        begin
-          require 'json'
-          @@available_json_backends << 'json'
-          @@json_backend = 'json'
-        rescue LoadError
-        end
-
-        if begin
-            Gem::Specification::find_by_name('yajl-ruby')
-          rescue Gem::LoadError
-            false
-          rescue
-            Gem.available?('yajl-ruby')
+        else
+          # Try force-loading json for rubies > 1.9.2
+          begin
+            require 'json'
+            @@available_json_backends << 'json'
+            @@json_backend = 'json'
+          rescue LoadError
           end
+        end
+
+
+        if Gem::Specification::find_all_by_name('yajl-ruby').any?
           require 'yajl'
           @@available_json_backends << 'yajl'
           @@json_backend = 'yajl'
@@ -461,9 +450,7 @@ module JSON
         if @@json_backend == 'yajl'
           @@serializer = lambda{|o| Yajl::Encoder.encode(o) }
         else
-          @@serializer = lambda{|o|
-            YAML.dump(o)
-          }
+          @@serializer = lambda{|o| YAML.dump(o) }
         end
       end
 
@@ -479,13 +466,7 @@ module JSON
 
     private
 
-    if begin
-        Gem::Specification::find_by_name('uuidtools')
-      rescue Gem::LoadError
-        false
-      rescue
-        Gem.available?('uuidtools')
-      end
+    if Gem::Specification::find_all_by_name('uuidtools').any?
       require 'uuidtools'
       @@fake_uuid_generator = lambda{|s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
     else
