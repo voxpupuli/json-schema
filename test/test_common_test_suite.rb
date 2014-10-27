@@ -11,11 +11,9 @@ class CommonTestSuiteTest < Test::Unit::TestCase
     "draft3/disallow.json",
     "draft3/optional/format.json",
     "draft3/optional/jsregex.json",
-    "draft3/ref.json",
     "draft3/refRemote.json",
     "draft4/dependencies.json",
     "draft4/optional/format.json",
-    "draft4/ref.json",
     "draft4/refRemote.json",
   ]
 
