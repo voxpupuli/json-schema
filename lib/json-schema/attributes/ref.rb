@@ -49,6 +49,7 @@ module JSON
           fragment_path = ''
           fragments.each do |fragment|
             if fragment && fragment != ''
+              fragment = URI.unescape(fragment.gsub('~0', '~').gsub('~1', '/'))
               if target_schema.is_a?(Array)
                 target_schema = target_schema[fragment.to_i]
               else
