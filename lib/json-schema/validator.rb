@@ -426,33 +426,22 @@ module JSON
       end
 
       if !defined?(MultiJson)
-        if begin
-            Gem::Specification::find_by_name('json')
-          rescue Gem::LoadError
-            false
-          rescue
-            Gem.available?('json')
-          end
+        if Gem::Specification::find_all_by_name('json').any?
           require 'json'
           @@available_json_backends << 'json'
           @@json_backend = 'json'
-        end
-
-        # Try force-loading json for rubies > 1.9.2
-        begin
-          require 'json'
-          @@available_json_backends << 'json'
-          @@json_backend = 'json'
-        rescue LoadError
-        end
-
-        if begin
-            Gem::Specification::find_by_name('yajl-ruby')
-          rescue Gem::LoadError
-            false
-          rescue
-            Gem.available?('yajl-ruby')
+        else
+          # Try force-loading json for rubies > 1.9.2
+          begin
+            require 'json'
+            @@available_json_backends << 'json'
+            @@json_backend = 'json'
+          rescue LoadError
           end
+        end
+
+
+        if Gem::Specification::find_all_by_name('yajl-ruby').any?
           require 'yajl'
           @@available_json_backends << 'yajl'
           @@json_backend = 'yajl'
@@ -461,9 +450,7 @@ module JSON
         if @@json_backend == 'yajl'
           @@serializer = lambda{|o| Yajl::Encoder.encode(o) }
         else
-          @@serializer = lambda{|o|
-            YAML.dump(o)
-          }
+          @@serializer = lambda{|o| YAML.dump(o) }
         end
       end
 
@@ -479,18 +466,12 @@ module JSON
 
     private
 
-    if begin
-        Gem::Specification::find_by_name('uuidtools')
-      rescue Gem::LoadError
-        false
-      rescue
-        Gem.available?('uuidtools')
-      end
+    if Gem::Specification::find_all_by_name('uuidtools').any?
       require 'uuidtools'
-      @@fake_uri_generator = lambda{|s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
+      @@fake_uuid_generator = lambda{|s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
     else
-      require 'json-schema/uri/uuid'
-      @@fake_uri_generator = lambda{|s| JSON::Util::UUID.create_v5(s,JSON::Util::UUID::Nil).to_s }
+      require 'json-schema/util/uuid'
+      @@fake_uuid_generator = lambda{|s| JSON::Util::UUID.create_v5(s,JSON::Util::UUID::Nil).to_s }
     end
 
     def serialize schema
@@ -501,8 +482,8 @@ module JSON
       end
     end
 
-    def fake_uri schema
-      @@fake_uri_generator.call(schema)
+    def fake_uuid schema
+      @@fake_uuid_generator.call(schema)
     end
 
     def schema_to_list(schema)
@@ -518,7 +499,7 @@ module JSON
       if schema.is_a?(String)
         begin
           # Build a fake URI for this
-          schema_uri = URI.parse(fake_uri(schema))
+          schema_uri = URI.parse(fake_uuid(schema))
           schema = JSON::Validator.parse(schema)
           if @options[:list] && @options[:fragment].nil?
             schema = schema_to_list(schema)
@@ -527,15 +508,7 @@ module JSON
           Validator.add_schema(schema)
         rescue
           # Build a uri for it
-          schema_uri = URI.parse(schema)
-          if schema_uri.relative?
-            # Check for absolute path
-            if schema[0,1] == '/'
-              schema_uri = URI.parse("file://#{schema}")
-            else
-              schema_uri = URI.parse("file://#{Dir.pwd}/#{schema}")
-            end
-          end
+          schema_uri = normalized_uri(schema)
           if Validator.schemas[schema_uri.to_s].nil?
             schema = JSON::Validator.parse(open(schema_uri.to_s).read)
             if @options[:list] && @options[:fragment].nil?
@@ -547,7 +520,7 @@ module JSON
             schema = Validator.schemas[schema_uri.to_s]
             if @options[:list] && @options[:fragment].nil?
               schema = schema_to_list(schema.schema)
-              schema_uri = URI.parse(fake_uri(serialize(schema)))
+              schema_uri = URI.parse(fake_uuid(serialize(schema)))
               schema = JSON::Schema.new(schema, schema_uri, @options[:version])
               Validator.add_schema(schema)
             end
@@ -558,7 +531,7 @@ module JSON
         if @options[:list] && @options[:fragment].nil?
           schema = schema_to_list(schema)
         end
-        schema_uri = URI.parse(fake_uri(serialize(schema)))
+        schema_uri = URI.parse(fake_uuid(serialize(schema)))
         schema = JSON::Schema.new(schema,schema_uri,@options[:version])
         Validator.add_schema(schema)
       else
@@ -573,28 +546,14 @@ module JSON
       if @options[:json]
         data = JSON::Validator.parse(data)
       elsif @options[:uri]
-        json_uri = URI.parse(data)
-        if json_uri.relative?
-          if data[0,1] == '/'
-            json_uri = URI.parse("file://#{data}")
-          else
-            json_uri = URI.parse("file://#{Dir.pwd}/#{data}")
-          end
-        end
+        json_uri = normalized_uri(data)
         data = JSON::Validator.parse(open(json_uri.to_s).read)
       elsif data.is_a?(String)
         begin
           data = JSON::Validator.parse(data)
         rescue
           begin
-            json_uri = URI.parse(data)
-            if json_uri.relative?
-              if data[0,1] == '/'
-                json_uri = URI.parse("file://#{data}")
-              else
-                json_uri = URI.parse("file://#{Dir.pwd}/#{data}")
-              end
-            end
+            json_uri = normalized_uri(data)
             data = JSON::Validator.parse(open(json_uri.to_s).read)
           rescue
             # Silently discard the error - the data will not change
@@ -603,6 +562,19 @@ module JSON
       end
       JSON::Schema.add_indifferent_access(data)
       data
+    end
+
+    def normalized_uri(data)
+      uri = URI.parse(data)
+      if uri.relative?
+        # Check for absolute path
+        if data[0,1] == '/'
+          uri = URI.parse("file://#{data}")
+        else
+          uri = URI.parse("file://#{Dir.pwd}/#{data}")
+        end
+      end
+      uri
     end
 
   end
