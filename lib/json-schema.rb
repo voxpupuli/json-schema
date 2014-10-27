@@ -1,12 +1,6 @@
 require 'rubygems'
 
-if begin
-  Gem::Specification::find_by_name('multi_json')
-  rescue Gem::LoadError
-    false
-  rescue
-    Gem.available?('multi_json')
-  end
+if Gem::Specification::find_all_by_name('multi_json').any?
   require 'multi_json'
 
   # Force MultiJson to load an engine before we define the JSON constant here; otherwise,
@@ -14,7 +8,6 @@ if begin
   MultiJson.respond_to?(:adapter) ? MultiJson.adapter : MultiJson.engine
 end
 
-require 'rubygems'
 require 'json-schema/util/hash'
 require 'json-schema/util/array_set'
 require 'json-schema/schema'
