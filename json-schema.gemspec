@@ -4,7 +4,7 @@ version_yaml = YAML.load(File.open('VERSION.yml').read)
 version = "#{version_yaml['major']}.#{version_yaml['minor']}.#{version_yaml['patch']}"
 gem_name = "json-schema"
 
-spec = Gem::Specification.new do |s|
+Gem::Specification.new do |s|
   s.name = gem_name
   s.version = version
   s.authors = ["Kenny Hoxworth"]
@@ -15,5 +15,6 @@ spec = Gem::Specification.new do |s|
   s.require_path = "lib"
   s.test_files = Dir[ "test/**/test*", "test/{data,schemas}/*.json" ]
   s.extra_rdoc_files = ["README.textile","LICENSE.md"]
-  s.license = 'MIT'
+  s.license = "MIT"
+  s.required_rubygems_version = ">= 1.8"
 end
