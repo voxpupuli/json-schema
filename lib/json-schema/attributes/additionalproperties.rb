@@ -5,30 +5,31 @@ module JSON
   class Schema
     class AdditionalPropertiesAttribute < Attribute
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
-        if data.is_a?(Hash) && (
+        return unless data.is_a?(Hash) && (
           current_schema.schema['type'].nil? || (
             current_schema.schema['type'].is_a?(String) &&
             current_schema.schema['type'].downcase == 'object'
           )
         )
-          extra_properties = data.keys
-          extra_properties = remove_valid_properties(extra_properties, current_schema, validator)
 
-          addprop = current_schema.schema['additionalProperties']
-          if addprop.is_a?(Hash)
-            matching_properties = extra_properties # & addprop.keys
-            matching_properties.each do |key|
-              schema = JSON::Schema.new(addprop[key] || addprop, current_schema.uri, validator)
-              fragments << key
-              schema.validate(data[key],fragments,processor,options)
-              fragments.pop
-            end
-            extra_properties -= matching_properties
+        extra_properties = data.keys
+        extra_properties = remove_valid_properties(extra_properties, current_schema, validator)
+
+        addprop = current_schema.schema['additionalProperties']
+        if addprop.is_a?(Hash)
+          matching_properties = extra_properties # & addprop.keys
+          matching_properties.each do |key|
+            schema = JSON::Schema.new(addprop[key] || addprop, current_schema.uri, validator)
+            fragments << key
+            schema.validate(data[key],fragments,processor,options)
+            fragments.pop
           end
-          if !extra_properties.empty? and (addprop == false or (addprop.is_a?(Hash) and !addprop.empty?))
-            message = "The property '#{build_fragment(fragments)}' contains additional properties #{extra_properties.inspect} outside of the schema when none are allowed"
-            validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
-          end
+          extra_properties -= matching_properties
+        end
+
+        if !extra_properties.empty? && (addprop == false || (addprop.is_a?(Hash) && !addprop.empty?))
+          message = "The property '#{build_fragment(fragments)}' contains additional properties #{extra_properties.inspect} outside of the schema when none are allowed"
+          validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
         end
       end
 
