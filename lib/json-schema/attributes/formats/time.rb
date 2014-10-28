@@ -3,7 +3,7 @@ require 'json-schema/attribute'
 module JSON
   class Schema
     class TimeFormat < FormatAttribute
-      REGEXP = Regexp.new('^(\d\d):(\d\d):(\d\d)$')
+      REGEXP = /\A(\d{2}):(\d{2}):(\d{2})\z/
 
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         if data.is_a?(String)
