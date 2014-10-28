@@ -1011,6 +1011,8 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data))
     data = {"a" => "12:00:00b"}
     assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "12:00:00\nabc"}
+    assert(!JSON::Validator.validate(schema,data))
   end
 
 
@@ -1032,6 +1034,8 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     data = {"a" => "2010-01-1"}
     assert(!JSON::Validator.validate(schema,data))
     data = {"a" => "2010-01-01n"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01\nabc"}
     assert(!JSON::Validator.validate(schema,data))
   end
 
@@ -1061,6 +1065,8 @@ class JSONSchemaDraft3Test < Test::Unit::TestCase
     data = {"a" => "2010-01-01T12:00:00z"}
     assert(!JSON::Validator.validate(schema,data))
     data = {"a" => "2010-01-0112:00:00Z"}
+    assert(!JSON::Validator.validate(schema,data))
+    data = {"a" => "2010-01-01T12:00:00.1Z\nabc"}
     assert(!JSON::Validator.validate(schema,data))
 
     # test with a specific timezone
