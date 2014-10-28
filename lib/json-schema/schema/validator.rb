@@ -1,7 +1,7 @@
 module JSON
   class Schema
     class Validator
-      attr_accessor :attributes, :formats, :uri, :names, :metaschema
+      attr_accessor :attributes, :formats, :uri, :names
       attr_reader :default_formats
 
       def initialize()
@@ -10,7 +10,7 @@ module JSON
         @default_formats = {}
         @uri = nil
         @names = []
-        @metaschema = ''
+        @metaschema_name = ''
       end
 
       def extend_schema_definition(schema_uri)
@@ -25,6 +25,11 @@ module JSON
           end
         end
         data
+      end
+
+      def metaschema
+        resources = File.expand_path('../../../../resources', __FILE__)
+        File.join(resources, @metaschema_name)
       end
     end
   end
