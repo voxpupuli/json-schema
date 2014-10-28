@@ -45,6 +45,7 @@ module JSON
       @validation_options[:strict] = true if @options[:strict] == true
 
       @@mutex.synchronize { @base_schema = initialize_schema(schema_data) }
+      @original_data = data
       @data = initialize_data(data)
       @@mutex.synchronize { build_schemas(@base_schema) }
 
@@ -106,21 +107,18 @@ module JSON
 
     # Run a simple true/false validation of data against a schema
     def validate()
-      begin
-        @base_schema.validate(@data,[],self,@validation_options)
-        if @validation_options[:clear_cache] == true
-          Validator.clear_cache
-        end
-        if @options[:errors_as_objects]
-          return @errors.map{|e| e.to_hash}
-        else
-          return @errors.map{|e| e.to_string}
-        end
-      rescue JSON::Schema::ValidationError
-        if @validation_options[:clear_cache] == true
-          Validator.clear_cache
-        end
-        raise $!
+      @base_schema.validate(@data,[],self,@validation_options)
+      if @options[:errors_as_objects]
+        return @errors.map{|e| e.to_hash}
+      else
+        return @errors.map{|e| e.to_string}
+      end
+    ensure
+      if @validation_options[:clear_cache] == true
+        Validator.clear_cache
+      end
+      if @validation_options[:insert_defaults]
+        JSON::Validator.merge_missing_values(@data, @original_data)
       end
     end
 
@@ -425,6 +423,25 @@ module JSON
         end
       end
 
+      def merge_missing_values(source, destination)
+        case destination
+        when Hash
+          source.each do |key, source_value|
+            destination_value = destination[key] || destination[key.to_sym]
+            if destination_value.nil?
+              destination[key] = source_value
+            else
+              merge_missing_values(source_value, destination_value)
+            end
+          end
+        when Array
+          source.each_with_index do |source_value, i|
+            destination_value = destination[i]
+            merge_missing_values(source_value, destination_value)
+          end
+        end
+      end
+
       if !defined?(MultiJson)
         if Gem::Specification::find_all_by_name('json').any?
           require 'json'
@@ -560,8 +577,7 @@ module JSON
           end
         end
       end
-      JSON::Schema.add_indifferent_access(data)
-      data
+      JSON::Schema.stringify(data)
     end
 
     def normalized_uri(data)

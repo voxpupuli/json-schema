@@ -6,7 +6,7 @@ module JSON
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         if data.is_a?(Hash)
           current_schema.schema['required'].each do |property,property_schema|
-            if !data.has_key?(property.to_s) && !data.has_key?(property.to_sym)
+            if !data.has_key?(property.to_s)
               prop_defaults = options[:insert_defaults] &&
                               current_schema.schema['properties'] &&
                               current_schema.schema['properties'][property] &&
