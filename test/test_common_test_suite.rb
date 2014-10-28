@@ -1,4 +1,5 @@
 require 'test/unit'
+require 'webmock'
 require File.expand_path('../../lib/json-schema', __FILE__)
 
 class CommonTestSuiteTest < Test::Unit::TestCase
@@ -16,10 +17,24 @@ class CommonTestSuiteTest < Test::Unit::TestCase
       "ECMA 262 regex dialect recognition/ECMA 262 has no support for lookbehind",
       "ECMA 262 regex dialect recognition/[^] is a valid regex",
     ],
-    "draft3/refRemote.json" => :all,
-    "draft4/optional/format.json" => :all,
-    "draft4/refRemote.json" => :all,
+    "draft4/optional/format.json" => :all
   })
+
+  include WebMock::API
+
+  def setup
+    WebMock.enable!
+
+    Dir["#{TEST_DIR}/../remotes/**/*.json"].each do |path|
+      schema = path.sub(%r{^.*/remotes/}, '')
+      stub_request(:get, "http://localhost:1234/#{schema}").
+        to_return(:body => File.read(path), :status => 200)
+    end
+  end
+
+  def teardown
+    WebMock.disable!
+  end
 
   Dir["#{TEST_DIR}/*"].each do |suite|
     version = File.basename(suite).to_sym
