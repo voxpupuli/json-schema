@@ -28,7 +28,7 @@ class CommonTestSuiteTest < Test::Unit::TestCase
         v = nil
 
         test["tests"].each do |t|
-          err_id = "#{rel_file}, '#{base_description}'/'#{t['description']}'"
+          err_id = "#{rel_file}: #{base_description}/#{t['description']}"
 
           define_method("test_#{err_id}") do
             skip "Known incompatibility with common test suite" if IGNORED_TESTS.include?(rel_file)
@@ -41,7 +41,7 @@ class CommonTestSuiteTest < Test::Unit::TestCase
                                                 )
             end
 
-            assert v.empty? == t["valid"], "Common test suite case failed: #{err_id}\n#{v}"
+            assert_equal t["valid"],  v.empty?, "Common test suite case failed: #{err_id}\n#{v}"
           end
         end
       end
