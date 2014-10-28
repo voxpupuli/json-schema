@@ -117,8 +117,8 @@ module JSON
       if @validation_options[:clear_cache] == true
         Validator.clear_cache
       end
-      if @validation_options[:insert_defaults] && @original_data.kind_of?(Enumerable)
-        @original_data.replace(@data)
+      if @validation_options[:insert_defaults]
+        JSON::Validator.merge_missing_values(@data, @original_data)
       end
     end
 
@@ -419,6 +419,25 @@ module JSON
             parser.parse(json) or raise JSON::Schema::JsonParseError.new("The JSON could not be parsed by yajl")
           else
             raise JSON::Schema::JsonParseError.new("No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json")
+          end
+        end
+      end
+
+      def merge_missing_values(source, destination)
+        case destination
+        when Hash
+          source.each do |key, source_value|
+            destination_value = destination[key] || destination[key.to_sym]
+            if destination_value.nil?
+              destination[key] = source_value
+            else
+              merge_missing_values(source_value, destination_value)
+            end
+          end
+        when Array
+          source.each_with_index do |source_value, i|
+            destination_value = destination[i]
+            merge_missing_values(source_value, destination_value)
           end
         end
       end
