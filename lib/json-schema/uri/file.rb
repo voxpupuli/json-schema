@@ -28,7 +28,7 @@ module URI
     end
 
     def open(*rest, &block)
-      ::File.open(self.path, *rest, &block)
+      ::File.open(self.path.gsub('%20', ' '), *rest, &block)
     end
 
     @@schemes['FILE'] = File

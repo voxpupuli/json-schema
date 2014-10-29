@@ -581,6 +581,9 @@ module JSON
     end
 
     def normalized_uri(data)
+      # URI cannot deal with spaces in path, encode them by %20 but escpace nothing else
+      # or lookup for existing schemas breaks (# gets encoded as %23 by URI.escape)
+      data = data.gsub(' ', '%20')
       uri = URI.parse(data)
       if uri.relative?
         # Check for absolute path
