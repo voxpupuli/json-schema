@@ -1,5 +1,4 @@
-require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/json-schema'
+require File.expand_path('../test_helper', __FILE__)
 
 class TestSchemaTypeAttribute < Test::Unit::TestCase
   def test_type_of_data

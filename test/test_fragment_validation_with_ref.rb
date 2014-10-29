@@ -1,5 +1,4 @@
 require File.expand_path('../test_helper', __FILE__)
-require 'json-schema'
 
 class FragmentValidationWithRef < Test::Unit::TestCase
   def whole_schema

@@ -1,7 +1,6 @@
-require 'test/unit'
+require File.expand_path('../test_helper', __FILE__)
 require 'webmock'
 require 'socket'
-require File.dirname(__FILE__) + '/../lib/json-schema'
 
 class BadSchemaRefTest < Test::Unit::TestCase
 

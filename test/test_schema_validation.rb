@@ -1,6 +1,5 @@
-require 'test/unit'
+require File.expand_path('../test_helper', __FILE__)
 require 'tmpdir'
-require File.dirname(__FILE__) + '/../lib/json-schema'
 
 class JSONSchemaValidation < Test::Unit::TestCase
   def valid_schema_v3

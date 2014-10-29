@@ -1,5 +1,4 @@
-require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/json-schema'
+require File.expand_path('../test_helper', __FILE__)
 
 class JSONSchemaDraft1Test < Test::Unit::TestCase
   def test_types

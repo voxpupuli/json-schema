@@ -1,6 +1,5 @@
-require 'test/unit'
+require File.expand_path('../test_helper', __FILE__)
 require 'webmock'
-require File.expand_path('../../lib/json-schema', __FILE__)
 
 class CommonTestSuiteTest < Test::Unit::TestCase
   TEST_DIR = File.expand_path('../test-suite/tests', __FILE__)

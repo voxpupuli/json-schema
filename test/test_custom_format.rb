@@ -1,6 +1,5 @@
 # encoding: utf-8
-require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/json-schema'
+require File.expand_path('../test_helper', __FILE__)
 
 class JSONSchemaCustomFormatTest < Test::Unit::TestCase
   def setup
