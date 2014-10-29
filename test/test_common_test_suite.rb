@@ -1,5 +1,4 @@
-require 'test/unit'
-require File.expand_path('../../lib/json-schema', __FILE__)
+require_relative 'test_helper'
 
 class CommonTestSuiteTest < Test::Unit::TestCase
   TEST_DIR = File.expand_path('../test-suite/tests', __FILE__)
