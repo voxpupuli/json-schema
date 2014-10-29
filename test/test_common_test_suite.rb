@@ -10,7 +10,6 @@ class CommonTestSuiteTest < Test::Unit::TestCase
   # you can replace `:all` with an array containing the names of individual
   # tests to skip.
   IGNORED_TESTS = Hash.new { |h,k| h[k] = [] }.merge({
-    "draft3/disallow.json" => :all,
     "draft3/optional/format.json" => :all,
     "draft3/optional/jsregex.json" => [
       "ECMA 262 regex dialect recognition/ECMA 262 has no support for lookbehind",

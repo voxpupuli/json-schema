@@ -32,7 +32,7 @@ module JSON
             pre_validation_error_count = validation_errors(processor).count
 
             begin
-              schema.validate(data,fragments,processor,options)
+              schema.validate(data,fragments,processor,options.merge(:disallow => false))
               valid = true
             rescue ValidationError
               # We don't care that these schemas don't validate - we only care that one validated
