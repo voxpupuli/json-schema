@@ -15,151 +15,151 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
     # Test integers
     schema["properties"]["a"]["type"] = "integer"
     data["a"] = 5
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 5.2
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data['a'] = 'string'
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data['a'] = true
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
 
     # Test numbers
     schema["properties"]["a"]["type"] = "number"
     data["a"] = 5
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 5.2
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data['a'] = 'string'
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data['a'] = true
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
 
     # Test strings
     schema["properties"]["a"]["type"] = "string"
     data["a"] = 5
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data["a"] = 5.2
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data['a'] = 'string'
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data['a'] = true
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
 
     # Test booleans
     schema["properties"]["a"]["type"] = "boolean"
     data["a"] = 5
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data["a"] = 5.2
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data['a'] = 'string'
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data['a'] = true
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data['a'] = false
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
 
     # Test object
     schema["properties"]["a"]["type"] = "object"
     data["a"] = {}
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 5.2
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data['a'] = 'string'
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data['a'] = true
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
 
     # Test array
     schema["properties"]["a"]["type"] = "array"
     data["a"] = []
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 5.2
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data['a'] = 'string'
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data['a'] = true
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
 
     # Test null
     schema["properties"]["a"]["type"] = "null"
     data["a"] = nil
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 5.2
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data['a'] = 'string'
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data['a'] = true
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
 
     # Test any
     schema["properties"]["a"]["type"] = "any"
     data["a"] = 5
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 5.2
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data['a'] = 'string'
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data['a'] = true
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
 
     # Test a union type
     schema["properties"]["a"]["type"] = ["integer","string"]
     data["a"] = 5
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 'boo'
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = false
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     # Test a union type with schemas
     schema["properties"]["a"]["type"] = [{ "type" => "string" }, {"type" => "object", "properties" => {"b" => {"type" => "integer"}}}]
 
     data["a"] = "test"
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 5
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data["a"] = {"b" => 5}
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = {"b" => "taco"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
    end
 
 
@@ -173,9 +173,9 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
     }
     data = {}
 
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data['a'] = "Hello"
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     schema = {
       "properties" => {
@@ -184,7 +184,7 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
     }
 
     data = {}
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
   end
 
@@ -205,37 +205,37 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
 
     # Test an integer
     data["a"] = 5
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 4
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     # Test a float
     data["a"] = 5.0
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 4.9
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     # Test a non-number
     data["a"] = "a string"
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     # Test exclusiveMinimum
     schema["properties"]["a"]["minimumCanEqual"] = false
 
     data["a"] = 6
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 5
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     # Test with float
     data["a"] = 5.00000001
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 5.0
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
   end
 
 
@@ -255,37 +255,37 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
 
     # Test an integer
     data["a"] = 5
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 6
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     # Test a float
     data["a"] = 5.0
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 5.1
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     # Test a non-number
     data["a"] = "a string"
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     # Test exclusiveMinimum
     schema["properties"]["a"]["maximumCanEqual"] = false
 
     data["a"] = 4
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 5
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     # Test with float
     data["a"] = 4.9999999
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 5.0
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
   end
 
 
@@ -303,14 +303,14 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
 
     # Test with an array
     data["a"] = ["boo"]
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = []
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     # Test with a non-array
     data["a"] = "boo"
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
   end
 
 
@@ -329,14 +329,14 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
 
     # Test with an array
     data["a"] = ["boo"]
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = ["boo","taco"]
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     # Test with a non-array
     data["a"] = "boo"
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
   end
 
 
@@ -354,14 +354,14 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
 
     # Test strings
     data["a"] = "156 taco bell"
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     # Test a non-string
     data["a"] = 5
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = "taco"
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
   end
 
 
@@ -379,14 +379,14 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
 
     # Try out strings
     data["a"] = "t"
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = ""
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     # Try out non-string
     data["a"] = 5
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
   end
 
 
@@ -404,14 +404,14 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
 
     # Try out strings
     data["a"] = "t"
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = "tt"
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     # Try out non-string
     data["a"] = 5
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
   end
 
 
@@ -429,24 +429,24 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
 
     # Make sure all of the above are valid...
     data["a"] = 1
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 'boo'
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = [1,2,3]
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = {"a" => "b"}
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     # Test something that doesn't exist
     data["a"] = 'taco'
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     # Try it without the key
     data = {}
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
   end
 
 
@@ -463,22 +463,22 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
     }
 
     data["a"] = 3.35
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 3.455
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
 
     schema["properties"]["a"]["maxDecimal"] = 0
 
     data["a"] = 4.0
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data["a"] = 'boo'
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 5
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
   end
 
 
@@ -497,21 +497,21 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
 
 
     data["a"] = 'string'
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
     data["a"] = 5
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
 
     schema["properties"]["a"]["disallow"] = ["integer","string"]
     data["a"] = 'string'
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data["a"] = 5
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     data["a"] = false
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
 
   end
 
@@ -530,16 +530,16 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
       "a" => 10
     }
 
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
     data["b"] = 5
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     # Test additional properties match a schema
     schema["additionalProperties"] = { "type" => "string" }
     data["b"] = "taco"
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
     data["b"] = 5
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
   end
 
 
@@ -549,9 +549,9 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
     }
 
     data = [1,2,4]
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
     data = [1,2,"string"]
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
     schema = {
       "items" => [
@@ -561,11 +561,11 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
     }
 
     data = [1,"string"]
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
     data = [1,"string",3]
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
     data = ["string",1]
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
 
   end
 
@@ -577,17 +577,17 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
     }
 
     data = {"a" => "1.1.1.1"}
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
     data = {"a" => "1.1.1"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "1.1.1.300"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => 5}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "1.1.1"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "1.1.1.1b"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "b1.1.1.1"}
   end
 
@@ -599,19 +599,19 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
     }
 
     data = {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff"}
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
     data = {"a" => "1111:0:8888:0:0:0:eeee:ffff"}
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
     data = {"a" => "1111:2222:8888::eeee:ffff"}
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
     data = {"a" => "1111:2222:8888:99999:aaaa:cccc:eeee:ffff"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:gggg"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "1111:2222::9999::cccc:eeee:ffff"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff:bbbb"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     assert(JSON::Validator.validate(schema, {"a" => "::1"}, :version => :draft1), 'validate with shortcut')
     assert(!JSON::Validator.validate(schema, {"a" => "42"}, :version => :draft1), 'not validate a simple number')
   end
@@ -623,25 +623,25 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
     }
 
     data = {"a" => "12:00:00"}
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
     data = {"a" => "12:00"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "12:00:60"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "12:60:00"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "24:00:00"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "0:00:00"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "-12:00:00"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "12:00:00b"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "12:00:00"}
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
     data = {"a" => "12:00:00\nabc"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
   end
 
 
@@ -652,19 +652,19 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
     }
 
     data = {"a" => "2010-01-01"}
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
     data = {"a" => "2010-01-32"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "n2010-01-01"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "2010-1-01"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "2010-01-1"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "2010-01-01n"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "2010-01-01\nabc"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
   end
 
   def test_format_datetime
@@ -674,23 +674,23 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
     }
 
     data = {"a" => "2010-01-01T12:00:00Z"}
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
     data = {"a" => "2010-01-32T12:00:00Z"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "2010-13-01T12:00:00Z"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "2010-01-01T24:00:00Z"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "2010-01-01T12:60:00Z"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "2010-01-01T12:00:60Z"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "2010-01-01T12:00:00z"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "2010-01-0112:00:00Z"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
     data = {"a" => "2010-01-01T12:00:00Z\nabc"}
-    assert(!JSON::Validator.validate(schema,data,:version => :draft1))
+    refute_valid schema, data, :version => :draft1
   end
 
   def test_format_unknown
@@ -700,9 +700,9 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
     }
 
     data = {"a" => "I can write what I want here"}
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
     data = {"a" => ""}
-    assert(JSON::Validator.validate(schema,data,:version => :draft1))
+    assert_valid schema, data, :version => :draft1
   end
 
 
@@ -714,8 +714,8 @@ class JSONSchemaDraft1Test < Test::Unit::TestCase
       "type" => "object",
       "properties" => { "a" => {"type" => ["string","null"], "format" => "ip-address"}}
     }
-    assert(!JSON::Validator.validate(schema,data1,:version => :draft1))
-    assert(JSON::Validator.validate(schema,data2,:version => :draft1))
+    refute_valid schema, data1, :version => :draft1
+    assert_valid schema, data2, :version => :draft1
   end
 
 end

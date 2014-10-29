@@ -16,8 +16,8 @@ class FragmentResolution < Test::Unit::TestCase
     }
 
     data = {"b" => 5}
-    assert(!JSON::Validator.validate(schema,data))
-    assert(JSON::Validator.validate(schema,data,:fragment => "#/properties/a"))
+    refute_valid schema, data
+    assert_valid schema, data, :fragment => "#/properties/a"
 
     assert_raise JSON::Schema::SchemaError do
       JSON::Validator.validate!(schema,data,:fragment => "/properties/a")

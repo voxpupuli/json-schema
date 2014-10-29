@@ -11,11 +11,7 @@ class RubySchemaTest < Test::Unit::TestCase
       }
     }
 
-    data = {
-      "a" => 5
-    }
-
-    assert(JSON::Validator.validate(schema, data))
+    assert_valid schema, { "a" => 5 }
   end
 
   def test_symbol_keys
@@ -28,11 +24,7 @@ class RubySchemaTest < Test::Unit::TestCase
       }
     }
 
-    data = {
-      :a => 5
-    }
-
-    assert(JSON::Validator.validate(schema, data))
+    assert_valid schema, { :a => 5 }
   end
 
   def test_symbol_keys_in_hash_within_array
@@ -62,6 +54,6 @@ class RubySchemaTest < Test::Unit::TestCase
       ]
     }
 
-    assert(JSON::Validator.validate(schema, data, :validate_schema => true))
+    assert_valid schema, data, :validate_schema => true
   end
 end

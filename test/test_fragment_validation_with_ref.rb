@@ -29,11 +29,6 @@ class FragmentValidationWithRef < Test::Unit::TestCase
 
   def test_validation_of_fragment
     data = [{"content" => "ohai", "author" => "Bob"}]
-    v = nil
-    assert_nothing_raised do
-      v = JSON::Validator.fully_validate(whole_schema,data,:fragment => "#/definitions/posts")
-    end
-
-    assert(v.empty?, v.join("\n"))
+    assert_valid whole_schema, data, :fragment => "#/definitions/posts"
   end
 end

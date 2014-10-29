@@ -13,9 +13,9 @@ class ListOptionTest < Test::Unit::TestCase
     JSON::Validator.add_schema(schema)
 
     data = {"a" => 1}
-    assert(JSON::Validator.validate(uri.to_s, data))
+    assert_valid uri.to_s, data
 
     data = [{"a" => 1}]
-    assert(JSON::Validator.validate(uri.to_s, data, :list => true))
+    assert_valid uri.to_s, data, :list => true
   end
 end

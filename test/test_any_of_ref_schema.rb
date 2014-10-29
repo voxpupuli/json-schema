@@ -1,15 +1,15 @@
 require File.expand_path('../test_helper', __FILE__)
 
 class AnyOfRefSchemaTest < Test::Unit::TestCase
+  def schema
+    schema_fixture_path('any_of_ref_schema.json')
+  end
+
   def test_any_of_ref_schema
-    schema = File.join(File.dirname(__FILE__),"schemas/any_of_ref_schema.json")
-    data = File.join(File.dirname(__FILE__),"data/any_of_ref_data.json")
-    errors = JSON::Validator.fully_validate(schema,data, :errors_as_objects => true)
-    assert(errors.empty?, errors.map{|e| e[:message] }.join("\n"))
+    assert_valid schema, data_fixture_path('any_of_ref_data.json')
   end
 
   def test_any_of_ref_subschema_errors
-    schema = File.join(File.dirname(__FILE__),'schemas/any_of_ref_schema.json')
     data = %({"names": ["jack"]})
     errors = JSON::Validator.fully_validate(schema, data, :errors_as_objects => true)
     nested_errors = errors[0][:errors]
@@ -20,7 +20,6 @@ class AnyOfRefSchemaTest < Test::Unit::TestCase
   end
 
   def test_any_of_ref_message
-    schema = File.join(File.dirname(__FILE__),'schemas/any_of_ref_schema.json')
     data = %({"names": ["jack"]})
     errors = JSON::Validator.fully_validate(schema, data)
     expected_message = """The property '#/names/0' of type String did not match one or more of the required schemas. The schema specific errors were:
