@@ -5,6 +5,11 @@ h1. Ruby JSON Schema Validator
 
 This library is intended to provide Ruby with an interface for validating JSON objects against a JSON schema conforming to "JSON Schema Draft 4":http://tools.ietf.org/html/draft-zyp-json-schema-04. Legacy support for "JSON Schema Draft 3":http://tools.ietf.org/html/draft-zyp-json-schema-03, "JSON Schema Draft 2":http://tools.ietf.org/html/draft-zyp-json-schema-02, and "JSON Schema Draft 1":http://tools.ietf.org/html/draft-zyp-json-schema-01 is also included.
 
+h2. Additional Resources
+
+* "Google Groups":https://groups.google.com/forum/#!forum/ruby-json-schema
+* #ruby-json-schema on chat.freenode.net
+
 h2. Version 2.0.0 Upgrade Notes
 
 Please be aware that the upgrade to version 2.0.0 will use Draft-04 *by default*, so schemas that do not declare a validator using the <code>$schema</code> keyword will use Draft-04 now instead of Draft-03. This is the reason for the major version upgrade.
