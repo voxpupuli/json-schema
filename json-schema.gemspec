@@ -18,4 +18,6 @@ Gem::Specification.new do |s|
   s.required_ruby_version = ">= 1.8.7"
   s.license = "MIT"
   s.required_rubygems_version = ">= 1.8"
+
+  s.add_development_dependency "webmock"
 end
