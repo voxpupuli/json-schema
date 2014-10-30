@@ -2,6 +2,23 @@
 require File.expand_path('../test_helper', __FILE__)
 
 class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
+  def schema_version
+    :draft4
+  end
+
+  def exclusive_minimum
+    { 'exclusiveMinimum' => true }
+  end
+
+  def exclusive_maximum
+    { 'exclusiveMaximum' => true }
+  end
+
+  include TypeValidationTests
+  include ArrayPropertyValidationTests
+  include NumberPropertyValidationTests
+  include StringPropertyValidationTests
+
   def test_required
     # Set up the default datatype
     schema = {
@@ -27,59 +44,6 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
     data = {}
     assert_valid schema, data
   end
-
-  def test_min_items
-    # Set up the default datatype
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "properties" => {
-        "a" => {"minItems" => 1}
-      }
-    }
-
-    data = {
-      "a" => nil
-    }
-
-    # Test with an array
-    data["a"] = ["boo"]
-    assert_valid schema, data
-
-    data["a"] = []
-    refute_valid schema, data
-
-    # Test with a non-array
-    data["a"] = "boo"
-    assert_valid schema, data
-  end
-
-
-
-  def test_max_items
-    # Set up the default datatype
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "properties" => {
-        "a" => {"maxItems" => 1}
-      }
-    }
-
-    data = {
-      "a" => nil
-    }
-
-    # Test with an array
-    data["a"] = ["boo"]
-    assert_valid schema, data
-
-    data["a"] = ["boo","taco"]
-    refute_valid schema, data
-
-    # Test with a non-array
-    data["a"] = "boo"
-    assert_valid schema, data
-  end
-
 
   def test_min_properties
     # Set up the default datatype
