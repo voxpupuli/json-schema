@@ -1,4 +1,4 @@
-module CommonTypeValidationTests
+module TypeValidationTests
   TYPES = {
     'integer' => 5,
     'number'  => 5.0,
@@ -47,7 +47,7 @@ module AnyTypeValidationTests
   def test_any_type
     schema = { 'type' => 'any' }
 
-    CommonTypeValidationTests::TYPES.values.each do |value|
+    TypeValidationTests::TYPES.values.each do |value|
       assert_valid schema, value
     end
   end
