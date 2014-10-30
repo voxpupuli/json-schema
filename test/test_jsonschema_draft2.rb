@@ -22,109 +22,7 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
 
     data = {}
     assert_valid schema, data, :version => :draft2
-
   end
-
-
-
-  def test_minimum
-    # Set up the default datatype
-    schema = {
-      "properties" => {
-        "a" => {"minimum" => 5}
-      }
-    }
-
-    data = {
-      "a" => nil
-    }
-
-
-    # Test an integer
-    data["a"] = 5
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = 4
-    refute_valid schema, data, :version => :draft2
-
-    # Test a float
-    data["a"] = 5.0
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = 4.9
-    refute_valid schema, data, :version => :draft2
-
-    # Test a non-number
-    data["a"] = "a string"
-    assert_valid schema, data, :version => :draft2
-
-    # Test exclusiveMinimum
-    schema["properties"]["a"]["minimumCanEqual"] = false
-
-    data["a"] = 6
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = 5
-    refute_valid schema, data, :version => :draft2
-
-    # Test with float
-    data["a"] = 5.00000001
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = 5.0
-    refute_valid schema, data, :version => :draft2
-  end
-
-
-
-  def test_maximum
-    # Set up the default datatype
-    schema = {
-      "properties" => {
-        "a" => {"maximum" => 5}
-      }
-    }
-
-    data = {
-      "a" => nil
-    }
-
-
-    # Test an integer
-    data["a"] = 5
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = 6
-    refute_valid schema, data, :version => :draft2
-
-    # Test a float
-    data["a"] = 5.0
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = 5.1
-    refute_valid schema, data, :version => :draft2
-
-    # Test a non-number
-    data["a"] = "a string"
-    assert_valid schema, data, :version => :draft2
-
-    # Test exclusiveMinimum
-    schema["properties"]["a"]["maximumCanEqual"] = false
-
-    data["a"] = 4
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = 5
-    refute_valid schema, data, :version => :draft2
-
-    # Test with float
-    data["a"] = 4.9999999
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = 5.0
-    refute_valid schema, data, :version => :draft2
-  end
-
 
   def test_min_items
     # Set up the default datatype
@@ -149,7 +47,6 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
     data["a"] = "boo"
     assert_valid schema, data, :version => :draft2
   end
-
 
 
   def test_max_items
