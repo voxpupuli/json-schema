@@ -145,7 +145,7 @@ module JSON
       end
 
       if Validator.schemas[uri.to_s].nil?
-        schema = JSON::Schema.new(JSON::Validator.parse(open(uri.to_s).read), uri, @options[:version])
+        schema = JSON::Schema.new(JSON::Validator.parse(open(uri.to_s.chomp('#')).read), uri, @options[:version])
         Validator.add_schema(schema)
         build_schemas(schema)
       end
