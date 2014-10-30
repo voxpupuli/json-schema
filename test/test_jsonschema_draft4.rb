@@ -16,6 +16,7 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
 
   include TypeValidationTests
   include ArrayPropertyValidationTests
+  include ArrayUniqueItemsValidationTests
   include NumberPropertyValidationTests
   include StringPropertyValidationTests
 
@@ -46,43 +47,23 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
   end
 
   def test_min_properties
-    # Set up the default datatype
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "minProperties" => 2,
-      "properties" => {
-      }
-    }
+    schema = { 'minProperties' => 2 }
 
-    data = {"a" => nil}
-    refute_valid schema, data
+    assert_valid schema, {'a' => 1, 'b' => 2}
+    assert_valid schema, {'a' => 1, 'b' => 2, 'c' => 3}
 
-    data = {"a" => nil, "b" => nil}
-    assert_valid schema, data
-
-    data = {"a" => nil, "b" => nil, "c" => nil}
-    assert_valid schema, data
+    refute_valid schema, {'a' => 1}
+    refute_valid schema, {}
   end
 
-
-
   def test_max_properties
-    # Set up the default datatype
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "maxProperties" => 2,
-      "properties" => {
-      }
-    }
+    schema = { 'maxProperties' => 2 }
 
-    data = {"a" => nil}
-    assert_valid schema, data
+    assert_valid schema, {'a' => 1, 'b' => 2}
+    assert_valid schema, {'a' => 1}
+    assert_valid schema, {}
 
-    data = {"a" => nil, "b" => nil}
-    assert_valid schema, data
-
-    data = {"a" => nil, "b" => nil, "c" => nil}
-    refute_valid schema, data
+    refute_valid schema, {'a' => 1, 'b' => 2, 'c' => 3}
   end
 
   def test_strict_properties
@@ -163,77 +144,6 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
 
     data = {"a" => "a", "b" => "b", "23 taco" => "cheese"}
     assert(!JSON::Validator.validate(schema,data,:strict => true))
-  end
-
-  def test_unique_items
-    # Set up the default datatype
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "properties" => {
-        "a" => {"uniqueItems" => true}
-      }
-    }
-
-    data = {
-      "a" => nil
-    }
-
-    # Test with nulls
-    data["a"] = [nil,5]
-    assert_valid schema, data
-
-    data["a"] = [nil,nil]
-    refute_valid schema, data
-
-    # Test with booleans
-    data["a"] = [true,4]
-    assert_valid schema, data
-
-    data["a"] = [true,false]
-    assert_valid schema, data
-
-    data["a"] = [true,true]
-    refute_valid schema, data
-
-    # Test with numbers
-    data["a"] = [4,true]
-    assert_valid schema, data
-
-    data["a"] = [4,4.1]
-    assert_valid schema, data
-
-    data["a"] = [4,4]
-    refute_valid schema, data
-
-    # Test with strings
-    data["a"] = ['a',true]
-    assert_valid schema, data
-
-    data["a"] = ['a','ab']
-    assert_valid schema, data
-
-    data["a"] = ['a','a']
-    refute_valid schema, data
-
-    # Test with arrays
-    data["a"] = [[1],true]
-    assert_valid schema, data
-
-    data["a"] = [[1,2],[1,3]]
-    assert_valid schema, data
-
-    data["a"] = [[1,2,3],[1,2,3]]
-    refute_valid schema, data
-
-    # Test with objects
-    data["a"] = [{"a" => 1},true]
-    assert_valid schema, data
-
-    data["a"] = [{"a" => 1},{"a" => 2}]
-    assert_valid schema, data
-
-    data["a"] = [{"a" => 1, "b" => 2}, {"a" => 1, "b" => 2}]
-    refute_valid schema, data
   end
 
   def test_enum

@@ -17,6 +17,7 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
   include SchemaUnionTypeValidationTests
   include AnyTypeValidationTests
   include ArrayPropertyValidationTests
+  include ArrayUniqueItemsValidationTests
   include NumberPropertyValidationTests
   include StringPropertyValidationTests
 
@@ -41,76 +42,6 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
 
     data = {}
     assert_valid schema, data, :version => :draft2
-  end
-
-  def test_unique_items
-    # Set up the default datatype
-    schema = {
-      "properties" => {
-        "a" => {"uniqueItems" => true}
-      }
-    }
-
-    data = {
-      "a" => nil
-    }
-
-    # Test with nulls
-    data["a"] = [nil,5]
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = [nil,nil]
-    refute_valid schema, data, :version => :draft2
-
-    # Test with booleans
-    data["a"] = [true,4]
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = [true,false]
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = [true,true]
-    refute_valid schema, data, :version => :draft2
-
-    # Test with numbers
-    data["a"] = [4,true]
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = [4,4.1]
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = [4,4]
-    refute_valid schema, data, :version => :draft2
-
-    # Test with strings
-    data["a"] = ['a',true]
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = ['a','ab']
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = ['a','a']
-    refute_valid schema, data, :version => :draft2
-
-    # Test with arrays
-    data["a"] = [[1],true]
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = [[1,2],[1,3]]
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = [[1,2,3],[1,2,3]]
-    refute_valid schema, data, :version => :draft2
-
-    # Test with objects
-    data["a"] = [{"a" => 1},true]
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = [{"a" => 1},{"a" => 2}]
-    assert_valid schema, data, :version => :draft2
-
-    data["a"] = [{"a" => 1, "b" => 2}, {"a" => 1, "b" => 2}]
-    refute_valid schema, data, :version => :draft2
   end
 
   def test_enum
