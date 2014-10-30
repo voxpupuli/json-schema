@@ -35,21 +35,19 @@ class CommonTestSuiteTest < Test::Unit::TestCase
         test["tests"].each do |t|
           err_id = "#{rel_file}: #{base_description}/#{t['description']}"
 
-          define_method("test_#{err_id}") do
-            if IGNORED_TESTS[rel_file] == :all or
+          unless IGNORED_TESTS[rel_file] == :all or
                IGNORED_TESTS[rel_file].include? "#{base_description}/#{t['description']}"
-              skip "Known issue"
-            end
+            define_method("test_#{err_id}") do
+              assert_nothing_raised("Exception raised running #{err_id}") do
+                v = JSON::Validator.fully_validate(schema,
+                                                   t["data"],
+                                                   :validate_schema => true,
+                                                   :version => version
+                                                  )
+              end
 
-            assert_nothing_raised("Exception raised running #{err_id}") do
-              v = JSON::Validator.fully_validate(schema,
-                                                 t["data"],
-                                                 :validate_schema => true,
-                                                 :version => version
-                                                )
+              assert_equal t["valid"], v.empty?, "Common test suite case failed: #{err_id}\n#{v}"
             end
-
-            assert_equal t["valid"], v.empty?, "Common test suite case failed: #{err_id}\n#{v}"
           end
         end
       end
