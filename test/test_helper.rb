@@ -1,9 +1,9 @@
-require 'test/unit'
+require 'minitest/autorun'
 
 $:.unshift(File.expand_path('../../lib', __FILE__))
 require 'json-schema'
 
-class Test::Unit::TestCase
+class MiniTest::Unit::TestCase
   def schema_fixture_path(filename)
     File.join(File.dirname(__FILE__), 'schemas', filename)
   end

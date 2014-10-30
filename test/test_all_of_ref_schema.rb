@@ -1,6 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class AllOfRefSchemaTest < Test::Unit::TestCase
+class AllOfRefSchemaTest < MiniTest::Unit::TestCase
   def schema
     schema_fixture_path('all_of_ref_schema.json')
   end

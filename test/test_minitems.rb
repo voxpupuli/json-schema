@@ -1,6 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class MinItemsTest < Test::Unit::TestCase
+class MinItemsTest < MiniTest::Unit::TestCase
   def test_minitems_nils
     schema = {
       "type" => "array",

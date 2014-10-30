@@ -1,6 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class MergeMissingValuesTest < Test::Unit::TestCase
+class MergeMissingValuesTest < MiniTest::Unit::TestCase
   def test_merge_missing_values_for_string
     original = 'foo'
     updated = 'foo'

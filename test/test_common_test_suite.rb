@@ -1,7 +1,7 @@
 require File.expand_path('../test_helper', __FILE__)
 require 'webmock'
 
-class CommonTestSuiteTest < Test::Unit::TestCase
+class CommonTestSuiteTest < MiniTest::Unit::TestCase
   TEST_DIR = File.expand_path('../test-suite/tests', __FILE__)
 
   # These are test files which we know fail spectacularly, either because we
@@ -48,19 +48,16 @@ class CommonTestSuiteTest < Test::Unit::TestCase
         test["tests"].each do |t|
           err_id = "#{rel_file}: #{base_description}/#{t['description']}"
 
-          unless IGNORED_TESTS[rel_file] == :all or
-               IGNORED_TESTS[rel_file].include? "#{base_description}/#{t['description']}"
-            define_method("test_#{err_id}") do
-              assert_nothing_raised("Exception raised running #{err_id}") do
-                v = JSON::Validator.fully_validate(schema,
-                                                   t["data"],
-                                                   :validate_schema => true,
-                                                   :version => version
-                                                  )
-              end
+          next if IGNORED_TESTS[rel_file] == :all
+          next if IGNORED_TESTS[rel_file].include?("#{base_description}/#{t['description']}")
 
-              assert_equal t["valid"], v.empty?, "Common test suite case failed: #{err_id}\n#{v}"
-            end
+          define_method("test_#{err_id}") do
+            errors = JSON::Validator.fully_validate(schema,
+              t["data"],
+              :validate_schema => true,
+              :version => version
+            )
+            assert_equal t["valid"], errors.empty?, "Common test suite case failed: #{err_id}\n#{v}"
           end
         end
       end

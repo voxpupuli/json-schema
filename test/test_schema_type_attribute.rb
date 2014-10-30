@@ -1,6 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class TestSchemaTypeAttribute < Test::Unit::TestCase
+class TestSchemaTypeAttribute < MiniTest::Unit::TestCase
   def test_type_of_data
     assert_equal(type_of_data(String.new), 'string')
     assert_equal(type_of_data(Numeric.new), 'number')

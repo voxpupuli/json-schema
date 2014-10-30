@@ -22,7 +22,7 @@ class ExtendedSchema < JSON::Schema::Validator
   JSON::Validator.register_validator(self.new)
 end
 
-class TestExtendedSchema < Test::Unit::TestCase
+class TestExtendedSchema < MiniTest::Unit::TestCase
   def test_extended_schema_validation
     schema = {
       "$schema" => "http://test.com/test.json",

@@ -1,6 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class FragmentValidationWithRef < Test::Unit::TestCase
+class FragmentValidationWithRef < MiniTest::Unit::TestCase
   def whole_schema
     {
       "$schema" => "http://json-schema.org/draft-04/schema#",
