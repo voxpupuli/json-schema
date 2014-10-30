@@ -171,34 +171,6 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
     refute_valid schema, data, :version => :draft2
   end
 
-
-  def test_items
-    schema = {
-      "items" => { "type" => "integer" }
-    }
-
-    data = [1,2,4]
-    assert_valid schema, data, :version => :draft2
-    data = [1,2,"string"]
-    refute_valid schema, data, :version => :draft2
-
-    schema = {
-      "items" => [
-        {"type" => "integer"},
-        {"type" => "string"}
-      ]
-    }
-
-    data = [1,"string"]
-    assert_valid schema, data, :version => :draft2
-    data = [1,"string",3]
-    assert_valid schema, data, :version => :draft2
-    data = ["string",1]
-    refute_valid schema, data, :version => :draft2
-
-  end
-
-
   def test_format_ipv4
     schema = {
       "type" => "object",

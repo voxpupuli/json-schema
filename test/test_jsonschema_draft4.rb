@@ -17,6 +17,7 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
   include TypeValidationTests
   include ArrayPropertyValidationTests
   include ArrayUniqueItemsValidationTests
+  include ArrayAdditionalItemsValidationTests
   include NumberPropertyValidationTests
   include StringPropertyValidationTests
 
@@ -296,58 +297,6 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
     data["b"] = 5
     refute_valid schema, data
   end
-
-
-  def test_items
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "items" => { "type" => "integer" }
-    }
-
-    data = [1,2,4]
-    assert_valid schema, data
-    data = [1,2,"string"]
-    refute_valid schema, data
-
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "items" => [
-        {"type" => "integer"},
-        {"type" => "string"}
-      ]
-    }
-
-    data = [1,"string"]
-    assert_valid schema, data
-    data = [1,"string",3]
-    assert_valid schema, data
-    data = ["string",1]
-    refute_valid schema, data
-
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "items" => [
-        {"type" => "integer"},
-        {"type" => "string"}
-      ],
-      "additionalItems" => false
-    }
-
-    data = [1,"string"]
-    assert_valid schema, data
-    data = [1,"string",3]
-    refute_valid schema, data
-
-    schema = {"$schema" => "http://json-schema.org/draft-04/schema#","items" => [{"type" => "integer"},{"type" => "string"}],"additionalItems" => {"type" => "integer"}}
-
-    data = [1,"string"]
-    assert_valid schema, data
-    data = [1,"string",3]
-    assert_valid schema, data
-    data = [1,"string","string"]
-    refute_valid schema, data
-  end
-
 
   def test_list_option
     schema = {

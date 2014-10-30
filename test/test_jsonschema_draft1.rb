@@ -18,6 +18,7 @@ class JSONSchemaDraft1Test < MiniTest::Unit::TestCase
   include AnyTypeValidationTests
   include ArrayPropertyValidationTests
   include NumberPropertyValidationTests
+  include ObjectPropertyValidationTests
   include StringPropertyValidationTests
 
   def test_optional
@@ -169,34 +170,6 @@ class JSONSchemaDraft1Test < MiniTest::Unit::TestCase
     data["b"] = 5
     refute_valid schema, data, :version => :draft1
   end
-
-
-  def test_items
-    schema = {
-      "items" => { "type" => "integer" }
-    }
-
-    data = [1,2,4]
-    assert_valid schema, data, :version => :draft1
-    data = [1,2,"string"]
-    refute_valid schema, data, :version => :draft1
-
-    schema = {
-      "items" => [
-        {"type" => "integer"},
-        {"type" => "string"}
-      ]
-    }
-
-    data = [1,"string"]
-    assert_valid schema, data, :version => :draft1
-    data = [1,"string",3]
-    assert_valid schema, data, :version => :draft1
-    data = ["string",1]
-    refute_valid schema, data, :version => :draft1
-
-  end
-
 
   def test_format_ipv4
     schema = {
