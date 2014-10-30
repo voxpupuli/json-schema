@@ -33,34 +33,33 @@ module JSON
       end
 
       def self.remove_valid_properties(extra_properties, current_schema, validator)
+        if current_schema.schema['properties']
+          extra_properties = extra_properties - current_schema.schema['properties'].keys
+        end
 
-          if current_schema.schema['properties']
-            extra_properties = extra_properties - current_schema.schema['properties'].keys
-          end
-
-          if current_schema.schema['patternProperties']
-            current_schema.schema['patternProperties'].each_key do |key|
-              r = Regexp.new(key)
-              extras_clone = extra_properties.clone
-              extras_clone.each do |prop|
-                if r.match(prop)
-                  extra_properties = extra_properties - [prop]
-                end
+        if current_schema.schema['patternProperties']
+          current_schema.schema['patternProperties'].each_key do |key|
+            r = Regexp.new(key)
+            extras_clone = extra_properties.clone
+            extras_clone.each do |prop|
+              if r.match(prop)
+                extra_properties = extra_properties - [prop]
               end
             end
           end
+        end
 
-          if schemas= current_schema.schema['extends']
-            schemas = [schemas] if !schemas.is_a?(Array)
-            schemas.each do |schema_value|
-              temp_uri,extended_schema= JSON::Schema::ExtendsAttribute.get_extended_uri_and_schema(schema_value, current_schema, validator)
-              if extended_schema
-                extra_properties= remove_valid_properties(extra_properties, extended_schema, validator)
-              end
+        if schemas = current_schema.schema['extends']
+          schemas = [schemas] if !schemas.is_a?(Array)
+          schemas.each do |schema_value|
+            _, extended_schema = JSON::Schema::ExtendsAttribute.get_extended_uri_and_schema(schema_value, current_schema, validator)
+            if extended_schema
+              extra_properties = remove_valid_properties(extra_properties, extended_schema, validator)
             end
           end
+        end
 
-          extra_properties
+        extra_properties
       end
 
     end

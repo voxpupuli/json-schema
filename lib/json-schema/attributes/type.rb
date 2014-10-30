@@ -74,11 +74,9 @@ module JSON
 
       # Lookup Schema type of given class instance
       def self.type_of_data(data)
-        type, klass = TYPE_CLASS_MAPPINGS.map { |k,v| [k,v] }.sort_by { |i|
-          k,v = i
+        type, _ = TYPE_CLASS_MAPPINGS.map { |k,v| [k,v] }.sort_by { |(_, v)|
           -Array(v).map { |klass| klass.ancestors.size }.max
-        }.find { |i|
-          k,v = i
+        }.find { |(_, v)|
           Array(v).any? { |klass| data.kind_of?(klass) }
         }
         type

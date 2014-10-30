@@ -160,7 +160,7 @@ class JSONSchemaDraft1Test < MiniTest::Unit::TestCase
 
     data["a"] = {"b" => "taco"}
     refute_valid schema, data, :version => :draft1
-   end
+  end
 
 
 

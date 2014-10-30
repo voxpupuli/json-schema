@@ -413,7 +413,7 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
     refute_valid schema, data
   end
 
-    def test_strict_properties
+  def test_strict_properties
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "properties" => {

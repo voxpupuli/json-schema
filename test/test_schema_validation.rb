@@ -134,7 +134,7 @@ class JSONSchemaValidation < MiniTest::Unit::TestCase
 
     errors = JSON::Validator.fully_validate_schema(invalid_schema_v3, :version => :draft3)
     assert_equal 1, errors.size
-    assert_match /the property .*required.*did not match/i, errors.first
+    assert_match(/the property .*required.*did not match/i, errors.first)
   end
 
 
@@ -150,7 +150,7 @@ class JSONSchemaValidation < MiniTest::Unit::TestCase
 
     errors = JSON::Validator.fully_validate_schema(invalid_schema_v4, :version => :draft4)
     assert_equal 1, errors.size
-    assert_match /the property .*required.*did not match/i, errors.first
+    assert_match(/the property .*required.*did not match/i, errors.first)
   end
 
   def test_validate_schema_3_without_version_option
