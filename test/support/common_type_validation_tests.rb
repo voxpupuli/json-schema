@@ -1,13 +1,4 @@
 module CommonTypeValidationTests
-  # Override assert/refute valid to always specify the draft version
-  def assert_valid(schema, data, options = {})
-    super(schema, data, options.merge(:version => schema_version))
-  end
-
-  def refute_valid(schema, data, options = {})
-    super(schema, data, options.merge(:version => schema_version))
-  end
-
   TYPES = {
     'integer' => 5,
     'number'  => 5.0,

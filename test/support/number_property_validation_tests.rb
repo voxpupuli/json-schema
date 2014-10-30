@@ -1,12 +1,4 @@
 module NumberPropertyValidationTests
-  def assert_valid(schema, data, options = {})
-    super(schema, data, options.merge(:version => schema_version))
-  end
-
-  def refute_valid(schema, data, options = {})
-    super(schema, data, options.merge(:version => schema_version))
-  end
-
   def test_minimum
     schema = {
       'properties' => {
@@ -20,7 +12,7 @@ module NumberPropertyValidationTests
     refute_valid schema, {'a' => 4}
     refute_valid schema, {'a' => 4.99999}
 
-    # non-numbers are disregarded
+    # other types are disregarded
     assert_valid schema, {'a' => 'str'}
   end
 
