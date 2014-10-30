@@ -261,10 +261,8 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "integer"}, "b" => {"$ref" => "#"}}
     }
 
-    data = {"a" => 5, "b" => {"b" => {"a" => 1}}}
-    assert_valid schema, data
-    data = {"a" => 5, "b" => {"b" => {"a" => 'taco'}}}
-    refute_valid schema, data
+    assert_valid schema, {"a" => 5, "b" => {"b" => {"a" => 1}}}
+    refute_valid schema, {"a" => 5, "b" => {"b" => {"a" => 'taco'}}}
   end
 
 
@@ -275,19 +273,12 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "string", "format" => "ipv4"}}
     }
 
-    data = {"a" => "1.1.1.1"}
-    assert_valid schema, data
-    data = {"a" => "1.1.1"}
-    refute_valid schema, data
-    data = {"a" => "1.1.1.300"}
-    refute_valid schema, data
-    data = {"a" => 5}
-    refute_valid schema, data
-    data = {"a" => "1.1.1"}
-    refute_valid schema, data
-    data = {"a" => "1.1.1.1b"}
-    refute_valid schema, data
-    data = {"a" => "b1.1.1.1"}
+    assert_valid schema, {"a" => "1.1.1.1"}
+    refute_valid schema, {"a" => "1.1.1"}
+    refute_valid schema, {"a" => "1.1.1.300"}
+    refute_valid schema, {"a" => 5}
+    refute_valid schema, {"a" => "1.1.1"}
+    refute_valid schema, {"a" => "1.1.1.1b"}
   end
 
 
@@ -298,20 +289,13 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "string", "format" => "ipv6"}}
     }
 
-    data = {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff"}
-    assert_valid schema, data
-    data = {"a" => "1111:0:8888:0:0:0:eeee:ffff"}
-    assert_valid schema, data
-    data = {"a" => "1111:2222:8888::eeee:ffff"}
-    assert_valid schema, data
-    data = {"a" => "1111:2222:8888:99999:aaaa:cccc:eeee:ffff"}
-    refute_valid schema, data
-    data = {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:gggg"}
-    refute_valid schema, data
-    data = {"a" => "1111:2222::9999::cccc:eeee:ffff"}
-    refute_valid schema, data
-    data = {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff:bbbb"}
-    refute_valid schema, data
+    assert_valid schema, {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff"}
+    assert_valid schema, {"a" => "1111:0:8888:0:0:0:eeee:ffff"}
+    assert_valid schema, {"a" => "1111:2222:8888::eeee:ffff"}
+    refute_valid schema, {"a" => "1111:2222:8888:99999:aaaa:cccc:eeee:ffff"}
+    refute_valid schema, {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:gggg"}
+    refute_valid schema, {"a" => "1111:2222::9999::cccc:eeee:ffff"}
+    refute_valid schema, {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff:bbbb"}
     assert(JSON::Validator.validate(schema, {"a" => "::1"}), 'validate with shortcut')
     assert(!JSON::Validator.validate(schema, {"a" => "42"}), 'not validate a simple number')
   end
@@ -324,30 +308,18 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "string", "format" => "date-time"}}
     }
 
-    data = {"a" => "2010-01-01T12:00:00Z"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00.1Z"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00,1Z"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00+0000"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00+00:00"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-32T12:00:00Z"}
-    refute_valid schema, data
-    data = {"a" => "2010-13-01T12:00:00Z"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-01T24:00:00Z"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-01T12:60:00Z"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-01T12:00:60Z"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00z"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-0112:00:00Z"}
-    refute_valid schema, data
+    assert_valid schema, {"a" => "2010-01-01T12:00:00Z"}
+    assert_valid schema, {"a" => "2010-01-01T12:00:00.1Z"}
+    refute_valid schema, {"a" => "2010-01-01T12:00:00,1Z"}
+    refute_valid schema, {"a" => "2010-01-01T12:00:00+0000"}
+    assert_valid schema, {"a" => "2010-01-01T12:00:00+00:00"}
+    refute_valid schema, {"a" => "2010-01-32T12:00:00Z"}
+    refute_valid schema, {"a" => "2010-13-01T12:00:00Z"}
+    assert_valid schema, {"a" => "2010-01-01T24:00:00Z"}
+    refute_valid schema, {"a" => "2010-01-01T12:60:00Z"}
+    assert_valid schema, {"a" => "2010-01-01T12:00:60Z"}
+    assert_valid schema, {"a" => "2010-01-01T12:00:00z"}
+    refute_valid schema, {"a" => "2010-01-0112:00:00Z"}
   end
 
   def test_format_uri
@@ -356,9 +328,9 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
     data3 = {"a" => "http://ja.wikipedia.org/wiki/メインページ"}
 
     schema = {
-        "$schema" => "http://json-schema.org/draft-04/schema#",
-        "type" => "object",
-        "properties" => { "a" => {"type" => "string", "format" => "uri"}}
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "type" => "object",
+      "properties" => { "a" => {"type" => "string", "format" => "uri"}}
     }
 
     assert(JSON::Validator.validate(schema,data1))
@@ -372,10 +344,8 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "string", "format" => "unknown"}}
     }
 
-    data = {"a" => "I can write what I want here"}
-    assert(JSON::Validator.validate(schema,data,:version => :draft4))
-    data = {"a" => ""}
-    assert(JSON::Validator.validate(schema,data,:version => :draft4))
+    assert_valid schema, {"a" => "I can write what I want here"}
+    assert_valid schema, {"a" => ""}
   end
 
 

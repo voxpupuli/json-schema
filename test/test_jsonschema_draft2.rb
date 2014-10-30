@@ -31,9 +31,9 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
     }
     data = {}
 
-    refute_valid schema, data, :version => :draft2
+    refute_valid schema, data
     data['a'] = "Hello"
-    assert_valid schema, data, :version => :draft2
+    assert_valid schema, data
 
     schema = {
       "properties" => {
@@ -42,7 +42,7 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
     }
 
     data = {}
-    assert_valid schema, data, :version => :draft2
+    assert_valid schema, data
   end
 
   def test_enum
@@ -59,24 +59,24 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
 
     # Make sure all of the above are valid...
     data["a"] = 1
-    assert_valid schema, data, :version => :draft2
+    assert_valid schema, data
 
     data["a"] = 'boo'
-    assert_valid schema, data, :version => :draft2
+    assert_valid schema, data
 
     data["a"] = [1,2,3]
-    assert_valid schema, data, :version => :draft2
+    assert_valid schema, data
 
     data["a"] = {"a" => "b"}
-    assert_valid schema, data, :version => :draft2
+    assert_valid schema, data
 
     # Test something that doesn't exist
     data["a"] = 'taco'
-    refute_valid schema, data, :version => :draft2
+    refute_valid schema, data
 
     # Try it without the key
     data = {}
-    assert_valid schema, data, :version => :draft2
+    assert_valid schema, data
   end
 
 
@@ -93,22 +93,22 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
     }
 
     data["a"] = 3.3
-    assert_valid schema, data, :version => :draft2
+    assert_valid schema, data
 
     data["a"] = 3.4
-    refute_valid schema, data, :version => :draft2
+    refute_valid schema, data
 
     schema["properties"]["a"]["divisibleBy"] = 2.0
 
     data["a"] = 4.0
-    assert_valid schema, data, :version => :draft2
+    assert_valid schema, data
 
     data["a"] = 'boo'
-    assert_valid schema, data, :version => :draft2
+    assert_valid schema, data
 
     data["a"] = 5
     schema["properties"]["a"]["divisibleBy"] = 0
-    refute_valid schema, data, :version => :draft2
+    refute_valid schema, data
   end
 
 
@@ -127,21 +127,21 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
 
 
     data["a"] = 'string'
-    assert_valid schema, data, :version => :draft2
+    assert_valid schema, data
 
     data["a"] = 5
-    refute_valid schema, data, :version => :draft2
+    refute_valid schema, data
 
 
     schema["properties"]["a"]["disallow"] = ["integer","string"]
     data["a"] = 'string'
-    refute_valid schema, data, :version => :draft2
+    refute_valid schema, data
 
     data["a"] = 5
-    refute_valid schema, data, :version => :draft2
+    refute_valid schema, data
 
     data["a"] = false
-    assert_valid schema, data, :version => :draft2
+    assert_valid schema, data
   end
 
   def test_format_ipv4
@@ -150,19 +150,12 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "string", "format" => "ip-address"}}
     }
 
-    data = {"a" => "1.1.1.1"}
-    assert_valid schema, data, :version => :draft2
-    data = {"a" => "1.1.1"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "1.1.1.300"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => 5}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "1.1.1"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "1.1.1.1b"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "b1.1.1.1"}
+    assert_valid schema, {"a" => "1.1.1.1"}
+    refute_valid schema, {"a" => "1.1.1"}
+    refute_valid schema, {"a" => "1.1.1.300"}
+    refute_valid schema, {"a" => 5}
+    refute_valid schema, {"a" => "1.1.1"}
+    refute_valid schema, {"a" => "1.1.1.1b"}
   end
 
 
@@ -172,22 +165,15 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "string", "format" => "ipv6"}}
     }
 
-    data = {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff"}
-    assert_valid schema, data, :version => :draft2
-    data = {"a" => "1111:0:8888:0:0:0:eeee:ffff"}
-    assert_valid schema, data, :version => :draft2
-    data = {"a" => "1111:2222:8888::eeee:ffff"}
-    assert_valid schema, data, :version => :draft2
-    data = {"a" => "1111:2222:8888:99999:aaaa:cccc:eeee:ffff"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:gggg"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "1111:2222::9999::cccc:eeee:ffff"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff:bbbb"}
-    refute_valid schema, data, :version => :draft2
-    assert(JSON::Validator.validate(schema, {"a" => "::1"}, :version => :draft2), 'validate with shortcut')
-    assert(!JSON::Validator.validate(schema, {"a" => "42"}, :version => :draft2), 'not validate a simple number')
+    assert_valid schema, {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff"}
+    assert_valid schema, {"a" => "1111:0:8888:0:0:0:eeee:ffff"}
+    assert_valid schema, {"a" => "1111:2222:8888::eeee:ffff"}
+    refute_valid schema, {"a" => "1111:2222:8888:99999:aaaa:cccc:eeee:ffff"}
+    refute_valid schema, {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:gggg"}
+    refute_valid schema, {"a" => "1111:2222::9999::cccc:eeee:ffff"}
+    refute_valid schema, {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff:bbbb"}
+    assert(JSON::Validator.validate(schema, {"a" => "::1"}), 'validate with shortcut')
+    assert(!JSON::Validator.validate(schema, {"a" => "42"}), 'not validate a simple number')
   end
 
   def test_format_time
@@ -196,24 +182,15 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "string", "format" => "time"}}
     }
 
-    data = {"a" => "12:00:00"}
-    assert_valid schema, data, :version => :draft2
-    data = {"a" => "12:00"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "12:00:60"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "12:60:00"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "24:00:00"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "0:00:00"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "-12:00:00"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "12:00:00b"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "12:00:00\nabc"}
-    refute_valid schema, data, :version => :draft2
+    assert_valid schema, {"a" => "12:00:00"}
+    refute_valid schema, {"a" => "12:00"}
+    refute_valid schema, {"a" => "12:00:60"}
+    refute_valid schema, {"a" => "12:60:00"}
+    refute_valid schema, {"a" => "24:00:00"}
+    refute_valid schema, {"a" => "0:00:00"}
+    refute_valid schema, {"a" => "-12:00:00"}
+    refute_valid schema, {"a" => "12:00:00b"}
+    refute_valid schema, {"a" => "12:00:00\nabc"}
   end
 
 
@@ -223,20 +200,13 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "string", "format" => "date"}}
     }
 
-    data = {"a" => "2010-01-01"}
-    assert_valid schema, data, :version => :draft2
-    data = {"a" => "2010-01-32"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "n2010-01-01"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "2010-1-01"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "2010-01-1"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "2010-01-01n"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "2010-01-01\nabc"}
-    refute_valid schema, data, :version => :draft2
+    assert_valid schema, {"a" => "2010-01-01"}
+    refute_valid schema, {"a" => "2010-01-32"}
+    refute_valid schema, {"a" => "n2010-01-01"}
+    refute_valid schema, {"a" => "2010-1-01"}
+    refute_valid schema, {"a" => "2010-01-1"}
+    refute_valid schema, {"a" => "2010-01-01n"}
+    refute_valid schema, {"a" => "2010-01-01\nabc"}
   end
 
   def test_format_datetime
@@ -245,24 +215,15 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "string", "format" => "date-time"}}
     }
 
-    data = {"a" => "2010-01-01T12:00:00Z"}
-    assert_valid schema, data, :version => :draft2
-    data = {"a" => "2010-01-32T12:00:00Z"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "2010-13-01T12:00:00Z"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "2010-01-01T24:00:00Z"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "2010-01-01T12:60:00Z"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "2010-01-01T12:00:60Z"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "2010-01-01T12:00:00z"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "2010-01-0112:00:00Z"}
-    refute_valid schema, data, :version => :draft2
-    data = {"a" => "2010-01-01T12:00:00Z\nabc"}
-    refute_valid schema, data, :version => :draft2
+    assert_valid schema, {"a" => "2010-01-01T12:00:00Z"}
+    refute_valid schema, {"a" => "2010-01-32T12:00:00Z"}
+    refute_valid schema, {"a" => "2010-13-01T12:00:00Z"}
+    refute_valid schema, {"a" => "2010-01-01T24:00:00Z"}
+    refute_valid schema, {"a" => "2010-01-01T12:60:00Z"}
+    refute_valid schema, {"a" => "2010-01-01T12:00:60Z"}
+    refute_valid schema, {"a" => "2010-01-01T12:00:00z"}
+    refute_valid schema, {"a" => "2010-01-0112:00:00Z"}
+    refute_valid schema, {"a" => "2010-01-01T12:00:00Z\nabc"}
   end
 
   def test_format_unknown
@@ -271,10 +232,8 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "string", "format" => "unknown"}}
     }
 
-    data = {"a" => "I can write what I want here"}
-    assert_valid schema, data, :version => :draft2
-    data = {"a" => ""}
-    assert_valid schema, data, :version => :draft2
+    assert_valid schema, {"a" => "I can write what I want here"}
+    assert_valid schema, {"a" => ""}
   end
 
 
@@ -286,8 +245,8 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
       "type" => "object",
       "properties" => { "a" => {"type" => ["string","null"], "format" => "ip-address"}}
     }
-    refute_valid schema, data1, :version => :draft2
-    assert_valid schema, data2, :version => :draft2
+    refute_valid schema, data1
+    assert_valid schema, data2
   end
 
 end

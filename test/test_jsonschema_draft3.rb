@@ -340,10 +340,8 @@ class JSONSchemaDraft3Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "integer"}, "b" => {"$ref" => "#"}}
     }
 
-    data = {"a" => 5, "b" => {"b" => {"a" => 1}}}
-    assert_valid schema, data
-    data = {"a" => 5, "b" => {"b" => {"a" => 'taco'}}}
-    refute_valid schema, data
+    assert_valid schema, {"a" => 5, "b" => {"b" => {"a" => 1}}}
+    refute_valid schema, {"a" => 5, "b" => {"b" => {"a" => 'taco'}}}
   end
 
 
@@ -354,19 +352,12 @@ class JSONSchemaDraft3Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "string", "format" => "ip-address"}}
     }
 
-    data = {"a" => "1.1.1.1"}
-    assert_valid schema, data
-    data = {"a" => "1.1.1"}
-    refute_valid schema, data
-    data = {"a" => "1.1.1.300"}
-    refute_valid schema, data
-    data = {"a" => 5}
-    refute_valid schema, data
-    data = {"a" => "1.1.1"}
-    refute_valid schema, data
-    data = {"a" => "1.1.1.1b"}
-    refute_valid schema, data
-    data = {"a" => "b1.1.1.1"}
+    assert_valid schema, {"a" => "1.1.1.1"}
+    refute_valid schema, {"a" => "1.1.1"}
+    refute_valid schema, {"a" => "1.1.1.300"}
+    refute_valid schema, {"a" => 5}
+    refute_valid schema, {"a" => "1.1.1"}
+    refute_valid schema, {"a" => "1.1.1.1b"}
   end
 
 
@@ -377,20 +368,13 @@ class JSONSchemaDraft3Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "string", "format" => "ipv6"}}
     }
 
-    data = {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff"}
-    assert_valid schema, data
-    data = {"a" => "1111:0:8888:0:0:0:eeee:ffff"}
-    assert_valid schema, data
-    data = {"a" => "1111:2222:8888::eeee:ffff"}
-    assert_valid schema, data
-    data = {"a" => "1111:2222:8888:99999:aaaa:cccc:eeee:ffff"}
-    refute_valid schema, data
-    data = {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:gggg"}
-    refute_valid schema, data
-    data = {"a" => "1111:2222::9999::cccc:eeee:ffff"}
-    refute_valid schema, data
-    data = {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff:bbbb"}
-    refute_valid schema, data
+    assert_valid schema, {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff"}
+    assert_valid schema, {"a" => "1111:0:8888:0:0:0:eeee:ffff"}
+    assert_valid schema, {"a" => "1111:2222:8888::eeee:ffff"}
+    refute_valid schema, {"a" => "1111:2222:8888:99999:aaaa:cccc:eeee:ffff"}
+    refute_valid schema, {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:gggg"}
+    refute_valid schema, {"a" => "1111:2222::9999::cccc:eeee:ffff"}
+    refute_valid schema, {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff:bbbb"}
     assert(JSON::Validator.validate(schema, {"a" => "::1"}), 'validate with shortcut')
     assert(!JSON::Validator.validate(schema, {"a" => "42"}), 'not validate a simple number')
   end
@@ -402,24 +386,15 @@ class JSONSchemaDraft3Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "string", "format" => "time"}}
     }
 
-    data = {"a" => "12:00:00"}
-    assert_valid schema, data
-    data = {"a" => "12:00"}
-    refute_valid schema, data
-    data = {"a" => "12:00:60"}
-    refute_valid schema, data
-    data = {"a" => "12:60:00"}
-    refute_valid schema, data
-    data = {"a" => "24:00:00"}
-    refute_valid schema, data
-    data = {"a" => "0:00:00"}
-    refute_valid schema, data
-    data = {"a" => "-12:00:00"}
-    refute_valid schema, data
-    data = {"a" => "12:00:00b"}
-    refute_valid schema, data
-    data = {"a" => "12:00:00\nabc"}
-    refute_valid schema, data
+    assert_valid schema, {"a" => "12:00:00"}
+    refute_valid schema, {"a" => "12:00"}
+    refute_valid schema, {"a" => "12:00:60"}
+    refute_valid schema, {"a" => "12:60:00"}
+    refute_valid schema, {"a" => "24:00:00"}
+    refute_valid schema, {"a" => "0:00:00"}
+    refute_valid schema, {"a" => "-12:00:00"}
+    refute_valid schema, {"a" => "12:00:00b"}
+    refute_valid schema, {"a" => "12:00:00\nabc"}
   end
 
 
@@ -430,20 +405,13 @@ class JSONSchemaDraft3Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "string", "format" => "date"}}
     }
 
-    data = {"a" => "2010-01-01"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-32"}
-    refute_valid schema, data
-    data = {"a" => "n2010-01-01"}
-    refute_valid schema, data
-    data = {"a" => "2010-1-01"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-1"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-01n"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-01\nabc"}
-    refute_valid schema, data
+    assert_valid schema, {"a" => "2010-01-01"}
+    refute_valid schema, {"a" => "2010-01-32"}
+    refute_valid schema, {"a" => "n2010-01-01"}
+    refute_valid schema, {"a" => "2010-1-01"}
+    refute_valid schema, {"a" => "2010-01-1"}
+    refute_valid schema, {"a" => "2010-01-01n"}
+    refute_valid schema, {"a" => "2010-01-01\nabc"}
   end
 
   def test_format_datetime
@@ -453,61 +421,36 @@ class JSONSchemaDraft3Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "string", "format" => "date-time"}}
     }
 
-    data = {"a" => "2010-01-01T12:00:00Z"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00.1Z"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00,1Z"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-32T12:00:00Z"}
-    refute_valid schema, data
-    data = {"a" => "2010-13-01T12:00:00Z"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-01T24:00:00Z"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-01T12:60:00Z"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-01T12:00:60Z"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00z"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-0112:00:00Z"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00.1Z\nabc"}
-    refute_valid schema, data
+    assert_valid schema, {"a" => "2010-01-01T12:00:00Z"}
+    assert_valid schema, {"a" => "2010-01-01T12:00:00.1Z"}
+    assert_valid schema, {"a" => "2010-01-01T12:00:00,1Z"}
+    refute_valid schema, {"a" => "2010-01-32T12:00:00Z"}
+    refute_valid schema, {"a" => "2010-13-01T12:00:00Z"}
+    refute_valid schema, {"a" => "2010-01-01T24:00:00Z"}
+    refute_valid schema, {"a" => "2010-01-01T12:60:00Z"}
+    refute_valid schema, {"a" => "2010-01-01T12:00:60Z"}
+    refute_valid schema, {"a" => "2010-01-01T12:00:00z"}
+    refute_valid schema, {"a" => "2010-01-0112:00:00Z"}
+    refute_valid schema, {"a" => "2010-01-01T12:00:00.1Z\nabc"}
 
     # test with a specific timezone
-    data = {"a" => "2010-01-01T12:00:00+01"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00+01:00"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00+01:30"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00+0234"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00+01:"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00+0"}
-    refute_valid schema, data
+    assert_valid schema, {"a" => "2010-01-01T12:00:00+01"}
+    assert_valid schema, {"a" => "2010-01-01T12:00:00+01:00"}
+    assert_valid schema, {"a" => "2010-01-01T12:00:00+01:30"}
+    assert_valid schema, {"a" => "2010-01-01T12:00:00+0234"}
+    refute_valid schema, {"a" => "2010-01-01T12:00:00+01:"}
+    refute_valid schema, {"a" => "2010-01-01T12:00:00+0"}
     # do not allow mixing Z and specific timezone
-    data = {"a" => "2010-01-01T12:00:00Z+01"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00+01Z"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00+01:30Z"}
-    refute_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00+0Z"}
-    refute_valid schema, data
+    refute_valid schema, {"a" => "2010-01-01T12:00:00Z+01"}
+    refute_valid schema, {"a" => "2010-01-01T12:00:00+01Z"}
+    refute_valid schema, {"a" => "2010-01-01T12:00:00+01:30Z"}
+    refute_valid schema, {"a" => "2010-01-01T12:00:00+0Z"}
 
     # test without any timezone
-    data = {"a" => "2010-01-01T12:00:00"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00.12345"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00,12345"}
-    assert_valid schema, data
-    data = {"a" => "2010-01-01T12:00:00.12345"}
-    assert_valid schema, data
+    assert_valid schema, {"a" => "2010-01-01T12:00:00"}
+    assert_valid schema, {"a" => "2010-01-01T12:00:00.12345"}
+    assert_valid schema, {"a" => "2010-01-01T12:00:00,12345"}
+    assert_valid schema, {"a" => "2010-01-01T12:00:00.12345"}
   end
 
   def test_format_unknown
@@ -516,10 +459,8 @@ class JSONSchemaDraft3Test < MiniTest::Unit::TestCase
       "properties" => { "a" => {"type" => "string", "format" => "unknown"}}
     }
 
-    data = {"a" => "I can write what I want here"}
-    assert(JSON::Validator.validate(schema,data,:version => :draft3))
-    data = {"a" => ""}
-    assert(JSON::Validator.validate(schema,data,:version => :draft3))
+    assert_valid schema, {'a' => 'I can write what I want here'}
+    assert_valid schema, {'a' => ''}
   end
 
 
