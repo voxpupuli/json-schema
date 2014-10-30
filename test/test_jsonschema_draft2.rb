@@ -19,6 +19,7 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
   include ArrayPropertyValidationTests
   include ArrayUniqueItemsValidationTests
   include NumberPropertyValidationTests
+  include ObjectAdditionalPropertyValidationTests
   include StringPropertyValidationTests
 
   def test_optional
@@ -141,34 +142,6 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
 
     data["a"] = false
     assert_valid schema, data, :version => :draft2
-
-  end
-
-
-
-  def test_additional_properties
-    # Test no additional properties allowed
-    schema = {
-      "properties" => {
-        "a" => { "type" => "integer" }
-      },
-      "additionalProperties" => false
-    }
-
-    data = {
-      "a" => 10
-    }
-
-    assert_valid schema, data, :version => :draft2
-    data["b"] = 5
-    refute_valid schema, data, :version => :draft2
-
-    # Test additional properties match a schema
-    schema["additionalProperties"] = { "type" => "string" }
-    data["b"] = "taco"
-    assert_valid schema, data, :version => :draft2
-    data["b"] = 5
-    refute_valid schema, data, :version => :draft2
   end
 
   def test_format_ipv4

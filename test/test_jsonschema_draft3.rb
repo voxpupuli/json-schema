@@ -21,6 +21,8 @@ class JSONSchemaDraft3Test < MiniTest::Unit::TestCase
   include ArrayAdditionalItemsValidationTests
   include ArrayUniqueItemsValidationTests
   include NumberPropertyValidationTests
+  include ObjectAdditionalPropertyValidationTests
+  include ObjectPatternPropertyValidationTests
   include StringPropertyValidationTests
 
   def test_types
@@ -309,71 +311,6 @@ class JSONSchemaDraft3Test < MiniTest::Unit::TestCase
 
     schema["extends"] = schema2
 
-    refute_valid schema, data
-  end
-
-  def test_pattern_properties
-    # Set up the default datatype
-    schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
-      "patternProperties" => {
-        "\\d+ taco" => {"type" => "integer"}
-      }
-    }
-
-    data = {
-      "a" => true,
-      "1 taco" => 1,
-      "20 tacos" => 20
-    }
-
-    assert_valid schema, data
-    data["20 tacos"] = "string!"
-    refute_valid schema, data
-  end
-
-
-  def test_additional_properties
-    # Test no additional properties allowed
-    schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
-      "properties" => {
-        "a" => { "type" => "integer" }
-      },
-      "additionalProperties" => false
-    }
-
-    data = {
-      "a" => 10
-    }
-
-    assert_valid schema, data
-    data["b"] = 5
-    refute_valid schema, data
-
-    # Test additional properties match a schema
-    schema["additionalProperties"] = { "type" => "string" }
-    data["b"] = "taco"
-    assert_valid schema, data
-    data["b"] = 5
-    refute_valid schema, data
-
-    # Make sure this works with pattern properties set, too
-    schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
-      "patternProperties" => {
-        "\\d+ taco" => {"type" => "integer"}
-      },
-      "additionalProperties" => false
-    }
-
-    data = {
-      "5 tacos" => 5,
-      "20 tacos" => 20
-    }
-
-    assert_valid schema, data
-    data["b"] = 5
     refute_valid schema, data
   end
 
