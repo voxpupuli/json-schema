@@ -19,6 +19,7 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
   include ArrayValidation::UniqueItemsTests
 
   include NumberValidation::MinMaxTests
+  include NumberValidation::MultipleOfTests
 
   include ObjectValidation::AdditionalPropertiesTests
   include ObjectValidation::PatternPropertiesTests
@@ -203,39 +204,6 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
     # Make sure all of the above are valid...
     data["a"] = 1
     assert(JSON::Validator.validate(schema,data,:validate_schema => true))
-  end
-
-
-  def test_multiple_of
-    # Set up the default datatype
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "properties" => {
-        "a" => {"multipleOf" => 1.1}
-      }
-    }
-
-    data = {
-      "a" => nil
-    }
-
-    data["a"] = 3.3
-    assert_valid schema, data
-
-    data["a"] = 3.4
-    refute_valid schema, data
-
-    schema["properties"]["a"]["multipleOf"] = 2.0
-
-    data["a"] = 4.0
-    assert_valid schema, data
-
-    data["a"] = 'boo'
-    assert_valid schema, data
-
-    data["a"] = 5
-    schema["properties"]["a"]["multipleOf"] = 0
-    refute_valid schema, data
   end
 
   def test_list_option

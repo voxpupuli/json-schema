@@ -55,4 +55,39 @@ module NumberValidation
       refute_valid schema, {'a' => 5}
     end
   end
+
+  # draft3 introduced `divisibleBy`, renamed to `multipleOf` in draft4.
+  # Favor the newer name, but the behavior should be identical.
+  module MultipleOfTests
+    def multiple_of
+      'multipleOf'
+    end
+
+    def test_multiple_of
+      schema = {
+        'properties' => {
+          'a' => { multiple_of => 1.1 }
+        }
+      }
+
+      assert_valid schema, {'a' => 0}
+
+      assert_valid schema, {'a' => 2.2}
+      refute_valid schema, {'a' => 3.4}
+
+      # other types are disregarded
+      assert_valid schema, {'a' => 'hi'}
+    end
+
+    def test_multiple_of_zero
+      schema = {
+        'properties' => {
+          'a' => { multiple_of => 0 }
+        }
+      }
+
+      refute_valid schema, {'a' => 5}
+      refute_valid schema, {'a' => 0}
+    end
+  end
 end

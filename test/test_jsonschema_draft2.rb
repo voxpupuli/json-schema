@@ -13,10 +13,15 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
     { 'maximumCanEqual' => false }
   end
 
+  def multiple_of
+    'divisibleBy'
+  end
+
   include ArrayValidation::ItemsTests
   include ArrayValidation::UniqueItemsTests
 
   include NumberValidation::MinMaxTests
+  include NumberValidation::MultipleOfTests
 
   include ObjectValidation::AdditionalPropertiesTests
 
@@ -82,40 +87,6 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
     data = {}
     assert_valid schema, data
   end
-
-
-  def test_divisible_by
-    # Set up the default datatype
-    schema = {
-      "properties" => {
-        "a" => {"divisibleBy" => 1.1}
-      }
-    }
-
-    data = {
-      "a" => nil
-    }
-
-    data["a"] = 3.3
-    assert_valid schema, data
-
-    data["a"] = 3.4
-    refute_valid schema, data
-
-    schema["properties"]["a"]["divisibleBy"] = 2.0
-
-    data["a"] = 4.0
-    assert_valid schema, data
-
-    data["a"] = 'boo'
-    assert_valid schema, data
-
-    data["a"] = 5
-    schema["properties"]["a"]["divisibleBy"] = 0
-    refute_valid schema, data
-  end
-
-
 
   def test_disallow
     # Set up the default datatype
