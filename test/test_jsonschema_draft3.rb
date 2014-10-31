@@ -14,16 +14,20 @@ class JSONSchemaDraft3Test < MiniTest::Unit::TestCase
     { 'exclusiveMaximum' => true }
   end
 
-  include TypeValidationTests
-  include SchemaUnionTypeValidationTests
-  include AnyTypeValidationTests
-  include ArrayPropertyValidationTests
-  include ArrayAdditionalItemsValidationTests
-  include ArrayUniqueItemsValidationTests
-  include NumberPropertyValidationTests
-  include ObjectAdditionalPropertyValidationTests
-  include ObjectPatternPropertyValidationTests
-  include StringPropertyValidationTests
+  include ArrayValidation::ItemsTests
+  include ArrayValidation::AdditionalItemsTests
+  include ArrayValidation::UniqueItemsTests
+
+  include NumberValidation::MinMaxTests
+
+  include ObjectValidation::AdditionalPropertiesTests
+  include ObjectValidation::PatternPropertiesTests
+
+  include StringValidation::ValueTests
+
+  include TypeValidation::SimpleTypeTests
+  include TypeValidation::AnyTypeTests
+  include TypeValidation::SchemaUnionTypeTests
 
   def test_types
     # Set up the default datatype

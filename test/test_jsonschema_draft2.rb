@@ -13,14 +13,18 @@ class JSONSchemaDraft2Test < MiniTest::Unit::TestCase
     { 'maximumCanEqual' => false }
   end
 
-  include TypeValidationTests
-  include SchemaUnionTypeValidationTests
-  include AnyTypeValidationTests
-  include ArrayPropertyValidationTests
-  include ArrayUniqueItemsValidationTests
-  include NumberPropertyValidationTests
-  include ObjectAdditionalPropertyValidationTests
-  include StringPropertyValidationTests
+  include ArrayValidation::ItemsTests
+  include ArrayValidation::UniqueItemsTests
+
+  include NumberValidation::MinMaxTests
+
+  include ObjectValidation::AdditionalPropertiesTests
+
+  include StringValidation::ValueTests
+
+  include TypeValidation::SimpleTypeTests
+  include TypeValidation::AnyTypeTests
+  include TypeValidation::SchemaUnionTypeTests
 
   def test_optional
     # Set up the default datatype
