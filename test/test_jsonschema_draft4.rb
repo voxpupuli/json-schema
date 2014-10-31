@@ -14,6 +14,10 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
     { 'exclusiveMaximum' => true }
   end
 
+  def ipv4_format
+    'ipv4'
+  end
+
   include ArrayValidation::ItemsTests
   include ArrayValidation::AdditionalItemsTests
   include ArrayValidation::UniqueItemsTests
@@ -25,6 +29,7 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
   include ObjectValidation::PatternPropertiesTests
 
   include StringValidation::ValueTests
+  include StringValidation::FormatTests
 
   include TypeValidation::SimpleTypeTests
 
@@ -237,42 +242,6 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
     refute_valid schema, {"a" => 5, "b" => {"b" => {"a" => 'taco'}}}
   end
 
-
-  def test_format_ipv4
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "type" => "object",
-      "properties" => { "a" => {"type" => "string", "format" => "ipv4"}}
-    }
-
-    assert_valid schema, {"a" => "1.1.1.1"}
-    refute_valid schema, {"a" => "1.1.1"}
-    refute_valid schema, {"a" => "1.1.1.300"}
-    refute_valid schema, {"a" => 5}
-    refute_valid schema, {"a" => "1.1.1"}
-    refute_valid schema, {"a" => "1.1.1.1b"}
-  end
-
-
-  def test_format_ipv6
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "type" => "object",
-      "properties" => { "a" => {"type" => "string", "format" => "ipv6"}}
-    }
-
-    assert_valid schema, {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff"}
-    assert_valid schema, {"a" => "1111:0:8888:0:0:0:eeee:ffff"}
-    assert_valid schema, {"a" => "1111:2222:8888::eeee:ffff"}
-    refute_valid schema, {"a" => "1111:2222:8888:99999:aaaa:cccc:eeee:ffff"}
-    refute_valid schema, {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:gggg"}
-    refute_valid schema, {"a" => "1111:2222::9999::cccc:eeee:ffff"}
-    refute_valid schema, {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff:bbbb"}
-    assert(JSON::Validator.validate(schema, {"a" => "::1"}), 'validate with shortcut')
-    assert(!JSON::Validator.validate(schema, {"a" => "42"}), 'not validate a simple number')
-  end
-
-
   def test_format_datetime
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
@@ -309,32 +278,6 @@ class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
     assert(!JSON::Validator.validate(schema,data2))
     assert(JSON::Validator.validate(schema,data3))
   end
-
-  def test_format_unknown
-    schema = {
-      "type" => "object",
-      "properties" => { "a" => {"type" => "string", "format" => "unknown"}}
-    }
-
-    assert_valid schema, {"a" => "I can write what I want here"}
-    assert_valid schema, {"a" => ""}
-  end
-
-
-  def test_format_union
-    data1 = {"a" => "boo"}
-    data2 = {"a" => nil}
-
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "type" => "object",
-      "properties" => { "a" => {"type" => ["string","null"], "format" => "ipv4"}}
-    }
-    assert(!JSON::Validator.validate(schema,data1))
-    assert(JSON::Validator.validate(schema,data2))
-  end
-
-
 
   def test_schema
     schema = {
