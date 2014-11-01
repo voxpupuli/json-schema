@@ -10,12 +10,19 @@ class CommonTestSuiteTest < Minitest::Test
   # you can replace `:all` with an array containing the names of individual
   # tests to skip.
   IGNORED_TESTS = Hash.new { |h,k| h[k] = [] }.merge({
-    "draft3/optional/format.json" => :all,
-    "draft3/optional/jsregex.json" => [
-      "ECMA 262 regex dialect recognition/ECMA 262 has no support for lookbehind",
-      "ECMA 262 regex dialect recognition/[^] is a valid regex",
+    "draft3/optional/jsregex.json" => :all,
+    "draft3/optional/format.json" => [
+      "validation of regular expressions",
+      "validation of e-mail addresses",
+      "validation of URIs",
+      "validation of host names",
+      "validation of CSS colors"
     ],
-    "draft4/optional/format.json" => :all
+    "draft4/optional/format.json" => [
+      "validation of URIs",
+      "validation of e-mail addresses",
+      "validation of host names"
+    ]
   })
 
   include WebMock::API
@@ -47,11 +54,12 @@ class CommonTestSuiteTest < Minitest::Test
         v = nil
 
         test["tests"].each do |t|
-          err_id = "#{rel_file}: #{base_description}/#{t['description']}"
-
           next if IGNORED_TESTS[rel_file] == :all
-          next if IGNORED_TESTS[rel_file].include?("#{base_description}/#{t['description']}")
+          next if IGNORED_TESTS[rel_file].any? { |test|
+            base_description == test || "#{base_description}/#{t['description']}" == test
+          }
 
+          err_id = "#{rel_file}: #{base_description}/#{t['description']}"
           define_method("test_#{err_id}") do
             errors = JSON::Validator.fully_validate(schema,
               t["data"],
