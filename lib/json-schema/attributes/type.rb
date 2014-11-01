@@ -49,27 +49,24 @@ module JSON
           break if valid
         end
 
-        if (options[:disallow])
-          if valid
-            message = "The property '#{build_fragment(fragments)}' matched one or more of the following types:"
-            types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
-            message.chop!
-            validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
-          end
+        if options[:disallow]
+          return if !valid
+          message = "The property '#{build_fragment(fragments)}' matched one or more of the following types: #{list_types(types)}"
+          validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
         elsif !valid
           if union
-            message = "The property '#{build_fragment(fragments)}' of type #{type_of_data(data)} did not match one or more of the following types:"
-            types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
-            message.chop!
+            message = "The property '#{build_fragment(fragments)}' of type #{type_of_data(data)} did not match one or more of the following types: #{list_types(types)}"
             validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
             validation_errors(processor).last.sub_errors = union_errors
           else
-            message = "The property '#{build_fragment(fragments)}' of type #{type_of_data(data)} did not match the following type:"
-            types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
-            message.chop!
+            message = "The property '#{build_fragment(fragments)}' of type #{type_of_data(data)} did not match the following type: #{list_types(types)}"
             validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
           end
         end
+      end
+
+      def self.list_types(types)
+        types.map { |type| type.is_a?(String) ? type : '(schema)' }.join(', ')
       end
 
       # Lookup Schema type of given class instance

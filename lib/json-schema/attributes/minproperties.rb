@@ -6,8 +6,9 @@ module JSON
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         return unless data.is_a?(Hash)
 
-        if data.size < current_schema.schema['minProperties']
-          message = "The property '#{build_fragment(fragments)}' did not contain a minimum number of properties #{current_schema.schema['minProperties']}"
+        min_properties = current_schema.schema['minProperties']
+        if data.size < min_properties
+          message = "The property '#{build_fragment(fragments)}' did not contain a minimum number of properties #{min_properties}"
           validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
         end
       end

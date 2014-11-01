@@ -5,9 +5,15 @@ module JSON
     class MinimumInclusiveAttribute < Attribute
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         return unless data.is_a?(Numeric)
-        if (current_schema.schema['minimumCanEqual'] == false ? data <= current_schema.schema['minimum'] : data < current_schema.schema['minimum'])
-          message = "The property '#{build_fragment(fragments)}' did not have a minimum value of #{current_schema.schema['minimum']}, "
-          message += current_schema.schema['exclusiveMinimum'] ? 'exclusively' : 'inclusively'
+
+        schema    = current_schema.schema
+        exclusive = schema['minimumCanEqual'] == false
+        minimum   = schema['minimum']
+
+        invalid = exclusive ? data <= minimum : data < minimum
+        if invalid
+          message = "The property '#{build_fragment(fragments)}' did not have a minimum value of #{minimum}, "
+          message += exclusive ? 'exclusively' : 'inclusively'
           validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
         end
       end

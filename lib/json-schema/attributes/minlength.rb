@@ -6,8 +6,9 @@ module JSON
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         return unless data.is_a?(String)
 
-        if data.length < current_schema.schema['minLength']
-          message = "The property '#{build_fragment(fragments)}' was not of a minimum string length of #{current_schema.schema['minLength']}"
+        min_length = current_schema.schema['minLength']
+        if data.length < min_length
+          message = "The property '#{build_fragment(fragments)}' was not of a minimum string length of #{min_length}"
           validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
         end
       end
