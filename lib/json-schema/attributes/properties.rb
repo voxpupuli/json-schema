@@ -3,6 +3,10 @@ require 'json-schema/attribute'
 module JSON
   class Schema
     class PropertiesAttribute < Attribute
+      def self.required?(schema, options)
+        schema.fetch('required') { options[:strict] }
+      end
+
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         return unless data.is_a?(Hash)
 
@@ -18,7 +22,7 @@ module JSON
             data[property] = default.is_a?(Hash) ? default.clone : default
           end
 
-          if property_schema.fetch('required') { options[:strict] } && !data.has_key?(property)
+          if required?(property_schema, options) && !data.has_key?(property)
             message = "The property '#{build_fragment(fragments)}' did not contain a required property of '#{property}'"
             validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
           end
@@ -54,9 +58,18 @@ module JSON
         end
 
         if diff.size > 0
-          message = "The property '#{build_fragment(fragments)}' contained undefined properties: '#{diff.keys.join(", ")}'"
+          properties = data.to_a.map { |(key, _)| key }.join(', ')
+          message = "The property '#{build_fragment(fragments)}' contained undefined properties: '#{properties}"
           validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
         end
+      end
+    end
+
+    class PropertiesV4Attribute < PropertiesAttribute
+      # draft4 relies on its own RequiredAttribute validation at a higher level, rather than
+      # as an attribute of individual properties.
+      def self.required?(schema, options)
+        options[:strict] == true
       end
     end
   end
