@@ -4,7 +4,7 @@ require 'uri'
 module URI
 
   # Ruby does not have built-in support for filesystem URIs, and definitely does not have built-in support for
-  # using open-uri with filesystem URIs
+  # using open-uri with filesystem URIs. At least until this issue is closed https://bugs.ruby-lang.org/issues/8544
   class File < Generic
 
     COMPONENT = [
@@ -15,11 +15,11 @@ module URI
         ].freeze
 
     def initialize(*arg)
-      # arg[2] is the 'host'; this logic to set it to "" causes file schemes with UNC to break
+      super(*arg)
+      # this logic to set the host to "" causes file schemes with UNC to break
       # so don't do it on windows platforms
       is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
-      arg[2] = "" unless is_windows
-      super(*arg)
+      @host = "" unless is_windows
     end
 
     def self.build(args)
