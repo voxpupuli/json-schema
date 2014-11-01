@@ -1,6 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class JSONSchemaTest < MiniTest::Unit::TestCase
+class JSONSchemaTest < Minitest::Test
 
   #
   # These tests are ONLY run if there is an appropriate JSON backend parser available

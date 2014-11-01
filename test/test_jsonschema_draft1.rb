@@ -1,6 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class JSONSchemaDraft1Test < MiniTest::Unit::TestCase
+class JSONSchemaDraft1Test < Minitest::Test
   def schema_version
     :draft1
   end

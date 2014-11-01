@@ -3,7 +3,7 @@ require 'webmock'
 require 'socket'
 
 
-class BadSchemaRefTest < MiniTest::Unit::TestCase
+class BadSchemaRefTest < Minitest::Test
   def setup
     WebMock.allow_net_connect!
   end

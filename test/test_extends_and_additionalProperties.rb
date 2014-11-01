@@ -1,6 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class ExtendsNestedTest < MiniTest::Unit::TestCase
+class ExtendsNestedTest < Minitest::Test
 
   def assert_validity(valid, schema_name, data, msg)
     msg = "Schema should be #{valid ? :valid : :invalid}.\n(#{schema_name}) #{msg}"

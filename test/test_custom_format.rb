@@ -1,7 +1,7 @@
 # encoding: utf-8
 require File.expand_path('../test_helper', __FILE__)
 
-class JSONSchemaCustomFormatTest < MiniTest::Unit::TestCase
+class JSONSchemaCustomFormatTest < Minitest::Test
   def setup
     @all_versions = ['draft1', 'draft2', 'draft3', 'draft4']
     @format_proc = lambda { |value| raise JSON::Schema::CustomFormatError.new("must be 42") unless value == "42" }

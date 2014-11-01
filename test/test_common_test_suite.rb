@@ -1,7 +1,7 @@
 require File.expand_path('../test_helper', __FILE__)
 require 'webmock'
 
-class CommonTestSuiteTest < MiniTest::Unit::TestCase
+class CommonTestSuiteTest < Minitest::Test
   TEST_DIR = File.expand_path('../test-suite/tests', __FILE__)
 
   # These are test files which we know fail spectacularly, either because we

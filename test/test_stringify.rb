@@ -1,6 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class StringifyTest < MiniTest::Unit::TestCase
+class StringifyTest < Minitest::Test
   def test_stringify_on_hash
     hash = {
       :a => 'foo',

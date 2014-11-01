@@ -1,6 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class JSONFullValidation < MiniTest::Unit::TestCase
+class JSONFullValidation < Minitest::Test
     
   def test_full_validation
     data = {"b" => {"a" => 5}}

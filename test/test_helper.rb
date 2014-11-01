@@ -7,7 +7,7 @@ Dir[File.join(File.expand_path('../support', __FILE__), '*.rb')].each do |suppor
   require support_file
 end
 
-class MiniTest::Unit::TestCase
+class Minitest::Test
   def schema_fixture_path(filename)
     File.join(File.dirname(__FILE__), 'schemas', filename)
   end

@@ -1,7 +1,7 @@
 # encoding: utf-8
 require File.expand_path('../test_helper', __FILE__)
 
-class JSONSchemaDraft4Test < MiniTest::Unit::TestCase
+class JSONSchemaDraft4Test < Minitest::Test
   def schema_version
     :draft4
   end

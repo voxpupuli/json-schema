@@ -1,6 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class OneOfTest < MiniTest::Unit::TestCase
+class OneOfTest < Minitest::Test
   def test_one_of_links_schema
     schema = schema_fixture_path('one_of_ref_links_schema.json')
     data   = data_fixture_path('one_of_ref_links_data.json')

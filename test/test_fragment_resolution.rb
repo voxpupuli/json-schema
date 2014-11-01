@@ -1,6 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class FragmentResolution < MiniTest::Unit::TestCase
+class FragmentResolution < Minitest::Test
   def test_fragment_resolution
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",

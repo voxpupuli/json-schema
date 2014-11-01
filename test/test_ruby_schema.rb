@@ -1,6 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class RubySchemaTest < MiniTest::Unit::TestCase
+class RubySchemaTest < Minitest::Test
   def test_string_keys
     schema = {
       "type" => 'object',
