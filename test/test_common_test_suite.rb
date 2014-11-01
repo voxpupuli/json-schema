@@ -1,8 +1,7 @@
-require 'test/unit'
+require File.expand_path('../test_helper', __FILE__)
 require 'webmock'
-require File.expand_path('../../lib/json-schema', __FILE__)
 
-class CommonTestSuiteTest < Test::Unit::TestCase
+class CommonTestSuiteTest < Minitest::Test
   TEST_DIR = File.expand_path('../test-suite/tests', __FILE__)
 
   # These are test files which we know fail spectacularly, either because we
@@ -11,12 +10,19 @@ class CommonTestSuiteTest < Test::Unit::TestCase
   # you can replace `:all` with an array containing the names of individual
   # tests to skip.
   IGNORED_TESTS = Hash.new { |h,k| h[k] = [] }.merge({
-    "draft3/optional/format.json" => :all,
-    "draft3/optional/jsregex.json" => [
-      "ECMA 262 regex dialect recognition/ECMA 262 has no support for lookbehind",
-      "ECMA 262 regex dialect recognition/[^] is a valid regex",
+    "draft3/optional/jsregex.json" => :all,
+    "draft3/optional/format.json" => [
+      "validation of regular expressions",
+      "validation of e-mail addresses",
+      "validation of URIs",
+      "validation of host names",
+      "validation of CSS colors"
     ],
-    "draft4/optional/format.json" => :all
+    "draft4/optional/format.json" => [
+      "validation of URIs",
+      "validation of e-mail addresses",
+      "validation of host names"
+    ]
   })
 
   include WebMock::API
@@ -33,6 +39,7 @@ class CommonTestSuiteTest < Test::Unit::TestCase
 
   def teardown
     WebMock.disable!
+    WebMock.reset!
   end
 
   Dir["#{TEST_DIR}/*"].each do |suite|
@@ -47,21 +54,19 @@ class CommonTestSuiteTest < Test::Unit::TestCase
         v = nil
 
         test["tests"].each do |t|
+          next if IGNORED_TESTS[rel_file] == :all
+          next if IGNORED_TESTS[rel_file].any? { |test|
+            base_description == test || "#{base_description}/#{t['description']}" == test
+          }
+
           err_id = "#{rel_file}: #{base_description}/#{t['description']}"
-
-          unless IGNORED_TESTS[rel_file] == :all or
-               IGNORED_TESTS[rel_file].include? "#{base_description}/#{t['description']}"
-            define_method("test_#{err_id}") do
-              assert_nothing_raised("Exception raised running #{err_id}") do
-                v = JSON::Validator.fully_validate(schema,
-                                                   t["data"],
-                                                   :validate_schema => true,
-                                                   :version => version
-                                                  )
-              end
-
-              assert_equal t["valid"], v.empty?, "Common test suite case failed: #{err_id}\n#{v}"
-            end
+          define_method("test_#{err_id}") do
+            errors = JSON::Validator.fully_validate(schema,
+              t["data"],
+              :validate_schema => true,
+              :version => version
+            )
+            assert_equal t["valid"], errors.empty?, "Common test suite case failed: #{err_id}\n#{v}"
           end
         end
       end

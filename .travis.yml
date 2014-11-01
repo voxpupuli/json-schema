@@ -6,6 +6,8 @@ rvm:
   - "2.1"
   - "jruby"
   - "rbx"
+install:
+  - bundle install --retry=3
 matrix:
   include:
     - rvm: "2.1"

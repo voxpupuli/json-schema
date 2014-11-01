@@ -1,52 +1,43 @@
-require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/json-schema'
+require File.expand_path('../test_helper', __FILE__)
 
-class JSONSchemaTest < Test::Unit::TestCase
+class JSONSchemaTest < Minitest::Test
 
   #
   # These tests are ONLY run if there is an appropriate JSON backend parser available
   #
 
   def test_schema_from_file
-    data = {"a" => 5}
-    assert(JSON::Validator.validate(File.join(File.dirname(__FILE__),"schemas/good_schema_1.json"),data))
-    data = {"a" => "bad"}
-    assert(!JSON::Validator.validate(File.join(File.dirname(__FILE__),"schemas/good_schema_1.json"),data))
+    assert_valid schema_fixture_path('good_schema_1.json'), { "a" => 5 }
+    refute_valid schema_fixture_path('good_schema_1.json'), { "a" => "bad" }
   end
 
   def test_data_from_file
     schema = {"$schema" => "http://json-schema.org/draft-03/schema#","type" => "object", "properties" => {"a" => {"type" => "integer"}}}
-    assert(JSON::Validator.validate_uri(schema,File.join(File.dirname(__FILE__),"data/good_data_1.json")))
-    assert(!JSON::Validator.validate_uri(schema,File.join(File.dirname(__FILE__),"data/bad_data_1.json")))
+    assert_valid schema, data_fixture_path('good_data_1.json'), :uri => true
+    refute_valid schema, data_fixture_path('bad_data_1.json'), :uri => true
   end
 
   def test_data_from_json
     if JSON::Validator.json_backend != nil
       schema = {"$schema" => "http://json-schema.org/draft-03/schema#","type" => "object", "properties" => {"a" => {"type" => "integer"}}}
-      assert(JSON::Validator.validate_json(schema, %Q({"a" : 5})))
-      assert(!JSON::Validator.validate_json(schema, %Q({"a" : "poop"})))
+      assert_valid schema, %Q({"a": 5}), :json => true
+      refute_valid schema, %Q({"a": "poop"}), :json => true
     end
   end
 
   def test_both_from_file
-    assert(JSON::Validator.validate_uri(File.join(File.dirname(__FILE__),"schemas/good_schema_1.json"),File.join(File.dirname(__FILE__),"data/good_data_1.json")))
-    assert(!JSON::Validator.validate_uri(File.join(File.dirname(__FILE__),"schemas/good_schema_1.json"),File.join(File.dirname(__FILE__),"data/bad_data_1.json")))
+    assert_valid schema_fixture_path('good_schema_1.json'), data_fixture_path('good_data_1.json'), :uri => true
+    refute_valid schema_fixture_path('good_schema_1.json'), data_fixture_path('bad_data_1.json'), :uri => true
   end
 
   def test_file_ref
-    data = {"b" => {"a" => 5}}
-    assert(JSON::Validator.validate(File.join(File.dirname(__FILE__),"schemas/good_schema_2.json"),data))
-
-    data = {"b" => {"a" => "boo"}}
-    assert(!JSON::Validator.validate(File.join(File.dirname(__FILE__),"schemas/good_schema_1.json"),data))
+    assert_valid schema_fixture_path('good_schema_2.json'), { "b" => { "a" => 5 } }
+    refute_valid schema_fixture_path('good_schema_1.json'), { "b" => { "a" => "boo" } }
   end
 
   def test_file_extends
-    data = {"a" => 5}
-    assert(JSON::Validator.validate(File.join(File.dirname(__FILE__),"schemas/good_schema_extends1.json"),data))
-
-    data = {"a" => 5, "b" => {"a" => 5}}
-    assert(JSON::Validator.validate(File.join(File.dirname(__FILE__),"schemas/good_schema_extends2.json"),data))
+    assert_valid schema_fixture_path('good_schema_extends1.json'), { "a" => 5 }
+    assert_valid schema_fixture_path('good_schema_extends2.json'), { "a" => 5, "b" => { "a" => 5 } }
   end
 
 end

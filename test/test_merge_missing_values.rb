@@ -1,7 +1,6 @@
-require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/json-schema'
+require File.expand_path('../test_helper', __FILE__)
 
-class MergeMissingValuesTest < Test::Unit::TestCase
+class MergeMissingValuesTest < Minitest::Test
   def test_merge_missing_values_for_string
     original = 'foo'
     updated = 'foo'

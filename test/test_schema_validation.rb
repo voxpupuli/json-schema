@@ -1,8 +1,7 @@
-require 'test/unit'
+require File.expand_path('../test_helper', __FILE__)
 require 'tmpdir'
-require File.dirname(__FILE__) + '/../lib/json-schema'
 
-class JSONSchemaValidation < Test::Unit::TestCase
+class JSONSchemaValidation < Minitest::Test
   def valid_schema_v3
     {
       "$schema" => "http://json-schema.org/draft-03/schema#",
@@ -135,7 +134,7 @@ class JSONSchemaValidation < Test::Unit::TestCase
 
     errors = JSON::Validator.fully_validate_schema(invalid_schema_v3, :version => :draft3)
     assert_equal 1, errors.size
-    assert_match /the property .*required.*did not match/i, errors.first
+    assert_match(/the property .*required.*did not match/i, errors.first)
   end
 
 
@@ -151,7 +150,7 @@ class JSONSchemaValidation < Test::Unit::TestCase
 
     errors = JSON::Validator.fully_validate_schema(invalid_schema_v4, :version => :draft4)
     assert_equal 1, errors.size
-    assert_match /the property .*required.*did not match/i, errors.first
+    assert_match(/the property .*required.*did not match/i, errors.first)
   end
 
   def test_validate_schema_3_without_version_option

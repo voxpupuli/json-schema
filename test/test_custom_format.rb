@@ -1,8 +1,7 @@
 # encoding: utf-8
-require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/json-schema'
+require File.expand_path('../test_helper', __FILE__)
 
-class JSONSchemaCustomFormatTest < Test::Unit::TestCase
+class JSONSchemaCustomFormatTest < Minitest::Test
   def setup
     @all_versions = ['draft1', 'draft2', 'draft3', 'draft4']
     @format_proc = lambda { |value| raise JSON::Schema::CustomFormatError.new("must be 42") unless value == "42" }

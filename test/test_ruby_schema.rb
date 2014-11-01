@@ -1,7 +1,6 @@
-require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/json-schema'
+require File.expand_path('../test_helper', __FILE__)
 
-class RubySchemaTest < Test::Unit::TestCase
+class RubySchemaTest < Minitest::Test
   def test_string_keys
     schema = {
       "type" => 'object',
@@ -12,11 +11,7 @@ class RubySchemaTest < Test::Unit::TestCase
       }
     }
 
-    data = {
-      "a" => 5
-    }
-
-    assert(JSON::Validator.validate(schema, data))
+    assert_valid schema, { "a" => 5 }
   end
 
   def test_symbol_keys
@@ -29,11 +24,7 @@ class RubySchemaTest < Test::Unit::TestCase
       }
     }
 
-    data = {
-      :a => 5
-    }
-
-    assert(JSON::Validator.validate(schema, data))
+    assert_valid schema, { :a => 5 }
   end
 
   def test_symbol_keys_in_hash_within_array
@@ -63,6 +54,6 @@ class RubySchemaTest < Test::Unit::TestCase
       ]
     }
 
-    assert(JSON::Validator.validate(schema, data, :validate_schema => true))
+    assert_valid schema, data, :validate_schema => true
   end
 end

@@ -1,7 +1,6 @@
-require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/json-schema'
+require File.expand_path('../test_helper', __FILE__)
 
-class ListOptionTest < Test::Unit::TestCase
+class ListOptionTest < Minitest::Test
   def test_list_option_reusing_schemas
     schema_hash = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
@@ -14,9 +13,9 @@ class ListOptionTest < Test::Unit::TestCase
     JSON::Validator.add_schema(schema)
 
     data = {"a" => 1}
-    assert(JSON::Validator.validate(uri.to_s, data))
+    assert_valid uri.to_s, data
 
     data = [{"a" => 1}]
-    assert(JSON::Validator.validate(uri.to_s, data, :list => true))
+    assert_valid uri.to_s, data, :list => true
   end
 end

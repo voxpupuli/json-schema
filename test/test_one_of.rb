@@ -1,14 +1,11 @@
-require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/json-schema'
+require File.expand_path('../test_helper', __FILE__)
 
-class OneOfTest < Test::Unit::TestCase
+class OneOfTest < Minitest::Test
   def test_one_of_links_schema
-    schema = File.join(File.dirname(__FILE__),"schemas/one_of_ref_links_schema.json")
-    data = File.join(File.dirname(__FILE__),"data/one_of_ref_links_data.json")
-    errors = JSON::Validator.fully_validate(schema,data, :errors_as_objects => true)
-    assert(errors.empty?, errors.map{|e| e[:message] }.join("\n"))
+    schema = schema_fixture_path('one_of_ref_links_schema.json')
+    data   = data_fixture_path('one_of_ref_links_data.json')
+    assert_valid schema, data
   end
-
 
   def test_one_of_with_string_patterns
     schema = {
@@ -26,17 +23,10 @@ class OneOfTest < Test::Unit::TestCase
       ]
     }
 
-    data = {"a" => "foo"}
-    assert(JSON::Validator.validate(schema,data))
-
-    data = {"a" => "foobar"}
-    assert(!JSON::Validator.validate(schema,data))
-
-    data = {"a" => "baz"}
-    assert(JSON::Validator.validate(schema,data))
-
-    data = {"a" => 5}
-    assert(!JSON::Validator.validate(schema,data))
+    assert_valid schema, { "a" => "foo" }
+    refute_valid schema, { "a" => "foobar" }
+    assert_valid schema, { "a" => "baz" }
+    refute_valid schema, { "a" => 5 }
   end
 
 end

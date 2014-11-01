@@ -1,11 +1,12 @@
-require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/json-schema'
+require File.expand_path('../test_helper', __FILE__)
 
 class BitwiseAndAttribute < JSON::Schema::Attribute
   def self.validate(current_schema, data, fragments, processor, validator, options = {})
-    if data.is_a?(Integer) && data & current_schema.schema['bitwise-and'].to_i == 0
-      message = "The property '#{build_fragment(fragments)}' did not evaluate  to true when bitwise-AND'd with  #{current_schema.schema['bitwise-or']}"
-      raise JSON::Schema::ValidationError.new(message, fragments, self, current_schema)
+    return unless data.is_a?(Integer)
+
+    if data & current_schema.schema['bitwise-and'].to_i == 0
+      message = "The property '#{build_fragment(fragments)}' did not evaluate to true when bitwise-AND'd with #{current_schema.schema['bitwise-and']}"
+      validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
     end
   end
 end
@@ -17,31 +18,12 @@ class ExtendedSchema < JSON::Schema::Validator
     @attributes["bitwise-and"] = BitwiseAndAttribute
     @uri = URI.parse("http://test.com/test.json")
   end
-  
+
   JSON::Validator.register_validator(self.new)
 end
 
-class JSONSchemaTestExtendedSchema < Test::Unit::TestCase
-  def test_schema_from_file
-    schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
-      "properties" => {
-        "a" => {
-          "bitwise-and" => 1
-        },
-        "b" => {
-          "type" => "string"
-        }
-      }
-    }
-    
-    data = {"a" => 0, "b" => "taco"}
-    assert(JSON::Validator.validate(schema,data))
-    data = {"a" => 1, "b" => "taco"}
-    assert(JSON::Validator.validate(schema,data))
-    data = {"a" => 1, "b" => 5}
-    assert(!JSON::Validator.validate(schema,data))
-    
+class TestExtendedSchema < Minitest::Test
+  def test_extended_schema_validation
     schema = {
       "$schema" => "http://test.com/test.json",
       "properties" => {
@@ -53,16 +35,28 @@ class JSONSchemaTestExtendedSchema < Test::Unit::TestCase
         }
       }
     }
-    
-    data = {
-      "a" => 0
+
+    assert_valid schema, {"a" => 1, "b" => "taco"}
+    refute_valid schema, {"a" => 0, "b" => "taco"}
+    refute_valid schema, {"a" => 1, "b" => 5}
+  end
+
+  def test_unextended_schema
+    # Verify that using the original schema disregards the `bitwise-and` property
+    schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
+      "properties" => {
+        "a" => {
+          "bitwise-and" => 1
+        },
+        "b" => {
+          "type" => "string"
+        }
+      }
     }
-    
-    data = {"a" => 1, "b" => "taco"}
-    assert(JSON::Validator.validate(schema,data))
-    data = {"a" => 0, "b" => "taco"}
-    assert(!JSON::Validator.validate(schema,data))
-    data = {"a" => 1, "b" => 5}
-    assert(!JSON::Validator.validate(schema,data))
+
+    assert_valid schema, {"a" => 0, "b" => "taco"}
+    assert_valid schema, {"a" => 1, "b" => "taco"}
+    refute_valid schema, {"a" => 1, "b" => 5}
   end
 end

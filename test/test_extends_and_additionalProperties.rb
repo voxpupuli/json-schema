@@ -1,47 +1,49 @@
-require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/json-schema'
+require File.expand_path('../test_helper', __FILE__)
 
-class ExtendsNestedTest < Test::Unit::TestCase
+class ExtendsNestedTest < Minitest::Test
 
-  def assert_validity(valid, schema_name, data, msg=nil)
-    file = File.expand_path("../schemas/#{schema_name}.schema.json",__FILE__)
-    errors = JSON::Validator.fully_validate file, data
-    msg.sub! /\.$/, '' if msg
-    send (valid ? :assert_equal : :assert_not_equal), [], errors, \
-      "Schema should be #{valid ? :valid : :invalid}#{msg ? ".\n[#{schema_name}] #{msg}" : ''}"
+  def assert_validity(valid, schema_name, data, msg)
+    msg = "Schema should be #{valid ? :valid : :invalid}.\n(#{schema_name}) #{msg}"
+    schema = schema_fixture_path("#{schema_name}.schema.json")
+    errors = JSON::Validator.fully_validate(schema, data)
+
+    if valid
+      assert_equal([], errors, msg)
+    else
+      refute_equal([], errors, msg)
+    end
   end
 
-  def assert_valid(schema_name, data, msg=nil) assert_validity true, schema_name, data, msg end
-  def refute_valid(schema_name, data, msg=nil) assert_validity false, schema_name, data, msg end
-
   %w[
-    extends_and_additionalProperties-1-filename extends_and_additionalProperties-1-ref
-    extends_and_additionalProperties-2-filename extends_and_additionalProperties-2-ref
+    extends_and_additionalProperties-1-filename
+    extends_and_additionalProperties-1-ref
+    extends_and_additionalProperties-2-filename
+    extends_and_additionalProperties-2-ref
   ].each do |schema_name|
-    test_prefix= 'test_' + schema_name.gsub('-','_')
-    class_eval <<-EOB
+    test_prefix = 'test_' + schema_name.gsub('-','_')
 
+    class_eval <<-EOB
       def #{test_prefix}_valid_outer
-        assert_valid '#{schema_name}', {"outerC"=>true}, "Outer defn is broken, maybe the outer extends overrode it?"
+        assert_validity true, '#{schema_name}', {"outerC"=>true}, "Outer defn is broken, maybe the outer extends overrode it"
       end
 
       def #{test_prefix}_valid_outer_extended
-        assert_valid '#{schema_name}', {"innerA"=>true}, "Extends at the root level isn't working."
+        assert_validity true, '#{schema_name}', {"innerA"=>true}, "Extends at the root level isn't working"
       end
 
       def #{test_prefix}_valid_inner
-        assert_valid '#{schema_name}', {"outerB"=>[{"innerA"=>true}]}, "Extends isn't working in the array element defn."
+        assert_validity true, '#{schema_name}', {"outerB"=>[{"innerA"=>true}]}, "Extends isn't working in the array element defn"
       end
 
       def #{test_prefix}_invalid_inner
-        refute_valid '#{schema_name}', {"outerB"=>[{"whaaaaat"=>true}]}, "Array element defn allowing anything when it should only allow what's in inner.schema"
+        assert_validity false, '#{schema_name}', {"outerB"=>[{"whaaaaat"=>true}]}, "Array element defn allowing anything when it should only allow what's in inner.schema"
       end
     EOB
 
     if schema_name['extends_and_additionalProperties-1']
       class_eval <<-EOB
         def #{test_prefix}_invalid_outer
-          refute_valid '#{schema_name}', {"whaaaaat"=>true}, "Outer defn allowing anything when it shouldn't."
+          assert_validity false, '#{schema_name}', {"whaaaaat"=>true}, "Outer defn allowing anything when it shouldn't"
         end
       EOB
     end
