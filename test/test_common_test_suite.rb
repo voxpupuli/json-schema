@@ -32,6 +32,7 @@ class CommonTestSuiteTest < Minitest::Test
 
   def teardown
     WebMock.disable!
+    WebMock.reset!
   end
 
   Dir["#{TEST_DIR}/*"].each do |suite|
