@@ -21,7 +21,7 @@ module JSON
       def self.get_referenced_uri_and_schema(s, current_schema, validator)
         uri,schema = nil,nil
 
-        temp_uri = URI.parse(s['$ref'])
+        temp_uri = Addressable::URI.parse(s['$ref'])
         if temp_uri.relative?
           temp_uri = current_schema.uri.clone
           # Check for absolute path
@@ -31,7 +31,7 @@ module JSON
           elsif path[0,1] == "/"
             temp_uri.path = Pathname.new(path).cleanpath.to_s
           else
-            temp_uri = current_schema.uri.merge(path)
+            temp_uri = current_schema.uri.join(path)
           end
           temp_uri.fragment = s['$ref'].split("#")[1]
         end
@@ -49,7 +49,7 @@ module JSON
           fragment_path = ''
           fragments.each do |fragment|
             if fragment && fragment != ''
-              fragment = URI.unescape(fragment.gsub('~0', '~').gsub('~1', '/'))
+              fragment = Addressable::URI.unescape(fragment.gsub('~0', '~').gsub('~1', '/'))
               if target_schema.is_a?(Array)
                 target_schema = target_schema[fragment.to_i]
               else

@@ -1,4 +1,4 @@
-require 'uri'
+require 'addressable/uri'
 require 'open-uri'
 require 'pathname'
 require 'bigdecimal'
@@ -324,7 +324,7 @@ module JSON
 
       def validator_for_uri(schema_uri)
         return default_validator unless schema_uri
-        u = URI.parse(schema_uri)
+        u = Addressable::URI.parse(schema_uri)
         validator = validators["#{u.scheme}://#{u.host}#{u.path}"]
         if validator.nil?
           raise JSON::Schema::SchemaError.new("Schema not found: #{schema_uri}")
@@ -504,7 +504,7 @@ module JSON
       if schema.is_a?(String)
         begin
           # Build a fake URI for this
-          schema_uri = URI.parse(fake_uuid(schema))
+          schema_uri = Addressable::URI.parse(fake_uuid(schema))
           schema = JSON::Validator.parse(schema)
           if @options[:list] && @options[:fragment].nil?
             schema = schema_to_list(schema)
@@ -526,7 +526,7 @@ module JSON
             schema = self.class.schema_for_uri(schema_uri)
             if @options[:list] && @options[:fragment].nil?
               schema = schema_to_list(schema.schema)
-              schema_uri = URI.parse(fake_uuid(serialize(schema)))
+              schema_uri = Addressable::URI.parse(fake_uuid(serialize(schema)))
               schema = JSON::Schema.new(schema, schema_uri, @options[:version])
               Validator.add_schema(schema)
             end
@@ -537,7 +537,7 @@ module JSON
         if @options[:list] && @options[:fragment].nil?
           schema = schema_to_list(schema)
         end
-        schema_uri = URI.parse(fake_uuid(serialize(schema)))
+        schema_uri = Addressable::URI.parse(fake_uuid(serialize(schema)))
         schema = JSON::Schema.stringify(schema)
         schema = JSON::Schema.new(schema,schema_uri,@options[:version])
         Validator.add_schema(schema)
@@ -571,14 +571,10 @@ module JSON
     end
 
     def normalized_uri(data)
-      uri = URI.parse(data)
-      if uri.relative?
-        # Check for absolute path
-        if data[0,1] == '/'
-          uri = URI.parse("file://#{data}")
-        else
-          uri = URI.parse("file://#{Dir.pwd}/#{data}")
-        end
+      uri = Addressable::URI.parse(data)
+      # Check for absolute path
+      if uri.relative? && data[0,1] != '/'
+        uri = Addressable::URI.parse("#{Dir.pwd}/#{data}")
       end
       uri
     end

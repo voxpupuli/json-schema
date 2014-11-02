@@ -11,9 +11,9 @@ module JSON
 
       # If there is an ID on this schema, use it to generate the URI
       if @schema['id'] && @schema['id'].kind_of?(String)
-        temp_uri = URI.parse(@schema['id'])
+        temp_uri = Addressable::URI.parse(@schema['id'])
         if temp_uri.relative?
-          uri = uri.merge(@schema['id'])
+          uri += Addressable::URI.parse(@schema['id'])
           temp_uri = uri
         end
         @uri = temp_uri
