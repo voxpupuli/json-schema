@@ -17,9 +17,7 @@ module JSON
 
           if data.has_key?(property)
             expected_schema = JSON::Schema.new(property_schema, current_schema.uri, validator)
-            fragments << property
-            expected_schema.validate(data[property], fragments, processor, options)
-            fragments.pop
+            expected_schema.validate(data[property], fragments + [property], processor, options)
           end
         end
       end

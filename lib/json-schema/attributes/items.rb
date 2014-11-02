@@ -9,18 +9,15 @@ module JSON
         items = current_schema.schema['items']
         case items
         when Hash
+          schema = JSON::Schema.new(items, current_schema.uri, validator)
           data.each_with_index do |item, i|
-            schema = JSON::Schema.new(items, current_schema.uri, validator)
-            fragments << i.to_s
-            schema.validate(item,fragments, processor, options)
-            fragments.pop
+            schema.validate(item, fragments + [i.to_s], processor, options)
           end
+
         when Array
           items.each_with_index do |item_schema, i|
             schema = JSON::Schema.new(item_schema, current_schema.uri, validator)
-            fragments << i.to_s
-            schema.validate(data[i], fragments, processor, options)
-            fragments.pop
+            schema.validate(data[i], fragments + [i.to_s], processor, options)
           end
         end
       end

@@ -15,9 +15,7 @@ module JSON
           matching_properties = extra_properties # & addprop.keys
           matching_properties.each do |key|
             additional_property_schema = JSON::Schema.new(addprop[key] || addprop, current_schema.uri, validator)
-            fragments << key
-            additional_property_schema.validate(data[key], fragments, processor, options)
-            fragments.pop
+            additional_property_schema.validate(data[key], fragments + [key], processor, options)
           end
           extra_properties -= matching_properties
         end

@@ -12,11 +12,8 @@ module JSON
           # Check each key in the data hash to see if it matches the regex
           data.each do |key, value|
             next unless regexp.match(key)
-
             schema = JSON::Schema.new(property_schema, current_schema.uri, validator)
-            fragments << key
-            schema.validate(data[key], fragments, processor, options)
-            fragments.pop
+            schema.validate(data[key], fragments + [key], processor, options)
           end
         end
       end
