@@ -207,12 +207,9 @@ module JSON
       # Items are always schemas
       if schema["items"]
         items = schema["items"].clone
-        single = false
-        if !items.is_a?(Array)
-          items = [items]
-          single = true
-        end
-        items.each_with_index do |item,i|
+        items = [items] unless items.is_a?(Array)
+
+        items.each do |item|
           handle_schema(parent_schema, item)
         end
       end
