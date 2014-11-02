@@ -9,10 +9,13 @@ module JSON
         schema = current_schema.schema
         return unless schema['items'].is_a?(Array)
 
-        if schema['additionalItems'] == false && schema['items'].length != data.length
-          message = "The property '#{build_fragment(fragments)}' contains additional array elements outside of the schema when none are allowed"
-          validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
-        elsif schema['additionalItems'].is_a?(Hash)
+        case schema['additionalItems']
+        when false
+          if schema['items'].length != data.length
+            message = "The property '#{build_fragment(fragments)}' contains additional array elements outside of the schema when none are allowed"
+            validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+          end
+        when Hash
           additional_items_schema = JSON::Schema.new(schema['additionalItems'], current_schema.uri, validator)
           data.each_with_index do |item, i|
             next if i < schema['items'].length
