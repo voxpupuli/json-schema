@@ -7,6 +7,7 @@ require 'date'
 require 'thread'
 require 'yaml'
 
+require 'json-schema/schema/loader'
 require 'json-schema/errors/schema_error'
 require 'json-schema/errors/json_parse_error'
 
@@ -39,6 +40,7 @@ module JSON
 
       validator = JSON::Validator.validator_for_name(@options[:version])
       @options[:version] = validator
+      @options[:schema_loader] ||= JSON::Validator.schema_loader
 
       @validation_options = @options[:record_errors] ? {:record_errors => true} : {}
       @validation_options[:insert_defaults] = true if @options[:insert_defaults]
@@ -99,10 +101,12 @@ module JSON
           raise JSON::Schema::SchemaError.new("Invalid schema encountered when resolving :fragment option")
         end
       end
-      if @options[:list] #check if the schema is validating a list
-        base_schema.schema = schema_to_list(base_schema.schema)
+
+      if @options[:list]
+        base_schema.to_array_schema
+      else
+        base_schema
       end
-      base_schema
     end
 
     # Run a simple true/false validation of data against a schema
@@ -127,8 +131,7 @@ module JSON
 
       return true if self.class.schema_loaded?(schema_uri)
 
-      schema_data = self.class.parse(custom_open(schema_uri))
-      schema = JSON::Schema.new(schema_data, schema_uri, @options[:version])
+      schema = @options[:schema_loader].load(schema_uri)
       self.class.add_schema(schema)
       build_schemas(schema)
     end
@@ -218,7 +221,7 @@ module JSON
     def handle_schema(parent_schema, obj)
       if obj.is_a?(Hash)
         schema_uri = parent_schema.uri.clone
-        schema = JSON::Schema.new(obj,schema_uri,parent_schema.validator)
+        schema = JSON::Schema.new(obj, schema_uri, parent_schema.validator)
         if obj['id']
           Validator.add_schema(schema)
         end
@@ -287,6 +290,14 @@ module JSON
 
       def fully_validate_uri(schema, data, opts={})
         fully_validate(schema, data, opts.merge(:uri => true))
+      end
+
+      def schema_loader
+        @@schema_loader ||= JSON::Schema::Loader.new
+      end
+
+      def schema_loader=(loader)
+        @@schema_loader = loader
       end
 
       def clear_cache
@@ -491,55 +502,45 @@ module JSON
       @@fake_uuid_generator.call(schema)
     end
 
-    def schema_to_list(schema)
-      new_schema = {"type" => "array", "items" => schema}
-      if !schema["$schema"].nil?
-        new_schema["$schema"] = schema["$schema"]
-      end
-
-      new_schema
-    end
-
     def initialize_schema(schema)
       if schema.is_a?(String)
         begin
           # Build a fake URI for this
           schema_uri = Addressable::URI.parse(fake_uuid(schema))
-          schema = JSON::Validator.parse(schema)
+          schema = JSON::Schema.new(JSON::Validator.parse(schema), schema_uri, @options[:version])
           if @options[:list] && @options[:fragment].nil?
-            schema = schema_to_list(schema)
+            schema = schema.to_array_schema
           end
-          schema = JSON::Schema.new(schema,schema_uri,@options[:version])
           Validator.add_schema(schema)
         rescue
           # Build a uri for it
           schema_uri = normalized_uri(schema)
           if !self.class.schema_loaded?(schema_uri)
-            schema = JSON::Validator.parse(custom_open(schema_uri))
+            schema = @options[:schema_loader].load(schema_uri)
             schema = JSON::Schema.stringify(schema)
+
             if @options[:list] && @options[:fragment].nil?
-              schema = schema_to_list(schema)
+              schema = schema.to_array_schema
             end
-            schema = JSON::Schema.new(schema,schema_uri,@options[:version])
+
             Validator.add_schema(schema)
           else
             schema = self.class.schema_for_uri(schema_uri)
             if @options[:list] && @options[:fragment].nil?
-              schema = schema_to_list(schema.schema)
-              schema_uri = Addressable::URI.parse(fake_uuid(serialize(schema)))
-              schema = JSON::Schema.new(schema, schema_uri, @options[:version])
+              schema = schema.to_array_schema
+              schema.uri = Addressable::URI.parse(fake_uuid(serialize(schema.schema)))
               Validator.add_schema(schema)
             end
             schema
           end
         end
       elsif schema.is_a?(Hash)
-        if @options[:list] && @options[:fragment].nil?
-          schema = schema_to_list(schema)
-        end
         schema_uri = Addressable::URI.parse(fake_uuid(serialize(schema)))
         schema = JSON::Schema.stringify(schema)
-        schema = JSON::Schema.new(schema,schema_uri,@options[:version])
+        schema = JSON::Schema.new(schema, schema_uri, @options[:version])
+        if @options[:list] && @options[:fragment].nil?
+          schema = schema.to_array_schema
+        end
         Validator.add_schema(schema)
       else
         raise "Invalid schema - must be either a string or a hash"
@@ -547,7 +548,6 @@ module JSON
 
       schema
     end
-
 
     def initialize_data(data)
       if @options[:json]

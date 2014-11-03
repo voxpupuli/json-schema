@@ -49,6 +49,13 @@ module JSON
       end
     end
 
+    # @return [JSON::Schema] a new schema matching an array whose items all match this schema.
+    def to_array_schema
+      array_schema = { 'type' => 'array', 'items' => schema }
+      array_schema['$schema'] = schema['$schema'] unless schema['$schema'].nil?
+      JSON::Schema.new(array_schema, uri, validator)
+    end
+
     def to_s
       @schema.to_json
     end

@@ -103,7 +103,7 @@ module JSON
 
       def read_file(pathname)
         if accept_file?(pathname)
-          pathname.read
+          File.read(Addressable::URI.unescape(pathname.to_s))
         else
           raise JSON::Schema::LoadRefused.new(pathname.to_s, :file)
         end
