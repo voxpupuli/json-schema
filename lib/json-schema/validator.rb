@@ -122,35 +122,28 @@ module JSON
       end
     end
 
+    def load_ref_schema(parent_schema, ref)
+      schema_uri = absolutize_ref_uri(ref, parent_schema.uri)
 
-    def load_ref_schema(parent_schema,ref)
-      uri = URI.parse(ref)
-      if uri.relative?
-        uri = parent_schema.uri.clone
+      return true if self.class.schema_loaded?(schema_uri)
 
-        # Check for absolute path
-        path = ref.split("#")[0]
-
-        # This is a self reference and thus the schema does not need to be re-loaded
-        if path.nil? || path == ''
-          return
-        end
-
-        if path && path[0,1] == '/'
-          uri.path = Pathname.new(path).cleanpath.to_s
-        else
-          uri = parent_schema.uri.merge(path)
-        end
-        uri.fragment = ''
-      end
-
-      if Validator.schemas[uri.to_s].nil?
-        schema = JSON::Schema.new(JSON::Validator.parse(open(uri.to_s.chomp('#')).read), uri, @options[:version])
-        Validator.add_schema(schema)
-        build_schemas(schema)
-      end
+      schema_data = self.class.parse(open(schema_uri.to_s).read)
+      schema = JSON::Schema.new(schema_data, schema_uri, @options[:version])
+      self.class.add_schema(schema)
+      build_schemas(schema)
     end
 
+    def absolutize_ref_uri(ref, parent_schema_uri)
+      ref_uri = URI.parse(ref)
+
+      return ref_uri if ref_uri.absolute?
+      # This is a self reference and thus the schema does not need to be re-loaded
+      return parent_schema_uri if ref_uri.path.empty?
+
+      uri = parent_schema_uri.clone
+      uri.fragment = ''
+      uri.merge(Pathname(ref_uri.path).cleanpath.to_s)
+    end
 
     # Build all schemas with IDs, mapping out the namespace
     def build_schemas(parent_schema)
@@ -318,7 +311,15 @@ module JSON
       end
 
       def add_schema(schema)
-        @@schemas[schema.uri.to_s] = schema if @@schemas[schema.uri.to_s].nil?
+        @@schemas[schema.uri.to_s] ||= schema
+      end
+
+      def schema_for_uri(uri)
+        @@schemas[uri.to_s]
+      end
+
+      def schema_loaded?(schema_uri)
+        @@schemas.has_key?(schema_uri.to_s)
       end
 
       def cache_schemas=(val)
@@ -526,7 +527,7 @@ module JSON
         rescue
           # Build a uri for it
           schema_uri = normalized_uri(schema)
-          if Validator.schemas[schema_uri.to_s].nil?
+          if !self.class.schema_loaded?(schema_uri)
             schema = JSON::Validator.parse(open(schema_uri.to_s).read)
             if @options[:list] && @options[:fragment].nil?
               schema = schema_to_list(schema)
@@ -534,7 +535,7 @@ module JSON
             schema = JSON::Schema.new(schema,schema_uri,@options[:version])
             Validator.add_schema(schema)
           else
-            schema = Validator.schemas[schema_uri.to_s]
+            schema = self.class.schema_for_uri(schema_uri)
             if @options[:list] && @options[:fragment].nil?
               schema = schema_to_list(schema.schema)
               schema_uri = URI.parse(fake_uuid(serialize(schema)))
