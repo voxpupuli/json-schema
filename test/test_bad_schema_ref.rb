@@ -29,7 +29,7 @@ class BadSchemaRefTest < Minitest::Test
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "array",
-      "items" => { "$ref" => "http://ppcheesecheseunicornnuuuurrrrr.com/json.schema"}
+      "items" => { "$ref" => "http://ppcheesecheseunicornnuuuurrrrr.example.invalid/json.schema"}
     }
 
     data = [1,2,3]
