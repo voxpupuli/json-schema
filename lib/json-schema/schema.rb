@@ -48,8 +48,7 @@ module JSON
     private
 
     def generate_schema_uri(uri)
-      schema_uri = uri.clone
-      schema_uri.fragment = ''
+      schema_uri = uri.merge('#') # Drop fragment if present
       return schema_uri unless @schema['id'] && @schema['id'].kind_of?(String)
 
       id_uri = URI.parse(@schema['id'])

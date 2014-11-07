@@ -36,6 +36,14 @@ class JSONSchemaValidation < Minitest::Test
     }
   end
 
+  def valid_schema_v4_with_fragment_id
+    valid_schema_v4.merge("id" => "#/foo")
+  end
+
+  def valid_schema_v4_with_absolute_uri_id
+    valid_schema_v4.merge("id" => "http://www.example.invalid/#/foo")
+  end
+
   def invalid_schema_v4
     {
       "$schema" => "http://json-schema.org/draft-04/schema#",
@@ -142,6 +150,8 @@ class JSONSchemaValidation < Minitest::Test
     data = {"b" => {"a" => 5}}
     assert(JSON::Validator.validate(valid_schema_v4,data,:validate_schema => true, :version => :draft4))
     assert(!JSON::Validator.validate(invalid_schema_v4,data,:validate_schema => true, :version => :draft4))
+    assert(JSON::Validator.validate(valid_schema_v4_with_fragment_id,data,:validate_schema => true, :version => :draft4))
+    assert(JSON::Validator.validate(valid_schema_v4_with_absolute_uri_id,data,:validate_schema => true, :version => :draft4))
   end
 
   def test_validate_just_schema_draft04
