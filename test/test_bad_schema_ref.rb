@@ -16,12 +16,12 @@ class BadSchemaRefTest < Minitest::Test
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "array",
-      "items" => { "$ref" => "../google.json"}
+      "items" => { "$ref" => "{bad-scheme}://foo.com"}
     }
 
     data = [1,2,3]
-    assert_raises(URI::BadURIError) do
-      JSON::Validator.validate(schema,data)
+    assert_raises(URI::InvalidURIError) do
+      JSON::Validator.validate(schema, data)
     end
   end
 
