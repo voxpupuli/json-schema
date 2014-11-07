@@ -134,7 +134,7 @@ module JSON
     end
 
     def absolutize_ref_uri(ref, parent_schema_uri)
-      ref_uri = URI.parse(ref)
+      ref_uri = Addressable::URI.parse(ref)
 
       return ref_uri if ref_uri.absolute?
       # This is a self reference and thus the schema does not need to be re-loaded
@@ -142,7 +142,7 @@ module JSON
 
       uri = parent_schema_uri.clone
       uri.fragment = ''
-      uri.merge(Pathname(ref_uri.path).cleanpath.to_s)
+      uri.join(ref_uri.path)
     end
 
     # Build all schemas with IDs, mapping out the namespace
@@ -578,6 +578,5 @@ module JSON
       end
       uri
     end
-
   end
 end
