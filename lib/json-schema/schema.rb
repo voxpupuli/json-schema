@@ -2,23 +2,11 @@ require 'pathname'
 
 module JSON
   class Schema
-
     attr_accessor :schema, :uri, :validator
 
-    def initialize(schema,uri,parent_validator=nil)
+    def initialize(schema, uri, parent_validator = nil)
       @schema = self.class.stringify(schema)
-      @uri = uri
-
-      # If there is an ID on this schema, use it to generate the URI
-      if @schema['id'] && @schema['id'].kind_of?(String)
-        temp_uri = URI.parse(@schema['id'])
-        if temp_uri.relative?
-          uri = uri.merge(@schema['id'])
-          temp_uri = uri
-        end
-        @uri = temp_uri
-      end
-      @uri.fragment = ''
+      @uri = generate_schema_uri(uri)
 
       # If there is a $schema on this schema, use it to determine which validator to use
       if @schema['$schema']
@@ -50,14 +38,24 @@ module JSON
     end
 
     def base_uri
-      parts = @uri.to_s.split('/')
-      parts.pop
-      parts.join('/') + '/'
+      @uri.merge(File.dirname(@uri.path)).to_s
     end
 
     def to_s
       @schema.to_json
     end
+
+    private
+
+    def generate_schema_uri(uri)
+      schema_uri = uri.clone
+      schema_uri.fragment = ''
+      return schema_uri unless @schema['id'] && @schema['id'].kind_of?(String)
+
+      id_uri = URI.parse(@schema['id'])
+      return id_uri unless id_uri.relative?
+
+      schema_uri.merge(id_uri.path)
+    end
   end
 end
-

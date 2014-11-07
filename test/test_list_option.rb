@@ -8,7 +8,7 @@ class ListOptionTest < Minitest::Test
       "properties" => { "a" => { "type" => "integer" } }
     }
 
-    uri = URI.parse('http://example.com/item')
+    uri = URI.parse('http://example.com/item#')
     schema = JSON::Schema.new(schema_hash, uri)
     JSON::Validator.add_schema(schema)
 
