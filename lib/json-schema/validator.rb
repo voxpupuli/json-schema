@@ -127,7 +127,7 @@ module JSON
 
       return true if self.class.schema_loaded?(schema_uri)
 
-      schema_data = self.class.parse(open(schema_uri.to_s).read)
+      schema_data = self.class.parse(custom_open(schema_uri))
       schema = JSON::Schema.new(schema_data, schema_uri, @options[:version])
       self.class.add_schema(schema)
       build_schemas(schema)
@@ -515,7 +515,7 @@ module JSON
           # Build a uri for it
           schema_uri = normalized_uri(schema)
           if !self.class.schema_loaded?(schema_uri)
-            schema = JSON::Validator.parse(open(schema_uri.to_s).read)
+            schema = JSON::Validator.parse(custom_open(schema_uri))
             schema = JSON::Schema.stringify(schema)
             if @options[:list] && @options[:fragment].nil?
               schema = schema_to_list(schema)
@@ -554,20 +554,28 @@ module JSON
         data = JSON::Validator.parse(data)
       elsif @options[:uri]
         json_uri = normalized_uri(data)
-        data = JSON::Validator.parse(open(json_uri.to_s).read)
+        data = JSON::Validator.parse(custom_open(json_uri))
       elsif data.is_a?(String)
         begin
           data = JSON::Validator.parse(data)
         rescue
           begin
             json_uri = normalized_uri(data)
-            data = JSON::Validator.parse(open(json_uri.to_s).read)
+            data = JSON::Validator.parse(custom_open(json_uri))
           rescue
             # Silently discard the error - the data will not change
           end
         end
       end
       JSON::Schema.stringify(data)
+    end
+
+    def custom_open(uri)
+      if uri.absolute?
+        open(uri.to_s).read
+      else
+        File.read(uri.to_s)
+      end
     end
 
     def normalized_uri(data)
