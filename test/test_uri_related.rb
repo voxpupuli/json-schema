@@ -18,4 +18,42 @@ class UriRelatedTest < Minitest::Test
     data = { "a" => 5 }
     assert_valid schema, data
   end
+
+  def test_schema_ref_with_empty_fragment
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "type" => "object",
+      "properties"=> {
+        "names"=> {
+          "type"=> "array",
+          "items"=> {
+            "anyOf"=> [
+              { "$ref" => "test/schemas/ref john with spaces schema.json#" },
+            ]
+          }
+        }
+      }
+    }
+    data = { "names" => ['john'] }
+    assert_valid schema, data
+  end
+
+  def test_schema_ref_from_file_with_spaces
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "type" => "object",
+      "properties"=> {
+        "names"=> {
+          "type"=> "array",
+          "items"=> {
+            "anyOf"=> [
+              { "$ref" => "test/schemas/ref john with spaces schema.json" },
+            ]
+          }
+        }
+      }
+    }
+    data = { "names" => ['john'] }
+    assert_valid schema, data
+  end
 end
