@@ -147,33 +147,26 @@ module JSON
 
     # Build all schemas with IDs, mapping out the namespace
     def build_schemas(parent_schema)
+      schema = parent_schema.schema
+
       # Build ref schemas if they exist
-      if parent_schema.schema["$ref"]
-        load_ref_schema(parent_schema, parent_schema.schema["$ref"])
-      end
-      if parent_schema.schema["extends"]
-        if parent_schema.schema["extends"].is_a?(String)
-          load_ref_schema(parent_schema, parent_schema.schema["extends"])
-        elsif parent_schema.schema["extends"].is_a?(Array)
-          parent_schema.schema["extends"].each do |type|
-            handle_schema(parent_schema, type)
-          end
-        end
+      if schema["$ref"]
+        load_ref_schema(parent_schema, schema["$ref"])
       end
 
-      # handle validations that always contain schemas
-      ["allOf", "anyOf", "oneOf", "not"].each do |key|
-        if parent_schema.schema.has_key?(key)
-          validations = parent_schema.schema[key]
-          validations = [validations] unless validations.is_a?(Array)
-          validations.each {|v| handle_schema(parent_schema, v) }
+      case schema["extends"]
+      when String
+        load_ref_schema(parent_schema, schema["extends"])
+      when Array
+        schema['extends'].each do |type|
+          handle_schema(parent_schema, type)
         end
       end
 
       # Check for schemas in union types
       ["type", "disallow"].each do |key|
-        if parent_schema.schema[key] && parent_schema.schema[key].is_a?(Array)
-          parent_schema.schema[key].each_with_index do |type,i|
+        if schema[key].is_a?(Array)
+          schema[key].each do |type|
             if type.is_a?(Hash)
               handle_schema(parent_schema, type)
             end
@@ -181,48 +174,42 @@ module JSON
         end
       end
 
-      # "definitions" are schemas in V4
-      if parent_schema.schema["definitions"]
-        parent_schema.schema["definitions"].each do |k,v|
-          handle_schema(parent_schema, v)
+      # Schema properties whose values are objects, the values of which
+      # are themselves schemas.
+      %w[definitions properties patternProperties].each do |key|
+        next unless value = schema[key]
+        value.each do |k, inner_schema|
+          handle_schema(parent_schema, inner_schema)
         end
       end
 
-      # All properties are schemas
-      if parent_schema.schema["properties"]
-        parent_schema.schema["properties"].each do |k,v|
-          handle_schema(parent_schema, v)
-        end
+      # Schema properties whose values are themselves schemas.
+      %w[additionalProperties additionalItems dependencies extends].each do |key|
+        next unless schema[key].is_a?(Hash)
+        handle_schema(parent_schema, schema[key])
       end
-      if parent_schema.schema["patternProperties"]
-        parent_schema.schema["patternProperties"].each do |k,v|
-          handle_schema(parent_schema, v)
+
+      # Schema properties whose values may be an array of schemas.
+      %w[allOf anyOf oneOf not].each do |key|
+        next unless value = schema[key]
+        Array(value).each do |inner_schema|
+          handle_schema(parent_schema, inner_schema)
         end
       end
 
       # Items are always schemas
-      if parent_schema.schema["items"]
-        items = parent_schema.schema["items"].clone
-        single = false
-        if !items.is_a?(Array)
-          items = [items]
-          single = true
-        end
-        items.each_with_index do |item,i|
+      if schema["items"]
+        items = schema["items"].clone
+        items = [items] unless items.is_a?(Array)
+
+        items.each do |item|
           handle_schema(parent_schema, item)
         end
       end
 
       # Convert enum to a ArraySet
-      if parent_schema.schema["enum"] && parent_schema.schema["enum"].is_a?(Array)
-        parent_schema.schema["enum"] = ArraySet.new(parent_schema.schema["enum"])
-      end
-
-      # Each of these might be schemas
-      ["additionalProperties", "additionalItems", "dependencies", "extends"].each do |key|
-        if parent_schema.schema[key].is_a?(Hash)
-          handle_schema(parent_schema, parent_schema.schema[key])
-        end
+      if schema["enum"].is_a?(Array)
+        schema["enum"] = ArraySet.new(schema["enum"])
       end
 
     end

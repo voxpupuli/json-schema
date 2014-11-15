@@ -4,10 +4,10 @@ module JSON
   class Schema
     class NotAttribute < Attribute
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
-
         schema = JSON::Schema.new(current_schema.schema['not'],current_schema.uri,validator)
         failed = true
         errors_copy = processor.validation_errors.clone
+
         begin
           schema.validate(data,fragments,processor,options)
           # If we're recording errors, we don't throw an exception. Instead, check the errors array length

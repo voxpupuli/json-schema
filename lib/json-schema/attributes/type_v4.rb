@@ -10,26 +10,19 @@ module JSON
           types = [types]
           union = false
         end
-        valid = false
 
-        types.each do |type|
-          valid = data_valid_for_type?(data, type)
-          break if valid
-        end
+        return if types.any? { |type| data_valid_for_type?(data, type) }
 
-        if !valid
-          if union
-            message = "The property '#{build_fragment(fragments)}' of type #{data.class} did not match one or more of the following types:"
-            types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
-            message.chop!
-            validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
-          else
-            message = "The property '#{build_fragment(fragments)}' of type #{data.class} did not match the following type:"
-            types.each {|type| message += type.is_a?(String) ? " #{type}," : " (schema)," }
-            message.chop!
-            validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
-          end
-        end
+        types = types.map { |type| type.is_a?(String) ? type : '(schema)' }.join(', ')
+        message = format(
+          "The property '%s' of type %s did not match %s: %s",
+          build_fragment(fragments),
+          data.class,
+          union ? 'one or more of the following types' : 'the following type',
+          types
+        )
+
+        validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
       end
     end
   end
