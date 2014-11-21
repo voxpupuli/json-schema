@@ -8,6 +8,8 @@ module JSON
         errors = Hash.new { |hsh, k| hsh[k] = [] }
         valid = false
 
+        original_data = data.is_a?(Hash) ? data.clone : data
+
         current_schema.schema['anyOf'].each_with_index do |element, schema_index|
           schema = JSON::Schema.new(element,current_schema.uri,validator)
 
@@ -30,6 +32,8 @@ module JSON
           end
 
           break if valid
+
+          data = original_data
         end
 
         if !valid
