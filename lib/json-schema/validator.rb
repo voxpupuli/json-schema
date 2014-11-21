@@ -516,6 +516,7 @@ module JSON
           schema_uri = normalized_uri(schema)
           if !self.class.schema_loaded?(schema_uri)
             schema = JSON::Validator.parse(open(schema_uri.to_s).read)
+            schema = JSON::Schema.stringify(schema)
             if @options[:list] && @options[:fragment].nil?
               schema = schema_to_list(schema)
             end
@@ -537,6 +538,7 @@ module JSON
           schema = schema_to_list(schema)
         end
         schema_uri = URI.parse(fake_uuid(serialize(schema)))
+        schema = JSON::Schema.stringify(schema)
         schema = JSON::Schema.new(schema,schema_uri,@options[:version])
         Validator.add_schema(schema)
       else
