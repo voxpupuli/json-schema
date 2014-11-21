@@ -257,7 +257,7 @@ class JSONSchemaDraft4Test < Minitest::Test
       "bar" => "baz"
     }
 
-    assert(JSON::Validator.validate(schema, data, insert_defaults: true, strict: true))
+    assert(JSON::Validator.validate(schema, data, :insert_defaults => true, :strict => true))
   end
 
   def test_default_with_anyof
@@ -285,7 +285,7 @@ class JSONSchemaDraft4Test < Minitest::Test
 
     data = {}
 
-    assert(JSON::Validator.validate(schema, data, insert_defaults: true, strict: true))
+    assert(JSON::Validator.validate(schema, data, :insert_defaults => true, :strict => true))
     assert(data['foo'] == 'view')
   end
 
@@ -316,7 +316,7 @@ class JSONSchemaDraft4Test < Minitest::Test
       "bar" => "baz"
     }
 
-    assert(JSON::Validator.validate(schema, data, insert_defaults: true, strict: true))
+    assert(JSON::Validator.validate(schema, data, :insert_defaults => true, :strict => true))
     assert(!data.key?('foo'))
   end
 
