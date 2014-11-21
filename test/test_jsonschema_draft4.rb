@@ -289,6 +289,37 @@ class JSONSchemaDraft4Test < Minitest::Test
     assert(data['foo'] == 'view')
   end
 
+  def test_default_with_strict_and_oneof
+    schema = {
+      "oneOf" => [
+        {
+          "type" => "object",
+          "properties" => {
+            "bar" => {
+              "type" => "string"
+            }
+          }
+        },
+        {
+          "type" => "object",
+          "properties" => {
+            "foo" => {
+              "enum" => ["view", "search"],
+              "default" => "view"
+            }
+          }
+        }
+      ]
+    }
+
+    data = {
+      "bar" => "baz"
+    }
+
+    assert(JSON::Validator.validate(schema, data, insert_defaults: true, strict: true))
+    assert(!data.key?('foo'))
+  end
+
   def test_self_reference
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
