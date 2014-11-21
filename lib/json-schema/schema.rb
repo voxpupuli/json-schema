@@ -6,7 +6,7 @@ module JSON
     attr_accessor :schema, :uri, :validator
 
     def initialize(schema,uri,parent_validator=nil)
-      @schema = self.class.stringify(schema)
+      @schema = schema
       @uri = uri
 
       # If there is an ID on this schema, use it to generate the URI
