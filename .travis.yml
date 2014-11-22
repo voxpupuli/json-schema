@@ -6,13 +6,8 @@ rvm:
   - "2.1"
   - "jruby"
   - "rbx"
-
-env:
-  CODECLIMATE_REPO_TOKEN: "f06667b968b44c85d8bacf7321b323574188f6771d0d3534e0cb9ddaade23dd7"
-
 install:
   - bundle install --retry=3
-
 matrix:
   include:
     - rvm: "2.1"
