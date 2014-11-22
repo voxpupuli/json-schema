@@ -541,6 +541,8 @@ module JSON
         schema = JSON::Schema.stringify(schema)
         schema = JSON::Schema.new(schema,schema_uri,@options[:version])
         Validator.add_schema(schema)
+      elsif schema.is_a?(JSON::Schema)
+        Validator.add_schema(schema)
       else
         raise "Invalid schema - must be either a string or a hash"
       end
