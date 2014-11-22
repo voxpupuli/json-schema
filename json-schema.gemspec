@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version = version
   s.authors = ["Kenny Hoxworth"]
   s.email = "hoxworth@gmail.com"
-  s.homepage = "http://github.com/hoxworth/json-schema/tree/master"
+  s.homepage = "http://github.com/ruby-json-schema/json-schema/tree/master"
   s.summary = "Ruby JSON Schema Validator"
   s.files = Dir[ "lib/**/*", "resources/*.json" ]
   s.require_path = "lib"
