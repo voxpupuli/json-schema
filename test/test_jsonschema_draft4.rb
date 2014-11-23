@@ -230,6 +230,95 @@ class JSONSchemaDraft4Test < Minitest::Test
     assert(!JSON::Validator.validate(schema,data,:list => true))
   end
 
+  def test_default_with_strict_and_anyof
+    schema = {
+      "anyOf" => [
+        {
+          "type" => "object",
+          "properties" => {
+            "foo" => {
+              "enum" => ["view", "search"],
+              "default" => "view"
+            }
+          }
+        },
+        {
+          "type" => "object",
+          "properties" => {
+            "bar" => {
+              "type" => "string"
+            }
+          }
+        }
+      ]
+    }
+
+    data = {
+      "bar" => "baz"
+    }
+
+    assert(JSON::Validator.validate(schema, data, :insert_defaults => true, :strict => true))
+  end
+
+  def test_default_with_anyof
+    schema = {
+      "anyOf" => [
+        {
+          "type" => "object",
+          "properties" => {
+            "foo" => {
+              "enum" => ["view", "search"],
+              "default" => "view"
+            }
+          }
+        },
+        {
+          "type" => "object",
+          "properties" => {
+            "bar" => {
+              "type" => "string"
+            }
+          }
+        }
+      ]
+    }
+
+    data = {}
+
+    assert(JSON::Validator.validate(schema, data, :insert_defaults => true, :strict => true))
+    assert(data['foo'] == 'view')
+  end
+
+  def test_default_with_strict_and_oneof
+    schema = {
+      "oneOf" => [
+        {
+          "type" => "object",
+          "properties" => {
+            "bar" => {
+              "type" => "string"
+            }
+          }
+        },
+        {
+          "type" => "object",
+          "properties" => {
+            "foo" => {
+              "enum" => ["view", "search"],
+              "default" => "view"
+            }
+          }
+        }
+      ]
+    }
+
+    data = {
+      "bar" => "baz"
+    }
+
+    assert(JSON::Validator.validate(schema, data, :insert_defaults => true, :strict => true))
+    assert(!data.key?('foo'))
+  end
 
   def test_self_reference
     schema = {
