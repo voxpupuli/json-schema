@@ -571,10 +571,10 @@ module JSON
     end
 
     def custom_open(uri)
-      if uri.absolute?
+      if uri.absolute? && uri.scheme != 'file'
         open(uri.to_s).read
       else
-        File.read(uri.to_s)
+        File.read(uri.path)
       end
     end
 
@@ -582,7 +582,7 @@ module JSON
       uri = Addressable::URI.parse(data)
       # Check for absolute path
       if uri.relative? && data[0,1] != '/'
-        uri = Addressable::URI.parse("#{Dir.pwd}/#{data}")
+        uri = Addressable::URI.convert_path("#{Dir.pwd}/#{data}")
       end
       uri
     end

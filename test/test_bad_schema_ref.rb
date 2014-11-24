@@ -25,19 +25,6 @@ class BadSchemaRefTest < Minitest::Test
     end
   end
 
-  def test_malicious_ref
-    schema = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
-      "type" => "array",
-      "items" => { "$ref" => "../../../../../../../../../../../../etc/passwd"}
-    }
-
-    data = [1,2,3]
-    assert_raises(Errno::ENOENT) do
-      JSON::Validator.validate(schema,data)
-    end
-  end
-
   def test_bad_host_ref
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
