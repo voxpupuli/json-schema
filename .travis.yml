@@ -8,7 +8,7 @@ rvm:
   - "jruby"
   - "rbx"
 
-sudo:false
+sudo: false
 
 install:
   - bundle install --retry=3
