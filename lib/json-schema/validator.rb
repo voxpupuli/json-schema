@@ -581,8 +581,9 @@ module JSON
     def normalized_uri(data)
       uri = Addressable::URI.parse(data)
       # Check for absolute path
-      if uri.relative? && data[0,1] != '/'
-        uri = Addressable::URI.convert_path("#{Dir.pwd}/#{data}")
+      if uri.relative?
+        data = "#{Dir.pwd}/#{data}" if data[0,1] != '/'
+        uri = Addressable::URI.convert_path(data)
       end
       uri
     end
