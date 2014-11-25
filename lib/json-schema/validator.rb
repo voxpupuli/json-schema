@@ -574,7 +574,7 @@ module JSON
       if uri.absolute? && uri.scheme != 'file'
         open(uri.to_s).read
       else
-        File.read(uri.path)
+        File.read(Addressable::URI.unescape(uri.path))
       end
     end
 
