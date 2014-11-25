@@ -31,3 +31,4 @@ CONTRIBUTORS
 * Matt Palmer - @mpalmer
 * Ben Kirzhner - @benkirzhner
 * RST-J - @RST-J
+* Christian Treppo - @treppo
