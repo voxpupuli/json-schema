@@ -20,7 +20,7 @@ class BadSchemaRefTest < Minitest::Test
     }
 
     data = [1,2,3]
-    assert_raises(URI::BadURIError) do
+    assert_raises(Errno::ENOENT) do
       JSON::Validator.validate(schema,data)
     end
   end
@@ -37,5 +37,4 @@ class BadSchemaRefTest < Minitest::Test
       JSON::Validator.validate(schema,data)
     end
   end
-
 end

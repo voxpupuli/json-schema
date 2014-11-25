@@ -16,7 +16,7 @@ class ExtendedSchema < JSON::Schema::Validator
     super
     extend_schema_definition("http://json-schema.org/draft-03/schema#")
     @attributes["bitwise-and"] = BitwiseAndAttribute
-    @uri = URI.parse("http://test.com/test.json")
+    @uri = Addressable::URI.parse("http://test.com/test.json")
   end
 
   JSON::Validator.register_validator(self.new)

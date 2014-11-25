@@ -1,4 +1,4 @@
-require 'uri'
+require 'addressable/uri'
 require 'open-uri'
 require 'pathname'
 require 'bigdecimal'
@@ -127,14 +127,14 @@ module JSON
 
       return true if self.class.schema_loaded?(schema_uri)
 
-      schema_data = self.class.parse(open(schema_uri.to_s).read)
+      schema_data = self.class.parse(custom_open(schema_uri))
       schema = JSON::Schema.new(schema_data, schema_uri, @options[:version])
       self.class.add_schema(schema)
       build_schemas(schema)
     end
 
     def absolutize_ref_uri(ref, parent_schema_uri)
-      ref_uri = URI.parse(ref)
+      ref_uri = Addressable::URI.parse(ref)
 
       return ref_uri if ref_uri.absolute?
       # This is a self reference and thus the schema does not need to be re-loaded
@@ -142,7 +142,7 @@ module JSON
 
       uri = parent_schema_uri.clone
       uri.fragment = ''
-      uri.merge(Pathname(ref_uri.path).cleanpath.to_s)
+      uri.join(ref_uri.path)
     end
 
     # Build all schemas with IDs, mapping out the namespace
@@ -324,7 +324,7 @@ module JSON
 
       def validator_for_uri(schema_uri)
         return default_validator unless schema_uri
-        u = URI.parse(schema_uri)
+        u = Addressable::URI.parse(schema_uri)
         validator = validators["#{u.scheme}://#{u.host}#{u.path}"]
         if validator.nil?
           raise JSON::Schema::SchemaError.new("Schema not found: #{schema_uri}")
@@ -504,7 +504,7 @@ module JSON
       if schema.is_a?(String)
         begin
           # Build a fake URI for this
-          schema_uri = URI.parse(fake_uuid(schema))
+          schema_uri = Addressable::URI.parse(fake_uuid(schema))
           schema = JSON::Validator.parse(schema)
           if @options[:list] && @options[:fragment].nil?
             schema = schema_to_list(schema)
@@ -515,7 +515,7 @@ module JSON
           # Build a uri for it
           schema_uri = normalized_uri(schema)
           if !self.class.schema_loaded?(schema_uri)
-            schema = JSON::Validator.parse(open(schema_uri.to_s).read)
+            schema = JSON::Validator.parse(custom_open(schema_uri))
             schema = JSON::Schema.stringify(schema)
             if @options[:list] && @options[:fragment].nil?
               schema = schema_to_list(schema)
@@ -526,7 +526,7 @@ module JSON
             schema = self.class.schema_for_uri(schema_uri)
             if @options[:list] && @options[:fragment].nil?
               schema = schema_to_list(schema.schema)
-              schema_uri = URI.parse(fake_uuid(serialize(schema)))
+              schema_uri = Addressable::URI.parse(fake_uuid(serialize(schema)))
               schema = JSON::Schema.new(schema, schema_uri, @options[:version])
               Validator.add_schema(schema)
             end
@@ -537,7 +537,7 @@ module JSON
         if @options[:list] && @options[:fragment].nil?
           schema = schema_to_list(schema)
         end
-        schema_uri = URI.parse(fake_uuid(serialize(schema)))
+        schema_uri = Addressable::URI.parse(fake_uuid(serialize(schema)))
         schema = JSON::Schema.stringify(schema)
         schema = JSON::Schema.new(schema,schema_uri,@options[:version])
         Validator.add_schema(schema)
@@ -554,14 +554,14 @@ module JSON
         data = JSON::Validator.parse(data)
       elsif @options[:uri]
         json_uri = normalized_uri(data)
-        data = JSON::Validator.parse(open(json_uri.to_s).read)
+        data = JSON::Validator.parse(custom_open(json_uri))
       elsif data.is_a?(String)
         begin
           data = JSON::Validator.parse(data)
         rescue
           begin
             json_uri = normalized_uri(data)
-            data = JSON::Validator.parse(open(json_uri.to_s).read)
+            data = JSON::Validator.parse(custom_open(json_uri))
           rescue
             # Silently discard the error - the data will not change
           end
@@ -570,18 +570,22 @@ module JSON
       JSON::Schema.stringify(data)
     end
 
+    def custom_open(uri)
+      if uri.absolute? && uri.scheme != 'file'
+        open(uri.to_s).read
+      else
+        File.read(uri.path)
+      end
+    end
+
     def normalized_uri(data)
-      uri = URI.parse(data)
+      uri = Addressable::URI.parse(data)
+      # Check for absolute path
       if uri.relative?
-        # Check for absolute path
-        if data[0,1] == '/'
-          uri = URI.parse("file://#{data}")
-        else
-          uri = URI.parse("file://#{Dir.pwd}/#{data}")
-        end
+        data = "#{Dir.pwd}/#{data}" if data[0,1] != '/'
+        uri = Addressable::URI.convert_path(data)
       end
       uri
     end
-
   end
 end
