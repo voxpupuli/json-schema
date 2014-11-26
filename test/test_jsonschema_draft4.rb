@@ -101,6 +101,29 @@ class JSONSchemaDraft4Test < Minitest::Test
     assert(!JSON::Validator.validate(schema,data,:strict => true))
   end
 
+  def test_strict_require_all_properties
+    schema = {
+        "$schema" => "http://json-schema.org/draft-04/schema#",
+        "required" => ["a"],
+        "properties" => {
+            "a" => {"type" => "string"},
+            "b" => {"type" => "string"}
+        }
+    }
+
+    data = {"a" => "a"}
+    assert(JSON::Validator.validate(schema,data,:strict => true, :require_all => false))
+
+    data = {"b" => "b"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true, :require_all => false))
+
+    data = {"a" => "a", "b" => "b"}
+    assert(JSON::Validator.validate(schema,data,:strict => true, :require_all => false))
+
+    data = {"a" => "a", "b" => "b", "c" => "c"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true, :require_all => false))
+  end
+
   def test_strict_properties_additional_props
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",

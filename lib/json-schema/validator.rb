@@ -24,7 +24,8 @@ module JSON
       :errors_as_objects => false,
       :insert_defaults => false,
       :clear_cache => true,
-      :strict => false
+      :strict => false,
+      :require_all => true
     }
     @@validators = {}
     @@default_validator = nil
@@ -43,6 +44,7 @@ module JSON
       @validation_options = @options[:record_errors] ? {:record_errors => true} : {}
       @validation_options[:insert_defaults] = true if @options[:insert_defaults]
       @validation_options[:strict] = true if @options[:strict] == true
+      @validation_options[:require_all] = true if @options[:require_all] == true
 
       @@mutex.synchronize { @base_schema = initialize_schema(schema_data) }
       @original_data = data
