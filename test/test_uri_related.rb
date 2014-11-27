@@ -23,6 +23,7 @@ class UriRelatedTest < Minitest::Test
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
+      "required" => ["names"],
       "properties"=> {
         "names"=> {
           "type"=> "array",
@@ -34,7 +35,7 @@ class UriRelatedTest < Minitest::Test
         }
       }
     }
-    data = {"first" => "john" }
+    data = {"names" => [{"first" => "john"}]}
     assert_valid schema, data
   end
 
@@ -42,6 +43,7 @@ class UriRelatedTest < Minitest::Test
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
+      "required" => ["names"],
       "properties"=> {
         "names"=> {
           "type"=> "array",
@@ -53,12 +55,12 @@ class UriRelatedTest < Minitest::Test
         }
       }
     }
-    data = {"first" => "john" }
+    data = {"names" => [{"first" => "john"}]}
     assert_valid schema, data
   end
 
   def test_schema_from_file_with_spaces
-    data = { "first" => "john" }
+    data = {"first" => "john"}
     schema = "test/schemas/ref john with spaces schema.json"
     assert_valid schema, data
   end
