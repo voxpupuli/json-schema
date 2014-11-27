@@ -142,7 +142,7 @@ module JSON
 
       uri = parent_schema_uri.clone
       uri.fragment = ''
-      uri.join(ref_uri.path)
+      normalized_uri(uri.join(ref_uri.path))
     end
 
     # Build all schemas with IDs, mapping out the namespace
@@ -574,7 +574,7 @@ module JSON
       if uri.absolute? && uri.scheme != 'file'
         open(uri.to_s).read
       else
-        File.read(uri.path)
+        File.read(Addressable::URI.unescape(uri.path))
       end
     end
 
@@ -582,6 +582,7 @@ module JSON
       uri = Addressable::URI.parse(data)
       # Check for absolute path
       if uri.relative?
+        data = data.to_s
         data = "#{Dir.pwd}/#{data}" if data[0,1] != '/'
         uri = Addressable::URI.convert_path(data)
       end
