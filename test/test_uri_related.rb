@@ -34,7 +34,7 @@ class UriRelatedTest < Minitest::Test
         }
       }
     }
-    data = { "names" => ['john'] }
+    data = { "first" => "john" }
     assert_valid schema, data
   end
 
@@ -47,13 +47,13 @@ class UriRelatedTest < Minitest::Test
           "type"=> "array",
           "items"=> {
             "anyOf"=> [
-              { "$ref" => "test/schemas/ref john with spaces schema.json" },
+              { "$ref" => "test/schemas/ref john with spaces schema.json" }
             ]
           }
         }
       }
     }
-    data = { "names" => ['john'] }
+    data = { "first" => "john" }
     assert_valid schema, data
   end
 end

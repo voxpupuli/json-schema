@@ -1,4 +1,10 @@
-{ "$schema" : "http://json-schema.org/draft-04/schema#"
-, "type" : "string"
-, "pattern" : "john"
+{
+  "$schema" : "http://json-schema.org/draft-04/schema#",
+  "type" : "object",
+  "properties": {
+    "first": {
+      "type": "string",
+      "enum": ["john"]
+    }
+  }
 }
