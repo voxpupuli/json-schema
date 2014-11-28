@@ -49,12 +49,6 @@ module JSON
       end
     end
 
-    def base_uri
-      parts = @uri.to_s.split('/')
-      parts.pop
-      parts.join('/') + '/'
-    end
-
     def to_s
       @schema.to_json
     end
