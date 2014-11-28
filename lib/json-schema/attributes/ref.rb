@@ -5,7 +5,7 @@ module JSON
   class Schema
     class RefAttribute < Attribute
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
-        uri, schema = get_referenced_uri_and_schema(current_schema.schema, current_schema, validator)
+        uri,schema = get_referenced_uri_and_schema(current_schema.schema, current_schema, validator)
 
         if schema
           schema.validate(data, fragments, processor, options)
@@ -18,14 +18,14 @@ module JSON
         end
       end
 
-      def self.get_referenced_uri_and_schema(contents, current_schema, validator)
-        uri, schema = nil,nil
+      def self.get_referenced_uri_and_schema(s, current_schema, validator)
+        uri,schema = nil,nil
 
-        temp_uri = Addressable::URI.parse(contents['$ref'])
+        temp_uri = Addressable::URI.parse(s['$ref'])
         if temp_uri.relative?
           temp_uri = current_schema.uri.clone
           # Check for absolute path
-          path = contents['$ref'].split("#")[0]
+          path = s['$ref'].split("#")[0]
           if path.nil? || path == ''
             temp_uri.path = current_schema.uri.path
           elsif path[0,1] == "/"
@@ -33,7 +33,7 @@ module JSON
           else
             temp_uri = current_schema.uri.join(path)
           end
-          temp_uri.fragment = contents['$ref'].split("#")[1]
+          temp_uri.fragment = s['$ref'].split("#")[1]
         end
         temp_uri.fragment = "" if temp_uri.fragment.nil?
 
