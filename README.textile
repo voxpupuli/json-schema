@@ -178,6 +178,16 @@ errors = JSON::Validator.fully_validate(schema, data, :errors_as_objects => true
 
 </pre>
 
+h3. Validate against an existing schema instance
+
+If you've already created a <code>JSON::Schema</code> object, it can be significantly faster to re-use it during validation:
+
+<pre>
+schema = JSON::Schema.new({ 'type' => 'array' }, URI.parse('http://example.com/array'))
+JSON::Validator.validate(schema, [])
+JSON::Validator.validate(schema, {})
+</pre>
+
 h3. Validate against a fragment of a supplied schema
 
 <pre>
