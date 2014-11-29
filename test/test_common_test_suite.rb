@@ -55,8 +55,8 @@ class CommonTestSuiteTest < Minitest::Test
 
         test["tests"].each do |t|
           next if IGNORED_TESTS[rel_file] == :all
-          next if IGNORED_TESTS[rel_file].any? { |test|
-            base_description == test || "#{base_description}/#{t['description']}" == test
+          next if IGNORED_TESTS[rel_file].any? { |ignored|
+            base_description == ignored || "#{base_description}/#{t['description']}" == ignored
           }
 
           err_id = "#{rel_file}: #{base_description}/#{t['description']}"
