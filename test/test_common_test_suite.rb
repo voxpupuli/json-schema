@@ -1,5 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 require 'webmock'
+require 'json'
 
 class CommonTestSuiteTest < Minitest::Test
   TEST_DIR = File.expand_path('../test-suite/tests', __FILE__)
@@ -45,7 +46,7 @@ class CommonTestSuiteTest < Minitest::Test
   Dir["#{TEST_DIR}/*"].each do |suite|
     version = File.basename(suite).to_sym
     Dir["#{suite}/**/*.json"].each do |tfile|
-      test_list = JSON::Validator.parse(File.read(tfile))
+      test_list = JSON.parse(File.read(tfile))
       rel_file = tfile[TEST_DIR.length+1..-1]
 
       test_list.each do |test|
