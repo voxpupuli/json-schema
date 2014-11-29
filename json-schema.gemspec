@@ -19,6 +19,9 @@ Gem::Specification.new do |s|
   s.license = "MIT"
   s.required_rubygems_version = ">= 1.8"
 
+  s.add_development_dependency "rake"
+  s.add_development_dependency "minitest", '~> 5.0'
   s.add_development_dependency "webmock"
+
   s.add_runtime_dependency "addressable", '~> 2.3'
 end
