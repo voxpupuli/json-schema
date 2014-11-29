@@ -14,10 +14,6 @@ h2. Version 2.0.0 Upgrade Notes
 
 Please be aware that the upgrade to version 2.0.0 will use Draft-04 *by default*, so schemas that do not declare a validator using the <code>$schema</code> keyword will use Draft-04 now instead of Draft-03. This is the reason for the major version upgrade.
 
-h2. Dependencies
-
-The JSON::Schema library has no dependencies if the validation methods are called using Ruby objects. However, either the <code>json</code> or the <code>yajl-ruby</code> gem needs to be installed to validate JSON strings or files containing JSON data.
-
 h2. Installation
 
 From rubygems.org:
