@@ -51,7 +51,6 @@ class CommonTestSuiteTest < Minitest::Test
       test_list.each do |test|
         schema = test["schema"]
         base_description = test["description"]
-        v = nil
 
         test["tests"].each do |t|
           next if IGNORED_TESTS[rel_file] == :all
@@ -66,7 +65,7 @@ class CommonTestSuiteTest < Minitest::Test
               :validate_schema => true,
               :version => version
             )
-            assert_equal t["valid"], errors.empty?, "Common test suite case failed: #{err_id}\n#{v}"
+            assert_equal t["valid"], errors.empty?, "Common test suite case failed: #{err_id}"
           end
         end
       end
