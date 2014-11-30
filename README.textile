@@ -278,6 +278,32 @@ data = {
 JSON::Validator.validate(schema, data, :version => :draft2)
 </pre>
 
+h3. Explicitly specifying the type of the data
+
+By default, json-schema accepts a variety of different types for the data parameter, and it will try to work out what to do with it dynamically. You can pass it a string uri (in which case it will download the json from that location before validating), a string of JSON text, or simply a ruby object (such as an array or hash representing parsed json). However, sometimes the nature of the data is ambiguous (for example, is "http://github.com" just a string, or is it a uri?). In other situations, you have already parsed your JSON, and you don't need to re-parse it.
+
+If you want to be explict about what kind of data is being parsed, JSON schema supports a number of options:
+
+<pre>
+require 'rubygems'
+require 'json-schema'
+
+schema = {
+  "type" => "string"
+}
+
+# examines the data, determines it's a uri, then tries to load data from it
+JSON::Validator.validate(schema, 'https://api.github.com') # returns false
+
+# data is already parsed json - just accept it as-is
+JSON::Validator.validate(schema, 'https://api.github.com', :parse_data => false) # returns true
+
+# data is parsed to a json string
+JSON::Validator.validate(schema, '"https://api.github.com"', :json => true) # returns true
+
+# loads data from the uri
+JSON::Validator.validate(schema, 'https://api.github.com', :uri => true) # returns false
+</pre>
 
 h3. Extend an existing schema and validate against it
 
