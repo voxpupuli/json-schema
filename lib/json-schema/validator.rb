@@ -400,7 +400,7 @@ module JSON
         else
           case @@json_backend.to_s
           when 'json'
-            JSON.parse(s)
+            JSON.parse(s, :quirks_mode => true)
           when 'yajl'
             json = StringIO.new(s)
             parser = Yajl::Parser.new
