@@ -14,9 +14,12 @@ class TestValidator < Minitest::Test
     end
   end
 
+  def setup
+    @original_loader = JSON::Validator.schema_loader
+  end
+
   def teardown
-    # Hacky. Not sure of a better tactic for resetting just yet.
-    JSON::Validator.send(:class_variable_set, :@@schema_loader, nil)
+    JSON::Validator.schema_loader = @original_loader
   end
 
   def test_default_schema_loader
