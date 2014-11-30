@@ -1,5 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 require 'webmock'
+require 'json'
 
 class CommonTestSuiteTest < Minitest::Test
   TEST_DIR = File.expand_path('../test-suite/tests', __FILE__)
@@ -45,18 +46,17 @@ class CommonTestSuiteTest < Minitest::Test
   Dir["#{TEST_DIR}/*"].each do |suite|
     version = File.basename(suite).to_sym
     Dir["#{suite}/**/*.json"].each do |tfile|
-      test_list = JSON::Validator.parse(File.read(tfile))
+      test_list = JSON.parse(File.read(tfile))
       rel_file = tfile[TEST_DIR.length+1..-1]
 
       test_list.each do |test|
         schema = test["schema"]
         base_description = test["description"]
-        v = nil
 
         test["tests"].each do |t|
           next if IGNORED_TESTS[rel_file] == :all
-          next if IGNORED_TESTS[rel_file].any? { |test|
-            base_description == test || "#{base_description}/#{t['description']}" == test
+          next if IGNORED_TESTS[rel_file].any? { |ignored|
+            base_description == ignored || "#{base_description}/#{t['description']}" == ignored
           }
 
           err_id = "#{rel_file}: #{base_description}/#{t['description']}"
@@ -66,7 +66,7 @@ class CommonTestSuiteTest < Minitest::Test
               :validate_schema => true,
               :version => version
             )
-            assert_equal t["valid"], errors.empty?, "Common test suite case failed: #{err_id}\n#{v}"
+            assert_equal t["valid"], errors.empty?, "Common test suite case failed: #{err_id}"
           end
         end
       end
