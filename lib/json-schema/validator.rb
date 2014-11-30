@@ -146,7 +146,7 @@ module JSON
 
       uri = parent_schema_uri.clone
       uri.fragment = ''
-      normalized_uri(uri.join(ref_uri.path))
+      Util::URI.normalized_uri(uri.join(ref_uri.path))
     end
 
     # Build all schemas with IDs, mapping out the namespace
@@ -310,15 +310,19 @@ module JSON
       end
 
       def add_schema(schema)
-        @@schemas[schema.uri.to_s] ||= schema
+        @@schemas[schema_key_for(schema.uri)] ||= schema
       end
 
       def schema_for_uri(uri)
-        @@schemas[uri.to_s]
+        @@schemas[schema_key_for(uri)]
       end
 
       def schema_loaded?(schema_uri)
-        @@schemas.has_key?(schema_uri.to_s)
+        @@schemas.has_key?(schema_key_for(schema_uri))
+      end
+
+      def schema_key_for(uri)
+        Util::URI.normalized_uri(uri).to_s.chomp('#')
       end
 
       def cache_schemas=(val)
@@ -515,7 +519,7 @@ module JSON
           Validator.add_schema(schema)
         rescue
           # Build a uri for it
-          schema_uri = normalized_uri(schema)
+          schema_uri = Util::URI.normalized_uri(schema)
           if !self.class.schema_loaded?(schema_uri)
             schema = @options[:schema_reader].read(schema_uri)
             schema = JSON::Schema.stringify(schema)
@@ -579,17 +583,6 @@ module JSON
       else
         File.read(Addressable::URI.unescape(uri.path))
       end
-    end
-
-    def normalized_uri(data)
-      uri = Addressable::URI.parse(data)
-      # Check for absolute path
-      if uri.relative?
-        data = data.to_s
-        data = "#{Dir.pwd}/#{data}" if data[0,1] != '/'
-        uri = Addressable::URI.convert_path(data)
-      end
-      uri
     end
   end
 end

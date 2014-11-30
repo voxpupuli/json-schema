@@ -9,6 +9,7 @@ if Gem::Specification::find_all_by_name('multi_json').any?
 end
 
 require 'json-schema/util/array_set'
+require 'json-schema/util/uri'
 require 'json-schema/schema'
 require 'json-schema/schema/reader'
 require 'json-schema/validator'
