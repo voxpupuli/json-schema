@@ -19,55 +19,60 @@ module JSON
       end
 
       def self.get_referenced_uri_and_schema(s, current_schema, validator)
-        uri,schema = nil,nil
+        uri = parse_uri(s, current_schema)
+        target_schema = get_target_schema(uri)
+        return [uri, JSON::Schema.new(target_schema,uri,validator)] if target_schema
+        [uri, nil]
+      end
 
-        temp_uri = Addressable::URI.parse(s['$ref'])
-        if temp_uri.relative?
-          temp_uri = current_schema.uri.clone
+      private
+
+      def self.parse_uri(s, current_schema)
+        uri = Addressable::URI.parse(s['$ref'])
+        if uri.relative?
+          uri = current_schema.uri.clone
           # Check for absolute path
           path = s['$ref'].split("#")[0]
           if path.nil? || path == ''
-            temp_uri.path = current_schema.uri.path
+            uri.path = current_schema.uri.path
           elsif path[0,1] == "/"
-            temp_uri.path = Pathname.new(path).cleanpath.to_s
+            uri.path = Pathname.new(path).cleanpath.to_s
           else
-            temp_uri = current_schema.uri.join(path)
+            uri = current_schema.uri.join(path)
           end
-          temp_uri.fragment = s['$ref'].split("#")[1]
+          uri.fragment = s['$ref'].split("#")[1]
         end
-        temp_uri.fragment = "" if temp_uri.fragment.nil?
 
+        uri.fragment = "" if uri.fragment.nil?
+        uri
+      end
+
+      def self.get_target_schema(uri)
         # Grab the parent schema from the schema list
-        schema_key = temp_uri.to_s.split("#")[0] + "#"
-
+        schema_key = uri.to_s.split("#")[0] + "#"
         ref_schema = JSON::Validator.schemas[schema_key]
 
-        if ref_schema
-          # Perform fragment resolution to retrieve the appropriate level for the schema
-          target_schema = ref_schema.schema
-          fragments = temp_uri.fragment.split("/")
-          fragment_path = ''
-          fragments.each do |fragment|
-            if fragment && fragment != ''
-              fragment = Addressable::URI.unescape(fragment.gsub('~0', '~').gsub('~1', '/'))
-              if target_schema.is_a?(Array)
-                target_schema = target_schema[fragment.to_i]
-              else
-                target_schema = target_schema[fragment]
-              end
-              fragment_path = fragment_path + "/#{fragment}"
-              if target_schema.nil?
-                raise SchemaError.new("The fragment '#{fragment_path}' does not exist on schema #{ref_schema.uri.to_s}")
-              end
-            end
+        return nil unless ref_schema
+
+        resolve_fragments(ref_schema.schema, uri.fragment)
+      end
+
+      def self.resolve_fragments(schema, fragment)
+        return schema if fragment.empty?
+
+        fragments = fragment.split("/").slice(1..-1)
+        fragment_path = ''
+        fragments.each do |fgmt|
+          fgmt = Addressable::URI.unescape(fgmt)
+
+          if schema.is_a?(Array)
+            schema = schema[fgmt.to_i]
+          else
+            schema = schema[fgmt]
           end
-
-          # We have the schema finally, build it and validate!
-          uri = temp_uri
-          schema = JSON::Schema.new(target_schema,temp_uri,validator)
+          fragment_path = fragment_path + "/#{fgmt}"
         end
-
-        [uri,schema]
+        schema
       end
     end
   end
