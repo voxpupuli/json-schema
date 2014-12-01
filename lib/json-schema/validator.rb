@@ -314,15 +314,18 @@ module JSON
       end
 
       def schema_for_uri(uri)
-        @@schemas[schema_key_for(uri)]
+        # We only store normalized uris terminated with fragment #, so we can try whether
+        # normalization can be skipped
+        @@schemas[uri] || @@schemas[schema_key_for(uri)]
       end
 
       def schema_loaded?(schema_uri)
-        @@schemas.has_key?(schema_key_for(schema_uri))
+        !schema_for_uri(schema_uri).nil?
       end
 
       def schema_key_for(uri)
-        Util::URI.normalized_uri(uri).to_s.chomp('#')
+        key = Util::URI.normalized_uri(uri).to_s
+        key.end_with?('#') ? key : "#{key}#"
       end
 
       def cache_schemas=(val)
@@ -578,6 +581,7 @@ module JSON
     end
 
     def custom_open(uri)
+      uri = Util::URI.normalized_uri(uri) if uri.is_a?(String)
       if uri.absolute? && uri.scheme != 'file'
         open(uri.to_s).read
       else
