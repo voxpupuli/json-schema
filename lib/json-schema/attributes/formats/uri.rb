@@ -9,7 +9,7 @@ module JSON
         begin
           # TODO
           # Addressable only throws an exception on to_s for invalid URI strings, although it
-          # probably should throughout parse already - change this when there is news from Addressable
+          # probably should throughout parse already - https://github.com/sporkmonger/addressable/issues/177
           Addressable::URI.parse(data).to_s
         rescue Addressable::URI::InvalidURIError
           validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors])

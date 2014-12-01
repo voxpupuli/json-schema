@@ -13,8 +13,7 @@ module JSON
       if @schema['id'] && @schema['id'].kind_of?(String)
         temp_uri = Addressable::URI.parse(@schema['id'])
         if temp_uri.relative?
-          uri += Addressable::URI.parse(@schema['id'])
-          temp_uri = uri
+          temp_uri = uri.join(temp_uri)
         end
         @uri = temp_uri
       end
