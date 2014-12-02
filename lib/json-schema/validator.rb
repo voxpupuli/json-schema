@@ -28,8 +28,6 @@ module JSON
     }
     @@validators = {}
     @@default_validator = nil
-    @@available_json_backends = []
-    @@json_backend = nil
     @@serializer = nil
     @@mutex = Mutex.new
 
@@ -372,43 +370,8 @@ module JSON
         end
       end
 
-      def json_backend
-        if defined?(MultiJson)
-          MultiJson.respond_to?(:adapter) ? MultiJson.adapter : MultiJson.engine
-        else
-          @@json_backend
-        end
-      end
-
-      def json_backend=(backend)
-        if defined?(MultiJson)
-          backend = backend == 'json' ? 'json_gem' : backend
-          MultiJson.respond_to?(:use) ? MultiJson.use(backend) : MultiJson.engine = backend
-        else
-          backend = backend.to_s
-          if @@available_json_backends.include?(backend)
-            @@json_backend = backend
-          else
-            raise JSON::Schema::JsonParseError.new("The JSON backend '#{backend}' could not be found.")
-          end
-        end
-      end
-
-      def parse(s)
-        if defined?(MultiJson)
-          MultiJson.respond_to?(:adapter) ? MultiJson.load(s) : MultiJson.decode(s)
-        else
-          case @@json_backend.to_s
-          when 'json'
-            JSON.parse(s)
-          when 'yajl'
-            json = StringIO.new(s)
-            parser = Yajl::Parser.new
-            parser.parse(json) or raise JSON::Schema::JsonParseError.new("The JSON could not be parsed by yajl")
-          else
-            raise JSON::Schema::JsonParseError.new("No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json")
-          end
-        end
+      def parse(string)
+        JSON.parse(string)
       end
 
       def merge_missing_values(source, destination)
@@ -427,35 +390,6 @@ module JSON
             destination_value = destination[i]
             merge_missing_values(source_value, destination_value)
           end
-        end
-      end
-
-      if !defined?(MultiJson)
-        if Gem::Specification::find_all_by_name('json').any?
-          require 'json'
-          @@available_json_backends << 'json'
-          @@json_backend = 'json'
-        else
-          # Try force-loading json for rubies > 1.9.2
-          begin
-            require 'json'
-            @@available_json_backends << 'json'
-            @@json_backend = 'json'
-          rescue LoadError
-          end
-        end
-
-
-        if Gem::Specification::find_all_by_name('yajl-ruby').any?
-          require 'yajl'
-          @@available_json_backends << 'yajl'
-          @@json_backend = 'yajl'
-        end
-
-        if @@json_backend == 'yajl'
-          @@serializer = lambda{|o| Yajl::Encoder.encode(o) }
-        else
-          @@serializer = lambda{|o| YAML.dump(o) }
         end
       end
 
@@ -479,12 +413,8 @@ module JSON
       @@fake_uuid_generator = lambda{|s| JSON::Util::UUID.create_v5(s,JSON::Util::UUID::Nil).to_s }
     end
 
-    def serialize schema
-      if defined?(MultiJson)
-        MultiJson.respond_to?(:dump) ? MultiJson.dump(schema) : MultiJson.encode(schema)
-      else
-        @@serializer.call(schema)
-      end
+    def serialize(schema)
+      JSON.dump(schema)
     end
 
     def fake_uuid schema
