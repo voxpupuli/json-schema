@@ -66,7 +66,16 @@ class TestSchemaReader < Minitest::Test
     stub_address_request('this is totally not valid JSON!')
 
     reader = JSON::Schema::Reader.new
-    assert_raises(JSON::ParserError) do
+
+    klass = if defined?(::Yajl)
+              Yajl::ParseError
+            elsif defined?(::MultiJson)
+              MultiJson::ParseError
+            else
+              JSON::ParserError
+            end
+
+    assert_raises(klass) do
       reader.read(ADDRESS_SCHEMA_URI)
     end
   end
