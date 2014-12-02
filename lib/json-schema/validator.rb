@@ -24,7 +24,8 @@ module JSON
       :errors_as_objects => false,
       :insert_defaults => false,
       :clear_cache => true,
-      :strict => false
+      :strict => false,
+      :parse_data => true
     }
     @@validators = {}
     @@default_validator = nil
@@ -400,7 +401,7 @@ module JSON
         else
           case @@json_backend.to_s
           when 'json'
-            JSON.parse(s)
+            JSON.parse(s, :quirks_mode => true)
           when 'yajl'
             json = StringIO.new(s)
             parser = Yajl::Parser.new
@@ -550,20 +551,22 @@ module JSON
 
 
     def initialize_data(data)
-      if @options[:json]
-        data = JSON::Validator.parse(data)
-      elsif @options[:uri]
-        json_uri = normalized_uri(data)
-        data = JSON::Validator.parse(custom_open(json_uri))
-      elsif data.is_a?(String)
-        begin
+      if @options[:parse_data]
+        if @options[:json]
           data = JSON::Validator.parse(data)
-        rescue
+        elsif @options[:uri]
+          json_uri = normalized_uri(data)
+          data = JSON::Validator.parse(custom_open(json_uri))
+        elsif data.is_a?(String)
           begin
-            json_uri = normalized_uri(data)
-            data = JSON::Validator.parse(custom_open(json_uri))
+            data = JSON::Validator.parse(data)
           rescue
-            # Silently discard the error - the data will not change
+            begin
+              json_uri = normalized_uri(data)
+              data = JSON::Validator.parse(custom_open(json_uri))
+            rescue
+              # Silently discard the error - the data will not change
+            end
           end
         end
       end

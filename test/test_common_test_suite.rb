@@ -1,5 +1,4 @@
 require File.expand_path('../test_helper', __FILE__)
-require 'webmock'
 require 'json'
 
 class CommonTestSuiteTest < Minitest::Test
@@ -26,21 +25,12 @@ class CommonTestSuiteTest < Minitest::Test
     ]
   })
 
-  include WebMock::API
-
   def setup
-    WebMock.enable!
-
     Dir["#{TEST_DIR}/../remotes/**/*.json"].each do |path|
       schema = path.sub(%r{^.*/remotes/}, '')
       stub_request(:get, "http://localhost:1234/#{schema}").
         to_return(:body => File.read(path), :status => 200)
     end
-  end
-
-  def teardown
-    WebMock.disable!
-    WebMock.reset!
   end
 
   Dir["#{TEST_DIR}/*"].each do |suite|
@@ -63,6 +53,7 @@ class CommonTestSuiteTest < Minitest::Test
           define_method("test_#{err_id}") do
             errors = JSON::Validator.fully_validate(schema,
               t["data"],
+              :parse_data => false,
               :validate_schema => true,
               :version => version
             )
