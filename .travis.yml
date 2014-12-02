@@ -17,3 +17,6 @@ matrix:
   include:
     - rvm: "2.2"
       gemfile: "gemfiles/Gemfile.uuidtools.x"
+env:
+  global:
+    secure: OfKdsz+f3GPzDkxqaEm1T5AZt7MVmMWGqlRe+150Q53EoWtJmZQrEvrJ9EVyhCW3qzeK57YlM5tAFbvvbMpO7LEn4BoW7Vqize3SoOdGDyK5CSheeRqfw4vAepvDVpV7AfEo/Hj3LNHwpgVcywMzf7SaHoTTk2FpzV/1fH7Oo8g=
