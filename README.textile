@@ -359,7 +359,7 @@ JSON::Validator.validate(schema,data) # => false
 
 h3. Custom format validation
 
-The JSON schema standard allows custom formats in schema definitions which should be ignored by validators that do not support them. JSON::Schema allows registering procs as custom format validators which receive the value to be checked as parameter and must raise a <code>JSON::Schema::CustomFormatError</code> to indicate a format violation. The error message will be prepended by the property namne, e.g. "The property '#a'":
+The JSON schema standard allows custom formats in schema definitions which should be ignored by validators that do not support them. JSON::Schema allows registering procs as custom format validators which receive the value to be checked as parameter and must raise a <code>JSON::Schema::CustomFormatError</code> to indicate a format violation. The error message will be prepended by the property name, e.g. "The property '#a'":
 
 <pre>
 require 'rubygems'
@@ -396,6 +396,30 @@ schema = {
 errors = JSON::Validator.fully_validate(schema, {"a" => "23"})
 
 </pre>
+
+h2. Controlling Remote Schema Reading
+
+In some cases, you may wish to prevent the JSON Schema library from making HTTP calls or reading local files in order to resolve <code>$ref</code> schemas. If you fully control all schemas which should be used by validation, this could be accomplished by registering all referenced schemas with the validator in advance:
+
+<pre>
+schema = JSON::Schema.new(some_schema_definition, Addressable::URI.parse('http://example.com/my-schema'))
+JSON::Validator.add_schema(schema)
+</pre>
+
+If more extensive control is necessary, the <code>JSON::Schema::Reader</code> instance used can be configured in a few ways:
+
+<pre>
+# Change the default schema reader used
+JSON::Validator.schema_reader = JSON::Schema::Reader.new(:accept_uri => true, :accept_file => false)
+
+# For this validation call, use a reader which only accepts URIs from my-website.com
+schema_reader = JSON::Schema::Reader.new(
+  :accept_uri => proc { |uri| uri.host == 'my-website.com' }
+)
+JSON::Validator.validate(some_schema, some_object, :schema_reader => schema_reader)
+</pre>
+
+The <code>JSON::Schema::Reader</code> interface requires only an object which responds to <code>read(string)</code> and returns a <code>JSON::Schema</code> instance. See the "API documentation":http://www.rubydoc.info/github/ruby-json-schema/json-schema/master/JSON/Schema/Reader for more information.
 
 h2. JSON Backends
 
