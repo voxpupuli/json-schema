@@ -4,9 +4,9 @@ require 'pathname'
 
 module JSON
   class Schema
-    # Raised by {JSON::Schema::Loader} when one of its settings indicate
-    # a schema should not be loaded.
-    class LoadRefused < StandardError
+    # Raised by {JSON::Schema::Reader} when one of its settings indicate
+    # a schema should not be readed.
+    class ReadRefused < StandardError
       # @return [String] the requested schema location which was refused
       attr_reader :location
 
@@ -16,20 +16,20 @@ module JSON
       def initialize(location, type)
         @location = location
         @type = type
-        super("Load of #{type == :uri ? 'URI' : type} at #{location} refused!")
+        super("Read of #{type == :uri ? 'URI' : type} at #{location} refused!")
       end
     end
 
-    # When an unregistered schema is encountered, the {JSON::Schema::Loader} is
+    # When an unregistered schema is encountered, the {JSON::Schema::Reader} is
     # used to fetch its contents and register it with the {JSON::Validator}.
     #
-    # This default loader will load schemas from the filesystem or from a URI.
-    class Loader
-      # The behavior of the schema loader can be controlled by providing
-      # callbacks to determine whether to permit loading referenced schemas.
+    # This default reader will read schemas from the filesystem or from a URI.
+    class Reader
+      # The behavior of the schema reader can be controlled by providing
+      # callbacks to determine whether to permit reading referenced schemas.
       # The options +accept_uri+ and +accept_file+ should be procs which
       # accept a +URI+ or +Pathname+ object, and return a boolean value
-      # indicating whether to load the referenced schema.
+      # indicating whether to read the referenced schema.
       #
       # URIs using the +file+ scheme will be normalized into +Pathname+ objects
       # and passed to the +accept_file+ callback.
@@ -39,13 +39,13 @@ module JSON
       # @option options [Boolean, #call] accept_file (true)
       #
       # @example Reject all unregistered schemas
-      #   JSON::Validator.schema_loader = JSON::Schema::Loader.new(
+      #   JSON::Validator.schema_reader = JSON::Schema::Reader.new(
       #     :accept_uri => false,
       #     :accept_file => false
       #   )
       #
       # @example Only permit URIs from certain hosts
-      #   JSON::Validator.schema_loader = JSON::Schema::Loader.new(
+      #   JSON::Validator.schema_reader = JSON::Schema::Reader.new(
       #     :accept_file => false,
       #     :accept_uri => proc { |uri| ['mycompany.com', 'json-schema.org'].include?(uri.host) }
       #   )
@@ -54,12 +54,12 @@ module JSON
         @accept_file = options.fetch(:accept_file, true)
       end
 
-      # @param location [#to_s] The location from which to load the schema
+      # @param location [#to_s] The location from which to read the schema
       # @return [JSON::Schema]
-      # @raise [JSON::Schema::LoadRefused] if +accept_uri+ or +accept_file+
-      #   indicated the schema should not be loaded
+      # @raise [JSON::Schema::ReadRefused] if +accept_uri+ or +accept_file+
+      #   indicated the schema should not be readed
       # @raise [JSON::ParserError] if the schema was not a valid JSON object
-      def load(location)
+      def read(location)
         uri  = Addressable::URI.parse(location.to_s)
         body = if uri.scheme.nil? || uri.scheme == 'file'
                  uri = Addressable::URI.convert_path(uri.path)
@@ -97,7 +97,7 @@ module JSON
         if accept_uri?(uri)
           open(uri.to_s).read
         else
-          raise JSON::Schema::LoadRefused.new(uri.to_s, :uri)
+          raise JSON::Schema::ReadRefused.new(uri.to_s, :uri)
         end
       end
 
@@ -105,7 +105,7 @@ module JSON
         if accept_file?(pathname)
           File.read(Addressable::URI.unescape(pathname.to_s))
         else
-          raise JSON::Schema::LoadRefused.new(pathname.to_s, :file)
+          raise JSON::Schema::ReadRefused.new(pathname.to_s, :file)
         end
       end
     end

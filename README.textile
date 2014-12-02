@@ -371,7 +371,7 @@ errors = JSON::Validator.fully_validate(schema, {"a" => "23"})
 
 </pre>
 
-h2. Controlling Remote Schema Loading
+h2. Controlling Remote Schema Reading
 
 In some cases, you may wish to prevent the JSON Schema library from making HTTP calls or reading local files in order to resolve <code>$ref</code> schemas. If you fully control all schemas which should be used by validation, this could be accomplished by registering all referenced schemas with the validator in advance:
 
@@ -380,20 +380,20 @@ schema = JSON::Schema.new(some_schema_definition, Addressable::URI.parse('http:/
 JSON::Validator.add_schema(schema)
 </pre>
 
-If more extensive control is necessary, the <code>JSON::Schema::Loader</code> instance used can be configured in a few ways:
+If more extensive control is necessary, the <code>JSON::Schema::Reader</code> instance used can be configured in a few ways:
 
 <pre>
-# Change the default schema loader used
-JSON::Validator.schema_loader = JSON::Schema::Loader.new(:accept_uri => true, :accept_file => false)
+# Change the default schema reader used
+JSON::Validator.schema_reader = JSON::Schema::Reader.new(:accept_uri => true, :accept_file => false)
 
-# For this validation call, use a loader which only accepts URIs from my-website.com
-schema_loader = JSON::Schema::Loader.new(
+# For this validation call, use a reader which only accepts URIs from my-website.com
+schema_reader = JSON::Schema::Reader.new(
   :accept_uri => proc { |uri| uri.host == 'my-website.com' }
 )
-JSON::Validator.validate(some_schema, some_object, :schema_loader => schema_loader)
+JSON::Validator.validate(some_schema, some_object, :schema_reader => schema_reader)
 </pre>
 
-The <code>JSON::Schema::Loader</code> interface requires only an object which responds to <code>load(string)</code> and returns a <code>JSON::Schema</code> instance. See the "API documentation":http://www.rubydoc.info/github/ruby-json-schema/json-schema/master/JSON/Schema/Loader for more information.
+The <code>JSON::Schema::Reader</code> interface requires only an object which responds to <code>read(string)</code> and returns a <code>JSON::Schema</code> instance. See the "API documentation":http://www.rubydoc.info/github/ruby-json-schema/json-schema/master/JSON/Schema/Reader for more information.
 
 h2. JSON Backends
 

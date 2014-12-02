@@ -7,7 +7,7 @@ require 'date'
 require 'thread'
 require 'yaml'
 
-require 'json-schema/schema/loader'
+require 'json-schema/schema/reader'
 require 'json-schema/errors/schema_error'
 require 'json-schema/errors/json_parse_error'
 
@@ -40,7 +40,7 @@ module JSON
 
       validator = JSON::Validator.validator_for_name(@options[:version])
       @options[:version] = validator
-      @options[:schema_loader] ||= JSON::Validator.schema_loader
+      @options[:schema_reader] ||= JSON::Validator.schema_reader
 
       @validation_options = @options[:record_errors] ? {:record_errors => true} : {}
       @validation_options[:insert_defaults] = true if @options[:insert_defaults]
@@ -131,7 +131,7 @@ module JSON
 
       return true if self.class.schema_loaded?(schema_uri)
 
-      schema = @options[:schema_loader].load(schema_uri)
+      schema = @options[:schema_reader].read(schema_uri)
       self.class.add_schema(schema)
       build_schemas(schema)
     end
@@ -292,12 +292,12 @@ module JSON
         fully_validate(schema, data, opts.merge(:uri => true))
       end
 
-      def schema_loader
-        @@schema_loader ||= JSON::Schema::Loader.new
+      def schema_reader
+        @@schema_reader ||= JSON::Schema::Reader.new
       end
 
-      def schema_loader=(loader)
-        @@schema_loader = loader
+      def schema_reader=(reader)
+        @@schema_reader = reader
       end
 
       def clear_cache
@@ -516,7 +516,7 @@ module JSON
           # Build a uri for it
           schema_uri = normalized_uri(schema)
           if !self.class.schema_loaded?(schema_uri)
-            schema = @options[:schema_loader].load(schema_uri)
+            schema = @options[:schema_reader].read(schema_uri)
             schema = JSON::Schema.stringify(schema)
 
             if @options[:list] && @options[:fragment].nil?
