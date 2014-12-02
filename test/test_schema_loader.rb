@@ -1,21 +1,8 @@
 require File.expand_path('../test_helper', __FILE__)
-require 'webmock'
 
 class TestSchemaReader < Minitest::Test
   ADDRESS_SCHEMA_URI  = 'http://json-schema.org/address'
   ADDRESS_SCHEMA_PATH = File.expand_path('../schemas/address_microformat.json', __FILE__)
-
-  include WebMock::API
-
-  def setup
-    WebMock.enable!
-    WebMock.disable_net_connect!
-  end
-
-  def teardown
-    WebMock.reset!
-    WebMock.disable!
-  end
 
   def stub_address_request(body = File.read(ADDRESS_SCHEMA_PATH))
     stub_request(:get, ADDRESS_SCHEMA_URI).
