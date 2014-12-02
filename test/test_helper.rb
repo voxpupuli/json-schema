@@ -1,5 +1,17 @@
+if ENV['CI'].to_s == 'true'
+  require "codeclimate-test-reporter"
+  CodeClimate::TestReporter.start
+end
+
 require 'minitest/autorun'
 require 'webmock/minitest'
+
+WebMock.disable_net_connect!
+
+Minitest.after_run do
+  # make sure webmock does not prevent posting to code climate
+  WebMock.allow_net_connect!
+end
 
 $:.unshift(File.expand_path('../../lib', __FILE__))
 require 'json-schema'

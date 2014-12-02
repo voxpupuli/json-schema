@@ -17,3 +17,6 @@ matrix:
   include:
     - rvm: "2.2"
       gemfile: "gemfiles/Gemfile.uuidtools.x"
+env:
+  global:
+    - CODECLIMATE_REPO_TOKEN=f06667b968b44c85d8bacf7321b323574188f6771d0d3534e0cb9ddaade23dd7
