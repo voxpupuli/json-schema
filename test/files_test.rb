@@ -2,10 +2,6 @@ require File.expand_path('../support/test_helper', __FILE__)
 
 class FilesTest < Minitest::Test
 
-  #
-  # These tests are ONLY run if there is an appropriate JSON backend parser available
-  #
-
   def test_schema_from_file
     assert_valid schema_fixture_path('good_schema_1.json'), { "a" => 5 }
     refute_valid schema_fixture_path('good_schema_1.json'), { "a" => "bad" }

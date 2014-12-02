@@ -407,25 +407,6 @@ The `JSON::Schema::Reader` interface requires only an object which responds to
 documentation](http://www.rubydoc.info/github/ruby-json-schema/json-schema/master/JSON/Schema/Reader)
 for more information.
 
-JSON Backends
--------------
-
-The JSON Schema library currently supports the `json` and `yajl-ruby` backend
-JSON parsers. If either of these libraries are installed, they will be
-automatically loaded and used to parse any JSON strings supplied by the user.
-
-If more than one of the supported JSON backends are installed, the `yajl-ruby`
-parser is used by default. This can be changed by issuing the following before
-validation:
-
-```ruby
-JSON::Validator.json_backend = :json
-```
-
-Optionally, the JSON Schema library supports using the MultiJSON library for
-selecting JSON backends. If the MultiJSON library is installed, it will be
-autoloaded.
-
 Notes
 -----
 

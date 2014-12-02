@@ -91,7 +91,7 @@ module JSON
                  read_uri(uri)
                end
 
-        JSON::Schema.new(JSON::Validator.parse(body), uri)
+        JSON::Schema.new(JSON::Util::Parser.parse(body), uri)
       end
 
       # @param uri [Addressable::URI]

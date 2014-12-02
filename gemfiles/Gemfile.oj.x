@@ -2,4 +2,5 @@ source "https://rubygems.org"
 
 gemspec :path => "../"
 
-gem "multi_json"
+gem "oj"
+gem "oj_mimic_json"

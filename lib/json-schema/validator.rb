@@ -32,9 +32,6 @@ module JSON
     }
     @@validators = {}
     @@default_validator = nil
-    @@available_json_backends = []
-    @@json_backend = nil
-    @@serializer = nil
     @@mutex = Mutex.new
 
     def initialize(schema_data, data, opts={})
@@ -378,54 +375,17 @@ module JSON
       end
 
       def json_backend
-        if defined?(MultiJson)
-          MultiJson.respond_to?(:adapter) ? MultiJson.adapter : MultiJson.engine
-        else
-          @@json_backend
-        end
+        warn "[DEPRECATION NOTICE] Alternate JSON backends for json-schema are no longer used. If you would like to use a non-standard JSON backend, please use it in compatibility mode."
+        nil
       end
 
       def json_backend=(backend)
-        if defined?(MultiJson)
-          backend = backend == 'json' ? 'json_gem' : backend
-          MultiJson.respond_to?(:use) ? MultiJson.use(backend) : MultiJson.engine = backend
-        else
-          backend = backend.to_s
-          if @@available_json_backends.include?(backend)
-            @@json_backend = backend
-          else
-            raise JSON::Schema::JsonParseError.new("The JSON backend '#{backend}' could not be found.")
-          end
-        end
+        warn "[DEPRECATION NOTICE] Alternate JSON backends for json-schema are no longer used. If you would like to use a non-standard JSON backend, please use it in compatibility mode."
       end
 
-      def parse(s)
-        if defined?(MultiJson)
-          begin
-            MultiJson.respond_to?(:adapter) ? MultiJson.load(s) : MultiJson.decode(s)
-          rescue MultiJson::ParseError => e
-            raise JSON::Schema::JsonParseError.new(e.message)
-          end
-        else
-          case @@json_backend.to_s
-          when 'json'
-            begin
-              JSON.parse(s, :quirks_mode => true)
-            rescue JSON::ParserError => e
-              raise JSON::Schema::JsonParseError.new(e.message)
-            end
-          when 'yajl'
-            begin
-              json = StringIO.new(s)
-              parser = Yajl::Parser.new
-              parser.parse(json) or raise JSON::Schema::JsonParseError.new("The JSON could not be parsed by yajl")
-            rescue Yajl::ParseError => e
-              raise JSON::Schema::JsonParseError.new(e.message)
-            end
-          else
-            raise JSON::Schema::JsonParseError.new("No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json")
-          end
-        end
+      def parse(string)
+        warn "[DEPRECATION NOTICE] JSON::Validator#parse has been moved to JSON::Util::Parser."
+        JSON::Util::Parser.parse(string)
       end
 
       def merge_missing_values(source, destination)
@@ -444,37 +404,6 @@ module JSON
             destination_value = destination[i]
             merge_missing_values(source_value, destination_value)
           end
-        end
-      end
-
-      if !defined?(MultiJson)
-        if Gem::Specification::find_all_by_name('json').any?
-          require 'json'
-          @@available_json_backends << 'json'
-          @@json_backend = 'json'
-        else
-          # Try force-loading json for rubies > 1.9.2
-          begin
-            require 'json'
-            @@available_json_backends << 'json'
-            @@json_backend = 'json'
-          rescue LoadError
-          end
-        end
-
-
-        if Gem::Specification::find_all_by_name('yajl-ruby').any?
-          require 'yajl'
-          @@available_json_backends << 'yajl'
-          @@json_backend = 'yajl'
-        end
-
-        if @@json_backend == 'yajl'
-          @@serializer = lambda{|o| Yajl::Encoder.encode(o) }
-        elsif @@json_backend == 'json'
-          @@serializer = lambda{|o| JSON.dump(o) }
-        else
-          @@serializer = lambda{|o| YAML.dump(o) }
         end
       end
 
@@ -505,12 +434,9 @@ module JSON
       @@fake_uuid_generator = lambda{|s| JSON::Util::UUID.create_v5(s,JSON::Util::UUID::Nil).to_s }
     end
 
-    def serialize schema
-      if defined?(MultiJson)
-        MultiJson.respond_to?(:dump) ? MultiJson.dump(schema) : MultiJson.encode(schema)
-      else
-        @@serializer.call(schema)
-      end
+    def serialize(schema)
+      warn "[DEPRECATION NOTICE] JSON::Validator#serialize has been moved to JSON::Util::Parser."
+      JSON::Util::Parser.serialize(schema)
     end
 
     def fake_uuid schema
@@ -522,7 +448,7 @@ module JSON
         begin
           # Build a fake URI for this
           schema_uri = JSON::Util::URI.parse(fake_uuid(schema))
-          schema = JSON::Schema.new(JSON::Validator.parse(schema), schema_uri, @options[:version])
+          schema = JSON::Schema.new(JSON::Util::Parser.parse(schema), schema_uri, @options[:version])
           if @options[:list] && @options[:fragment].nil?
             schema = schema.to_array_schema
           end
@@ -543,14 +469,14 @@ module JSON
             schema = self.class.schema_for_uri(schema_uri)
             if @options[:list] && @options[:fragment].nil?
               schema = schema.to_array_schema
-              schema.uri = JSON::Util::URI.parse(fake_uuid(serialize(schema.schema)))
+              schema.uri = JSON::Util::URI.parse(fake_uuid(JSON::Util::Parser.serialize(schema.schema)))
               Validator.add_schema(schema)
             end
             schema
           end
         end
       elsif schema.is_a?(Hash)
-        schema_uri = JSON::Util::URI.parse(fake_uuid(serialize(schema)))
+        schema_uri = JSON::Util::URI.parse(fake_uuid(JSON::Util::Parser.serialize(schema)))
         schema = JSON::Schema.stringify(schema)
         schema = JSON::Schema.new(schema, schema_uri, @options[:version])
         if @options[:list] && @options[:fragment].nil?
@@ -567,17 +493,17 @@ module JSON
     def initialize_data(data)
       if @options[:parse_data]
         if @options[:json]
-          data = JSON::Validator.parse(data)
+          data = JSON::Util::Parser.parse(data)
         elsif @options[:uri]
           json_uri = Util::URI.normalized_uri(data)
-          data = JSON::Validator.parse(custom_open(json_uri))
+          data = JSON::Util::Parser.parse(custom_open(json_uri))
         elsif data.is_a?(String)
           begin
-            data = JSON::Validator.parse(data)
+            data = JSON::Util::Parser.parse(data)
           rescue JSON::Schema::JsonParseError
             begin
               json_uri = Util::URI.normalized_uri(data)
-              data = JSON::Validator.parse(custom_open(json_uri))
+              data = JSON::Util::Parser.parse(custom_open(json_uri))
             rescue JSON::Schema::JsonLoadError
               # Silently discard the error - use the data as-is
             end
