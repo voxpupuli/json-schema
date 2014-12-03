@@ -40,7 +40,7 @@ module JSON
         # Grab the parent schema from the schema list
         schema_key = temp_uri.to_s.split("#")[0] + "#"
 
-        ref_schema = JSON::Validator.schemas[schema_key]
+        ref_schema = JSON::Validator.schema_for_uri(schema_key)
 
         if ref_schema
           # Perform fragment resolution to retrieve the appropriate level for the schema
