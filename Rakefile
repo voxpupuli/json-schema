@@ -1,6 +1,7 @@
-require 'rubygems'
+require 'bundler'
 require 'rake'
 require 'rake/testtask'
+
 
 desc "Updates the json-schema common test suite to the latest version"
 task :update_common_tests do
