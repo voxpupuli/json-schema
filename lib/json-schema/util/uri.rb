@@ -2,7 +2,7 @@ module JSON
   module Util
     module URI
       def self.normalized_uri(uri)
-        uri = Addressable::URI.parse(uri) if uri.is_a?(String)
+        uri = Addressable::URI.parse(uri) unless uri.is_a?(Addressable::URI)
         # Check for absolute path
         if uri.relative?
           data = uri.to_s

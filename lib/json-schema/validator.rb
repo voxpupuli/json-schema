@@ -562,14 +562,14 @@ module JSON
         if @options[:json]
           data = JSON::Validator.parse(data)
         elsif @options[:uri]
-          json_uri = normalized_uri(data)
+          json_uri = Util::URI.normalized_uri(data)
           data = JSON::Validator.parse(custom_open(json_uri))
         elsif data.is_a?(String)
           begin
             data = JSON::Validator.parse(data)
           rescue
             begin
-              json_uri = normalized_uri(data)
+              json_uri = Util::URI.normalized_uri(data)
               data = JSON::Validator.parse(custom_open(json_uri))
             rescue
               # Silently discard the error - the data will not change
