@@ -2,11 +2,6 @@ require File.expand_path('../test_helper', __FILE__)
 
 class InitializeDataTest < Minitest::Test
 
-  def refute_block(&blk)
-    result = blk.call
-    refute(result)
-  end
-
   def test_parse_character_string
     schema = {'type' => 'string'}
     data = 'hello world'
@@ -15,12 +10,8 @@ class InitializeDataTest < Minitest::Test
 
     assert(JSON::Validator.validate(schema, data, :parse_data => false))
 
-    refute_block do
-      begin
-        JSON::Validator.validate(schema, data, :json => true)
-      rescue
-        false
-      end
+    assert_raises(parser_error) do
+      JSON::Validator.validate(schema, data, :json => true)
     end
 
     assert_raises(Errno::ENOENT) { JSON::Validator.validate(schema, data, :uri => true) }
@@ -75,12 +66,8 @@ class InitializeDataTest < Minitest::Test
 
     assert(JSON::Validator.validate(schema, data, :parse_data => false))
 
-    refute_block do
-      begin
-        JSON::Validator.validate(schema, data, :json => true)
-      rescue
-        false
-      end
+    assert_raises(parser_error) do
+      JSON::Validator.validate(schema, data, :json => true)
     end
 
     assert(JSON::Validator.validate(schema, data, :uri => true))
@@ -96,12 +83,8 @@ class InitializeDataTest < Minitest::Test
 
     assert(JSON::Validator.validate(schema, data, :parse_data => false))
 
-    refute_block do
-      begin
-        JSON::Validator.validate(schema, data, :json => true)
-      rescue
-        false
-      end
+    assert_raises(parser_error) do
+      JSON::Validator.validate(schema, data, :json => true)
     end
 
     assert_raises(Timeout::Error) { JSON::Validator.validate(schema, data, :uri => true) }

@@ -67,15 +67,7 @@ class TestSchemaReader < Minitest::Test
 
     reader = JSON::Schema::Reader.new
 
-    klass = if defined?(::Yajl)
-              Yajl::ParseError
-            elsif defined?(::MultiJson)
-              MultiJson::ParseError
-            else
-              JSON::ParserError
-            end
-
-    assert_raises(klass) do
+    assert_raises(parser_error) do
       reader.read(ADDRESS_SCHEMA_URI)
     end
   end
