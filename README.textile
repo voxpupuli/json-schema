@@ -40,6 +40,8 @@ By default, the validator uses the "JSON Schema Draft 4":http://tools.ietf.org/h
 
 h3. Validate Ruby objects against a Ruby schema
 
+Valid types are: @array@, @boolean@, @integer@, @number@, @null@, @object@, @string@. The types @object@ and @array@ can be nested. While @object@ uses the keyword "properties" for its nested items, @array@ uses the term "items".
+
 <pre>
 require 'rubygems'
 require 'json-schema'
