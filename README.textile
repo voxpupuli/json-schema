@@ -40,6 +40,8 @@ By default, the validator uses the "JSON Schema Draft 4":http://tools.ietf.org/h
 
 h3. Validate Ruby objects against a Ruby schema
 
+For further information on json schema itself refer to <a href="http://spacetelescope.github.io/understanding-json-schema/">Understanding JSON Schema</a>.
+
 <pre>
 require 'rubygems'
 require 'json-schema'
