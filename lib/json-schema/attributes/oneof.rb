@@ -30,7 +30,7 @@ module JSON
           validation_errors += 1 if !valid
           while diff > 0
             diff = diff - 1
-            errors["oneOf ##{schema_index} "].push(validation_errors(processor).pop)
+            errors["oneOf ##{schema_index}"].push(validation_errors(processor).pop)
           end
           data = original_data
         end
