@@ -12,23 +12,26 @@ module JSON
         original_data = data.is_a?(Hash) ? data.clone : data
         success_data = nil
 
+        valid = false
+
         one_of.each_with_index do |element, schema_index|
           schema = JSON::Schema.new(element,current_schema.uri,validator)
           pre_validation_error_count = validation_errors(processor).count
           begin
             schema.validate(data,fragments,processor,options)
             success_data = data.is_a?(Hash) ? data.clone : data
+            valid = true
           rescue ValidationError
-            # just ignore
+            valid = false
           end
 
           diff = validation_errors(processor).count - pre_validation_error_count
-          validation_errors += 1 if diff > 0
+          valid = false if diff > 0
+          validation_errors += 1 if !valid
           while diff > 0
             diff = diff - 1
             errors["oneOf ##{schema_index} "].push(validation_errors(processor).pop)
           end
-
           data = original_data
         end
 
@@ -46,7 +49,7 @@ module JSON
         end
 
         validation_error(processor, message, fragments, current_schema, self, options[:record_errors]) if message
-        validation_errors(processor).last.sub_errors = errors
+        validation_errors(processor).last.sub_errors = errors if message
       end
     end
   end
