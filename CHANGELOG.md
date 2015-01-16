@@ -11,7 +11,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Corrected the draft6 schema id to `http://json-schema.org/draft/schema#`
-- Rescue URI error when initializing a data string that contains a colon 
+- Rescue URI error when initializing a data string that contains a colon
+- Fragments with an odd number of components no longer raise an `undefined method `validate'`
+  error
 
 ## [2.8.0] - 2017-02-07
 

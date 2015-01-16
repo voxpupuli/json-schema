@@ -103,6 +103,8 @@ module JSON
 
       if @options[:list]
         base_schema.to_array_schema
+      elsif base_schema.is_a?(Hash)
+        JSON::Schema.new(base_schema, schema_uri, @options[:version])
       else
         base_schema
       end
