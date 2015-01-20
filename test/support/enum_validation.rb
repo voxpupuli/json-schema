@@ -1,5 +1,5 @@
 module EnumValidation
-  def test_enum
+  def test_enum_general
     schema = {
       "properties" => {
         "a" => {"enum" => [1,'boo',[1,2,3],{"a" => "b"}]}
@@ -25,7 +25,7 @@ module EnumValidation
     assert_valid schema, data
   end
 
-  def test_fixed_float_issue_enum
+  def test_enum_number_integer_includes_float
     schema = {
       "properties" => {
         "a" => {
@@ -48,6 +48,54 @@ module EnumValidation
     assert_valid schema, data
   end
 
+  def test_enum_number_float_includes_integer
+    schema = {
+      "properties" => {
+        "a" => {
+          "type" => "number",
+          "enum" => [0.0, 1.0, 2.0]
+        }
+      }
+    }
+
+    data = { "a" => 0.0 }
+    assert_valid schema, data
+
+    data["a"] = 0
+    assert_valid schema, data
+
+
+    data["a"] = 1.0
+    assert_valid schema, data
+
+    data["a"] = 1
+    assert_valid schema, data
+  end
+
+  def test_enum_integer_integer_excludes_float
+    schema = {
+      "properties" => {
+        "a" => {
+          "type" => "integer",
+          "enum" => [0, 1, 2]
+        }
+      }
+    }
+
+    data = { "a" => 0 }
+    assert_valid schema, data
+
+    data["a"] = 0.0
+    refute_valid schema, data
+
+
+    data["a"] = 1
+    assert_valid schema, data
+
+    data["a"] = 1.0
+    refute_valid schema, data
+  end
+
   def test_enum_with_schema_validation
     schema = {
       "properties" => {
@@ -56,21 +104,5 @@ module EnumValidation
     }
     data = { "a" => 1 }
     assert_valid(schema, data, :validate_schema => true)
-  end
-
-  module ItemsTests
-    def test_items_single_schema
-      schema = { 'items' => { 'type' => 'string' } }
-
-      assert_valid schema, []
-      assert_valid schema, ['a']
-      assert_valid schema, ['a', 'b']
-
-      refute_valid schema, [1]
-      refute_valid schema, ['a', 1]
-
-      # other types are disregarded
-      assert_valid schema, {'a' => 'foo'}
-    end
   end
 end
