@@ -20,7 +20,8 @@ class JSONSchemaDraft2Test < Minitest::Test
   include ArrayValidation::ItemsTests
   include ArrayValidation::UniqueItemsTests
 
-  include EnumValidation
+  include EnumValidation::General
+  include EnumValidation::V1_V2
 
   include NumberValidation::MinMaxTests
   include NumberValidation::MultipleOfTests
@@ -56,40 +57,6 @@ class JSONSchemaDraft2Test < Minitest::Test
       }
     }
 
-    data = {}
-    assert_valid schema, data
-  end
-
-  def test_enum
-    # Set up the default datatype
-    schema = {
-      "properties" => {
-        "a" => {"enum" => [1,'boo',[1,2,3],{"a" => "b"}], "optional" => true}
-      }
-    }
-
-    data = {
-      "a" => nil
-    }
-
-    # Make sure all of the above are valid...
-    data["a"] = 1
-    assert_valid schema, data
-
-    data["a"] = 'boo'
-    assert_valid schema, data
-
-    data["a"] = [1,2,3]
-    assert_valid schema, data
-
-    data["a"] = {"a" => "b"}
-    assert_valid schema, data
-
-    # Test something that doesn't exist
-    data["a"] = 'taco'
-    refute_valid schema, data
-
-    # Try it without the key
     data = {}
     assert_valid schema, data
   end

@@ -22,7 +22,8 @@ class JSONSchemaDraft4Test < Minitest::Test
   include ArrayValidation::AdditionalItemsTests
   include ArrayValidation::UniqueItemsTests
 
-  include EnumValidation
+  include EnumValidation::General
+  include EnumValidation::V3_V4
 
   include NumberValidation::MinMaxTests
   include NumberValidation::MultipleOfTests
