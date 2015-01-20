@@ -15,6 +15,8 @@ class JSONSchemaDraft1Test < Minitest::Test
 
   include ArrayValidation::ItemsTests
 
+  include EnumValidation
+
   include NumberValidation::MinMaxTests
 
   include ObjectValidation::AdditionalPropertiesTests

@@ -22,6 +22,8 @@ class JSONSchemaDraft4Test < Minitest::Test
   include ArrayValidation::AdditionalItemsTests
   include ArrayValidation::UniqueItemsTests
 
+  include EnumValidation
+
   include NumberValidation::MinMaxTests
   include NumberValidation::MultipleOfTests
 
@@ -113,6 +115,28 @@ class JSONSchemaDraft4Test < Minitest::Test
 
     # Try it without the key
     data = {}
+    assert_valid schema, data
+  end
+
+  def test_enum
+    # Set up the default datatype
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "properties" => {
+        "a" => {
+          "type" => "number",
+          "enum" => [0, 1, 2]
+        }
+      }
+    }
+
+    data = {
+      "a" => 0
+    }
+
+    assert_valid schema, data
+
+    data["a"] = 0.0
     assert_valid schema, data
   end
 
