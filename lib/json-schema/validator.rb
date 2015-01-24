@@ -137,6 +137,10 @@ module JSON
       build_schemas(schema)
     end
 
+    def base_schema
+      @base_schema
+    end
+
     def absolutize_ref_uri(ref, parent_schema_uri)
       ref_uri = Addressable::URI.parse(ref)
 
@@ -238,6 +242,46 @@ module JSON
       @errors
     end
 
+    def resolve_nested_references(schema, schema_portion, list)
+      case schema_portion
+      when Array
+        # for arrays resolve all items which have not been resolved yet
+        schema_portion.each_with_index do |item, i|
+          schema_portion[i] = resolve_nested_references(schema, item, list) unless list.include?(schema_portion[i])
+        end
+      when Hash
+        if schema_portion["$ref"]
+          # for hashes with a reference, resolve their referenced schema and copy(!) the result into the currently handled portion
+          _, ref_schema = JSON::Schema::RefAttribute.get_referenced_uri_and_schema(schema_portion, schema, self)
+          resolved_portion = resolve(ref_schema, ref_schema.schema, list)
+          schema_portion.clear
+          resolved_portion.each { |key, value| schema_portion[key] = value }
+        else
+          # for hashes without a reference we also resolve recursively what has not been resolved yet
+          schema_portion.each do |key, value|
+            schema_portion[key] = resolve_nested_references(schema, value, list) unless list.include?(value)
+          end
+        end
+      end
+      schema_portion
+    end
+
+    def resolve(schema, handle_schema_hash, list = [])
+      # if we already dealt with the schema hash we have nothing left to do
+      return handle_schema_hash if list.include?(handle_schema_hash)
+      # remember the hash we are dealing with for the future
+      list << handle_schema_hash
+      # $ref is specified as 'SHOULD replace the current schema with the schema referenced by the value's URI' so we do exactly that
+      if handle_schema_hash["$ref"]
+        _, ref_schema = JSON::Schema::RefAttribute.get_referenced_uri_and_schema(handle_schema_hash, schema, self)
+        fail "Could not find referenced schema #{handle_schema_hash["$ref"]}" unless ref_schema
+        # translates to 'replace the current schema with the referenced one and resolve this instead'
+        handle_schema_hash = resolve(ref_schema, ref_schema.schema, list)
+      end
+      # finally we must recursively walk through our schema and resolve nested schemas
+      resolve_nested_references schema, handle_schema_hash, list
+      handle_schema_hash
+    end
 
     class << self
       def validate(schema, data,opts={})
@@ -277,6 +321,11 @@ module JSON
         opts[:record_errors] = true
         validator = JSON::Validator.new(schema, data, opts)
         validator.validate
+      end
+
+      def fully_resolve(schema)
+        validator = JSON::Validator.new(schema, {}, {})
+        validator.resolve(validator.base_schema, validator.base_schema.schema)
       end
 
       def fully_validate_schema(schema, opts={})

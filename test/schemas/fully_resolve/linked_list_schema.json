@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://example.com/linked_list#",
+  "type": "object",
+  "required": ["head", "tail"],
+  "properties" : {
+    "head" : {
+      "type": "object" 
+    },
+    "tail": {
+      "oneOf": [
+        { "$ref": "#" },
+        { "type": "null" }
+      ]
+    }
+  }
+}
