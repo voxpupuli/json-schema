@@ -5,6 +5,7 @@ rvm:
   - "1.9"
   - "2.0"
   - "2.1"
+  - "2.2"
   - "jruby"
   - "rbx"
 
@@ -15,11 +16,11 @@ install:
 
 matrix:
   include:
-    - rvm: "2.1"
+    - rvm: "2.2"
       gemfile: "gemfiles/Gemfile.multi_json.x"
-    - rvm: "2.1"
+    - rvm: "2.2"
       gemfile: "gemfiles/Gemfile.yajl-ruby.x"
-    - rvm: "2.1"
+    - rvm: "2.2"
       gemfile: "gemfiles/Gemfile.uuidtools.x"
   allow_failures:
     - rvm: "1.8"
