@@ -9,7 +9,7 @@ task :update_common_tests do
   unless File.read(".git/config").include?('submodule "test/test-suite"')
     sh "git submodule init"
   end
-  sh "git submodule update --quiet"
+  sh "git submodule update --remote --quiet"
 end
 
 Rake::TestTask.new do |t|
