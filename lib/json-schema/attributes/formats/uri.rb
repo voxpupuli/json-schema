@@ -7,10 +7,7 @@ module JSON
         return unless data.is_a?(String)
         error_message = "The property '#{build_fragment(fragments)}' must be a valid URI"
         begin
-          # TODO
-          # Addressable only throws an exception on to_s for invalid URI strings, although it
-          # probably should throughout parse already - https://github.com/sporkmonger/addressable/issues/177
-          Addressable::URI.parse(data).to_s
+          Addressable::URI.parse(data)
         rescue Addressable::URI::InvalidURIError
           validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors])
         end
