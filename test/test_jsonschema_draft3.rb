@@ -28,6 +28,8 @@ class JSONSchemaDraft3Test < Minitest::Test
   include ObjectValidation::AdditionalPropertiesTests
   include ObjectValidation::PatternPropertiesTests
 
+  include StrictValidation
+
   include StringValidation::ValueTests
   include StringValidation::FormatTests
   include StringValidation::DateAndTimeFormatTests
@@ -94,28 +96,6 @@ class JSONSchemaDraft3Test < Minitest::Test
     assert_valid schema, data
   end
 
-  def test_strict_properties
-    schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
-      "properties" => {
-        "a" => {"type" => "string"},
-        "b" => {"type" => "string"}
-      }
-    }
-
-    data = {"a" => "a"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
-
-    data = {"b" => "b"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
-
-    data = {"a" => "a", "b" => "b"}
-    assert(JSON::Validator.validate(schema,data,:strict => true))
-
-    data = {"a" => "a", "b" => "b", "c" => "c"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
-  end
-
   def test_strict_properties_required_props
     schema = {
       "$schema" => "http://json-schema.org/draft-03/schema#",
@@ -133,64 +113,6 @@ class JSONSchemaDraft3Test < Minitest::Test
 
     data = {"a" => "a", "b" => "b"}
     assert(JSON::Validator.validate(schema,data,:strict => true))
-  end
-
-  def test_strict_properties_additional_props
-    schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
-      "properties" => {
-        "a" => {"type" => "string"},
-        "b" => {"type" => "string"}
-      },
-      "additionalProperties" => {"type" => "integer"}
-    }
-
-    data = {"a" => "a"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
-
-    data = {"b" => "b"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
-
-    data = {"a" => "a", "b" => "b"}
-    assert(JSON::Validator.validate(schema,data,:strict => true))
-
-    data = {"a" => "a", "b" => "b", "c" => "c"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
-
-    data = {"a" => "a", "b" => "b", "c" => 3}
-    assert(JSON::Validator.validate(schema,data,:strict => true))
-  end
-
-  def test_strict_properties_pattern_props
-    schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
-      "properties" => {
-        "a" => {"type" => "string"},
-        "b" => {"type" => "string"}
-      },
-      "patternProperties" => {"\\d+ taco" => {"type" => "integer"}}
-    }
-
-    data = {"a" => "a"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
-
-    data = {"b" => "b"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
-
-    data = {"a" => "a", "b" => "b"}
-    assert(JSON::Validator.validate(schema,data,:strict => true))
-
-    data = {"a" => "a", "b" => "b", "c" => "c"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
-
-    data = {"a" => "a", "b" => "b", "c" => 3}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
-
-    data = {"a" => "a", "b" => "b", "23 taco" => 3}
-    assert(JSON::Validator.validate(schema,data,:strict => true))
-
-    data = {"a" => "a", "b" => "b", "23 taco" => "cheese"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
   end
 
   def test_enum

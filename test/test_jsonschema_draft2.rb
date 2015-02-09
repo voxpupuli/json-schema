@@ -25,6 +25,8 @@ class JSONSchemaDraft2Test < Minitest::Test
 
   include ObjectValidation::AdditionalPropertiesTests
 
+  include StrictValidation
+
   include StringValidation::ValueTests
   include StringValidation::FormatTests
   include StringValidation::DateAndTimeFormatTests
