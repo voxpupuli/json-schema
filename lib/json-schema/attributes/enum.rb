@@ -5,7 +5,7 @@ module JSON
     class EnumAttribute < Attribute
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         enum = current_schema.schema['enum']
-        return if enum.any? { |value| data == value }
+        return if enum.include?(data)
 
         values = enum.map { |val|
           case val

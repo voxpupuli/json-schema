@@ -96,7 +96,7 @@ module EnumValidation
       assert_valid schema, data
     end
 
-    def test_enum_integer_integer_excludes_float
+    def test_enum_integer_excludes_float
       schema = {
         "properties" => {
           "a" => {
