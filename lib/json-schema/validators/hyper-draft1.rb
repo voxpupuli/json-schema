@@ -8,7 +8,6 @@ module JSON
       end
 
       JSON::Validator.register_validator(self.new)
-      JSON::Validator.register_default_validator(self.new)
     end
   end
 end
