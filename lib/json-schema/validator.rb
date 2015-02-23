@@ -129,7 +129,7 @@ module JSON
 
     def load_ref_schema(parent_schema, ref)
       schema_uri = absolutize_ref_uri(ref, parent_schema.uri)
-
+      schema_uri.fragment = ''
       return true if self.class.schema_loaded?(schema_uri)
 
       schema = @options[:schema_reader].read(schema_uri)
