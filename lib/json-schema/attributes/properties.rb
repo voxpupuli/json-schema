@@ -56,7 +56,7 @@ module JSON
         end
 
         if diff.size > 0
-          properties = data.to_a.map { |(key, _)| key }.join(', ')
+          properties = diff.keys.join(', ')
           message = "The property '#{build_fragment(fragments)}' contained undefined properties: '#{properties}'"
           validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
         end
