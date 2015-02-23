@@ -129,7 +129,6 @@ module JSON
 
     def load_ref_schema(parent_schema, ref)
       schema_uri = absolutize_ref_uri(ref, parent_schema.uri)
-      schema_uri.fragment = ''
       return true if self.class.schema_loaded?(schema_uri)
 
       schema = @options[:schema_reader].read(schema_uri)
@@ -139,6 +138,7 @@ module JSON
 
     def absolutize_ref_uri(ref, parent_schema_uri)
       ref_uri = Addressable::URI.parse(ref)
+      ref_uri.fragment = ''
 
       return ref_uri if ref_uri.absolute?
       # This is a self reference and thus the schema does not need to be re-loaded
