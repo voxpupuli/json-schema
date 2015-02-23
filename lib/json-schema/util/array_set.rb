@@ -1,14 +1,20 @@
+require 'set'
+
 # This is a hack that I don't want to ever use anywhere else or repeat EVER, but we need enums to be
-# an Array to pass schema validation. But we also want fast lookup! And we can't use sets because of
-# backport support... so...
+# an Array to pass schema validation. But we also want fast lookup!
 
 class ArraySet < Array
-	def include?(obj)
-		# On first invocation create a HASH (yeah, yeah) to act as our set given the array values
-		if !defined? @array_values
-			@array_values = {}
-			self.each {|x| @array_values[x] = 1}
-		end
-		@array_values.has_key? obj
-	end
+  def include?(obj)
+    if !defined? @values
+      @values = Set.new
+      self.each { |x| @values << convert_to_float_if_fixnum(x) }
+    end
+    @values.include?(convert_to_float_if_fixnum(obj))
+  end
+
+  private
+
+  def convert_to_float_if_fixnum(value)
+    value.is_a?(Fixnum) ? value.to_f : value
+  end
 end

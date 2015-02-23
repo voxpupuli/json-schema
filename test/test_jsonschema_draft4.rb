@@ -22,6 +22,9 @@ class JSONSchemaDraft4Test < Minitest::Test
   include ArrayValidation::AdditionalItemsTests
   include ArrayValidation::UniqueItemsTests
 
+  include EnumValidation::General
+  include EnumValidation::V3_V4
+
   include NumberValidation::MinMaxTests
   include NumberValidation::MultipleOfTests
 
@@ -81,56 +84,84 @@ class JSONSchemaDraft4Test < Minitest::Test
     refute_valid schema, {'a' => 1, 'b' => 2, 'c' => 3}
   end
 
-  def test_enum
-    # Set up the default datatype
+  def test_strict_properties
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "properties" => {
-        "a" => {"enum" => [1,'boo',[1,2,3],{"a" => "b"}]}
+        "a" => {"type" => "string"},
+        "b" => {"type" => "string"}
       }
     }
 
-    data = {
-      "a" => nil
-    }
+    data = {"a" => "a"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
 
-    # Make sure all of the above are valid...
-    data["a"] = 1
-    assert_valid schema, data
+    data = {"b" => "b"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
 
-    data["a"] = 'boo'
-    assert_valid schema, data
+    data = {"a" => "a", "b" => "b"}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
 
-    data["a"] = [1,2,3]
-    assert_valid schema, data
-
-    data["a"] = {"a" => "b"}
-    assert_valid schema, data
-
-    # Test something that doesn't exist
-    data["a"] = 'taco'
-    refute_valid schema, data
-
-    # Try it without the key
-    data = {}
-    assert_valid schema, data
+    data = {"a" => "a", "b" => "b", "c" => "c"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
   end
 
-  def test_enum_with_schema_validation
+  def test_strict_properties_additional_props
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "properties" => {
-        "a" => {"enum" => [1,'boo',[1,2,3],{"a" => "b"}]}
-      }
+        "a" => {"type" => "string"},
+        "b" => {"type" => "string"}
+      },
+      "additionalProperties" => {"type" => "integer"}
     }
 
-    data = {
-      "a" => nil
+    data = {"a" => "a"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"b" => "b"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b"}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "c" => "c"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "c" => 3}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
+  end
+
+  def test_strict_properties_pattern_props
+    schema = {
+      "$schema" => "http://json-schema.org/draft-03/schema#",
+      "properties" => {
+        "a" => {"type" => "string"},
+        "b" => {"type" => "string"}
+      },
+      "patternProperties" => {"\\d+ taco" => {"type" => "integer"}}
     }
 
-    # Make sure all of the above are valid...
-    data["a"] = 1
-    assert(JSON::Validator.validate(schema,data,:validate_schema => true))
+    data = {"a" => "a"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"b" => "b"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b"}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "c" => "c"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "c" => 3}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "23 taco" => 3}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "23 taco" => "cheese"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
   end
 
   def test_list_option
