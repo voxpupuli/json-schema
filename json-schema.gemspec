@@ -13,7 +13,6 @@ Gem::Specification.new do |s|
   s.summary = "Ruby JSON Schema Validator"
   s.files = Dir[ "lib/**/*", "resources/*.json" ]
   s.require_path = "lib"
-  s.test_files = Dir[ "test/**/test*", "test/{data,schemas}/*.json" ]
   s.extra_rdoc_files = ["README.textile","LICENSE.md"]
   s.required_ruby_version = ">= 1.8.7"
   s.license = "MIT"
