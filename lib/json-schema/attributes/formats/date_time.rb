@@ -14,18 +14,16 @@ module JSON
 
             begin
               Date.parse(parts[0])
-            rescue Exception
+            rescue ArgumentError => e
+              raise e unless e.message == 'invalid date'
               validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors])
               return
             end
 
-            begin
-              validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors]) and return if m[1].to_i > 23
-              validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors]) and return if m[2].to_i > 59
-              validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors]) and return if m[3].to_i > 59
-            rescue Exception
-              validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors])
-            end
+            validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors]) and return if m.length < 4
+            validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors]) and return if m[1].to_i > 23
+            validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors]) and return if m[2].to_i > 59
+            validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors]) and return if m[3].to_i > 59
           else
             validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors])
           end

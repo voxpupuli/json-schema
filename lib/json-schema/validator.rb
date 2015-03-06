@@ -9,6 +9,8 @@ require 'yaml'
 
 require 'json-schema/schema/reader'
 require 'json-schema/errors/schema_error'
+require 'json-schema/errors/schema_parse_error'
+require 'json-schema/errors/json_load_error'
 require 'json-schema/errors/json_parse_error'
 
 module JSON
@@ -54,17 +56,13 @@ module JSON
 
       # validate the schema, if requested
       if @options[:validate_schema]
-        begin
-          if @base_schema.schema["$schema"]
-            base_validator = JSON::Validator.validator_for_name(@base_schema.schema["$schema"])
-          end
-          metaschema = base_validator ? base_validator.metaschema : validator.metaschema
-          # Don't clear the cache during metaschema validation!
-          meta_validator = JSON::Validator.new(metaschema, @base_schema.schema, {:clear_cache => false})
-          meta_validator.validate
-        rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
-          raise $!
+        if @base_schema.schema["$schema"]
+          base_validator = JSON::Validator.validator_for_name(@base_schema.schema["$schema"])
         end
+        metaschema = base_validator ? base_validator.metaschema : validator.metaschema
+        # Don't clear the cache during metaschema validation!
+        meta_validator = JSON::Validator.new(metaschema, @base_schema.schema, {:clear_cache => false})
+        meta_validator.validate
       end
 
       # If the :fragment option is set, try and validate against the fragment
@@ -415,15 +413,27 @@ module JSON
 
       def parse(s)
         if defined?(MultiJson)
-          MultiJson.respond_to?(:adapter) ? MultiJson.load(s) : MultiJson.decode(s)
+          begin
+            MultiJson.respond_to?(:adapter) ? MultiJson.load(s) : MultiJson.decode(s)
+          rescue MultiJson::ParseError => e
+            raise JSON::Schema::JsonParseError.new(e.message)
+          end
         else
           case @@json_backend.to_s
           when 'json'
-            JSON.parse(s, :quirks_mode => true)
+            begin
+              JSON.parse(s, :quirks_mode => true)
+            rescue JSON::ParserError => e
+              raise JSON::Schema::JsonParseError.new(e.message)
+            end
           when 'yajl'
-            json = StringIO.new(s)
-            parser = Yajl::Parser.new
-            parser.parse(json) or raise JSON::Schema::JsonParseError.new("The JSON could not be parsed by yajl")
+            begin
+              json = StringIO.new(s)
+              parser = Yajl::Parser.new
+              parser.parse(json) or raise JSON::Schema::JsonParseError.new("The JSON could not be parsed by yajl")
+            rescue Yajl::ParseError => e
+              raise JSON::Schema::JsonParseError.new(e.message)
+            end
           else
             raise JSON::Schema::JsonParseError.new("No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json")
           end
@@ -520,7 +530,7 @@ module JSON
             schema = schema.to_array_schema
           end
           Validator.add_schema(schema)
-        rescue
+        rescue JSON::Schema::JsonParseError
           # Build a uri for it
           schema_uri = Util::URI.normalized_uri(schema)
           if !self.class.schema_loaded?(schema_uri)
@@ -551,7 +561,7 @@ module JSON
         end
         Validator.add_schema(schema)
       else
-        raise "Invalid schema - must be either a string or a hash"
+        raise SchemaParseError, "Invalid schema - must be either a string or a hash"
       end
 
       schema
@@ -567,12 +577,12 @@ module JSON
         elsif data.is_a?(String)
           begin
             data = JSON::Validator.parse(data)
-          rescue
+          rescue JSON::Schema::JsonParseError
             begin
               json_uri = Util::URI.normalized_uri(data)
               data = JSON::Validator.parse(custom_open(json_uri))
-            rescue
-              # Silently discard the error - the data will not change
+            rescue JSON::Schema::JsonLoadError
+              # Silently discard the error - use the data as-is
             end
           end
         end
@@ -582,10 +592,18 @@ module JSON
 
     def custom_open(uri)
       uri = Util::URI.normalized_uri(uri) if uri.is_a?(String)
-      if uri.absolute? && uri.scheme != 'file'
-        open(uri.to_s).read
+      if uri.absolute? && Util::URI::SUPPORTED_PROTOCOLS.include?(uri.scheme)
+        begin
+          open(uri.to_s).read
+        rescue OpenURI::HTTPError, Timeout::Error => e
+          raise JSON::Schema::JsonLoadError, e.message
+        end
       else
-        File.read(Addressable::URI.unescape(uri.path))
+        begin
+          File.read(Addressable::URI.unescape(uri.path))
+        rescue SystemCallError => e
+          raise JSON::Schema::JsonLoadError, e.message
+        end
       end
     end
   end
