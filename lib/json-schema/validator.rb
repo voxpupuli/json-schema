@@ -26,7 +26,8 @@ module JSON
       :insert_defaults => false,
       :clear_cache => true,
       :strict => false,
-      :parse_data => true
+      :parse_data => true,
+      :stringify_data_keys => false
     }
     @@validators = {}
     @@default_validator = nil
@@ -47,7 +48,7 @@ module JSON
       @validation_options[:clear_cache] = false if @options[:clear_cache] == false
 
       @@mutex.synchronize { @base_schema = initialize_schema(schema_data) }
-      @original_data = data
+      @original_data = @options[:stringify_data_keys] ? JSON::Schema.stringify!(data) : data
       @data = initialize_data(data)
       @@mutex.synchronize { build_schemas(@base_schema) }
 
@@ -374,13 +375,13 @@ module JSON
       def register_format_validator(format, validation_proc, versions = ["draft1", "draft2", "draft3", "draft4"])
         custom_format_validator = JSON::Schema::CustomFormat.new(validation_proc)
         validators_for_names(versions).each do |validator|
-          validator.formats[format.to_s] = custom_format_validator
+          validator.formats[format] = custom_format_validator
         end
       end
 
       def deregister_format_validator(format, versions = ["draft1", "draft2", "draft3", "draft4"])
         validators_for_names(versions).each do |validator|
-          validator.formats[format.to_s] = validator.default_formats[format.to_s]
+          validator.formats[format] = validator.default_formats[format]
         end
       end
 
@@ -398,7 +399,7 @@ module JSON
         case destination
         when Hash
           source.each do |key, source_value|
-            destination_value = destination[key] || destination[key.to_sym]
+            destination_value = destination[key]
             if destination_value.nil?
               destination[key] = source_value
             else
@@ -508,7 +509,7 @@ module JSON
           end
         end
       end
-      JSON::Schema.stringify(data)
+      data
     end
 
     def custom_open(uri)

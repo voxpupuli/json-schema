@@ -7,7 +7,7 @@ module JSON
         return unless data.is_a?(Hash)
 
         current_schema.schema['dependencies'].each do |property, dependency_value|
-          next unless data.has_key?(property.to_s)
+          next unless data.has_key?(property)
           next unless accept_value?(dependency_value)
 
           case dependency_value
@@ -25,7 +25,7 @@ module JSON
       end
 
       def self.validate_dependency(schema, data, property, value, fragments, processor, attribute, options)
-        return if data.key?(value.to_s)
+        return if data.key?(value)
         message = "The property '#{build_fragment(fragments)}' has a property '#{property}' that depends on a missing property '#{value}'"
         validation_error(processor, message, fragments, schema, attribute, options[:record_errors])
       end
