@@ -12,7 +12,7 @@ module JSON
 
         schema = current_schema.schema
         schema['properties'].each do |property, property_schema|
-          property = property.to_s
+          property = property
 
           if !data.key?(property) &&
               options[:insert_defaults] &&
@@ -37,8 +37,6 @@ module JSON
         return unless options[:strict] == true && !schema.key?('additionalProperties')
 
         diff = data.select do |k, v|
-          k = k.to_s
-
           if schema.has_key?('patternProperties')
             match = false
             schema['patternProperties'].each do |property, property_schema|

@@ -35,16 +35,19 @@ module JSON
 
     def self.stringify(schema)
       case schema
-      when Hash then
-        Hash[schema.map { |key, value| [key.to_s, stringify(schema[key])] }]
-      when Array then
-        schema.map do |schema_item|
-          stringify(schema_item)
-        end
-      when Symbol then
-        schema.to_s
+      when Hash, Array, Symbol
+        JSON::Validator.parse(schema.to_json)
       else
         schema
+      end
+    end
+
+    def self.stringify!(data)
+      case data
+      when Hash, Array
+        data.replace(stringify(data))
+      else
+        data
       end
     end
 
