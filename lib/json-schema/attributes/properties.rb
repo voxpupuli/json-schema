@@ -12,8 +12,6 @@ module JSON
 
         schema = current_schema.schema
         schema['properties'].each do |property, property_schema|
-          property = property
-
           if !data.key?(property) &&
               options[:insert_defaults] &&
               property_schema.has_key?('default') &&
