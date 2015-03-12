@@ -10,7 +10,7 @@ module JSON
         defined_properties = schema['properties']
 
         schema['required'].each do |property, property_schema|
-          next if data.has_key?(property.to_s)
+          next if data.has_key?(property)
           prop_defaults = options[:insert_defaults] &&
                           defined_properties &&
                           defined_properties[property] &&

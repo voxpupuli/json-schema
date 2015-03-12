@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.require_path = "lib"
   s.test_files = Dir[ "test/**/test*", "test/{data,schemas}/*.json" ]
   s.extra_rdoc_files = ["README.textile","LICENSE.md"]
-  s.required_ruby_version = ">= 1.8.7"
+  s.required_ruby_version = ">= 1.9.0"
   s.license = "MIT"
   s.required_rubygems_version = ">= 1.8"
 

@@ -8,8 +8,6 @@ module JSON
 
         schema = current_schema.schema
         schema['properties'].each do |property, property_schema|
-          property = property.to_s
-
           if !property_schema['optional'] && !data.key?(property)
             message = "The property '#{build_fragment(fragments)}' did not contain a required property of '#{property}'"
             validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
