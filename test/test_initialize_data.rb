@@ -10,7 +10,7 @@ class InitializeDataTest < Minitest::Test
 
     assert(JSON::Validator.validate(schema, data, :parse_data => false))
 
-    assert_raises(parser_error) do
+    assert_raises(JSON::ParserError) do
       JSON::Validator.validate(schema, data, :json => true)
     end
 
@@ -66,7 +66,7 @@ class InitializeDataTest < Minitest::Test
 
     assert(JSON::Validator.validate(schema, data, :parse_data => false))
 
-    assert_raises(parser_error) do
+    assert_raises(JSON::ParserError) do
       JSON::Validator.validate(schema, data, :json => true)
     end
 
@@ -83,7 +83,7 @@ class InitializeDataTest < Minitest::Test
 
     assert(JSON::Validator.validate(schema, data, :parse_data => false))
 
-    assert_raises(parser_error) do
+    assert_raises(JSON::ParserError) do
       JSON::Validator.validate(schema, data, :json => true)
     end
 

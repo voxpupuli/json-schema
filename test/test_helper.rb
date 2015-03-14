@@ -34,14 +34,4 @@ class Minitest::Test
     errors = JSON::Validator.fully_validate(schema, data, options)
     refute_equal([], errors, "#{data.inspect} should be invalid for schema:\n#{schema.inspect}")
   end
-
-  def parser_error
-    if defined?(::Yajl)
-      Yajl::ParseError
-    elsif defined?(::MultiJson)
-      MultiJson::ParseError
-    else
-      JSON::ParserError
-    end
-  end
 end

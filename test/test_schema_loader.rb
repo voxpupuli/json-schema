@@ -67,7 +67,7 @@ class TestSchemaReader < Minitest::Test
 
     reader = JSON::Schema::Reader.new
 
-    assert_raises(parser_error) do
+    assert_raises(JSON::ParserError) do
       reader.read(ADDRESS_SCHEMA_URI)
     end
   end
