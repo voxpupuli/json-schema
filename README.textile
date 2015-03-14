@@ -1,5 +1,6 @@
 !https://travis-ci.org/ruby-json-schema/json-schema.svg?branch=master!:https://travis-ci.org/ruby-json-schema/json-schema
 !https://codeclimate.com/github/ruby-json-schema/json-schema/badges/gpa.svg!:https://codeclimate.com/github/ruby-json-schema/json-schema
+!https://codeclimate.com/github/ruby-json-schema/json-schema/badges/coverage.svg!:https://codeclimate.com/github/ruby-json-schema/json-schema
 
 h1. Ruby JSON Schema Validator
 
@@ -422,18 +423,6 @@ JSON::Validator.validate(some_schema, some_object, :schema_reader => schema_read
 </pre>
 
 The <code>JSON::Schema::Reader</code> interface requires only an object which responds to <code>read(string)</code> and returns a <code>JSON::Schema</code> instance. See the "API documentation":http://www.rubydoc.info/github/ruby-json-schema/json-schema/master/JSON/Schema/Reader for more information.
-
-h2. JSON Backends
-
-The JSON Schema library currently supports the <code>json</code> and <code>yajl-ruby</code> backend JSON parsers. If either of these libraries are installed, they will be automatically loaded and used to parse any JSON strings supplied by the user.
-
-If more than one of the supported JSON backends are installed, the <code>yajl-ruby</code> parser is used by default. This can be changed by issuing the following before validation:
-
-<pre>
-JSON::Validator.json_backend = :json
-</pre>
-
-Optionally, the JSON Schema library supports using the MultiJSON library for selecting JSON backends. If the MultiJSON library is installed, it will be autoloaded.
 
 h2. Notes
 

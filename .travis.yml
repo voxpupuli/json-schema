@@ -1,7 +1,6 @@
 language: "ruby"
 
 rvm:
-  - "1.8"
   - "1.9"
   - "2.0"
   - "2.1"
@@ -17,10 +16,7 @@ install:
 matrix:
   include:
     - rvm: "2.2"
-      gemfile: "gemfiles/Gemfile.multi_json.x"
-    - rvm: "2.2"
-      gemfile: "gemfiles/Gemfile.yajl-ruby.x"
-    - rvm: "2.2"
       gemfile: "gemfiles/Gemfile.uuidtools.x"
-  allow_failures:
-    - rvm: "1.8"
+env:
+  global:
+    secure: OfKdsz+f3GPzDkxqaEm1T5AZt7MVmMWGqlRe+150Q53EoWtJmZQrEvrJ9EVyhCW3qzeK57YlM5tAFbvvbMpO7LEn4BoW7Vqize3SoOdGDyK5CSheeRqfw4vAepvDVpV7AfEo/Hj3LNHwpgVcywMzf7SaHoTTk2FpzV/1fH7Oo8g=

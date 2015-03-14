@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.files = Dir[ "lib/**/*", "resources/*.json" ]
   s.require_path = "lib"
   s.extra_rdoc_files = ["README.textile","LICENSE.md"]
-  s.required_ruby_version = ">= 1.8.7"
+  s.required_ruby_version = ">= 1.9.0"
   s.license = "MIT"
   s.required_rubygems_version = ">= 1.8"
 
@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "minitest", '~> 5.0'
   s.add_development_dependency "webmock"
   s.add_development_dependency "bundler"
+  s.add_development_dependency "codeclimate-test-reporter"
 
   s.add_runtime_dependency "addressable", '~> 2.3.7'
 end

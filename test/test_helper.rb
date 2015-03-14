@@ -1,3 +1,8 @@
+if ENV['CI'].to_s == 'true'
+  require "codeclimate-test-reporter"
+  CodeClimate::TestReporter.start
+end
+
 require 'minitest/autorun'
 require 'webmock/minitest'
 
