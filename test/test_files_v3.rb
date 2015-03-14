@@ -2,10 +2,6 @@ require File.expand_path('../test_helper', __FILE__)
 
 class JSONSchemaTest < Minitest::Test
 
-  #
-  # These tests are ONLY run if there is an appropriate JSON backend parser available
-  #
-
   def test_schema_from_file
     assert_valid schema_fixture_path('good_schema_1.json'), { "a" => 5 }
     refute_valid schema_fixture_path('good_schema_1.json'), { "a" => "bad" }
@@ -18,11 +14,9 @@ class JSONSchemaTest < Minitest::Test
   end
 
   def test_data_from_json
-    if JSON::Validator.json_backend != nil
-      schema = {"$schema" => "http://json-schema.org/draft-03/schema#","type" => "object", "properties" => {"a" => {"type" => "integer"}}}
-      assert_valid schema, %Q({"a": 5}), :json => true
-      refute_valid schema, %Q({"a": "poop"}), :json => true
-    end
+    schema = {"$schema" => "http://json-schema.org/draft-03/schema#","type" => "object", "properties" => {"a" => {"type" => "integer"}}}
+    assert_valid schema, %Q({"a": 5}), :json => true
+    refute_valid schema, %Q({"a": "poop"}), :json => true
   end
 
   def test_both_from_file
