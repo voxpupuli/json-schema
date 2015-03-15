@@ -249,28 +249,12 @@ module JSON
         end
       end
 
-      def validate_json(schema, data, opts={})
-        validate(schema, data, opts.merge(:json => true))
-      end
-
-      def validate_uri(schema, data, opts={})
-        validate(schema, data, opts.merge(:uri => true))
-      end
-
       def validate!(schema, data,opts={})
         validator = JSON::Validator.new(schema, data, opts)
         validator.validate
         return true
       end
       alias_method 'validate2', 'validate!'
-
-      def validate_json!(schema, data, opts={})
-        validate!(schema, data, opts.merge(:json => true))
-      end
-
-      def validate_uri!(schema, data, opts={})
-        validate!(schema, data, opts.merge(:uri => true))
-      end
 
       def fully_validate(schema, data, opts={})
         opts[:record_errors] = true
@@ -282,14 +266,6 @@ module JSON
         data = schema
         schema = JSON::Validator.validator_for_name(opts[:version]).metaschema
         fully_validate(schema, data, opts)
-      end
-
-      def fully_validate_json(schema, data, opts={})
-        fully_validate(schema, data, opts.merge(:json => true))
-      end
-
-      def fully_validate_uri(schema, data, opts={})
-        fully_validate(schema, data, opts.merge(:uri => true))
       end
 
       def schema_reader
