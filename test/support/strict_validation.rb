@@ -22,8 +22,8 @@ module StrictValidation
   end
 
   def test_strict_error_message
-    schema = { :type => 'object', :properties => { :a => { :type => 'string' } } }
-    data = { :a => 'abc', :b => 'abc' }
+    schema = { 'type' => 'object', 'properties' => { 'a' => { 'type' => 'string' } } }
+    data = { 'a' => 'abc', 'b' => 'abc' }
     errors = JSON::Validator.fully_validate(schema,data,:strict => true)
     assert_match("The property '#/' contained undefined properties: 'b' in schema", errors[0])
   end

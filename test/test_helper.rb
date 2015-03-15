@@ -17,6 +17,10 @@ class Minitest::Test
     File.join(File.dirname(__FILE__), 'data', filename)
   end
 
+  def data_fixture(filename)
+    JSON.parse(File.read(data_fixture_path(filename)))
+  end
+
   def assert_valid(schema, data, options = {})
     if !options.key?(:version) && respond_to?(:schema_version)
       options = options.merge(:version => schema_version)

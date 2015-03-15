@@ -33,24 +33,6 @@ module JSON
       @validator.validate(self, data, fragments, processor, options)
     end
 
-    def self.stringify(schema)
-      case schema
-      when Hash, Array, Symbol
-        JSON::Validator.parse(schema.to_json)
-      else
-        schema
-      end
-    end
-
-    def self.stringify!(data)
-      case data
-      when Hash, Array
-        data.replace(stringify(data))
-      else
-        data
-      end
-    end
-
     # @return [JSON::Schema] a new schema matching an array whose items all match this schema.
     def to_array_schema
       array_schema = { 'type' => 'array', 'items' => schema }

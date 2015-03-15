@@ -316,9 +316,9 @@ class JSONSchemaDraft4Test < Minitest::Test
       "properties" => { "a" => {"type" => "string", "format" => "uri"}}
     }
 
-    assert(JSON::Validator.validate(schema,data1))
-    assert(!JSON::Validator.validate(schema,data2))
-    assert(JSON::Validator.validate(schema,data3))
+    assert_valid schema, data1
+    refute_valid schema, data2
+    assert_valid schema, data3
   end
 
   def test_schema

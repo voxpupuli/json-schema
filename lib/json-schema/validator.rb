@@ -25,9 +25,7 @@ module JSON
       :errors_as_objects => false,
       :insert_defaults => false,
       :clear_cache => true,
-      :strict => false,
-      :parse_data => true,
-      :stringify_data_keys => false
+      :strict => false
     }
     @@validators = {}
     @@default_validator = nil
@@ -48,8 +46,9 @@ module JSON
       @validation_options[:clear_cache] = false if @options[:clear_cache] == false
 
       @@mutex.synchronize { @base_schema = initialize_schema(schema_data) }
-      @original_data = @options[:stringify_data_keys] ? JSON::Schema.stringify!(data) : data
-      @data = initialize_data(data)
+      # TODO cleanup when support for inserting defaults is dropped
+      @original_data = data
+      @data = data
       @@mutex.synchronize { build_schemas(@base_schema) }
 
       # validate the schema, if requested
@@ -457,7 +456,6 @@ module JSON
           schema_uri = Util::URI.normalized_uri(schema)
           if !self.class.schema_loaded?(schema_uri)
             schema = @options[:schema_reader].read(schema_uri)
-            schema = JSON::Schema.stringify(schema)
 
             if @options[:list] && @options[:fragment].nil?
               schema = schema.to_array_schema
@@ -476,7 +474,6 @@ module JSON
         end
       elsif schema.is_a?(Hash)
         schema_uri = Addressable::URI.parse(fake_uuid(serialize(schema)))
-        schema = JSON::Schema.stringify(schema)
         schema = JSON::Schema.new(schema, schema_uri, @options[:version])
         if @options[:list] && @options[:fragment].nil?
           schema = schema.to_array_schema
@@ -487,29 +484,6 @@ module JSON
       end
 
       schema
-    end
-
-    def initialize_data(data)
-      if @options[:parse_data]
-        if @options[:json]
-          data = JSON::Validator.parse(data)
-        elsif @options[:uri]
-          json_uri = Util::URI.normalized_uri(data)
-          data = JSON::Validator.parse(custom_open(json_uri))
-        elsif data.is_a?(String)
-          begin
-            data = JSON::Validator.parse(data)
-          rescue
-            begin
-              json_uri = Util::URI.normalized_uri(data)
-              data = JSON::Validator.parse(custom_open(json_uri))
-            rescue
-              # Silently discard the error - the data will not change
-            end
-          end
-        end
-      end
-      data
     end
 
     def custom_open(uri)

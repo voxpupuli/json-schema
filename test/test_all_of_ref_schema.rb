@@ -6,7 +6,7 @@ class AllOfRefSchemaTest < Minitest::Test
   end
 
   def data
-    data_fixture_path('all_of_ref_data.json')
+    data_fixture('all_of_ref_data.json')
   end
 
   def test_all_of_ref_schema_fails
@@ -14,7 +14,7 @@ class AllOfRefSchemaTest < Minitest::Test
   end
 
   def test_all_of_ref_schema_succeeds
-    assert_valid schema, %({"name": 42})
+    assert_valid schema, {"name" => 42}
   end
 
   def test_all_of_ref_subschema_errors

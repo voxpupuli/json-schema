@@ -6,11 +6,11 @@ class AnyOfRefSchemaTest < Minitest::Test
   end
 
   def test_any_of_ref_schema
-    assert_valid schema, data_fixture_path('any_of_ref_data.json')
+    assert_valid schema, data_fixture('any_of_ref_data.json')
   end
 
   def test_any_of_ref_subschema_errors
-    data = %({"names": ["jack"]})
+    data = {"names" =>  ["jack"]}
     errors = JSON::Validator.fully_validate(schema, data, :errors_as_objects => true)
     nested_errors = errors[0][:errors]
     assert_equal([:anyof_0, :anyof_1, :anyof_2], nested_errors.keys, 'should have nested errors for each anyOf subschema')
@@ -20,7 +20,7 @@ class AnyOfRefSchemaTest < Minitest::Test
   end
 
   def test_any_of_ref_message
-    data = %({"names": ["jack"]})
+    data = {"names" => ["jack"]}
     errors = JSON::Validator.fully_validate(schema, data)
     expected_message = """The property '#/names/0' of type String did not match one or more of the required schemas. The schema specific errors were:
 

@@ -46,82 +46,6 @@ class JSONSchemaValidation < Minitest::Test
     }
   end
 
-  def symbolized_schema
-    {
-      :type => :object,
-      :required => [
-        :id,
-        :name,
-        :real_name,
-        :role,
-        :website,
-        :biography,
-        :created_at,
-        :demographic
-      ],
-      :properties => {
-        :id => {
-          :type => [
-            :integer
-          ]
-        },
-        :name => {
-          :type => [
-            :string
-          ]
-        },
-        :real_name => {
-          :type => [
-            :string
-          ]
-        },
-        :role => {
-          :type => [
-            :string
-          ]
-        },
-        :website => {
-          :type => [
-            :string,
-            :null
-          ]
-        },
-        :created_at => {
-          :type => [
-            :string
-          ]
-        },
-        :biography => {
-          :type => [
-            :string,
-            :null
-          ]
-        }
-      },
-      :relationships => {
-        :demographic => {
-          :type => :object,
-          :required => [
-            :id,
-            :gender
-          ],
-          :properties => {
-            :id => {
-              :type => [
-                :integer
-              ]
-            },
-            :gender => {
-              :type => [
-                :string
-              ]
-            }
-          }
-        }
-      }
-    }
-  end
-
   def test_draft03_validation
     data = {"b" => {"a" => 5}}
     assert(JSON::Validator.validate(valid_schema_v3,data,:validate_schema => true, :version => :draft3))
@@ -167,19 +91,5 @@ class JSONSchemaValidation < Minitest::Test
         assert(!JSON::Validator.validate(invalid_schema_v4,data,:validate_schema => true, :version => :draft4))
       end
     end
-  end
-
-  def test_validate_schema_with_symbol_keys
-    data = {
-      "created_at" => "2014-01-25T00:58:33-08:00",
-      "id" => 8517194300913402149003,
-      "name" => "chelsey",
-      "real_name" => "Mekhi Hegmann",
-      "website" => nil,
-      "role" => "user",
-      "biography" => nil,
-      "demographic" => nil
-    }
-    assert(JSON::Validator.validate!(symbolized_schema, data, :validate_schema => true))
   end
 end
