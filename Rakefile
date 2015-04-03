@@ -14,7 +14,11 @@ end
 
 Rake::TestTask.new do |t|
   t.libs << "."
-  t.test_files = FileList['test/test*.rb']
+  t.warning = true
+  t.verbose = true
+  t.test_files = FileList.new('test/test*.rb') do |fl|
+    fl.exclude(/test_helper\.rb$/)
+  end
 end
 
 task :test => :update_common_tests
