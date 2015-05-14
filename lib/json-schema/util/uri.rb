@@ -1,7 +1,12 @@
+require 'singleton'
+
 module JSON
   module Util
-    module URI
-      def self.normalized_uri(uri)
+    class URI
+      include Singleton
+      attr_accessor :cache
+
+      def normalized_uri(uri)
         uri = Addressable::URI.parse(uri) unless uri.is_a?(Addressable::URI)
         # Check for absolute path
         if uri.relative?
@@ -10,6 +15,11 @@ module JSON
           uri = Addressable::URI.convert_path(data)
         end
         uri
+      end
+
+      def self.normalized_uri(uri)
+        instance.cache ||= {}
+        instance.cache[uri] ||= instance.normalized_uri(uri)
       end
     end
   end
