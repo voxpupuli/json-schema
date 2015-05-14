@@ -60,7 +60,7 @@ module JSON
       #   indicated the schema could not be read
       # @raise [JSON::Schema::ParseError] if the schema was not a valid JSON object
       def read(location)
-        uri  = Addressable::URI.parse(location.to_s)
+        uri  = JSON::Util::URI.parse(location.to_s)
         body = if uri.scheme.nil? || uri.scheme == 'file'
                  uri = Addressable::URI.convert_path(uri.path)
                  read_file(Pathname.new(uri.path).expand_path)

@@ -8,5 +8,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Added a changelog
 
 ### Changed
+- Improved performance by caching the parsing and normalization of URIs
 - Made validation failures raise a `JSON::Schema::SchemaParseError` and data
   loading failures a `JSON::Schema::JsonLoadError`

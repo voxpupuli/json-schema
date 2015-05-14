@@ -2,7 +2,7 @@ require 'json-schema/schema/validator'
 
 module JSON
   class Schema
-    
+
     class Draft3 < Validator
       def initialize
         super
@@ -38,13 +38,13 @@ module JSON
           'uri' => UriFormat
         }
         @formats = @default_formats.clone
-        @uri = Addressable::URI.parse("http://json-schema.org/draft-03/schema#")
+        @uri = JSON::Util::URI.parse("http://json-schema.org/draft-03/schema#")
         @names = ["draft3", "http://json-schema.org/draft-03/schema#"]
         @metaschema_name = "draft-03.json"
       end
-      
+
       JSON::Validator.register_validator(self.new)
     end
-    
+
   end
 end
