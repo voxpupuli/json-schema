@@ -29,10 +29,10 @@ module JSON
         "number" => Numeric,
         "integer" => Integer,
         "boolean" => [TrueClass, FalseClass],
-        "object" => Hash,
+        "object" => [Hash, OpenStruct],
         "array" => Array,
         "null" => NilClass,
-        "any" => [Object, OpenStruct]
+        "any" => Object
       }
 
       def self.data_valid_for_type?(data, type)
