@@ -1,4 +1,5 @@
 require 'json-schema/errors/validation_error'
+require 'ostruct'
 
 module JSON
   class Schema
@@ -31,7 +32,7 @@ module JSON
         "object" => Hash,
         "array" => Array,
         "null" => NilClass,
-        "any" => Object
+        "any" => [Object, OpenStruct]
       }
 
       def self.data_valid_for_type?(data, type)
