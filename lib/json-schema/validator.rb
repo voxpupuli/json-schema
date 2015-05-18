@@ -474,6 +474,8 @@ module JSON
 
         if @@json_backend == 'yajl'
           @@serializer = lambda{|o| Yajl::Encoder.encode(o) }
+        elsif @@json_backend == 'json'
+          @@serializer = lambda{|o| JSON.dump(o) }
         else
           @@serializer = lambda{|o| YAML.dump(o) }
         end
