@@ -539,14 +539,14 @@ module JSON
             schema = self.class.schema_for_uri(schema_uri)
             if @options[:list] && @options[:fragment].nil?
               schema = schema.to_array_schema
-              schema.uri = Addressable::URI.parse(fake_uuid(serialize(schema.schema)))
+              schema.uri = Addressable::URI.parse(fake_uuid(schema.hash.to_s))
               Validator.add_schema(schema)
             end
             schema
           end
         end
       elsif schema.is_a?(Hash)
-        schema_uri = Addressable::URI.parse(fake_uuid(serialize(schema)))
+        schema_uri = Addressable::URI.parse(fake_uuid(schema.hash.to_s))
         schema = JSON::Schema.stringify(schema)
         schema = JSON::Schema.new(schema, schema_uri, @options[:version])
         if @options[:list] && @options[:fragment].nil?
