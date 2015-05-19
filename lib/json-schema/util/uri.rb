@@ -17,6 +17,9 @@ module JSON
         uri
       end
 
+      # This cache creates a race condition in multithreaded environments
+      # This is OK because the worst case result of the race is
+      # a cache miss
       def self.normalized_uri(uri)
         instance.cache ||= {}
         instance.cache[uri] ||= instance.normalized_uri(uri)
