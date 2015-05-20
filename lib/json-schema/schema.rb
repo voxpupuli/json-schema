@@ -17,7 +17,8 @@ module JSON
         end
         @uri = temp_uri
       end
-      @uri.fragment = ''
+      # @@TODO maybe this whole modified uri should be cached for performance too
+      @uri.fragment = '' if !@uri.fragment.nil? && !@uri.fragment.empty?
 
       # If there is a $schema on this schema, use it to determine which validator to use
       if @schema['$schema']
