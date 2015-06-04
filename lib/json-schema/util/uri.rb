@@ -11,7 +11,7 @@ module JSON
         # Check for absolute path
         if uri.relative?
           data = uri.to_s
-          data = "#{Dir.pwd}/#{data}" if data[0,1] != '/'
+          data = "#{Dir.pwd}/#{data}" if data[0, 1] != '/'
           uri = Addressable::URI.convert_path(data)
         end
         uri
@@ -22,7 +22,7 @@ module JSON
       # a cache miss
       def self.normalized_uri(uri)
         instance.normalize_cache ||= {}
-        instance.normalize_cache[uri] ||= instance.normalized_uri(uri)
+        instance.normalize_cache[uri.to_s] ||= instance.normalized_uri(uri)
       end
 
       def self.parse(uri)
