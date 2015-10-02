@@ -35,9 +35,10 @@ module JSON
     @@serializer = nil
     @@mutex = Mutex.new
 
-    def initialize(schema_data, data, opts={})
+    def initialize(schema_data, data=nil, opts={})
       @options = @@default_opts.clone.merge(opts)
       @errors = []
+      @data = data
 
       validator = JSON::Validator.validator_for_name(@options[:version])
       @options[:version] = validator
@@ -49,8 +50,6 @@ module JSON
       @validation_options[:clear_cache] = false if @options[:clear_cache] == false
 
       @@mutex.synchronize { @base_schema = initialize_schema(schema_data) }
-      @original_data = data
-      @data = initialize_data(data)
       @@mutex.synchronize { build_schemas(@base_schema) }
 
       # validate the schema, if requested
@@ -113,7 +112,15 @@ module JSON
 
     # Run a simple true/false validation of data against a schema
     def validate()
-      @base_schema.validate(@data,[],self,@validation_options)
+      validate_data(@data)
+    end
+
+    # Validate the provided data against the schema this instance was created
+    # with.
+    def validate_data(data)
+      original_data = data
+      data = initialize_data(data)
+      @base_schema.validate(data,[],self,@validation_options)
       if @options[:errors_as_objects]
         return @errors.map{|e| e.to_hash}
       else
@@ -124,7 +131,7 @@ module JSON
         Validator.clear_cache
       end
       if @validation_options[:insert_defaults]
-        JSON::Validator.merge_missing_values(@data, @original_data)
+        JSON::Validator.merge_missing_values(data, original_data)
       end
     end
 
