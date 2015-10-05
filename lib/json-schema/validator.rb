@@ -15,6 +15,20 @@ module JSON
 
   class Validator
 
+    class Processor
+      def initialize
+        @errors = []
+      end
+
+      def validation_error(error)
+        @errors.push(error)
+      end
+
+      def validation_errors
+        @errors
+      end
+    end
+
     @@schemas = {}
     @@cache_schemas = false
     @@default_opts = {
@@ -37,8 +51,8 @@ module JSON
 
     def initialize(schema_data, data=nil, opts={})
       @options = @@default_opts.clone.merge(opts)
-      @errors = []
-      @data = data
+      # This instance var is deprecated, please don't use it.
+      @_data = data
 
       validator = JSON::Validator.validator_for_name(@options[:version])
       @options[:version] = validator
@@ -112,19 +126,20 @@ module JSON
 
     # Run a simple true/false validation of data against a schema
     def validate()
-      validate_data(@data)
+      validate_data(@_data, @options)
     end
 
     # Validate the provided data against the schema this instance was created
     # with.
-    def validate_data(data)
+    def validate_data(data, options = {})
       original_data = data
       data = initialize_data(data)
-      @base_schema.validate(data,[],self,@validation_options)
-      if @options[:errors_as_objects]
-        return @errors.map{|e| e.to_hash}
+      processor = Processor.new
+      @base_schema.validate(data, [], processor, @validation_options)
+      if options[:errors_as_objects]
+        return processor.validation_errors.map{|e| e.to_hash}
       else
-        return @errors.map{|e| e.to_string}
+        return processor.validation_errors.map{|e| e.to_string}
       end
     ensure
       if @validation_options[:clear_cache] == true
@@ -237,15 +252,6 @@ module JSON
         build_schemas(schema)
       end
     end
-
-    def validation_error(error)
-      @errors.push(error)
-    end
-
-    def validation_errors
-      @errors
-    end
-
 
     class << self
       def validate(schema, data,opts={})
