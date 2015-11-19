@@ -512,7 +512,7 @@ module JSON
     end
 
     def initialize_schema(schema)
-      if schema.is_a?(String)
+      if schema.is_a?(String) || schema.is_a?(Pathname)
         begin
           # Build a fake URI for this
           schema_uri = Addressable::URI.parse(fake_uuid(schema))
