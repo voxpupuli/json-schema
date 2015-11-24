@@ -21,11 +21,13 @@ class JSONSchemaCustomFormatTest < Minitest::Test
     @schema_1 = @schema_4.clone
     @schema_1["$schema"] = "http://json-schema.org/draft-01/schema#"
     @default = @schema_4.clone
+    @default.delete("$schema")
     @schemas = {
       "draft1" => @schema_1,
       "draft2" => @schema_2,
       "draft3" => @schema_3,
       "draft4" => @schema_4,
+      nil => @default,
     }
     JSON::Validator.restore_default_formats
   end
