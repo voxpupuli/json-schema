@@ -373,20 +373,20 @@ module JSON
         @@default_validator = v
       end
 
-      def register_format_validator(format, validation_proc, versions = ["draft1", "draft2", "draft3", "draft4"])
+      def register_format_validator(format, validation_proc, versions = ["draft1", "draft2", "draft3", "draft4", nil])
         custom_format_validator = JSON::Schema::CustomFormat.new(validation_proc)
         validators_for_names(versions).each do |validator|
           validator.formats[format.to_s] = custom_format_validator
         end
       end
 
-      def deregister_format_validator(format, versions = ["draft1", "draft2", "draft3", "draft4"])
+      def deregister_format_validator(format, versions = ["draft1", "draft2", "draft3", "draft4", nil])
         validators_for_names(versions).each do |validator|
           validator.formats[format.to_s] = validator.default_formats[format.to_s]
         end
       end
 
-      def restore_default_formats(versions = ["draft1", "draft2", "draft3", "draft4"])
+      def restore_default_formats(versions = ["draft1", "draft2", "draft3", "draft4", nil])
         validators_for_names(versions).each do |validator|
           validator.formats = validator.default_formats.clone
         end
@@ -482,9 +482,16 @@ module JSON
       private
 
       def validators_for_names(names)
-        names.map! { |name| name.to_s }
-        validators.reduce([]) do |memo, (_, validator)|
-          memo.tap { |m| m << validator if (validator.names & names).any? }
+        names = names.map { |name| name.to_s }
+        [].tap do |memo|
+          validators.each do |_, validator|
+            if (validator.names & names).any?
+              memo << validator
+            end
+          end
+          if names.include?('')
+            memo << default_validator
+          end
         end
       end
     end
