@@ -16,7 +16,7 @@ module JSON
 
           if !data.key?(property) &&
               options[:insert_defaults] &&
-              property_schema['default'] &&
+              property_schema.has_key?('default') &&
               !property_schema['readonly']
             default = property_schema['default']
             data[property] = default.is_a?(Hash) ? default.clone : default

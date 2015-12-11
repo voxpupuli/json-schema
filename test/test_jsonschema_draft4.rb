@@ -469,6 +469,24 @@ class JSONSchemaDraft4Test < Minitest::Test
 
   end
 
+  def test_boolean_false_default
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "type" => "object",
+      "required" => ["a"],
+      "properties" => {
+        "a" => {"type" => "boolean", "default" => false},
+        "b" => {"type" => "integer"}
+      }
+    }
+
+    data = {:b => 2}
+    refute_valid schema, data
+    assert_nil(data["a"])
+    assert(JSON::Validator.validate(schema, data, :insert_defaults => true))
+    assert_equal(false, data["a"])
+    assert_equal(2, data[:b])
+  end
 
   def test_all_of
     schema = {

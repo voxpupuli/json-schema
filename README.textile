@@ -26,7 +26,7 @@ From the git repo:
 
 <pre>
 $ gem build json-schema.gemspec
-$ gem install json-schema-2.5.0.gem
+$ gem install json-schema-2.5.2.gem
 </pre>
 
 
@@ -82,7 +82,7 @@ JSON::Validator.validate('user.json', data, :list => true)
 
 h3. Strictly validate an object's properties
 
-With the <code>:strict</code> option, validation fails when an object contains properties that are not defined in the schema's property list or doesn't match the <code>additionalProperties</code> property. Furthermore, all properties are treated as <code>required</code> by default.
+With the <code>:strict</code> option, validation fails when an object contains properties that are not defined in the schema's property list or doesn't match the <code>additionalProperties</code> property. Furthermore, all properties are treated as <code>required</code> regardless of <code>required</code> properties set in the schema.
 
 <pre>
 require 'rubygems'

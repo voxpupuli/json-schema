@@ -13,7 +13,6 @@ Gem::Specification.new do |s|
   s.summary = "Ruby JSON Schema Validator"
   s.files = Dir[ "lib/**/*", "resources/*.json" ]
   s.require_path = "lib"
-  s.test_files = Dir[ "test/**/test*", "test/{data,schemas}/*.json" ]
   s.extra_rdoc_files = ["README.textile","LICENSE.md"]
   s.required_ruby_version = ">= 1.8.7"
   s.license = "MIT"
@@ -24,5 +23,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "webmock"
   s.add_development_dependency "bundler"
 
-  s.add_runtime_dependency "addressable", '~> 2.3.7'
+  s.add_runtime_dependency "addressable", '~> 2.3.8'
 end
