@@ -4,13 +4,13 @@ module JSON
       attr_accessor :attributes, :formats, :uri, :names
       attr_reader :default_formats
 
-      def initialize()
+      def initialize
         @attributes = {}
         @formats = {}
         @default_formats = {}
         @uri = nil
         @names = []
-        @metaschema_name = ''
+        @metaschema_name = ""
       end
 
       def extend_schema_definition(schema_uri)
@@ -19,8 +19,8 @@ module JSON
       end
 
       def validate(current_schema, data, fragments, processor, options = {})
-        current_schema.schema.each do |attr_name,attribute|
-          if @attributes.has_key?(attr_name.to_s)
+        current_schema.schema.each do |attr_name, _attribute|
+          if @attributes.key?(attr_name.to_s)
             @attributes[attr_name.to_s].validate(current_schema, data, fragments, processor, self, options)
           end
         end
@@ -28,7 +28,7 @@ module JSON
       end
 
       def metaschema
-        resources = File.expand_path('../../../../resources', __FILE__)
+        resources = File.expand_path("../../../../resources", __FILE__)
         File.join(resources, @metaschema_name)
       end
     end

@@ -1,8 +1,7 @@
-require 'json-schema/schema/validator'
+require "json-schema/schema/validator"
 
 module JSON
   class Schema
-
     class Draft4 < Validator
       def initialize
         super
@@ -37,10 +36,10 @@ module JSON
           "$ref" => JSON::Schema::RefAttribute
         }
         @default_formats = {
-          'date-time' => DateTimeV4Format,
-          'ipv4' => IP4Format,
-          'ipv6' => IP6Format,
-          'uri' => UriFormat
+          "date-time" => DateTimeV4Format,
+          "ipv4" => IP4Format,
+          "ipv6" => IP6Format,
+          "uri" => UriFormat
         }
         @formats = @default_formats.clone
         @uri = Addressable::URI.parse("http://json-schema.org/draft-04/schema#")
@@ -48,9 +47,8 @@ module JSON
         @metaschema_name = "draft-04.json"
       end
 
-      JSON::Validator.register_validator(self.new)
-      JSON::Validator.register_default_validator(self.new)
+      JSON::Validator.register_validator(new)
+      JSON::Validator.register_default_validator(new)
     end
-
   end
 end

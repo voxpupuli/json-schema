@@ -1,4 +1,4 @@
-require 'json-schema/attribute'
+require "json-schema/attribute"
 
 module JSON
   class Schema
@@ -8,22 +8,22 @@ module JSON
         errors = Hash.new { |hsh, k| hsh[k] = [] }
         valid = true
 
-        current_schema.schema['allOf'].each_with_index do |element, schema_index|
-          schema = JSON::Schema.new(element,current_schema.uri,validator)
+        current_schema.schema["allOf"].each_with_index do |element, schema_index|
+          schema = JSON::Schema.new(element, current_schema.uri, validator)
 
           # We're going to add a little cruft here to try and maintain any validation errors that occur in the allOf
           # We'll handle this by keeping an error count before and after validation, extracting those errors and pushing them onto an error array
           pre_validation_error_count = validation_errors(processor).count
 
           begin
-            schema.validate(data,fragments,processor,options)
+            schema.validate(data, fragments, processor, options)
           rescue ValidationError
             valid = false
           end
 
           diff = validation_errors(processor).count - pre_validation_error_count
           while diff > 0
-            diff = diff - 1
+            diff -= 1
             errors["allOf ##{schema_index}"].push(validation_errors(processor).pop)
           end
         end

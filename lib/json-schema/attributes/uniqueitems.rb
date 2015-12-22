@@ -1,9 +1,9 @@
-require 'json-schema/attribute'
+require "json-schema/attribute"
 
 module JSON
   class Schema
     class UniqueItemsAttribute < Attribute
-      def self.validate(current_schema, data, fragments, processor, validator, options = {})
+      def self.validate(current_schema, data, fragments, processor, _validator, options = {})
         return unless data.is_a?(Array)
 
         if data.clone.uniq!

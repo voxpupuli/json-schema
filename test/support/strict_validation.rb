@@ -9,22 +9,22 @@ module StrictValidation
     }
 
     data = {"a" => "a"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    assert(!JSON::Validator.validate(schema, data, :strict => true))
 
     data = {"b" => "b"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    assert(!JSON::Validator.validate(schema, data, :strict => true))
 
     data = {"a" => "a", "b" => "b"}
-    assert(JSON::Validator.validate(schema,data,:strict => true))
+    assert(JSON::Validator.validate(schema, data, :strict => true))
 
     data = {"a" => "a", "b" => "b", "c" => "c"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    assert(!JSON::Validator.validate(schema, data, :strict => true))
   end
 
   def test_strict_error_message
-    schema = { :type => 'object', :properties => { :a => { :type => 'string' } } }
-    data = { :a => 'abc', :b => 'abc' }
-    errors = JSON::Validator.fully_validate(schema,data,:strict => true)
+    schema = {:type => "object", :properties => {:a => {:type => "string"}}}
+    data = {:a => "abc", :b => "abc"}
+    errors = JSON::Validator.fully_validate(schema, data, :strict => true)
     assert_match("The property '#/' contained undefined properties: 'b' in schema", errors[0])
   end
 
@@ -39,19 +39,19 @@ module StrictValidation
     }
 
     data = {"a" => "a"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    assert(!JSON::Validator.validate(schema, data, :strict => true))
 
     data = {"b" => "b"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    assert(!JSON::Validator.validate(schema, data, :strict => true))
 
     data = {"a" => "a", "b" => "b"}
-    assert(JSON::Validator.validate(schema,data,:strict => true))
+    assert(JSON::Validator.validate(schema, data, :strict => true))
 
     data = {"a" => "a", "b" => "b", "c" => "c"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    assert(!JSON::Validator.validate(schema, data, :strict => true))
 
     data = {"a" => "a", "b" => "b", "c" => 3}
-    assert(JSON::Validator.validate(schema,data,:strict => true))
+    assert(JSON::Validator.validate(schema, data, :strict => true))
   end
 
   def test_strict_properties_pattern_props
@@ -65,25 +65,24 @@ module StrictValidation
     }
 
     data = {"a" => "a"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    assert(!JSON::Validator.validate(schema, data, :strict => true))
 
     data = {"b" => "b"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    assert(!JSON::Validator.validate(schema, data, :strict => true))
 
     data = {"a" => "a", "b" => "b"}
-    assert(JSON::Validator.validate(schema,data,:strict => true))
+    assert(JSON::Validator.validate(schema, data, :strict => true))
 
     data = {"a" => "a", "b" => "b", "c" => "c"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    assert(!JSON::Validator.validate(schema, data, :strict => true))
 
     data = {"a" => "a", "b" => "b", "c" => 3}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    assert(!JSON::Validator.validate(schema, data, :strict => true))
 
     data = {"a" => "a", "b" => "b", "23 taco" => 3}
-    assert(JSON::Validator.validate(schema,data,:strict => true))
+    assert(JSON::Validator.validate(schema, data, :strict => true))
 
     data = {"a" => "a", "b" => "b", "23 taco" => "cheese"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    assert(!JSON::Validator.validate(schema, data, :strict => true))
   end
-
 end

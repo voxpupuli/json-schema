@@ -1,4 +1,4 @@
-require 'json-schema/attribute'
+require "json-schema/attribute"
 
 module JSON
   class Schema
@@ -6,8 +6,8 @@ module JSON
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         return unless data.is_a?(Hash)
 
-        current_schema.schema['dependencies'].each do |property, dependency_value|
-          next unless data.has_key?(property.to_s)
+        current_schema.schema["dependencies"].each do |property, dependency_value|
+          next unless data.key?(property.to_s)
           next unless accept_value?(dependency_value)
 
           case dependency_value

@@ -1,4 +1,4 @@
-require 'json-schema/attribute'
+require "json-schema/attribute"
 
 module JSON
   class Schema
@@ -6,11 +6,11 @@ module JSON
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         return unless data.is_a?(Hash)
 
-        current_schema.schema['patternProperties'].each do |property, property_schema|
+        current_schema.schema["patternProperties"].each do |property, property_schema|
           regexp = Regexp.new(property)
 
           # Check each key in the data hash to see if it matches the regex
-          data.each do |key, value|
+          data.each do |key, _value|
             next unless regexp.match(key)
             schema = JSON::Schema.new(property_schema, current_schema.uri, validator)
             schema.validate(data[key], fragments + [key], processor, options)

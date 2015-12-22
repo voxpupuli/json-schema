@@ -1,4 +1,4 @@
-require 'json/common'
+require "json/common"
 
 module JSON
   class Schema

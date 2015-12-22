@@ -1,6 +1,5 @@
-require File.expand_path('../test_helper', __FILE__)
-require 'socket'
-
+require File.expand_path("../test_helper", __FILE__)
+require "socket"
 
 class BadSchemaRefTest < Minitest::Test
   def setup
@@ -15,12 +14,12 @@ class BadSchemaRefTest < Minitest::Test
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "array",
-      "items" => { "$ref" => "../google.json"}
+      "items" => {"$ref" => "../google.json"}
     }
 
-    data = [1,2,3]
+    data = [1, 2, 3]
     assert_raises(Errno::ENOENT) do
-      JSON::Validator.validate(schema,data)
+      JSON::Validator.validate(schema, data)
     end
   end
 
@@ -28,12 +27,12 @@ class BadSchemaRefTest < Minitest::Test
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "array",
-      "items" => { "$ref" => "http://ppcheesecheseunicornnuuuurrrrr.example.invalid/json.schema"}
+      "items" => {"$ref" => "http://ppcheesecheseunicornnuuuurrrrr.example.invalid/json.schema"}
     }
 
-    data = [1,2,3]
+    data = [1, 2, 3]
     assert_raises(SocketError, OpenURI::HTTPError) do
-      JSON::Validator.validate(schema,data)
+      JSON::Validator.validate(schema, data)
     end
   end
 end

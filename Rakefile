@@ -1,6 +1,6 @@
-require 'bundler'
-require 'rake'
-require 'rake/testtask'
+require "bundler"
+require "rake"
+require "rake/testtask"
 
 Bundler::GemHelper.install_tasks
 
@@ -16,7 +16,7 @@ Rake::TestTask.new do |t|
   t.libs << "."
   t.warning = true
   t.verbose = true
-  t.test_files = FileList.new('test/test*.rb') do |fl|
+  t.test_files = FileList.new("test/test*.rb") do |fl|
     fl.exclude(/test_helper\.rb$/)
   end
 end

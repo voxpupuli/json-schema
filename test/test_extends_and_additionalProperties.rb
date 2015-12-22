@@ -1,7 +1,6 @@
-require File.expand_path('../test_helper', __FILE__)
+require File.expand_path("../test_helper", __FILE__)
 
 class ExtendsNestedTest < Minitest::Test
-
   def assert_validity(valid, schema_name, data, msg)
     msg = "Schema should be #{valid ? :valid : :invalid}.\n(#{schema_name}) #{msg}"
     schema = schema_fixture_path("#{schema_name}.schema.json")
@@ -14,13 +13,13 @@ class ExtendsNestedTest < Minitest::Test
     end
   end
 
-  %w[
+  %w(
     extends_and_additionalProperties-1-filename
     extends_and_additionalProperties-1-ref
     extends_and_additionalProperties-2-filename
     extends_and_additionalProperties-2-ref
-  ].each do |schema_name|
-    test_prefix = 'test_' + schema_name.gsub('-','_')
+  ).each do |schema_name|
+    test_prefix = "test_" + schema_name.tr("-", "_")
 
     class_eval <<-EOB
       def #{test_prefix}_valid_outer
@@ -40,13 +39,12 @@ class ExtendsNestedTest < Minitest::Test
       end
     EOB
 
-    if schema_name['extends_and_additionalProperties-1']
-      class_eval <<-EOB
-        def #{test_prefix}_invalid_outer
-          assert_validity false, '#{schema_name}', {"whaaaaat"=>true}, "Outer defn allowing anything when it shouldn't"
-        end
-      EOB
-    end
+    next unless schema_name["extends_and_additionalProperties-1"]
 
+    class_eval <<-EOB
+      def #{test_prefix}_invalid_outer
+        assert_validity false, '#{schema_name}', {"whaaaaat"=>true}, "Outer defn allowing anything when it shouldn't"
+      end
+    EOB
   end
 end

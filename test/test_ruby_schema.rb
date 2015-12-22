@@ -1,9 +1,9 @@
-require File.expand_path('../test_helper', __FILE__)
+require File.expand_path("../test_helper", __FILE__)
 
 class RubySchemaTest < Minitest::Test
   def test_string_keys
     schema = {
-      "type" => 'object',
+      "type" => "object",
       "required" => ["a"],
       "properties" => {
         "a" => {"type" => "integer", "default" => 42},
@@ -11,12 +11,12 @@ class RubySchemaTest < Minitest::Test
       }
     }
 
-    assert_valid schema, { "a" => 5 }
+    assert_valid schema, "a" => 5
   end
 
   def test_symbol_keys
     schema = {
-      :type => 'object',
+      :type => "object",
       :required => ["a"],
       :properties => {
         :a => {:type => "integer", :default => 42},
@@ -24,12 +24,12 @@ class RubySchemaTest < Minitest::Test
       }
     }
 
-    assert_valid schema, { :a => 5 }
+    assert_valid schema, :a => 5
   end
 
   def test_symbol_keys_in_hash_within_array
     schema = {
-      :type => 'object',
+      :type => "object",
       :properties => {
         :a => {
           :type => "array",

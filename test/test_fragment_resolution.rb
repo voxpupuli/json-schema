@@ -1,4 +1,4 @@
-require File.expand_path('../test_helper', __FILE__)
+require File.expand_path("../test_helper", __FILE__)
 
 class FragmentResolution < Minitest::Test
   def test_fragment_resolution
@@ -9,7 +9,7 @@ class FragmentResolution < Minitest::Test
         "a" => {
           "type" => "object",
           "properties" => {
-            "b" => {"type" => "integer" }
+            "b" => {"type" => "integer"}
           }
         }
       }
@@ -20,11 +20,11 @@ class FragmentResolution < Minitest::Test
     assert_valid schema, data, :fragment => "#/properties/a"
 
     assert_raises JSON::Schema::SchemaError do
-      JSON::Validator.validate!(schema,data,:fragment => "/properties/a")
+      JSON::Validator.validate!(schema, data, :fragment => "/properties/a")
     end
 
     assert_raises JSON::Schema::SchemaError do
-      JSON::Validator.validate!(schema,data,:fragment => "#/properties/b")
+      JSON::Validator.validate!(schema, data, :fragment => "#/properties/b")
     end
   end
 end

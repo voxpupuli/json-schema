@@ -1,5 +1,5 @@
-require File.expand_path('../test_helper', __FILE__)
-require 'tmpdir'
+require File.expand_path("../test_helper", __FILE__)
+require "tmpdir"
 
 class JSONSchemaValidation < Minitest::Test
   def valid_schema_v3
@@ -124,8 +124,8 @@ class JSONSchemaValidation < Minitest::Test
 
   def test_draft03_validation
     data = {"b" => {"a" => 5}}
-    assert(JSON::Validator.validate(valid_schema_v3,data,:validate_schema => true, :version => :draft3))
-    assert(!JSON::Validator.validate(invalid_schema_v3,data,:validate_schema => true, :version => :draft3))
+    assert(JSON::Validator.validate(valid_schema_v3, data, :validate_schema => true, :version => :draft3))
+    assert(!JSON::Validator.validate(invalid_schema_v3, data, :validate_schema => true, :version => :draft3))
   end
 
   def test_validate_just_schema_draft03
@@ -137,11 +137,10 @@ class JSONSchemaValidation < Minitest::Test
     assert_match(/the property .*required.*did not match/i, errors.first)
   end
 
-
   def test_draft04_validation
     data = {"b" => {"a" => 5}}
-    assert(JSON::Validator.validate(valid_schema_v4,data,:validate_schema => true, :version => :draft4))
-    assert(!JSON::Validator.validate(invalid_schema_v4,data,:validate_schema => true, :version => :draft4))
+    assert(JSON::Validator.validate(valid_schema_v4, data, :validate_schema => true, :version => :draft4))
+    assert(!JSON::Validator.validate(invalid_schema_v4, data, :validate_schema => true, :version => :draft4))
   end
 
   def test_validate_just_schema_draft04
@@ -155,16 +154,16 @@ class JSONSchemaValidation < Minitest::Test
 
   def test_validate_schema_3_without_version_option
     data = {"b" => {"a" => 5}}
-    assert(JSON::Validator.validate(valid_schema_v3,data,:validate_schema => true))
-    assert(!JSON::Validator.validate(invalid_schema_v3,data,:validate_schema => true))
+    assert(JSON::Validator.validate(valid_schema_v3, data, :validate_schema => true))
+    assert(!JSON::Validator.validate(invalid_schema_v3, data, :validate_schema => true))
   end
 
   def test_schema_validation_from_different_directory
     Dir.mktmpdir do |tmpdir|
       Dir.chdir(tmpdir) do
         data = {"b" => {"a" => 5}}
-        assert(JSON::Validator.validate(valid_schema_v4,data,:validate_schema => true, :version => :draft4))
-        assert(!JSON::Validator.validate(invalid_schema_v4,data,:validate_schema => true, :version => :draft4))
+        assert(JSON::Validator.validate(valid_schema_v4, data, :validate_schema => true, :version => :draft4))
+        assert(!JSON::Validator.validate(invalid_schema_v4, data, :validate_schema => true, :version => :draft4))
       end
     end
   end
@@ -172,7 +171,7 @@ class JSONSchemaValidation < Minitest::Test
   def test_validate_schema_with_symbol_keys
     data = {
       "created_at" => "2014-01-25T00:58:33-08:00",
-      "id" => 8517194300913402149003,
+      "id" => 8_517_194_300_913_402_149_003,
       "name" => "chelsey",
       "real_name" => "Mekhi Hegmann",
       "website" => nil,

@@ -1,9 +1,9 @@
-require 'json-schema/errors/validation_error'
+require "json-schema/errors/validation_error"
 
 module JSON
   class Schema
     class Attribute
-      def self.validate(current_schema, data, fragments, processor, validator, options = {})
+      def self.validate(_current_schema, _data, _fragments, _processor, _validator, _options = {})
       end
 
       def self.build_fragment(fragments)

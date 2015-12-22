@@ -1,17 +1,17 @@
-require 'json-schema/attributes/format'
-require 'ipaddr'
-require 'socket'
+require "json-schema/attributes/format"
+require "ipaddr"
+require "socket"
 
 module JSON
   class Schema
     class IPFormat < FormatAttribute
-      def self.validate(current_schema, data, fragments, processor, validator, options = {})
+      def self.validate(current_schema, data, fragments, processor, _validator, options = {})
         return unless data.is_a?(String)
 
         begin
           ip = IPAddr.new(data)
         rescue ArgumentError => e
-          raise e unless e.message == 'invalid address'
+          raise e unless e.message == "invalid address"
         end
 
         family = ip_version == 6 ? Socket::AF_INET6 : Socket::AF_INET

@@ -1,10 +1,10 @@
-require 'json-schema/attributes/divisibleby'
+require "json-schema/attributes/divisibleby"
 
 module JSON
   class Schema
     class MultipleOfAttribute < DivisibleByAttribute
       def self.keyword
-        'multipleOf'
+        "multipleOf"
       end
     end
   end

@@ -1,12 +1,12 @@
-require File.expand_path('../test_helper', __FILE__)
+require File.expand_path("../test_helper", __FILE__)
 
 class AllOfRefSchemaTest < Minitest::Test
   def schema
-    schema_fixture_path('all_of_ref_schema.json')
+    schema_fixture_path("all_of_ref_schema.json")
   end
 
   def data
-    data_fixture_path('all_of_ref_data.json')
+    data_fixture_path("all_of_ref_data.json")
   end
 
   def test_all_of_ref_schema_fails
@@ -20,8 +20,8 @@ class AllOfRefSchemaTest < Minitest::Test
   def test_all_of_ref_subschema_errors
     errors = JSON::Validator.fully_validate(schema, data, :errors_as_objects => true)
     nested_errors = errors[0][:errors]
-    assert_equal([:allof_0], nested_errors.keys, 'should have nested errors for each allOf subschema')
-    assert_match(/the property '#\/name' of type String did not match the following type: integer/i, nested_errors[:allof_0][0][:message])
+    assert_equal([:allof_0], nested_errors.keys, "should have nested errors for each allOf subschema")
+    assert_match(%r{the property '#/name' of type String did not match the following type: integer}i, nested_errors[:allof_0][0][:message])
   end
 
   def test_all_of_ref_message

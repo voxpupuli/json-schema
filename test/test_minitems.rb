@@ -1,11 +1,11 @@
-require File.expand_path('../test_helper', __FILE__)
+require File.expand_path("../test_helper", __FILE__)
 
 class MinItemsTest < Minitest::Test
   def test_minitems_nils
     schema = {
       "type" => "array",
       "minItems" => 1,
-      "items" => { "type" => "object" }
+      "items" => {"type" => "object"}
     }
 
     errors = JSON::Validator.fully_validate(schema, [nil])

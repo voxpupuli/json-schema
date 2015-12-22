@@ -1,16 +1,16 @@
-require 'json-schema/attribute'
-require 'json-schema/attributes/extends'
+require "json-schema/attribute"
+require "json-schema/attributes/extends"
 
 module JSON
   class Schema
     class AdditionalPropertiesAttribute < Attribute
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         schema = current_schema.schema
-        return unless data.is_a?(Hash) && (schema['type'].nil? || schema['type'] == 'object')
+        return unless data.is_a?(Hash) && (schema["type"].nil? || schema["type"] == "object")
 
         extra_properties = remove_valid_properties(data.keys, current_schema, validator)
 
-        addprop = schema['additionalProperties']
+        addprop = schema["additionalProperties"]
         if addprop.is_a?(Hash)
           matching_properties = extra_properties # & addprop.keys
           matching_properties.each do |key|
@@ -29,18 +29,18 @@ module JSON
       def self.remove_valid_properties(extra_properties, current_schema, validator)
         schema = current_schema.schema
 
-        if schema['properties']
-          extra_properties = extra_properties - schema['properties'].keys
+        if schema["properties"]
+          extra_properties -= schema["properties"].keys
         end
 
-        if schema['patternProperties']
-          schema['patternProperties'].each_key do |key|
+        if schema["patternProperties"]
+          schema["patternProperties"].each_key do |key|
             regexp = Regexp.new(key)
             extra_properties.reject! { |prop| regexp.match(prop) }
           end
         end
 
-        if extended_schemas = schema['extends']
+        if extended_schemas = schema["extends"]
           extended_schemas = [extended_schemas] unless extended_schemas.is_a?(Array)
           extended_schemas.each do |schema_value|
             _, extended_schema = JSON::Schema::ExtendsAttribute.get_extended_uri_and_schema(schema_value, current_schema, validator)
@@ -52,7 +52,6 @@ module JSON
 
         extra_properties
       end
-
     end
   end
 end

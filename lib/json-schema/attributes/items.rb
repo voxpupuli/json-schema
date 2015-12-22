@@ -1,4 +1,4 @@
-require 'json-schema/attribute'
+require "json-schema/attribute"
 
 module JSON
   class Schema
@@ -6,7 +6,7 @@ module JSON
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         return unless data.is_a?(Array)
 
-        items = current_schema.schema['items']
+        items = current_schema.schema["items"]
         case items
         when Hash
           schema = JSON::Schema.new(items, current_schema.uri, validator)

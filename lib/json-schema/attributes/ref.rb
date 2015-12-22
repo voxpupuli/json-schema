@@ -1,16 +1,16 @@
-require 'json-schema/attribute'
-require 'json-schema/errors/schema_error'
+require "json-schema/attribute"
+require "json-schema/errors/schema_error"
 
 module JSON
   class Schema
     class RefAttribute < Attribute
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
-        uri,schema = get_referenced_uri_and_schema(current_schema.schema, current_schema, validator)
+        uri, schema = get_referenced_uri_and_schema(current_schema.schema, current_schema, validator)
 
         if schema
           schema.validate(data, fragments, processor, options)
         elsif uri
-          message = "The referenced schema '#{uri.to_s}' cannot be found"
+          message = "The referenced schema '#{uri}' cannot be found"
           validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
         else
           message = "The property '#{build_fragment(fragments)}' was not a valid schema"
@@ -19,21 +19,22 @@ module JSON
       end
 
       def self.get_referenced_uri_and_schema(s, current_schema, validator)
-        uri,schema = nil,nil
+        uri = nil
+        schema = nil
 
-        temp_uri = Addressable::URI.parse(s['$ref'])
+        temp_uri = Addressable::URI.parse(s["$ref"])
         if temp_uri.relative?
           temp_uri = current_schema.uri.clone
           # Check for absolute path
-          path = s['$ref'].split("#")[0]
-          if path.nil? || path == ''
+          path = s["$ref"].split("#")[0]
+          if path.nil? || path == ""
             temp_uri.path = current_schema.uri.path
-          elsif path[0,1] == "/"
+          elsif path[0, 1] == "/"
             temp_uri.path = Pathname.new(path).cleanpath.to_s
           else
             temp_uri = current_schema.uri.join(path)
           end
-          temp_uri.fragment = s['$ref'].split("#")[1]
+          temp_uri.fragment = s["$ref"].split("#")[1]
         end
         temp_uri.fragment = "" if temp_uri.fragment.nil?
 
@@ -46,28 +47,27 @@ module JSON
           # Perform fragment resolution to retrieve the appropriate level for the schema
           target_schema = ref_schema.schema
           fragments = temp_uri.fragment.split("/")
-          fragment_path = ''
+          fragment_path = ""
           fragments.each do |fragment|
-            if fragment && fragment != ''
-              fragment = Addressable::URI.unescape(fragment.gsub('~0', '~').gsub('~1', '/'))
-              if target_schema.is_a?(Array)
-                target_schema = target_schema[fragment.to_i]
-              else
-                target_schema = target_schema[fragment]
-              end
-              fragment_path = fragment_path + "/#{fragment}"
-              if target_schema.nil?
-                raise SchemaError.new("The fragment '#{fragment_path}' does not exist on schema #{ref_schema.uri.to_s}")
-              end
+            next unless fragment && fragment != ""
+            fragment = Addressable::URI.unescape(fragment.gsub("~0", "~").gsub("~1", "/"))
+            if target_schema.is_a?(Array)
+              target_schema = target_schema[fragment.to_i]
+            else
+              target_schema = target_schema[fragment]
+            end
+            fragment_path += "/#{fragment}"
+            if target_schema.nil?
+              raise SchemaError.new("The fragment '#{fragment_path}' does not exist on schema #{ref_schema.uri}")
             end
           end
 
           # We have the schema finally, build it and validate!
           uri = temp_uri
-          schema = JSON::Schema.new(target_schema,temp_uri,validator)
+          schema = JSON::Schema.new(target_schema, temp_uri, validator)
         end
 
-        [uri,schema]
+        [uri, schema]
       end
     end
   end

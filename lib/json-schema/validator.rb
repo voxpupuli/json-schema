@@ -1,22 +1,20 @@
-require 'addressable/uri'
-require 'open-uri'
-require 'pathname'
-require 'bigdecimal'
-require 'digest/sha1'
-require 'date'
-require 'thread'
-require 'yaml'
+require "addressable/uri"
+require "open-uri"
+require "pathname"
+require "bigdecimal"
+require "digest/sha1"
+require "date"
+require "thread"
+require "yaml"
 
-require 'json-schema/schema/reader'
-require 'json-schema/errors/schema_error'
-require 'json-schema/errors/schema_parse_error'
-require 'json-schema/errors/json_load_error'
-require 'json-schema/errors/json_parse_error'
+require "json-schema/schema/reader"
+require "json-schema/errors/schema_error"
+require "json-schema/errors/schema_parse_error"
+require "json-schema/errors/json_load_error"
+require "json-schema/errors/json_parse_error"
 
 module JSON
-
   class Validator
-
     @@schemas = {}
     @@cache_schemas = false
     @@default_opts = {
@@ -37,7 +35,7 @@ module JSON
     @@serializer = nil
     @@mutex = Mutex.new
 
-    def initialize(schema_data, data, opts={})
+    def initialize(schema_data, data, opts = {})
       @options = @@default_opts.clone.merge(opts)
       @errors = []
 
@@ -62,7 +60,7 @@ module JSON
         end
         metaschema = base_validator ? base_validator.metaschema : validator.metaschema
         # Don't clear the cache during metaschema validation!
-        meta_validator = JSON::Validator.new(metaschema, @base_schema.schema, {:clear_cache => false})
+        meta_validator = JSON::Validator.new(metaschema, @base_schema.schema, :clear_cache => false)
         meta_validator.validate
       end
 
@@ -82,21 +80,21 @@ module JSON
       end
 
       fragments.each do |f|
-        if base_schema.is_a?(JSON::Schema) #test if fragment is a JSON:Schema instance
-          if !base_schema.schema.has_key?(f)
+        if base_schema.is_a?(JSON::Schema) # test if fragment is a JSON:Schema instance
+          unless base_schema.schema.key?(f)
             raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
           end
           base_schema = base_schema.schema[f]
         elsif base_schema.is_a?(Hash)
-          if !base_schema.has_key?(f)
+          unless base_schema.key?(f)
             raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
           end
-          base_schema = JSON::Schema.new(base_schema[f],schema_uri,@options[:version])
+          base_schema = JSON::Schema.new(base_schema[f], schema_uri, @options[:version])
         elsif base_schema.is_a?(Array)
           if base_schema[f.to_i].nil?
             raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
           end
-          base_schema = JSON::Schema.new(base_schema[f.to_i],schema_uri,@options[:version])
+          base_schema = JSON::Schema.new(base_schema[f.to_i], schema_uri, @options[:version])
         else
           raise JSON::Schema::SchemaError.new("Invalid schema encountered when resolving :fragment option")
         end
@@ -110,12 +108,12 @@ module JSON
     end
 
     # Run a simple true/false validation of data against a schema
-    def validate()
-      @base_schema.validate(@data,[],self,@validation_options)
+    def validate
+      @base_schema.validate(@data, [], self, @validation_options)
       if @options[:errors_as_objects]
-        return @errors.map{|e| e.to_hash}
+        return @errors.map(&:to_hash)
       else
-        return @errors.map{|e| e.to_string}
+        return @errors.map(&:to_string)
       end
     ensure
       if @validation_options[:clear_cache] == true
@@ -137,14 +135,14 @@ module JSON
 
     def absolutize_ref_uri(ref, parent_schema_uri)
       ref_uri = Addressable::URI.parse(ref)
-      ref_uri.fragment = ''
+      ref_uri.fragment = ""
 
       return ref_uri if ref_uri.absolute?
       # This is a self reference and thus the schema does not need to be re-loaded
       return parent_schema_uri if ref_uri.path.empty?
 
       uri = parent_schema_uri.clone
-      uri.fragment = ''
+      uri.fragment = ""
       Util::URI.normalized_uri(uri.join(ref_uri.path))
     end
 
@@ -161,39 +159,38 @@ module JSON
       when String
         load_ref_schema(parent_schema, schema["extends"])
       when Array
-        schema['extends'].each do |type|
+        schema["extends"].each do |type|
           handle_schema(parent_schema, type)
         end
       end
 
       # Check for schemas in union types
       ["type", "disallow"].each do |key|
-        if schema[key].is_a?(Array)
-          schema[key].each do |type|
-            if type.is_a?(Hash)
-              handle_schema(parent_schema, type)
-            end
+        next unless schema[key].is_a?(Array)
+        schema[key].each do |type|
+          if type.is_a?(Hash)
+            handle_schema(parent_schema, type)
           end
         end
       end
 
       # Schema properties whose values are objects, the values of which
       # are themselves schemas.
-      %w[definitions properties patternProperties].each do |key|
+      ["definitions", "properties", "patternProperties"].each do |key|
         next unless value = schema[key]
-        value.each do |k, inner_schema|
+        value.each do |_k, inner_schema|
           handle_schema(parent_schema, inner_schema)
         end
       end
 
       # Schema properties whose values are themselves schemas.
-      %w[additionalProperties additionalItems dependencies extends].each do |key|
+      ["additionalProperties", "additionalItems", "dependencies", "extends"].each do |key|
         next unless schema[key].is_a?(Hash)
         handle_schema(parent_schema, schema[key])
       end
 
       # Schema properties whose values may be an array of schemas.
-      %w[allOf anyOf oneOf not].each do |key|
+      ["allOf", "anyOf", "oneOf", "not"].each do |key|
         next unless value = schema[key]
         Array(value).each do |inner_schema|
           handle_schema(parent_schema, inner_schema)
@@ -214,7 +211,6 @@ module JSON
       if schema["enum"].is_a?(Array)
         schema["enum"] = ArraySet.new(schema["enum"])
       end
-
     end
 
     # Either load a reference schema or create a new schema
@@ -222,7 +218,7 @@ module JSON
       if obj.is_a?(Hash)
         schema_uri = parent_schema.uri.clone
         schema = JSON::Schema.new(obj, schema_uri, parent_schema.validator)
-        if obj['id']
+        if obj["id"]
           Validator.add_schema(schema)
         end
         build_schemas(schema)
@@ -237,58 +233,55 @@ module JSON
       @errors
     end
 
-
     class << self
-      def validate(schema, data,opts={})
-        begin
-          validator = JSON::Validator.new(schema, data, opts)
-          validator.validate
-          return true
-        rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
-          return false
-        end
-      end
-
-      def validate_json(schema, data, opts={})
-        validate(schema, data, opts.merge(:json => true))
-      end
-
-      def validate_uri(schema, data, opts={})
-        validate(schema, data, opts.merge(:uri => true))
-      end
-
-      def validate!(schema, data,opts={})
+      def validate(schema, data, opts = {})
         validator = JSON::Validator.new(schema, data, opts)
         validator.validate
         return true
+      rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
+        return false
       end
-      alias_method 'validate2', 'validate!'
 
-      def validate_json!(schema, data, opts={})
+      def validate_json(schema, data, opts = {})
+        validate(schema, data, opts.merge(:json => true))
+      end
+
+      def validate_uri(schema, data, opts = {})
+        validate(schema, data, opts.merge(:uri => true))
+      end
+
+      def validate!(schema, data, opts = {})
+        validator = JSON::Validator.new(schema, data, opts)
+        validator.validate
+        true
+      end
+      alias_method "validate2", "validate!"
+
+      def validate_json!(schema, data, opts = {})
         validate!(schema, data, opts.merge(:json => true))
       end
 
-      def validate_uri!(schema, data, opts={})
+      def validate_uri!(schema, data, opts = {})
         validate!(schema, data, opts.merge(:uri => true))
       end
 
-      def fully_validate(schema, data, opts={})
+      def fully_validate(schema, data, opts = {})
         opts[:record_errors] = true
         validator = JSON::Validator.new(schema, data, opts)
         validator.validate
       end
 
-      def fully_validate_schema(schema, opts={})
+      def fully_validate_schema(schema, opts = {})
         data = schema
         schema = JSON::Validator.validator_for_name(opts[:version]).metaschema
         fully_validate(schema, data, opts)
       end
 
-      def fully_validate_json(schema, data, opts={})
+      def fully_validate_json(schema, data, opts = {})
         fully_validate(schema, data, opts.merge(:json => true))
       end
 
-      def fully_validate_uri(schema, data, opts={})
+      def fully_validate_uri(schema, data, opts = {})
         fully_validate(schema, data, opts.merge(:uri => true))
       end
 
@@ -400,7 +393,7 @@ module JSON
 
       def json_backend=(backend)
         if defined?(MultiJson)
-          backend = backend == 'json' ? 'json_gem' : backend
+          backend = backend == "json" ? "json_gem" : backend
           MultiJson.respond_to?(:use) ? MultiJson.use(backend) : MultiJson.engine = backend
         else
           backend = backend.to_s
@@ -421,17 +414,17 @@ module JSON
           end
         else
           case @@json_backend.to_s
-          when 'json'
+          when "json"
             begin
               JSON.parse(s, :quirks_mode => true)
             rescue JSON::ParserError => e
               raise JSON::Schema::JsonParseError.new(e.message)
             end
-          when 'yajl'
+          when "yajl"
             begin
               json = StringIO.new(s)
               parser = Yajl::Parser.new
-              parser.parse(json) or raise JSON::Schema::JsonParseError.new("The JSON could not be parsed by yajl")
+              parser.parse(json) || raise(JSON::Schema::JsonParseError.new("The JSON could not be parsed by yajl"))
             rescue Yajl::ParseError => e
               raise JSON::Schema::JsonParseError.new(e.message)
             end
@@ -460,46 +453,45 @@ module JSON
         end
       end
 
-      if !defined?(MultiJson)
-        if Gem::Specification::find_all_by_name('json').any?
-          require 'json'
-          @@available_json_backends << 'json'
-          @@json_backend = 'json'
+      unless defined?(MultiJson)
+        if Gem::Specification.find_all_by_name("json").any?
+          require "json"
+          @@available_json_backends << "json"
+          @@json_backend = "json"
         else
           # Try force-loading json for rubies > 1.9.2
           begin
-            require 'json'
-            @@available_json_backends << 'json'
-            @@json_backend = 'json'
+            require "json"
+            @@available_json_backends << "json"
+            @@json_backend = "json"
           rescue LoadError
           end
         end
 
-
-        if Gem::Specification::find_all_by_name('yajl-ruby').any?
-          require 'yajl'
-          @@available_json_backends << 'yajl'
-          @@json_backend = 'yajl'
+        if Gem::Specification.find_all_by_name("yajl-ruby").any?
+          require "yajl"
+          @@available_json_backends << "yajl"
+          @@json_backend = "yajl"
         end
 
-        if @@json_backend == 'yajl'
-          @@serializer = lambda{|o| Yajl::Encoder.encode(o) }
+        if @@json_backend == "yajl"
+          @@serializer = lambda { |o| Yajl::Encoder.encode(o) }
         else
-          @@serializer = lambda{|o| YAML.dump(o) }
+          @@serializer = lambda { |o| YAML.dump(o) }
         end
       end
 
       private
 
       def validators_for_names(names)
-        names = names.map { |name| name.to_s }
+        names = names.map(&:to_s)
         [].tap do |memo|
           validators.each do |_, validator|
             if (validator.names & names).any?
               memo << validator
             end
           end
-          if names.include?('')
+          if names.include?("")
             memo << default_validator
           end
         end
@@ -508,15 +500,15 @@ module JSON
 
     private
 
-    if Gem::Specification::find_all_by_name('uuidtools').any?
-      require 'uuidtools'
-      @@fake_uuid_generator = lambda{|s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
+    if Gem::Specification.find_all_by_name("uuidtools").any?
+      require "uuidtools"
+      @@fake_uuid_generator = lambda { |s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
     else
-      require 'json-schema/util/uuid'
-      @@fake_uuid_generator = lambda{|s| JSON::Util::UUID.create_v5(s,JSON::Util::UUID::Nil).to_s }
+      require "json-schema/util/uuid"
+      @@fake_uuid_generator = lambda { |s| JSON::Util::UUID.create_v5(s, JSON::Util::UUID::Nil).to_s }
     end
 
-    def serialize schema
+    def serialize(schema)
       if defined?(MultiJson)
         MultiJson.respond_to?(:dump) ? MultiJson.dump(schema) : MultiJson.encode(schema)
       else
@@ -524,7 +516,7 @@ module JSON
       end
     end
 
-    def fake_uuid schema
+    def fake_uuid(schema)
       @@fake_uuid_generator.call(schema)
     end
 

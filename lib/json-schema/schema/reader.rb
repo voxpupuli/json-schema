@@ -1,6 +1,6 @@
-require 'open-uri'
-require 'addressable/uri'
-require 'pathname'
+require "open-uri"
+require "addressable/uri"
+require "pathname"
 
 module JSON
   class Schema
@@ -61,7 +61,7 @@ module JSON
       # @raise [JSON::Schema::ParseError] if the schema was not a valid JSON object
       def read(location)
         uri  = Addressable::URI.parse(location.to_s)
-        body = if uri.scheme.nil? || uri.scheme == 'file'
+        body = if uri.scheme.nil? || uri.scheme == "file"
                  uri = Addressable::URI.convert_path(uri.path)
                  read_file(Pathname.new(uri.path).expand_path)
                else
