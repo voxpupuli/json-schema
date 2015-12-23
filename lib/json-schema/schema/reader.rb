@@ -1,5 +1,4 @@
 require 'open-uri'
-require 'addressable/uri'
 require 'pathname'
 
 module JSON
@@ -62,7 +61,7 @@ module JSON
       def read(location)
         uri  = JSON::Util::URI.parse(location.to_s)
         body = if uri.scheme.nil? || uri.scheme == 'file'
-                 uri = Addressable::URI.convert_path(uri.path)
+                 uri = JSON::Util::URI.file_uri(uri)
                  read_file(Pathname.new(uri.path).expand_path)
                else
                  read_uri(uri)
@@ -103,7 +102,7 @@ module JSON
 
       def read_file(pathname)
         if accept_file?(pathname)
-          File.read(Addressable::URI.unescape(pathname.to_s))
+          File.read(JSON::Util::URI.unescaped_uri(pathname.to_s))
         else
           raise JSON::Schema::ReadRefused.new(pathname.to_s, :file)
         end

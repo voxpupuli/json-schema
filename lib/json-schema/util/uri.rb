@@ -1,3 +1,5 @@
+require 'addressable/uri'
+
 module JSON
   module Util
     module URI
@@ -13,7 +15,7 @@ module JSON
           if normalized_uri.relative?
             data = normalized_uri
             data = File.join(base_path, data) if data.path[0,1] != "/"
-            normalized_uri = Addressable::URI.convert_path(data)
+            normalized_uri = file_uri(data)
           end
           @normalize_cache[uri] = normalized_uri.freeze
         end
@@ -33,6 +35,8 @@ module JSON
             @parse_cache[uri] = Addressable::URI.parse(uri)
           end
         end
+      rescue Addressable::URI::InvalidURIError => e
+        raise JSON::Schema::UriError.new(e.message)
       end
 
       def self.strip_fragment(uri)
@@ -42,6 +46,18 @@ module JSON
         else
           parsed_uri.merge(:fragment => "")
         end
+      end
+
+      def self.file_uri(uri)
+        parsed_uri = parse(uri)
+
+        Addressable::URI.convert_path(parsed_uri.path)
+      end
+
+      def self.unescaped_uri(uri)
+        parsed_uri = parse(uri)
+
+        Addressable::URI.unescape(parsed_uri.path)
       end
     end
   end

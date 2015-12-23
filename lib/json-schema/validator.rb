@@ -1,4 +1,3 @@
-require 'addressable/uri'
 require 'open-uri'
 require 'pathname'
 require 'bigdecimal'
@@ -609,7 +608,7 @@ module JSON
         end
       else
         begin
-          File.read(Addressable::URI.unescape(uri.path))
+          File.read(JSON::Util::URI.unescaped_uri(uri))
         rescue SystemCallError => e
           raise JSON::Schema::JsonLoadError, e.message
         end
