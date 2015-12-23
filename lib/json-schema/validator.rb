@@ -137,8 +137,7 @@ module JSON
     end
 
     def absolutize_ref_uri(ref, parent_schema_uri)
-      ref_uri = JSON::Util::URI.parse(ref)
-      ref_uri.fragment = ''
+      ref_uri = JSON::Util::URI.strip_fragment(ref)
 
       return ref_uri if ref_uri.absolute?
       # This is a self reference and thus the schema does not need to be re-loaded

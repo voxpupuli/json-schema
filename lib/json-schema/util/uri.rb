@@ -36,10 +36,11 @@ module JSON
       end
 
       def self.strip_fragment(uri)
-        if uri.fragment.nil? || uri.fragment.empty?
-          uri
+        parsed_uri = parse(uri)
+        if parsed_uri.fragment.nil? || parsed_uri.fragment.empty?
+          parsed_uri
         else
-          uri.merge(:fragment => "")
+          parsed_uri.merge(:fragment => "")
         end
       end
     end
