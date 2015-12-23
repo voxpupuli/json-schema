@@ -22,5 +22,7 @@ matrix:
       gemfile: "gemfiles/Gemfile.yajl-ruby.x"
     - rvm: "2.2"
       gemfile: "gemfiles/Gemfile.uuidtools.x"
-  allow_failures:
     - rvm: "1.8"
+      gemfile: "gemfiles/Gemfile.ruby_18.x"
+  exclude:
+     - rvm: "1.8"
