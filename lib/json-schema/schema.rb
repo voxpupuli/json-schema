@@ -11,13 +11,14 @@ module JSON
 
       # If there is an ID on this schema, use it to generate the URI
       if @schema['id'] && @schema['id'].kind_of?(String)
-        temp_uri = Addressable::URI.parse(@schema['id'])
+        temp_uri = JSON::Util::URI.parse(@schema['id'])
         if temp_uri.relative?
           temp_uri = uri.join(temp_uri)
         end
         @uri = temp_uri
       end
-      @uri.fragment = ''
+      # @@TODO maybe this whole modified uri should be cached for performance too
+      @uri.fragment = '' if !@uri.fragment.nil? && !@uri.fragment.empty?
 
       # If there is a $schema on this schema, use it to determine which validator to use
       if @schema['$schema']

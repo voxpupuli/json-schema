@@ -7,7 +7,7 @@ module JSON
         return unless data.is_a?(String)
         error_message = "The property '#{build_fragment(fragments)}' must be a valid URI"
         begin
-          Addressable::URI.parse(data)
+          JSON::Util::URI.parse(data)
         rescue Addressable::URI::InvalidURIError
           validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors])
         end
