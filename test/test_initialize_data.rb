@@ -10,11 +10,11 @@ class InitializeDataTest < Minitest::Test
 
     assert(JSON::Validator.validate(schema, data, :parse_data => false))
 
-    assert_raises(parser_error) do
+    assert_raises(JSON::Schema::JsonParseError) do
       JSON::Validator.validate(schema, data, :json => true)
     end
 
-    assert_raises(Errno::ENOENT) { JSON::Validator.validate(schema, data, :uri => true) }
+    assert_raises(JSON::Schema::JsonLoadError) { JSON::Validator.validate(schema, data, :uri => true) }
   end
 
   def test_parse_integer_string
@@ -27,7 +27,7 @@ class InitializeDataTest < Minitest::Test
 
     assert(JSON::Validator.validate(schema, data, :json => true))
 
-    assert_raises(Errno::ENOENT) { JSON::Validator.validate(schema, data, :uri => true) }
+    assert_raises(JSON::Schema::JsonLoadError) { JSON::Validator.validate(schema, data, :uri => true) }
   end
 
   def test_parse_hash_string
@@ -40,7 +40,7 @@ class InitializeDataTest < Minitest::Test
 
     assert(JSON::Validator.validate(schema, data, :json => true))
 
-    assert_raises(Errno::ENOENT) { JSON::Validator.validate(schema, data, :uri => true) }
+    assert_raises(JSON::Schema::JsonLoadError) { JSON::Validator.validate(schema, data, :uri => true) }
   end
 
   def test_parse_json_string
@@ -53,7 +53,7 @@ class InitializeDataTest < Minitest::Test
 
     assert(JSON::Validator.validate(schema, data, :json => true))
 
-    assert_raises(Errno::ENOENT) { JSON::Validator.validate(schema, data, :uri => true) }
+    assert_raises(JSON::Schema::JsonLoadError) { JSON::Validator.validate(schema, data, :uri => true) }
   end
 
   def test_parse_valid_uri_string
@@ -66,7 +66,7 @@ class InitializeDataTest < Minitest::Test
 
     assert(JSON::Validator.validate(schema, data, :parse_data => false))
 
-    assert_raises(parser_error) do
+    assert_raises(JSON::Schema::JsonParseError) do
       JSON::Validator.validate(schema, data, :json => true)
     end
 
@@ -83,11 +83,17 @@ class InitializeDataTest < Minitest::Test
 
     assert(JSON::Validator.validate(schema, data, :parse_data => false))
 
-    assert_raises(parser_error) do
+    stub_request(:get, "foo.bar").to_return(:status => [500, "Internal Server Error"])
+
+    assert(JSON::Validator.validate(schema, data))
+
+    assert(JSON::Validator.validate(schema, data, :parse_data => false))
+
+    assert_raises(JSON::Schema::JsonParseError) do
       JSON::Validator.validate(schema, data, :json => true)
     end
 
-    assert_raises(Timeout::Error) { JSON::Validator.validate(schema, data, :uri => true) }
+    assert_raises(JSON::Schema::JsonLoadError) { JSON::Validator.validate(schema, data, :uri => true) }
   end
 
   def test_parse_integer

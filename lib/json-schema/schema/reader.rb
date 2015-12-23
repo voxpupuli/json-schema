@@ -57,8 +57,8 @@ module JSON
       # @param location [#to_s] The location from which to read the schema
       # @return [JSON::Schema]
       # @raise [JSON::Schema::ReadRefused] if +accept_uri+ or +accept_file+
-      #   indicated the schema should not be readed
-      # @raise [JSON::ParserError] if the schema was not a valid JSON object
+      #   indicated the schema could not be read
+      # @raise [JSON::Schema::ParseError] if the schema was not a valid JSON object
       def read(location)
         uri  = Addressable::URI.parse(location.to_s)
         body = if uri.scheme.nil? || uri.scheme == 'file'

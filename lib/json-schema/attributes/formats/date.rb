@@ -11,7 +11,8 @@ module JSON
           if REGEXP.match(data)
             begin
               Date.parse(data)
-            rescue Exception
+            rescue ArgumentError => e
+              raise e unless e.message == 'invalid date'
               validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors])
             end
           else
