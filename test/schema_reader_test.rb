@@ -1,4 +1,4 @@
-require File.expand_path('../test_helper', __FILE__)
+require File.expand_path('../support/test_helper', __FILE__)
 
 class SchemaReaderTest < Minitest::Test
   ADDRESS_SCHEMA_URI  = 'http://json-schema.org/address'

@@ -1,4 +1,4 @@
-require File.expand_path('../test_helper', __FILE__)
+require File.expand_path('../support/test_helper', __FILE__)
 
 class FragmentResolutionTest < Minitest::Test
   def test_fragment_resolution
