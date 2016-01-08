@@ -1,4 +1,3 @@
-require 'addressable/uri'
 require 'open-uri'
 require 'pathname'
 require 'bigdecimal'
@@ -12,6 +11,7 @@ require 'json-schema/errors/schema_error'
 require 'json-schema/errors/schema_parse_error'
 require 'json-schema/errors/json_load_error'
 require 'json-schema/errors/json_parse_error'
+require 'json-schema/util/uri'
 
 module JSON
 
@@ -136,15 +136,13 @@ module JSON
     end
 
     def absolutize_ref_uri(ref, parent_schema_uri)
-      ref_uri = Addressable::URI.parse(ref)
-      ref_uri.fragment = ''
+      ref_uri = JSON::Util::URI.strip_fragment(ref)
 
       return ref_uri if ref_uri.absolute?
       # This is a self reference and thus the schema does not need to be re-loaded
       return parent_schema_uri if ref_uri.path.empty?
 
-      uri = parent_schema_uri.clone
-      uri.fragment = ''
+      uri = JSON::Util::URI.strip_fragment(parent_schema_uri.dup)
       Util::URI.normalized_uri(uri.join(ref_uri.path))
     end
 
@@ -220,7 +218,7 @@ module JSON
     # Either load a reference schema or create a new schema
     def handle_schema(parent_schema, obj)
       if obj.is_a?(Hash)
-        schema_uri = parent_schema.uri.clone
+        schema_uri = parent_schema.uri.dup
         schema = JSON::Schema.new(obj, schema_uri, parent_schema.validator)
         if obj['id']
           Validator.add_schema(schema)
@@ -342,7 +340,7 @@ module JSON
 
       def validator_for_uri(schema_uri)
         return default_validator unless schema_uri
-        u = Addressable::URI.parse(schema_uri)
+        u = JSON::Util::URI.parse(schema_uri)
         validator = validators["#{u.scheme}://#{u.host}#{u.path}"]
         if validator.nil?
           raise JSON::Schema::SchemaError.new("Schema not found: #{schema_uri}")
@@ -484,6 +482,8 @@ module JSON
 
         if @@json_backend == 'yajl'
           @@serializer = lambda{|o| Yajl::Encoder.encode(o) }
+        elsif @@json_backend == 'json'
+          @@serializer = lambda{|o| JSON.dump(o) }
         else
           @@serializer = lambda{|o| YAML.dump(o) }
         end
@@ -532,7 +532,7 @@ module JSON
       if schema.is_a?(String)
         begin
           # Build a fake URI for this
-          schema_uri = Addressable::URI.parse(fake_uuid(schema))
+          schema_uri = JSON::Util::URI.parse(fake_uuid(schema))
           schema = JSON::Schema.new(JSON::Validator.parse(schema), schema_uri, @options[:version])
           if @options[:list] && @options[:fragment].nil?
             schema = schema.to_array_schema
@@ -554,14 +554,14 @@ module JSON
             schema = self.class.schema_for_uri(schema_uri)
             if @options[:list] && @options[:fragment].nil?
               schema = schema.to_array_schema
-              schema.uri = Addressable::URI.parse(fake_uuid(serialize(schema.schema)))
+              schema.uri = JSON::Util::URI.parse(fake_uuid(serialize(schema.schema)))
               Validator.add_schema(schema)
             end
             schema
           end
         end
       elsif schema.is_a?(Hash)
-        schema_uri = Addressable::URI.parse(fake_uuid(serialize(schema)))
+        schema_uri = JSON::Util::URI.parse(fake_uuid(serialize(schema)))
         schema = JSON::Schema.stringify(schema)
         schema = JSON::Schema.new(schema, schema_uri, @options[:version])
         if @options[:list] && @options[:fragment].nil?
@@ -608,7 +608,7 @@ module JSON
         end
       else
         begin
-          File.read(Addressable::URI.unescape(uri.path))
+          File.read(JSON::Util::URI.unescaped_uri(uri))
         rescue SystemCallError => e
           raise JSON::Schema::JsonLoadError, e.message
         end
