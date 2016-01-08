@@ -1,6 +1,6 @@
 require File.expand_path('../test_helper', __FILE__)
 
-class TestValidator < Minitest::Test
+class ValidatorSchemaReaderTest < Minitest::Test
 
   class MockReader
     def read(location)

@@ -1,7 +1,7 @@
 require File.expand_path('../test_helper', __FILE__)
 require 'tmpdir'
 
-class JSONSchemaValidation < Minitest::Test
+class SchemaValidationTest < Minitest::Test
   def valid_schema_v3
     {
       "$schema" => "http://json-schema.org/draft-03/schema#",
