@@ -106,6 +106,41 @@ class JSONSchemaDraft4Test < Minitest::Test
     assert(!JSON::Validator.validate(schema,data,:strict => true))
   end
 
+  def test_restrict_additional_properties
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "properties" => {
+        "a" => {"type" => "string"},
+        "b" => {"type" => "string"},
+        "map" => {
+            "type" => "object",
+            "properties" => {
+                "name" => {"type" => "string"},
+                "id" => {"type" => "integer"}
+            }
+        }
+      }
+    }
+
+    data = {"a" => "a"}
+    assert(JSON::Validator.validate(schema,data,:restrict_additional_properties => true))
+
+    data = {"b" => "b"}
+    assert(JSON::Validator.validate(schema,data,:restrict_additional_properties => true))
+
+    data = {"a" => "a", "b" => "b"}
+    assert(JSON::Validator.validate(schema,data,:restrict_additional_properties => true))
+
+    data = {"a" => "a", "b" => "b", "c" => "c"}
+    assert(!JSON::Validator.validate(schema,data,:restrict_additional_properties => true))
+
+    data = {"a" => "a", "b" => "b", "map" => {"name" => "atom"}}
+    assert(JSON::Validator.validate(schema,data,:restrict_additional_properties => true))
+
+    data = {"a" => "a", "b" => "b", "map" => {"name" => "atom", "id" => 5, "foo" => 88}}
+    assert(!JSON::Validator.validate(schema,data,:restrict_additional_properties => true))
+  end
+
   def test_strict_properties_additional_props
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",

@@ -33,6 +33,21 @@ module JSON
           end
         end
 
+        if options[:restrict_additional_properties]
+          diff = data.select do |k, v|
+            k = k.to_s
+            !schema['properties'].has_key?(k)
+          end
+
+          if diff.size > 0
+            properties = diff.keys.join(', ')
+            message = "The property '#{build_fragment(fragments)}' contained undefined properties: '#{properties}'"
+            validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+          end
+
+          return
+        end
+
         # When strict is true, ensure no undefined properties exist in the data
         return unless options[:strict] == true && !schema.key?('additionalProperties')
 

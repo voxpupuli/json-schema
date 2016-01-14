@@ -28,7 +28,8 @@ module JSON
       :insert_defaults => false,
       :clear_cache => true,
       :strict => false,
-      :parse_data => true
+      :parse_data => true,
+      :restrict_additional_properties => false
     }
     @@validators = {}
     @@default_validator = nil
@@ -49,6 +50,7 @@ module JSON
       @validation_options[:insert_defaults] = true if @options[:insert_defaults]
       @validation_options[:strict] = true if @options[:strict] == true
       @validation_options[:clear_cache] = false if @options[:clear_cache] == false
+      @validation_options[:restrict_additional_properties] = true if @options[:restrict_additional_properties] == true
 
       @@mutex.synchronize { @base_schema = initialize_schema(schema_data) }
       @original_data = data
@@ -242,7 +244,8 @@ module JSON
           validator = JSON::Validator.new(schema, data, opts)
           validator.validate
           return true
-        rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
+        rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError => e
+          print e.message
           return false
         end
       end
