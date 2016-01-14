@@ -569,7 +569,7 @@ module JSON
         end
         Validator.add_schema(schema)
       else
-        raise SchemaParseError, "Invalid schema - must be either a string or a hash"
+        raise JSON::Schema::SchemaParseError, "Invalid schema - must be either a string or a hash"
       end
 
       schema
