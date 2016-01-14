@@ -4,6 +4,10 @@ Please keep to the changelog format described on [keepachangelog.com](http://kee
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
+
+## [2.6.0] - 2016-01-08
+
 ### Added
 - Added a changelog
 
