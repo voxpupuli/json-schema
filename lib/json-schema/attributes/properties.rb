@@ -4,7 +4,6 @@ module JSON
   class Schema
     class PropertiesAttribute < Attribute
       def self.required?(schema, options)
-        fail "required?"
         schema.fetch('required') { options[:require_all] }
       end
 
@@ -68,7 +67,7 @@ module JSON
       # draft4 relies on its own RequiredAttribute validation at a higher level, rather than
       # as an attribute of individual properties.
       def self.required?(schema, options)
-        options[:strict] == true
+        options[:require_all] == true
       end
     end
   end
