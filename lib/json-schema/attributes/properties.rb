@@ -4,7 +4,7 @@ module JSON
   class Schema
     class PropertiesAttribute < Attribute
       def self.required?(schema, options)
-        schema.fetch('required') { options[:strict] }
+        schema.fetch('required') { options[:require_all] }
       end
 
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
