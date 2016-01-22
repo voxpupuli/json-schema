@@ -19,6 +19,9 @@ module StrictValidation
 
     data = {"a" => "a", "b" => "b", "c" => "c"}
     assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"b" => "b"}
+    assert(JSON::Validator.validate(schema,data,:strict => true,:require_all => false))
   end
 
   def test_strict_error_message

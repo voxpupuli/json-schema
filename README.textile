@@ -84,7 +84,8 @@ h3. Strictly validate an object's properties
 
 With the <code>:strict</code> option, validation fails when an object contains properties that are not defined in the schema's property list or doesn't match the <code>additionalProperties</code> property.
 
-With the <code>:require_all</code> option, all properties are treated as <code>required</code> regardless of <code>required</code> properties set in the schema.
+With the <code>:require_all</code> option, all properties are treated as <code>required</code> regardless of <code>required</code> properties set in the schema. The default is <code>true</code> when <code>:strict</code> is true,
+unless <code>:require_all</code> is explicitly set.
 
 <pre>
 require 'rubygems'
@@ -98,10 +99,10 @@ schema = {
   }
 }
 
-JSON::Validator.validate(schema, {"a" => 1, "b" => 2}, :strict => true)            # ==> true
-JSON::Validator.validate(schema, {"a" => 1, "b" => 2, "c" => 3}, :strict => true)  # ==> false
-JSON::Validator.validate(schema, {"a" => 1}, :strict => true)                      # ==> true
-JSON::Validator.validate(schema, {"a" => 1}, :require_all => true)                 # ==> false
+JSON::Validator.validate(schema, {"a" => 1, "b" => 2}, :strict => true)              # ==> true
+JSON::Validator.validate(schema, {"a" => 1, "b" => 2, "c" => 3}, :strict => true)    # ==> false
+JSON::Validator.validate(schema, {"a" => 1}, :strict => true)                        # ==> false
+JSON::Validator.validate(schema, {"a" => 1}, :strict => true, :require_all => false) # ==> true
 </pre>
 
 h3. Catch a validation error and print it out
