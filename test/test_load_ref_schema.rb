@@ -18,23 +18,21 @@ class LoadRefSchemaTests < Minitest::Test
 
   def test_cached_schema
     schema_url = "http://example.com/schema#"
-    schema = {
-      "$ref" => schema_url
-    }
+    schema = { "$ref" => schema_url }
     data = {}
     load_other_schema
-    validator = JSON::Validator.new(schema, data)
+    _validator = JSON::Validator.new(schema, data)
+
     assert JSON::Validator.schema_loaded?(schema_url)
   end
 
   def test_cached_schema_with_fragment
     schema_url = "http://example.com/schema#"
-    schema = {
-      "$ref" => "#{schema_url}/properties/title"
-    }
+    schema = { "$ref" => "#{schema_url}/properties/title" }
     data = {}
     load_other_schema
-    validator = JSON::Validator.new(schema, data)
+    _validator = JSON::Validator.new(schema, data)
+
     assert JSON::Validator.schema_loaded?(schema_url)
   end
 end

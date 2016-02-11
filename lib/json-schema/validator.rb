@@ -1,4 +1,3 @@
-require 'addressable/uri'
 require 'open-uri'
 require 'pathname'
 require 'bigdecimal'
@@ -9,7 +8,10 @@ require 'yaml'
 
 require 'json-schema/schema/reader'
 require 'json-schema/errors/schema_error'
+require 'json-schema/errors/schema_parse_error'
+require 'json-schema/errors/json_load_error'
 require 'json-schema/errors/json_parse_error'
+require 'json-schema/util/uri'
 
 module JSON
 
@@ -55,17 +57,13 @@ module JSON
 
       # validate the schema, if requested
       if @options[:validate_schema]
-        begin
-          if @base_schema.schema["$schema"]
-            base_validator = JSON::Validator.validator_for_name(@base_schema.schema["$schema"])
-          end
-          metaschema = base_validator ? base_validator.metaschema : validator.metaschema
-          # Don't clear the cache during metaschema validation!
-          meta_validator = JSON::Validator.new(metaschema, @base_schema.schema, {:clear_cache => false})
-          meta_validator.validate
-        rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
-          raise $!
+        if @base_schema.schema["$schema"]
+          base_validator = JSON::Validator.validator_for_name(@base_schema.schema["$schema"])
         end
+        metaschema = base_validator ? base_validator.metaschema : validator.metaschema
+        # Don't clear the cache during metaschema validation!
+        meta_validator = JSON::Validator.new(metaschema, @base_schema.schema, {:clear_cache => false})
+        meta_validator.validate
       end
 
       # If the :fragment option is set, try and validate against the fragment
@@ -138,15 +136,13 @@ module JSON
     end
 
     def absolutize_ref_uri(ref, parent_schema_uri)
-      ref_uri = Addressable::URI.parse(ref)
-      ref_uri.fragment = ''
+      ref_uri = JSON::Util::URI.strip_fragment(ref)
 
       return ref_uri if ref_uri.absolute?
       # This is a self reference and thus the schema does not need to be re-loaded
       return parent_schema_uri if ref_uri.path.empty?
 
-      uri = parent_schema_uri.clone
-      uri.fragment = ''
+      uri = JSON::Util::URI.strip_fragment(parent_schema_uri.dup)
       Util::URI.normalized_uri(uri.join(ref_uri.path))
     end
 
@@ -222,7 +218,7 @@ module JSON
     # Either load a reference schema or create a new schema
     def handle_schema(parent_schema, obj)
       if obj.is_a?(Hash)
-        schema_uri = parent_schema.uri.clone
+        schema_uri = parent_schema.uri.dup
         schema = JSON::Schema.new(obj, schema_uri, parent_schema.validator)
         if obj['id']
           Validator.add_schema(schema)
@@ -344,7 +340,7 @@ module JSON
 
       def validator_for_uri(schema_uri)
         return default_validator unless schema_uri
-        u = Addressable::URI.parse(schema_uri)
+        u = JSON::Util::URI.parse(schema_uri)
         validator = validators["#{u.scheme}://#{u.host}#{u.path}"]
         if validator.nil?
           raise JSON::Schema::SchemaError.new("Schema not found: #{schema_uri}")
@@ -416,15 +412,27 @@ module JSON
 
       def parse(s)
         if defined?(MultiJson)
-          MultiJson.respond_to?(:adapter) ? MultiJson.load(s) : MultiJson.decode(s)
+          begin
+            MultiJson.respond_to?(:adapter) ? MultiJson.load(s) : MultiJson.decode(s)
+          rescue MultiJson::ParseError => e
+            raise JSON::Schema::JsonParseError.new(e.message)
+          end
         else
           case @@json_backend.to_s
           when 'json'
-            JSON.parse(s, :quirks_mode => true)
+            begin
+              JSON.parse(s, :quirks_mode => true)
+            rescue JSON::ParserError => e
+              raise JSON::Schema::JsonParseError.new(e.message)
+            end
           when 'yajl'
-            json = StringIO.new(s)
-            parser = Yajl::Parser.new
-            parser.parse(json) or raise JSON::Schema::JsonParseError.new("The JSON could not be parsed by yajl")
+            begin
+              json = StringIO.new(s)
+              parser = Yajl::Parser.new
+              parser.parse(json) or raise JSON::Schema::JsonParseError.new("The JSON could not be parsed by yajl")
+            rescue Yajl::ParseError => e
+              raise JSON::Schema::JsonParseError.new(e.message)
+            end
           else
             raise JSON::Schema::JsonParseError.new("No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json")
           end
@@ -474,6 +482,8 @@ module JSON
 
         if @@json_backend == 'yajl'
           @@serializer = lambda{|o| Yajl::Encoder.encode(o) }
+        elsif @@json_backend == 'json'
+          @@serializer = lambda{|o| JSON.dump(o) }
         else
           @@serializer = lambda{|o| YAML.dump(o) }
         end
@@ -522,13 +532,13 @@ module JSON
       if schema.is_a?(String)
         begin
           # Build a fake URI for this
-          schema_uri = Addressable::URI.parse(fake_uuid(schema))
+          schema_uri = JSON::Util::URI.parse(fake_uuid(schema))
           schema = JSON::Schema.new(JSON::Validator.parse(schema), schema_uri, @options[:version])
           if @options[:list] && @options[:fragment].nil?
             schema = schema.to_array_schema
           end
           Validator.add_schema(schema)
-        rescue
+        rescue JSON::Schema::JsonParseError
           # Build a uri for it
           schema_uri = Util::URI.normalized_uri(schema)
           if !self.class.schema_loaded?(schema_uri)
@@ -544,14 +554,14 @@ module JSON
             schema = self.class.schema_for_uri(schema_uri)
             if @options[:list] && @options[:fragment].nil?
               schema = schema.to_array_schema
-              schema.uri = Addressable::URI.parse(fake_uuid(serialize(schema.schema)))
+              schema.uri = JSON::Util::URI.parse(fake_uuid(serialize(schema.schema)))
               Validator.add_schema(schema)
             end
             schema
           end
         end
       elsif schema.is_a?(Hash)
-        schema_uri = Addressable::URI.parse(fake_uuid(serialize(schema)))
+        schema_uri = JSON::Util::URI.parse(fake_uuid(serialize(schema)))
         schema = JSON::Schema.stringify(schema)
         schema = JSON::Schema.new(schema, schema_uri, @options[:version])
         if @options[:list] && @options[:fragment].nil?
@@ -559,7 +569,7 @@ module JSON
         end
         Validator.add_schema(schema)
       else
-        raise "Invalid schema - must be either a string or a hash"
+        raise JSON::Schema::SchemaParseError, "Invalid schema - must be either a string or a hash"
       end
 
       schema
@@ -575,12 +585,12 @@ module JSON
         elsif data.is_a?(String)
           begin
             data = JSON::Validator.parse(data)
-          rescue
+          rescue JSON::Schema::JsonParseError
             begin
               json_uri = Util::URI.normalized_uri(data)
               data = JSON::Validator.parse(custom_open(json_uri))
-            rescue
-              # Silently discard the error - the data will not change
+            rescue JSON::Schema::JsonLoadError
+              # Silently discard the error - use the data as-is
             end
           end
         end
@@ -590,10 +600,18 @@ module JSON
 
     def custom_open(uri)
       uri = Util::URI.normalized_uri(uri) if uri.is_a?(String)
-      if uri.absolute? && uri.scheme != 'file'
-        open(uri.to_s).read
+      if uri.absolute? && Util::URI::SUPPORTED_PROTOCOLS.include?(uri.scheme)
+        begin
+          open(uri.to_s).read
+        rescue OpenURI::HTTPError, Timeout::Error => e
+          raise JSON::Schema::JsonLoadError, e.message
+        end
       else
-        File.read(Addressable::URI.unescape(uri.path))
+        begin
+          File.read(JSON::Util::URI.unescaped_uri(uri))
+        rescue SystemCallError => e
+          raise JSON::Schema::JsonLoadError, e.message
+        end
       end
     end
   end

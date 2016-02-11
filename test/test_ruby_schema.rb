@@ -56,4 +56,10 @@ class RubySchemaTest < Minitest::Test
 
     assert_valid schema, data, :validate_schema => true
   end
+
+  def test_schema_of_unrecognized_type
+    assert_raises JSON::Schema::SchemaParseError do
+      JSON::Validator.validate(Object.new, {})
+    end
+  end
 end

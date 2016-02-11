@@ -214,7 +214,7 @@ schema = {
   "type" => "object",
   "required" => ["a"],
   "properties" => {
-    "a" => {"type" => "integer"}  # This will fail schema validation!
+    "a" => {"type" => "integer", "required" => "true"}  # This will fail schema validation!
   }
 }
 

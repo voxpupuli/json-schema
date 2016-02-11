@@ -66,7 +66,7 @@ class JSONSchemaCustomFormatTest < Minitest::Test
   end
 
   def test_format_validation
-    (@all_versions - [nil]).each do |version|
+    @all_versions.each do |version|
       data = {
         "a" => "23"
       }
@@ -92,7 +92,7 @@ class JSONSchemaCustomFormatTest < Minitest::Test
   end
 
   def test_override_default_format
-    (@all_versions - [nil]).each do |version|
+    @all_versions.each do |version|
       data = {
         "a" => "2001:db8:85a3:0:0:8a2e:370:7334"
       }
