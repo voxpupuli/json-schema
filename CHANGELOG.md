@@ -8,6 +8,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - Made sure schemas of an unrecognized type raise a SchemaParseError (not Name error)
 
+### Changed
+- Readme was converted from textile to markdown
+
 ## [2.6.0] - 2016-01-08
 
 ### Added
