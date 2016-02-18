@@ -45,12 +45,11 @@ $ gem install json-schema-2.5.2.gem
 Usage
 -----
 
-Three base validation methods exist: `validate`, `validate!`, and
-`fully_validate`. The first returns a boolean on whether a validation attempt
-passes and the second will throw a `JSON::Schema::ValidationError` with an
-appropriate message/trace on where the validation failed. The third validation
-method does not immediately fail upon a validation error and instead builds an
-array of validation errors return when validation is complete.
+Three base validation methods exist: 
+
+1. `validate`: returns a boolean on whether a validation attempt passes
+2. `validate!`: throws a `JSON::Schema::ValidationError` with an appropriate message/trace on where the validation failed
+3. `fully_validate`: builds an array of validation errors return when validation is complete
 
 All methods take two arguments, which can be either a JSON string, a file
 containing JSON, or a Ruby object representing JSON data. The first argument to
