@@ -1,5 +1,5 @@
-![https://travis-ci.org/ruby-json-schema/json-schema](https://travis-ci.org/ruby-json-schema/json-schema.svg?branch=master)
-![https://codeclimate.com/github/ruby-json-schema/json-schema](https://codeclimate.com/github/ruby-json-schema/json-schema/badges/gpa.svg)
+[![Travis](https://travis-ci.org/ruby-json-schema/json-schema.svg?branch=master)](https://travis-ci.org/ruby-json-schema/json-schema)
+[![Code Climate](https://codeclimate.com/github/ruby-json-schema/json-schema/badges/gpa.svg)](https://codeclimate.com/github/ruby-json-schema/json-schema)
 
 Ruby JSON Schema Validator
 ==========================
