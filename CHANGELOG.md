@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [2.6.1] - 2016-02-26
+
 ### Fixed
 - Made sure schemas of an unrecognized type raise a SchemaParseError (not Name error)
 
