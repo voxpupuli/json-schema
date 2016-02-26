@@ -40,7 +40,7 @@ class InitializeDataTest < Minitest::Test
 
     assert(JSON::Validator.validate(schema, data, :json => true))
 
-    assert_raises(JSON::Schema::JsonLoadError) { JSON::Validator.validate(schema, data, :uri => true) }
+    assert_raises(JSON::Schema::UriError) { JSON::Validator.validate(schema, data, :uri => true) }
   end
 
   def test_parse_json_string

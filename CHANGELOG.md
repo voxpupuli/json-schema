@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Made all `validate*` methods on `JSON::Validator` ultimately call `validate!`
+- Updated addressable dependency to 2.4.0
 
 ## [2.6.2] - 2016-05-13
 
