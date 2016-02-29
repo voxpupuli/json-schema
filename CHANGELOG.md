@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+# Changed
+- Attached failed `uri` or `pathname`  to read errors for more meaning
+
 ## [2.6.1] - 2016-02-26
 
 ### Fixed
