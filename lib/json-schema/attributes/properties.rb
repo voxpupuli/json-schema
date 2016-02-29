@@ -55,6 +55,8 @@ module JSON
           end
         end
 
+        diff = Hash[diff] if diff.is_a?(Array)
+
         if diff.size > 0
           properties = diff.keys.join(', ')
           message = "The property '#{build_fragment(fragments)}' contained undefined properties: '#{properties}'"
