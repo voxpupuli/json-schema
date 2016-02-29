@@ -57,9 +57,13 @@ class SchemaReaderTest < Minitest::Test
 
   def test_file_scheme
     reader = JSON::Schema::Reader.new(:accept_uri => true, :accept_file => false)
-    assert_raises(JSON::Schema::ReadRefused) do
+    error = assert_raises(JSON::Schema::ReadRefused) do
       reader.read('file://' + ADDRESS_SCHEMA_PATH)
     end
+
+    assert_equal(:file, error.type)
+    assert_equal(ADDRESS_SCHEMA_PATH, error.location)
+    assert_equal("Read of file at #{ADDRESS_SCHEMA_PATH} refused", error.message)
   end
 
   def test_parse_error

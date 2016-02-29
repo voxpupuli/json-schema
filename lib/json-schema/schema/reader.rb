@@ -3,9 +3,8 @@ require 'pathname'
 
 module JSON
   class Schema
-    # Raised by {JSON::Schema::Reader} when one of its settings indicate
-    # a schema should not be readed.
-    class ReadRefused < StandardError
+    # Base for any reading exceptions encountered by {JSON::Schema::Reader}
+    class ReadError < StandardError
       # @return [String] the requested schema location which was refused
       attr_reader :location
 
@@ -15,7 +14,30 @@ module JSON
       def initialize(location, type)
         @location = location
         @type = type
-        super("Read of #{type == :uri ? 'URI' : type} at #{location} refused!")
+        super(error_message)
+      end
+
+      private
+
+      def type_string
+        type == :uri ? 'URI' : type.to_s
+      end
+    end
+
+    # Raised by {JSON::Schema::Reader} when one of its settings indicate
+    # a schema should not be read.
+    class ReadRefused < ReadError
+      private
+      def error_message
+        "Read of #{type_string} at #{location} refused"
+      end
+    end
+
+    # Raised by {JSON::Schema::Reader} when an attempt to read a schema fails
+    class ReadFailed < ReadError
+      private
+      def error_message
+        "Read of #{type_string} at #{location} failed"
       end
     end
 
@@ -58,6 +80,8 @@ module JSON
       # @raise [JSON::Schema::ReadRefused] if +accept_uri+ or +accept_file+
       #   indicated the schema could not be read
       # @raise [JSON::Schema::ParseError] if the schema was not a valid JSON object
+      # @raise [JSON::Schema::ReadFailed] if reading the location was acceptable but the
+      #   attempt to retrieve it failed
       def read(location)
         uri  = JSON::Util::URI.parse(location.to_s)
         body = if uri.scheme.nil? || uri.scheme == 'file'
@@ -98,6 +122,8 @@ module JSON
         else
           raise JSON::Schema::ReadRefused.new(uri.to_s, :uri)
         end
+      rescue OpenURI::HTTPError, SocketError
+        raise JSON::Schema::ReadFailed.new(uri.to_s, :uri)
       end
 
       def read_file(pathname)
@@ -106,6 +132,8 @@ module JSON
         else
           raise JSON::Schema::ReadRefused.new(pathname.to_s, :file)
         end
+      rescue Errno::ENOENT
+        raise JSON::Schema::ReadFailed.new(pathname.to_s, :file)
       end
     end
   end

@@ -19,9 +19,15 @@ class BadSchemaRefTest < Minitest::Test
     }
 
     data = [1,2,3]
-    assert_raises(Errno::ENOENT) do
+    error = assert_raises(JSON::Schema::ReadFailed) do
       JSON::Validator.validate(schema,data)
     end
+
+    expanded_path = File.expand_path("../../google.json", __FILE__)
+
+    assert_equal(:file, error.type)
+    assert_equal(expanded_path, error.location)
+    assert_equal("Read of file at #{expanded_path} failed", error.message)
   end
 
   def test_bad_host_ref
@@ -32,8 +38,12 @@ class BadSchemaRefTest < Minitest::Test
     }
 
     data = [1,2,3]
-    assert_raises(SocketError, OpenURI::HTTPError) do
+    error = assert_raises(JSON::Schema::ReadFailed) do
       JSON::Validator.validate(schema,data)
     end
+
+    assert_equal(:uri, error.type)
+    assert_equal("http://ppcheesecheseunicornnuuuurrrrr.example.invalid/json.schema", error.location)
+    assert_equal("Read of URI at http://ppcheesecheseunicornnuuuurrrrr.example.invalid/json.schema failed", error.message)
   end
 end
