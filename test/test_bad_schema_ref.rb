@@ -19,7 +19,7 @@ class BadSchemaRefTest < Minitest::Test
     }
 
     data = [1,2,3]
-    assert_raises(Errno::ENOENT) do
+    assert_raises(JSON::Schema::ReadFailed) do
       JSON::Validator.validate(schema,data)
     end
   end
@@ -32,7 +32,7 @@ class BadSchemaRefTest < Minitest::Test
     }
 
     data = [1,2,3]
-    assert_raises(SocketError, OpenURI::HTTPError) do
+    assert_raises(JSON::Schema::ReadFailed) do
       JSON::Validator.validate(schema,data)
     end
   end
