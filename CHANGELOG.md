@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - Updated example of extending an existing schema
+- Fixed build on jruby and Rubinius
 
 ## [2.6.1] - 2016-02-26
 
