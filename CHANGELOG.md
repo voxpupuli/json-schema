@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+- Updated example of extending an existing schema
+
 ## [2.6.1] - 2016-02-26
 
 ### Fixed
