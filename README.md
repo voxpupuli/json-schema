@@ -362,8 +362,8 @@ require 'json-schema'
 class BitwiseAndAttribute < JSON::Schema::Attribute
   def self.validate(current_schema, data, fragments, processor, validator, options = {})
     if data.is_a?(Integer) && data & current_schema.schema['bitwise-and'].to_i == 0
-      message = "The property '#{build_fragment(fragments)}' did not evaluate  to true when bitwise-AND'd with  #{current_schema.schema['bitwise-or']}"
-      raise JSON::Schema::ValidationError.new(message, fragments, current_schema)
+      message = "The property '#{build_fragment(fragments)}' did not evaluate  to true when bitwise-AND'd with #{current_schema.schema['bitwise-and']}"
+      validation_error(processor, message, fragments, current_schema, BitwiseAndAttribute, options[:record_errors])
     end
   end
 end
