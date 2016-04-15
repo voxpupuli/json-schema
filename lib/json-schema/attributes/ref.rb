@@ -48,11 +48,11 @@ module JSON
         if ref_schema
           # Perform fragment resolution to retrieve the appropriate level for the schema
           target_schema = ref_schema.schema
-          fragments = temp_uri.fragment.split("/")
+          fragments = JSON::Util::URI.parse(JSON::Util::URI.unescape_uri(temp_uri)).fragment.split("/")
           fragment_path = ''
           fragments.each do |fragment|
             if fragment && fragment != ''
-              fragment = JSON::Util::URI.unescaped_uri(fragment.gsub('~0', '~').gsub('~1', '/'))
+              fragment = fragment.gsub('~0', '~').gsub('~1', '/')
               if target_schema.is_a?(Array)
                 target_schema = target_schema[fragment.to_i]
               else

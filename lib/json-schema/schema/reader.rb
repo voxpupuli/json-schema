@@ -102,7 +102,7 @@ module JSON
 
       def read_file(pathname)
         if accept_file?(pathname)
-          File.read(JSON::Util::URI.unescaped_uri(pathname.to_s))
+          File.read(JSON::Util::URI.unescaped_path(pathname.to_s))
         else
           raise JSON::Schema::ReadRefused.new(pathname.to_s, :file)
         end

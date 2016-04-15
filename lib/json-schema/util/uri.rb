@@ -54,7 +54,11 @@ module JSON
         Addressable::URI.convert_path(parsed_uri.path)
       end
 
-      def self.unescaped_uri(uri)
+      def self.unescape_uri(uri)
+        Addressable::URI.unescape(uri)
+      end
+
+      def self.unescaped_path(uri)
         parsed_uri = parse(uri)
 
         Addressable::URI.unescape(parsed_uri.path)
