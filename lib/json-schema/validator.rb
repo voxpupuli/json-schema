@@ -41,8 +41,7 @@ module JSON
       @options = @@default_opts.clone.merge(opts)
       @errors = []
 
-      validator = JSON::Validator.validator_for_name(@options[:version])
-      @options[:version] = validator
+      configured_validator = JSON::Validator.validator_for_name(@options[:version])
       @options[:schema_reader] ||= JSON::Validator.schema_reader
 
       @validation_options = @options[:record_errors] ? {:record_errors => true} : {}
@@ -50,19 +49,15 @@ module JSON
       @validation_options[:strict] = true if @options[:strict] == true
       @validation_options[:clear_cache] = false if @options[:clear_cache] == false
 
-      @@mutex.synchronize { @base_schema = initialize_schema(schema_data) }
+      @@mutex.synchronize { @base_schema = initialize_schema(schema_data, configured_validator) }
       @original_data = data
       @data = initialize_data(data)
       @@mutex.synchronize { build_schemas(@base_schema) }
 
       # validate the schema, if requested
       if @options[:validate_schema]
-        if @base_schema.schema["$schema"]
-          base_validator = JSON::Validator.validator_for_name(@base_schema.schema["$schema"])
-        end
-        metaschema = base_validator ? base_validator.metaschema : validator.metaschema
         # Don't clear the cache during metaschema validation!
-        meta_validator = JSON::Validator.new(metaschema, @base_schema.schema, {:clear_cache => false})
+        meta_validator = JSON::Validator.new(@base_schema.validator.metaschema, @base_schema.schema, {:clear_cache => false})
         meta_validator.validate
       end
 
@@ -81,31 +76,26 @@ module JSON
         raise JSON::Schema::SchemaError.new("Invalid fragment syntax in :fragment option")
       end
 
+      schema_fragment = base_schema.schema
       fragments.each do |f|
-        if base_schema.is_a?(JSON::Schema) #test if fragment is a JSON:Schema instance
-          if !base_schema.schema.has_key?(f)
-            raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
-          end
-          base_schema = base_schema.schema[f]
-        elsif base_schema.is_a?(Hash)
-          if !base_schema.has_key?(f)
-            raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
-          end
-          base_schema = JSON::Schema.new(base_schema[f],schema_uri,@options[:version])
-        elsif base_schema.is_a?(Array)
-          if base_schema[f.to_i].nil?
-            raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
-          end
-          base_schema = JSON::Schema.new(base_schema[f.to_i],schema_uri,@options[:version])
-        else
-          raise JSON::Schema::SchemaError.new("Invalid schema encountered when resolving :fragment option")
+        case schema_fragment
+        when Hash
+          schema_fragment = schema_fragment[f]
+        when Array
+          schema_fragment = schema_fragment[f.to_i]
         end
       end
 
+      unless schema_fragment.is_a?(Hash)
+        raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
+      end
+
+      schema = JSON::Schema.new(schema_fragment, schema_uri, base_schema.validator)
+
       if @options[:list]
-        base_schema.to_array_schema
+        schema.to_array_schema
       else
-        base_schema
+        schema
       end
     end
 
@@ -528,12 +518,12 @@ module JSON
       @@fake_uuid_generator.call(schema)
     end
 
-    def initialize_schema(schema)
+    def initialize_schema(schema, default_validator)
       if schema.is_a?(String)
         begin
           # Build a fake URI for this
           schema_uri = JSON::Util::URI.parse(fake_uuid(schema))
-          schema = JSON::Schema.new(JSON::Validator.parse(schema), schema_uri, @options[:version])
+          schema = JSON::Schema.new(JSON::Validator.parse(schema), schema_uri, default_validator)
           if @options[:list] && @options[:fragment].nil?
             schema = schema.to_array_schema
           end
@@ -563,7 +553,7 @@ module JSON
       elsif schema.is_a?(Hash)
         schema_uri = JSON::Util::URI.parse(fake_uuid(serialize(schema)))
         schema = JSON::Schema.stringify(schema)
-        schema = JSON::Schema.new(schema, schema_uri, @options[:version])
+        schema = JSON::Schema.new(schema, schema_uri, default_validator)
         if @options[:list] && @options[:fragment].nil?
           schema = schema.to_array_schema
         end
