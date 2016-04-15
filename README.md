@@ -42,10 +42,10 @@ $ gem build json-schema.gemspec
 $ gem install json-schema-2.5.2.gem
 ```
 
-Usage
+Validation
 -----
 
-Three base validation methods exist: 
+Three base validation methods exist:
 
 1. `validate`: returns a boolean on whether a validation attempt passes
 2. `validate!`: throws a `JSON::Schema::ValidationError` with an appropriate message/trace on where the validation failed
@@ -67,15 +67,15 @@ attribute in the schema and referencing the appropriate specification URI. Note
 that the `$schema` attribute takes precedence over the `:version` option during
 parsing and validation.
 
-### Validate Ruby objects against a Ruby schema
-
 For further information on json schema itself refer to <a
 href="http://spacetelescope.github.io/understanding-json-schema/">Understanding
 JSON Schema</a>.
 
-```rb
-require 'rubygems'
-require 'json-schema'
+Basic Usage
+--------------
+
+```ruby
+require "json-schema"
 
 schema = {
   "type" => "object",
@@ -85,279 +85,188 @@ schema = {
   }
 }
 
-data = {
-  "a" => 5
-}
+#
+# validate ruby objects against a ruby schema
+#
 
-JSON::Validator.validate(schema, data)
-```
+# => true
+JSON::Validator.validate(schema, { "a" => 5 })
+# => false
+JSON::Validator.validate(schema, {})
 
-### Validate a JSON string against a JSON schema file
+#
+# validate a json string against a json schema file
+#
 
-```rb
-require 'rubygems'
-require 'json-schema'
+require "json"
+File.write("schema.json", JSON.dump(schema))
 
-JSON::Validator.validate('schema.json', '{"a" : 5}')
-```
+# => true
+JSON::Validator.validate('schema.json', '{ "a": 5 }')
 
-### Validate a list of objects against a schema that represents the individual objects
+#
+# raise an error when validation fails
+#
 
-```rb
-require 'rubygems'
-require 'json-schema'
-
-data = ['user','user','user']
-JSON::Validator.validate('user.json', data, :list => true)
-```
-
-### Strictly validate an object's properties
-
-With the `:strict` option, validation fails when an object contains properties
-that are not defined in the schema's property list or doesn't match the
-`additionalProperties` property. Furthermore, all properties are treated as
-`required` regardless of `required` properties set in the schema.
-
-```rb
-require 'rubygems'
-require 'json-schema'
-
-schema = {
-  "type" => "object",
-  "properties" => {
-    "a" => {"type" => "integer"},
-    "b" => {"type" => "integer"}
-  }
-}
-
-JSON::Validator.validate(schema, {"a" => 1, "b" => 2}, :strict => true)            # ==> true
-JSON::Validator.validate(schema, {"a" => 1, "b" => 2, "c" => 3}, :strict => true)  # ==> false
-JSON::Validator.validate(schema, {"a" => 1}, :strict => true)                      # ==> false
-```
-
-### Catch a validation error and print it out
-
-```rb
-require 'rubygems'
-require 'json-schema'
-
-schema = {
-  "type" => "object",
-  "required" => ["a"],
-  "properties" => {
-    "a" => {"type" => "integer"}
-  }
-}
-
-data = {
-  "a" => "taco"
-}
-
+# => "The property '#/a' of type String did not match the following type: integer"
 begin
-  JSON::Validator.validate!(schema, data)
-rescue JSON::Schema::ValidationError
-  puts $!.message
+  JSON::Validator.validate!(schema, { "a" => "taco" })
+rescue JSON::Schema::ValidationError => e
+  e.message
 end
+
+#
+# return an array of error messages when validation fails
+#
+
+# => ["The property '#/a' of type String did not match the following type: integer in schema 18a1ffbb-4681-5b00-bd15-2c76aee4b28f"]
+JSON::Validator.fully_validate(schema, { "a" => "taco" })
 ```
 
-### Fully validate against a schema and catch all errors
+Advanced Options
+-----------------
 
-```rb
-require 'rubygems'
-require 'json-schema'
-
-schema = {
-  "type" => "object",
-  "required" => ["a","b"],
-  "properties" => {
-    "a" => {"type" => "integer"},
-    "b" => {"type" => "string"}
-  }
-}
-
-data = {
-  "a" => "taco"
-}
-
-errors = JSON::Validator.fully_validate(schema, data)
-
-# ["The property '#/a' of type String did not match the following type: integer in schema 03179a21-197e-5414-9611-e9f63e8324cd#", "The property '#/' did not contain a required property of 'b' in schema 03179a21-197e-5414-9611-e9f63e8324cd#"]
-```
-
-### Fully validate against a schema and catch all errors as objects
-
-```rb
-require 'rubygems'
-require 'json-schema'
+```ruby
+require "json-schema"
 
 schema = {
-  "type" => "object",
-  "required" => ["a","b"],
+  "type"=>"object",
+  "required" => ["a"],
   "properties" => {
-    "a" => {"type" => "integer"},
-    "b" => {"type" => "string"}
-  }
-}
-
-data = {
-  "a" => "taco"
-}
-
-errors = JSON::Validator.fully_validate(schema, data, :errors_as_objects => true)
-
-# [{:message=>"The property '#/a' of type String did not match the following type: integer in schema 03179a21-197e-5414-9611-e9f63e8324cd#", :schema=>#, :failed_attribute=>"Type", :fragment=>"#/a"}, {:message=>"The property '#/' did not contain a required property of 'b' in schema 03179a21-197e-5414-9611-e9f63e8324cd#", :schema=>#, :failed_attribute=>"Properties", :fragment=>"#/"}]
-```
-
-### Validate against a fragment of a supplied schema
-
-```rb
-require 'rubygems'
-require 'json-schema'
-
-schema = {
-  "type" => "object",
-  "required" => ["a","b"],
-  "properties" => {
-    "a" => {"type" => "integer"},
-    "b" => {"type" => "string"},
-    "c" => {
+    "a" => {
+      "type" => "integer",
+      "default" => 42
+    },
+    "b" => {
       "type" => "object",
       "properties" => {
-        "z" => {"type" => "integer"}
+        "x" => {
+          "type" => "integer"
+        }
       }
     }
   }
 }
 
-data = {
-  "z" => 1
-}
+#
+# with the `:list` option, a list can be validated against a schema that represents the individual objects
+#
 
-JSON::Validator.validate(schema, data, :fragment => "#/properties/c")
-```
+# => true
+JSON::Validator.validate(schema, [{"a" => 1}, {"a" => 2}, {"a" => 3}], :list => true)
+# => false
+JSON::Validator.validate(schema, [{"a" => 1}, {"a" => 2}, {"a" => 3}])
 
-### Validate a JSON object against a JSON schema object, while also validating the schema itself
+#
+# with the `:errors_as_objects` option, `#fully_validate` returns errors as hashes instead of strings
+#
 
-```rb
-require 'rubygems'
-require 'json-schema'
+# => [{:schema=>#<Addressable::URI:0x3ffa69cbeed8 URI:18a1ffbb-4681-5b00-bd15-2c76aee4b28f>, :fragment=>"#/a", :message=>"The property '#/a' of type String did not match the following type: integer in schema 18a1ffbb-4681-5b00-bd15-2c76aee4b28f", :failed_attribute=>"TypeV4"}]
+JSON::Validator.fully_validate(schema, { "a" => "taco" }, :errors_as_objects => true)
 
-schema = {
+#
+# with the `:strict` option, all properties are condisidered to have `"required": true` and all objects `"additionalProperties": false`
+#
+
+# => true
+JSON::Validator.validate(schema, { "a" => 1, "b" => { "x" => 2 } }, :strict => true)
+# => false
+JSON::Validator.validate(schema, { "a" => 1, "b" => { "x" => 2 }, "c" => 3 }, :strict => true)
+# => false
+JSON::Validator.validate(schema, { "a" => 1 }, :strict => true)
+
+#
+# with the `:fragment` option, only a fragment of the schema is used for validation
+#
+
+# => true
+JSON::Validator.validate(schema, { "x" => 1 }, :fragment => "#/properties/b")
+# => false
+JSON::Validator.validate(schema, { "x" => 1 })
+
+#
+# with the `:validate_schema` option, the schema is validated (against the json schema spec) before the json is validated (against the specified schema)
+#
+
+# => true
+JSON::Validator.validate(schema, { "a" => 1 }, :validate_schema => true)
+# => false
+JSON::Validator.validate({ "required" => true }, { "a" => 1 }, :validate_schema => true)
+
+#
+# with the `:insert_defaults` option, any undefined values in the json that have a default in the schema are replaced with the default before validation
+#
+
+# => true
+JSON::Validator.validate(schema, {}, :insert_defaults => true)
+# => false
+JSON::Validator.validate(schema, {})
+
+#
+# with the `:version` option, schemas conforming to older drafts of the json schema spec can be used
+#
+
+v2_schema = {
   "type" => "object",
-  "required" => ["a"],
   "properties" => {
-    "a" => {"type" => "integer", "required" => "true"}  # This will fail schema validation!
+    "a" => {
+      "type" => "integer"
+    }
   }
 }
 
-data = {
-  "a" => 5
-}
+# => false
+JSON::Validator.validate(v2_schema, {}, :version => :draft2)
+# => true
+JSON::Validator.validate(v2_schema, {})
 
-JSON::Validator.validate(schema, data, :validate_schema => true)
+#
+# with the `:parse_data` option set to false, the json must be a parsed ruby object (not a json text, a uri or a file path)
+#
+
+# => true
+JSON::Validator.validate(schema, { "a" => 1 }, :parse_data => false)
+# => false
+JSON::Validator.validate(schema, '{ "a": 1 }', :parse_data => false)
+
+#
+# with the `:json` option, the json must be an unparsed json text (not a hash, a uri or a file path)
+#
+
+# => true
+JSON::Validator.validate(schema, '{ "a": 1 }', :json => true)
+# => "no implicit conversion of Hash into String"
+begin
+  JSON::Validator.validate(schema, { "a" => 1 }, :json => true)
+rescue TypeError => e
+  e.message
+end
+
+#
+# with the `:uri` option, the json must be a uri or file path (not a hash or a json text)
+#
+
+File.write("data.json", '{ "a": 1 }')
+
+# => true
+JSON::Validator.validate(schema, "data.json", :uri => true)
+# => "Can't convert Hash into String."
+begin
+  JSON::Validator.validate(schema, { "a"  => 1 }, :uri => true)
+rescue TypeError => e
+  e.message
+end
 ```
 
-### Validate a JSON object against a JSON schema object, while inserting default values from the schema
-
-With the `:insert_defaults` option set to true any missing property that has a
-default value specified in the schema will be inserted into the validated data.
-The inserted default value is validated hence catching a schema that specifies
-an invalid default value.
-
-```rb
-require 'rubygems'
-require 'json-schema'
-
-schema = {
-  "type" => "object",
-  "required" => ["a"],
-  "properties" => {
-    "a" => {"type" => "integer", "default" => 42},
-    "b" => {"type" => "integer"}
-  }
-}
-
-# Would not normally validate because "a" is missing and required by schema,
-# but "default" option allows insertion of valid default.
-data = {
-  "b" => 5
-}
-
-JSON::Validator.validate(schema, data)
-# false
-
-JSON::Validator.validate(schema, data, :insert_defaults => true)
-# true
-# data = {
-#   "a" => 42,
-#   "b" => 5
-# }
-```
-
-### Validate an object against a JSON Schema Draft 2 schema
-
-```rb
-require 'rubygems'
-require 'json-schema'
-
-schema = {
-  "type" => "object",
-  "properties" => {
-    "a" => {"type" => "integer", "optional" => true}
-  }
-}
-
-data = {
-  "a" => 5
-}
-
-JSON::Validator.validate(schema, data, :version => :draft2)
-```
-
-### Explicitly specifying the type of the data
-
-By default, json-schema accepts a variety of different types for the data
-parameter, and it will try to work out what to do with it dynamically. You can
-pass it a string uri (in which case it will download the json from that location
-before validating), a string of JSON text, or simply a ruby object (such as an
-array or hash representing parsed json). However, sometimes the nature of the
-data is ambiguous (for example, is "http://github.com" just a string, or is it a
-uri?). In other situations, you have already parsed your JSON, and you don't
-need to re-parse it.
-
-If you want to be explict about what kind of data is being parsed, JSON schema
-supports a number of options:
-
-```rb
-require 'rubygems'
-require 'json-schema'
-
-schema = {
-  "type" => "string"
-}
-
-# examines the data, determines it's a uri, then tries to load data from it
-JSON::Validator.validate(schema, 'https://api.github.com') # returns false
-
-# data is already parsed json - just accept it as-is
-JSON::Validator.validate(schema, 'https://api.github.com', :parse_data => false) # returns true
-
-# data is parsed to a json string
-JSON::Validator.validate(schema, '"https://api.github.com"', :json => true) # returns true
-
-# loads data from the uri
-JSON::Validator.validate(schema, 'https://api.github.com', :uri => true) # returns false
-```
-
-### Extend an existing schema and validate against it
+Extending Schemas
+-----------------
 
 For this example, we are going to extend the [JSON Schema Draft
 3](http://tools.ietf.org/html/draft-zyp-json-schema-03) specification by adding
 a 'bitwise-and' property for validation.
 
-```rb
-require 'rubygems'
-require 'json-schema'
+```ruby
+require "json-schema"
 
 class BitwiseAndAttribute < JSON::Schema::Attribute
   def self.validate(current_schema, data, fragments, processor, validator, options = {})
@@ -403,7 +312,8 @@ data = {"a" => 0, "b" => "taco"}
 JSON::Validator.validate(schema,data) # => false
 ```
 
-### Custom format validation
+Custom format validation
+------------------------
 
 The JSON schema standard allows custom formats in schema definitions which
 should be ignored by validators that do not support them. JSON::Schema allows
@@ -412,9 +322,8 @@ checked as parameter and must raise a `JSON::Schema::CustomFormatError` to
 indicate a format violation. The error message will be prepended by the property
 name, e.g. [The property '#a']()
 
-```rb
-require 'rubygems'
-require 'json-schema'
+```ruby
+require "json-schema"
 
 format_proc = -> value {
   raise JSON::Schema::CustomFormatError.new("must be 42") unless value == "42"
@@ -456,7 +365,7 @@ control all schemas which should be used by validation, this could be
 accomplished by registering all referenced schemas with the validator in
 advance:
 
-```rb
+```ruby
 schema = JSON::Schema.new(some_schema_definition, Addressable::URI.parse('http://example.com/my-schema'))
 JSON::Validator.add_schema(schema)
 ```
@@ -464,7 +373,7 @@ JSON::Validator.add_schema(schema)
 If more extensive control is necessary, the `JSON::Schema::Reader` instance used
 can be configured in a few ways:
 
-```rb
+```ruby
 # Change the default schema reader used
 JSON::Validator.schema_reader = JSON::Schema::Reader.new(:accept_uri => true, :accept_file => false)
 
@@ -491,7 +400,7 @@ If more than one of the supported JSON backends are installed, the `yajl-ruby`
 parser is used by default. This can be changed by issuing the following before
 validation:
 
-```rb
+```ruby
 JSON::Validator.json_backend = :json
 ```
 
