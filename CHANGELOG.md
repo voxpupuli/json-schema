@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+- Made it possible to include colons in a $ref
+
 ### Changed
 - Reformatted examples in the readme
 
