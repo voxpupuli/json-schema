@@ -14,18 +14,11 @@ module JSON
         return if types.any? { |type| data_valid_for_type?(data, type) }
 
         types = types.map { |type| type.is_a?(String) ? type : '(schema)' }.join(', ')
-        message = format(
-          "#{fragments.join('/')} must be a '%s'",
-          types
-        )
-        # message = format(
-        #   "The property '%s' of type %s did not match %s: %s",
-        #   build_fragment(fragments),
-        #   data.class,
-        #   union ? 'one or more of the following types' : 'the following type',
-        #   types
-        # )
-
+        message = if schema['invalidMessage'].present?
+          schema['invalidMessage']
+        else
+          format( "#{fragments.join('/')} must be '%s'", types)
+        end
         validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
       end
     end
