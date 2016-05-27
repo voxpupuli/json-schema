@@ -19,7 +19,7 @@ module JSON
 
           if !prop_defaults
             schema_property = schema['properties'][property]
-            message = schema_property.has_key?('invalidMessage') ? schema_property['invalidMessage'] : "The property '#{build_fragment(fragments)}' did not contain a required property of '#{property}'"
+            message = schema_property.has_key?('invalidMessage') ? schema_property['invalidMessage'] : "'#{property}' is missing"
             validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
           end
         end
