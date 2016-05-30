@@ -6,10 +6,11 @@ module JSON
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         return unless data.is_a?(String)
 
-        pattern = current_schema.schema['pattern']
+        schema = current_schema.schema
+        pattern = schema['pattern']
         regexp  = Regexp.new(pattern)
         unless regexp.match(data)
-          message = "The property '#{build_fragment(fragments)}' value #{data.inspect} did not match the regex '#{pattern}'"
+          message = schema['invalidMessage'].present? ? schema['invalidMessage'] : "The property '#{build_fragment(fragments)}' value #{data.inspect} did not match the regex '#{pattern}'"
           validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
         end
       end
