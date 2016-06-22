@@ -1,6 +1,6 @@
-require File.expand_path('../test_helper', __FILE__)
+require File.expand_path('../support/test_helper', __FILE__)
 
-class TestSchemaTypeAttribute < Minitest::Test
+class TypeAttributeTest < Minitest::Test
   def test_type_of_data
     assert_equal(type_of_data(String.new), 'string')
     assert_equal(type_of_data(Numeric.new), 'number')

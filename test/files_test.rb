@@ -1,6 +1,6 @@
-require File.expand_path('../test_helper', __FILE__)
+require File.expand_path('../support/test_helper', __FILE__)
 
-class JSONSchemaTest < Minitest::Test
+class FilesTest < Minitest::Test
 
   #
   # These tests are ONLY run if there is an appropriate JSON backend parser available
@@ -11,18 +11,28 @@ class JSONSchemaTest < Minitest::Test
     refute_valid schema_fixture_path('good_schema_1.json'), { "a" => "bad" }
   end
 
-  def test_data_from_file
+  def test_data_from_file_v3
     schema = {"$schema" => "http://json-schema.org/draft-03/schema#","type" => "object", "properties" => {"a" => {"type" => "integer"}}}
     assert_valid schema, data_fixture_path('good_data_1.json'), :uri => true
     refute_valid schema, data_fixture_path('bad_data_1.json'), :uri => true
   end
 
-  def test_data_from_json
-    if JSON::Validator.json_backend != nil
-      schema = {"$schema" => "http://json-schema.org/draft-03/schema#","type" => "object", "properties" => {"a" => {"type" => "integer"}}}
-      assert_valid schema, %Q({"a": 5}), :json => true
-      refute_valid schema, %Q({"a": "poop"}), :json => true
-    end
+  def test_data_from_json_v3
+    schema = {"$schema" => "http://json-schema.org/draft-03/schema#","type" => "object", "properties" => {"a" => {"type" => "integer"}}}
+    assert_valid schema, %Q({"a": 5}), :json => true
+    refute_valid schema, %Q({"a": "poop"}), :json => true
+  end
+
+  def test_data_from_file_v4
+    schema = {"$schema" => "http://json-schema.org/draft-04/schema#","type" => "object", "properties" => {"a" => {"type" => "integer"}}}
+    assert_valid schema, data_fixture_path('good_data_1.json'), :uri => true
+    refute_valid schema, data_fixture_path('bad_data_1.json'), :uri => true
+  end
+
+  def test_data_from_json_v4
+    schema = {"$schema" => "http://json-schema.org/draft-04/schema#","type" => "object", "properties" => {"a" => {"type" => "integer"}}}
+    assert_valid schema, %Q({"a": 5}), :json => true
+    refute_valid schema, %Q({"a": "poop"}), :json => true
   end
 
   def test_both_from_file
