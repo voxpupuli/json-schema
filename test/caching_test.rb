@@ -1,61 +1,57 @@
 require File.expand_path('../support/test_helper', __FILE__)
 
 class CachingTestTest < Minitest::Test
-  URI = "http://example.com/test-schema.json"
+  def setup
+    @schema = Tempfile.new(['schema', '.json'])
+  end
+
+  def teardown
+    @schema.close
+    @schema.unlink
+
+    JSON::Validator.clear_cache
+  end
 
   def test_caching
-    initial_schema = {
-      "type" => "string"
-    }
-    schema = JSON::Schema.new(initial_schema, URI)
-    JSON::Validator.add_schema(schema)
-    assert_valid(URI, "foo", :clear_cache => false)
+    set_schema('type' => 'string')
+    assert_valid(schema_path, 'foo', :clear_cache => false)
 
-    initial_schema = {
-      "type" => "number"
-    }
-    schema = JSON::Schema.new(initial_schema, URI)
-    JSON::Validator.add_schema(schema)
-    assert_valid(URI, "foo")
+    set_schema('type' => 'number')
+    refute_valid(schema_path, 123)
   end
 
   def test_clear_cache
-    initial_schema = {
-      "type" => "string"
-    }
-    schema = JSON::Schema.new(initial_schema, URI)
-    JSON::Validator.add_schema(schema)
-    assert_valid(URI, "foo", :clear_cache => true)
+    set_schema('type' => 'string')
+    assert_valid(schema_path, 'foo', :clear_cache => true)
 
-    initial_schema = {
-      "type" => "number"
-    }
-    schema = JSON::Schema.new(initial_schema, URI)
-    JSON::Validator.add_schema(schema)
-    assert_valid(URI, 123)
+    set_schema('type' => 'number')
+    assert_valid(schema_path, 123)
   end
 
   def test_cache_schemas
     suppress_warnings do
-      JSON::Validator.cache_schemas = true
-    end
-
-    initial_schema = {
-      "type" => "string"
-    }
-    schema = JSON::Schema.new(initial_schema, URI)
-    JSON::Validator.add_schema(schema)
-    assert_valid(URI, "foo")
-
-    initial_schema = {
-      "type" => "number"
-    }
-    schema = JSON::Schema.new(initial_schema, URI)
-    JSON::Validator.add_schema(schema)
-    assert_valid(URI, 123)
-  ensure
-    suppress_warnings do
       JSON::Validator.cache_schemas = false
     end
+
+    set_schema('type' => 'string')
+    assert_valid(schema_path, 'foo', :clear_cache => false)
+
+    set_schema('type' => 'number')
+    assert_valid(schema_path, 123)
+  ensure
+    suppress_warnings do
+      JSON::Validator.cache_schemas = true
+    end
+  end
+
+  private
+
+  def schema_path
+    @schema.path
+  end
+
+  def set_schema(schema_definition)
+    @schema.write(schema_definition.to_json)
+    @schema.rewind
   end
 end

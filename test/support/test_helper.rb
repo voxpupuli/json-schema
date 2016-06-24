@@ -38,7 +38,7 @@ class Minitest::Test
   end
 
   def validation_errors(schema, data, options)
-    options = { :clear_cache => true }.merge(options)
+    options = { :clear_cache => true, :validate_schema => true }.merge(options)
     JSON::Validator.fully_validate(schema, data, options)
   end
 end
