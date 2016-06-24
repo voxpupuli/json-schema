@@ -28,20 +28,17 @@ class Minitest::Test
   end
 
   def assert_valid(schema, data, options = {})
-    if !options.key?(:version) && respond_to?(:schema_version)
-      options = options.merge(:version => schema_version)
-    end
-
-    errors = JSON::Validator.fully_validate(schema, data, options)
+    errors = validation_errors(schema, data, options)
     assert_equal([], errors, "#{data.inspect} should be valid for schema:\n#{schema.inspect}")
   end
 
   def refute_valid(schema, data, options = {})
-    if !options.key?(:version) && respond_to?(:schema_version)
-      options = options.merge(:version => schema_version)
-    end
-
-    errors = JSON::Validator.fully_validate(schema, data, options)
+    errors = validation_errors(schema, data, options)
     refute_equal([], errors, "#{data.inspect} should be invalid for schema:\n#{schema.inspect}")
+  end
+
+  def validation_errors(schema, data, options)
+    options = { :clear_cache => true }.merge(options)
+    JSON::Validator.fully_validate(schema, data, options)
   end
 end

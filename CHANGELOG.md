@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+- Made sure we really do clear the cache when instructed to
+
 ### Changed
 - Made all `validate*` methods on `JSON::Validator` ultimately call `validate!`
 
