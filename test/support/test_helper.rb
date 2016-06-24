@@ -9,6 +9,16 @@ Dir[File.join(File.expand_path('../', __FILE__), '*.rb')].each do |support_file|
 end
 
 class Minitest::Test
+  def suppress_warnings
+    old_verbose = $VERBOSE
+    $VERBOSE = nil
+    begin
+      yield
+    ensure
+      $VERBOSE = old_verbose
+    end
+  end
+
   def schema_fixture_path(filename)
     File.join(File.dirname(__FILE__), '../schemas', filename)
   end
