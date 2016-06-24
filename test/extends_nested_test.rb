@@ -1,50 +1,41 @@
 require File.expand_path('../support/test_helper', __FILE__)
 
 class ExtendsNestedTest < Minitest::Test
+  ADDITIONAL_PROPERTIES = ['extends_and_additionalProperties_false_schema.json']
+  PATTERN_PROPERTIES = ['extends_and_patternProperties_schema.json']
 
-  def assert_validity(valid, schema_name, data, msg)
-    msg = "Schema should be #{valid ? :valid : :invalid}.\n(#{schema_name}) #{msg}"
-    schema = schema_fixture_path("#{schema_name}_schema.json")
-    errors = JSON::Validator.fully_validate(schema, data)
+  ALL_SCHEMAS = ADDITIONAL_PROPERTIES + PATTERN_PROPERTIES
 
-    if valid
-      assert_equal([], errors, msg)
-    else
-      refute_equal([], errors, msg)
+  def test_valid_outer
+    ALL_SCHEMAS.each do |file|
+      path = schema_fixture_path(file)
+      assert_valid path, { "outerC" => true }, {}, "Outer defn is broken, maybe the outer extends overrode it"
     end
   end
 
-  %w[
-    extends_and_additionalProperties_false
-    extends_and_patternProperties
-  ].each do |schema_name|
-    test_prefix = 'test_' + schema_name.gsub('-','_')
-
-    class_eval <<-EOB
-      def #{test_prefix}_valid_outer
-        assert_validity true, '#{schema_name}', {"outerC"=>true}, "Outer defn is broken, maybe the outer extends overrode it"
-      end
-
-      def #{test_prefix}_valid_outer_extended
-        assert_validity true, '#{schema_name}', {"innerA"=>true}, "Extends at the root level isn't working"
-      end
-
-      def #{test_prefix}_valid_inner
-        assert_validity true, '#{schema_name}', {"outerB"=>[{"innerA"=>true}]}, "Extends isn't working in the array element defn"
-      end
-
-      def #{test_prefix}_invalid_inner
-        assert_validity false, '#{schema_name}', {"outerB"=>[{"whaaaaat"=>true}]}, "Array element defn allowing anything when it should only allow what's in inner.schema"
-      end
-    EOB
-
-    if schema_name['extends_and_additionalProperties_false']
-      class_eval <<-EOB
-        def #{test_prefix}_invalid_outer
-          assert_validity false, '#{schema_name}', {"whaaaaat"=>true}, "Outer defn allowing anything when it shouldn't"
-        end
-      EOB
+  def test_valid_outer_extended
+    ALL_SCHEMAS.each do |file|
+      path = schema_fixture_path(file)
+      assert_valid path, { "innerA" => true }, {}, "Extends at the root level isn't working"
     end
+  end
 
+  def test_valid_inner
+    ALL_SCHEMAS.each do |file|
+      path = schema_fixture_path(file)
+      assert_valid path, { "outerB" => [{ "innerA" => true }] }, {}, "Extends isn't working in the array element defn"
+    end
+  end
+
+  def test_invalid_inner
+    ALL_SCHEMAS.each do |file|
+      path = schema_fixture_path(file)
+      refute_valid path, { "outerB" => [{ "whaaaaat" => true }] }, {}, "Array element defn allowing anything when it should only allow what's in inner.schema"
+    end
+  end
+
+  def test_invalid_outer
+    path = schema_fixture_path(ADDITIONAL_PROPERTIES)
+    refute_valid path, { "whaaaaat" => true }, {}, "Outer defn allowing anything when it shouldn't"
   end
 end
