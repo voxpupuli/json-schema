@@ -253,7 +253,11 @@ module JSON
         validator = new(schema, data, opts)
         validator.validate
       end
-      alias_method 'validate2', 'validate!'
+
+      def validate2(schema, data, opts={})
+        warn "[DEPRECATION NOTICE] JSON::Validator#validate2 has been replaced by JSON::Validator#validate! and will be removed in version >= 3. Please use the #validate! method instead."
+        validate!(schema, data, opts)
+      end
 
       def validate_json!(schema, data, opts={})
         validate!(schema, data, opts.merge(:json => true))
