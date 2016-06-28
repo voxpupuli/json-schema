@@ -11,6 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
   `JSON::Schema::RefAttribute` into `JSON::Util::URI`
 - Deprecated `JSON::Validator#validator_for` in favor of `JSON::Validator#validator_for_uri`
 - Deprecated `JSON::Validator.validate2` in favor of `JSON::Validator.validate!`
+- Deprecated `JSON::Schema::Validator#extend_schema_definition` in favour of subclassing
 
 ## [2.7.0] - 2016-09-29
 
