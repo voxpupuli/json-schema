@@ -1,7 +1,6 @@
 language: "ruby"
 
 rvm:
-  - "1.8"
   - "1.9"
   - "2.0"
   - "2.1"
@@ -23,5 +22,3 @@ matrix:
       gemfile: "gemfiles/Gemfile.yajl-ruby.x"
     - rvm: "2.3.1"
       gemfile: "gemfiles/Gemfile.uuidtools.x"
-  allow_failures:
-    - rvm: "1.8"
