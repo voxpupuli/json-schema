@@ -62,8 +62,7 @@ module JSON
         end
         metaschema = base_validator ? base_validator.metaschema : validator.metaschema
         # Don't clear the cache during metaschema validation!
-        meta_validator = JSON::Validator.new(metaschema, @base_schema.schema, {:clear_cache => false})
-        meta_validator.validate
+        self.class.validate!(metaschema, @base_schema.schema, {:clear_cache => false})
       end
 
       # If the :fragment option is set, try and validate against the fragment
@@ -110,12 +109,17 @@ module JSON
     end
 
     # Run a simple true/false validation of data against a schema
-    def validate()
+    def validate
       @base_schema.validate(@data,[],self,@validation_options)
-      if @options[:errors_as_objects]
-        return @errors.map{|e| e.to_hash}
+
+      if @options[:record_errors]
+        if @options[:errors_as_objects]
+          @errors.map{|e| e.to_hash}
+        else
+          @errors.map{|e| e.to_string}
+        end
       else
-        return @errors.map{|e| e.to_string}
+        true
       end
     ensure
       if @validation_options[:clear_cache] == true
@@ -239,9 +243,7 @@ module JSON
     class << self
       def validate(schema, data,opts={})
         begin
-          validator = JSON::Validator.new(schema, data, opts)
-          validator.validate
-          return true
+          validate!(schema, data, opts)
         rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
           return false
         end
@@ -258,7 +260,6 @@ module JSON
       def validate!(schema, data,opts={})
         validator = JSON::Validator.new(schema, data, opts)
         validator.validate
-        return true
       end
       alias_method 'validate2', 'validate!'
 
@@ -271,9 +272,7 @@ module JSON
       end
 
       def fully_validate(schema, data, opts={})
-        opts[:record_errors] = true
-        validator = JSON::Validator.new(schema, data, opts)
-        validator.validate
+        validate!(schema, data, opts.merge(:record_errors => true))
       end
 
       def fully_validate_schema(schema, opts={})
