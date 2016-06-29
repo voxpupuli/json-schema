@@ -1,4 +1,4 @@
-require 'json-schema/attribute'
+require 'json-schema/attributes/format'
 require 'json-schema/errors/custom_format_error'
 
 module JSON
