@@ -131,23 +131,12 @@ module JSON
     end
 
     def load_ref_schema(parent_schema, ref)
-      schema_uri = absolutize_ref_uri(ref, parent_schema.uri)
+      schema_uri = JSON::Util::URI.absolutize_ref(ref, parent_schema.uri)
       return true if self.class.schema_loaded?(schema_uri)
 
       schema = @options[:schema_reader].read(schema_uri)
       self.class.add_schema(schema)
       build_schemas(schema)
-    end
-
-    def absolutize_ref_uri(ref, parent_schema_uri)
-      ref_uri = JSON::Util::URI.strip_fragment(ref)
-
-      return ref_uri if ref_uri.absolute?
-      # This is a self reference and thus the schema does not need to be re-loaded
-      return parent_schema_uri if ref_uri.path.empty?
-
-      uri = JSON::Util::URI.strip_fragment(parent_schema_uri.dup)
-      Util::URI.normalized_uri(uri.join(ref_uri.path))
     end
 
     # Build all schemas with IDs, mapping out the namespace

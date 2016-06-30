@@ -22,23 +22,7 @@ module JSON
       def self.get_referenced_uri_and_schema(s, current_schema, validator)
         uri,schema = nil,nil
 
-        temp_uri = JSON::Util::URI.parse(s['$ref'])
-        temp_uri.defer_validation do
-          if temp_uri.relative?
-            temp_uri.merge!(current_schema.uri)
-            # Check for absolute path
-            path, fragment = s['$ref'].split("#")
-            if path.nil? || path == ''
-              temp_uri.path = current_schema.uri.path
-            elsif path[0,1] == "/"
-              temp_uri.path = Pathname.new(path).cleanpath.to_s
-            else
-              temp_uri.join!(path)
-            end
-            temp_uri.fragment = fragment
-          end
-          temp_uri.fragment = "" if temp_uri.fragment.nil? || temp_uri.fragment.empty?
-        end
+        temp_uri = JSON::Util::URI.normalize_ref(s['$ref'], current_schema.uri)
 
         # Grab the parent schema from the schema list
         schema_key = temp_uri.to_s.split("#")[0] + "#"
