@@ -507,14 +507,6 @@ module JSON
 
     private
 
-    if Gem::Specification::find_all_by_name('uuidtools').any?
-      require 'uuidtools'
-      @@fake_uuid_generator = lambda{|s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
-    else
-      require 'json-schema/util/uuid'
-      @@fake_uuid_generator = lambda{|s| JSON::Util::UUID.create_v5(s,JSON::Util::UUID::Nil).to_s }
-    end
-
     def serialize schema
       if defined?(MultiJson)
         MultiJson.respond_to?(:dump) ? MultiJson.dump(schema) : MultiJson.encode(schema)
@@ -523,15 +515,11 @@ module JSON
       end
     end
 
-    def fake_uuid schema
-      @@fake_uuid_generator.call(schema)
-    end
-
     def initialize_schema(schema)
       if schema.is_a?(String)
         begin
           # Build a fake URI for this
-          schema_uri = JSON::Util::URI.parse(fake_uuid(schema))
+          schema_uri = JSON::Util::URI.fake_uri(schema)
           schema = JSON::Schema.new(JSON::Validator.parse(schema), schema_uri, @options[:version])
           if @options[:list] && @options[:fragment].nil?
             schema = schema.to_array_schema
@@ -553,14 +541,14 @@ module JSON
             schema = self.class.schema_for_uri(schema_uri)
             if @options[:list] && @options[:fragment].nil?
               schema = schema.to_array_schema
-              schema.uri = JSON::Util::URI.parse(fake_uuid(serialize(schema.schema)))
+              schema.uri = JSON::Util::URI.fake_uri(serialize(schema.schema))
               Validator.add_schema(schema)
             end
             schema
           end
         end
       elsif schema.is_a?(Hash)
-        schema_uri = JSON::Util::URI.parse(fake_uuid(serialize(schema)))
+        schema_uri = JSON::Util::URI.fake_uri(serialize(schema))
         schema = JSON::Schema.stringify(schema)
         schema = JSON::Schema.new(schema, schema_uri, @options[:version])
         if @options[:list] && @options[:fragment].nil?

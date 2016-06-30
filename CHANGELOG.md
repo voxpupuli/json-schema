@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+- Replaced UUIDs with SHA1 hashes as the cache key for parsed schemas
+
 ## [2.7.0] - 2016-09-29
 
 ### Fixed

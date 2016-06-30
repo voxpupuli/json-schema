@@ -1,4 +1,5 @@
 require 'addressable/uri'
+require 'digest/sha1'
 
 module JSON
   module Util
@@ -52,6 +53,11 @@ module JSON
         parsed_uri = parse(uri)
 
         Addressable::URI.convert_path(parsed_uri.path)
+      end
+
+      def self.fake_uri(string)
+        digest = Digest::SHA1.hexdigest(string)
+        parse(digest)
       end
 
       def self.unescape_uri(uri)
