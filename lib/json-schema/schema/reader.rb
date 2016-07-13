@@ -1,5 +1,4 @@
 require 'open-uri'
-require 'addressable/uri'
 require 'pathname'
 
 module JSON
@@ -57,12 +56,12 @@ module JSON
       # @param location [#to_s] The location from which to read the schema
       # @return [JSON::Schema]
       # @raise [JSON::Schema::ReadRefused] if +accept_uri+ or +accept_file+
-      #   indicated the schema should not be readed
-      # @raise [JSON::ParserError] if the schema was not a valid JSON object
+      #   indicated the schema could not be read
+      # @raise [JSON::Schema::ParseError] if the schema was not a valid JSON object
       def read(location)
-        uri  = Addressable::URI.parse(location.to_s)
+        uri  = JSON::Util::URI.parse(location.to_s)
         body = if uri.scheme.nil? || uri.scheme == 'file'
-                 uri = Addressable::URI.convert_path(uri.path)
+                 uri = JSON::Util::URI.file_uri(uri)
                  read_file(Pathname.new(uri.path).expand_path)
                else
                  read_uri(uri)
@@ -103,7 +102,7 @@ module JSON
 
       def read_file(pathname)
         if accept_file?(pathname)
-          File.read(Addressable::URI.unescape(pathname.to_s))
+          File.read(JSON::Util::URI.unescaped_path(pathname.to_s))
         else
           raise JSON::Schema::ReadRefused.new(pathname.to_s, :file)
         end
