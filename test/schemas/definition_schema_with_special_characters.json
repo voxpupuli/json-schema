@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "a": {
+      "$ref": "#/definitions/foo:bar"
+    }
+  },
+  "definitions": {
+    "foo:bar": {
+      "type": "integer"
+    }
+  }
+}

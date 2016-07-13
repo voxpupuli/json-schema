@@ -17,7 +17,7 @@ module JSON
             message = "The property '#{build_fragment(fragments)}' of type #{data.class} matched the disallowed schema"
             failed = false
           end
-        rescue
+        rescue ValidationError
           # Yay, we failed validation.
         end
 
