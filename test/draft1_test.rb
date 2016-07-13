@@ -1,8 +1,8 @@
-require File.expand_path('../test_helper', __FILE__)
+require File.expand_path('../support/test_helper', __FILE__)
 
-class JSONSchemaDraft2Test < Minitest::Test
+class Draft1Test < Minitest::Test
   def schema_version
-    :draft2
+    :draft1
   end
 
   def exclusive_minimum
@@ -13,18 +13,12 @@ class JSONSchemaDraft2Test < Minitest::Test
     { 'maximumCanEqual' => false }
   end
 
-  def multiple_of
-    'divisibleBy'
-  end
-
   include ArrayValidation::ItemsTests
-  include ArrayValidation::UniqueItemsTests
 
   include EnumValidation::General
   include EnumValidation::V1_V2
 
   include NumberValidation::MinMaxTests
-  include NumberValidation::MultipleOfTests
 
   include ObjectValidation::AdditionalPropertiesTests
 
@@ -61,6 +55,39 @@ class JSONSchemaDraft2Test < Minitest::Test
     assert_valid schema, data
   end
 
+  def test_max_decimal
+    # Set up the default datatype
+    schema = {
+      "properties" => {
+        "a" => {"maxDecimal" => 2}
+      }
+    }
+
+    data = {
+      "a" => nil
+    }
+
+    data["a"] = 3.35
+    assert_valid schema, data
+
+    data["a"] = 3.455
+    refute_valid schema, data
+
+
+    schema["properties"]["a"]["maxDecimal"] = 0
+
+    data["a"] = 4.0
+    refute_valid schema, data
+
+    data["a"] = 'boo'
+    assert_valid schema, data
+
+    data["a"] = 5
+    assert_valid schema, data
+  end
+
+
+
   def test_disallow
     # Set up the default datatype
     schema = {
@@ -90,6 +117,7 @@ class JSONSchemaDraft2Test < Minitest::Test
 
     data["a"] = false
     assert_valid schema, data
+
   end
 
   def test_format_datetime
@@ -110,4 +138,3 @@ class JSONSchemaDraft2Test < Minitest::Test
   end
 
 end
-

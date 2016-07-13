@@ -1,20 +1,20 @@
 require 'minitest/autorun'
 require 'webmock/minitest'
 
-$:.unshift(File.expand_path('../../lib', __FILE__))
+$LOAD_PATH.unshift(File.expand_path('../../../lib', __FILE__))
 require 'json-schema'
 
-Dir[File.join(File.expand_path('../support', __FILE__), '*.rb')].each do |support_file|
-  require support_file
+Dir[File.join(File.expand_path('../', __FILE__), '*.rb')].each do |support_file|
+  require support_file unless support_file == __FILE__
 end
 
 class Minitest::Test
   def schema_fixture_path(filename)
-    File.join(File.dirname(__FILE__), 'schemas', filename)
+    File.join(File.dirname(__FILE__), '../schemas', filename)
   end
 
   def data_fixture_path(filename)
-    File.join(File.dirname(__FILE__), 'data', filename)
+    File.join(File.dirname(__FILE__), '../data', filename)
   end
 
   def assert_valid(schema, data, options = {})

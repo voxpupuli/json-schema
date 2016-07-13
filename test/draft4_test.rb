@@ -1,7 +1,7 @@
 # encoding: utf-8
-require File.expand_path('../test_helper', __FILE__)
+require File.expand_path('../support/test_helper', __FILE__)
 
-class JSONSchemaDraft4Test < Minitest::Test
+class Draft4Test < Minitest::Test
   def schema_version
     :draft4
   end
@@ -671,5 +671,3 @@ class JSONSchemaDraft4Test < Minitest::Test
     refute_valid schema, data
   end
 end
-
-

@@ -1,6 +1,6 @@
-require File.expand_path('../test_helper', __FILE__)
+require File.expand_path('../support/test_helper', __FILE__)
 
-class LoadRefSchemaTests < Minitest::Test
+class LoadRefSchemaTest < Minitest::Test
   def load_other_schema
     JSON::Validator.add_schema(JSON::Schema.new(
       {

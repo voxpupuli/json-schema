@@ -5,8 +5,21 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [2.6.2] - 2016-05-13
+
+### Fixed
+- Made it possible to include colons in a $ref
+
+### Changed
+- Reformatted examples in the readme
+
+## [2.6.1] - 2016-02-26
+
 ### Fixed
 - Made sure schemas of an unrecognized type raise a SchemaParseError (not Name error)
+
+### Changed
+- Readme was converted from textile to markdown
 
 ## [2.6.0] - 2016-01-08
 
