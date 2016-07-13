@@ -386,55 +386,8 @@ module JSON
         end
       end
 
-      def json_backend
-        if defined?(MultiJson)
-          MultiJson.respond_to?(:adapter) ? MultiJson.adapter : MultiJson.engine
-        else
-          @@json_backend
-        end
-      end
-
-      def json_backend=(backend)
-        if defined?(MultiJson)
-          backend = backend == 'json' ? 'json_gem' : backend
-          MultiJson.respond_to?(:use) ? MultiJson.use(backend) : MultiJson.engine = backend
-        else
-          backend = backend.to_s
-          if @@available_json_backends.include?(backend)
-            @@json_backend = backend
-          else
-            raise JSON::Schema::JsonParseError.new("The JSON backend '#{backend}' could not be found.")
-          end
-        end
-      end
-
-      def parse(s)
-        if defined?(MultiJson)
-          begin
-            MultiJson.respond_to?(:adapter) ? MultiJson.load(s) : MultiJson.decode(s)
-          rescue MultiJson::ParseError => e
-            raise JSON::Schema::JsonParseError.new(e.message)
-          end
-        else
-          case @@json_backend.to_s
-          when 'json'
-            begin
-              JSON.parse(s, :quirks_mode => true)
-            rescue JSON::ParserError => e
-              raise JSON::Schema::JsonParseError.new(e.message)
-            end
-          when 'yajl'
-            begin
-              json = StringIO.new(s)
-              parser = Yajl::Parser.new
-              parser.parse(json) or raise JSON::Schema::JsonParseError.new("The JSON could not be parsed by yajl")
-            rescue Yajl::ParseError => e
-              raise JSON::Schema::JsonParseError.new(e.message)
-            end
-          else
-            raise JSON::Schema::JsonParseError.new("No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json")
-          end
-        end
+      def parse(string)
+        JSON.parse(string, quirks_mode: true)
       end
 
       def merge_missing_values(source, destination)
@@ -501,7 +454,7 @@ module JSON
             schema = schema.to_array_schema
           end
           Validator.add_schema(schema)
-        rescue JSON::Schema::JsonParseError
+        rescue JSON::ParserError
           # Build a uri for it
           schema_uri = Util::URI.normalized_uri(schema)
           if !self.class.schema_loaded?(schema_uri)
@@ -548,11 +501,11 @@ module JSON
         elsif data.is_a?(String)
           begin
             data = JSON::Validator.parse(data)
-          rescue JSON::Schema::JsonParseError
+          rescue
             begin
               json_uri = Util::URI.normalized_uri(data)
               data = JSON::Validator.parse(custom_open(json_uri))
-            rescue JSON::Schema::JsonLoadError
+            rescue
               # Silently discard the error - use the data as-is
             end
           end
