@@ -11,7 +11,7 @@ module JSON
 
         case schema['additionalItems']
         when false
-          if schema['items'].length != data.length
+          if schema['items'].length < data.length
             message = "The property '#{build_fragment(fragments)}' contains additional array elements outside of the schema when none are allowed"
             validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
           end
