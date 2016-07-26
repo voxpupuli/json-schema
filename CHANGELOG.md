@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Made all `validate*` methods on `JSON::Validator` ultimately call `validate!`
+- Removed support for old (pre-2.0) rubies
 
 ## [2.6.2] - 2016-05-13
 
