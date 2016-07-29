@@ -256,6 +256,24 @@ begin
 rescue TypeError => e
   e.message
 end
+
+#
+# with the `:clear_cache` option set to true, the internal cache of schemas is
+# cleared after validation (otherwise schemas are cached for efficiency)
+#
+
+File.write("schema.json", v2_schema.to_json)
+
+# => true
+JSON::Validator.validate("schema.json", {})
+
+File.write("schema.json", schema.to_json)
+
+# => true
+JSON::Validator.validate("schema.json", {}, :clear_cache => true)
+
+# => false
+JSON::Validator.validate("schema.json", {})
 ```
 
 Extending Schemas

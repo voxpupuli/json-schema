@@ -1,8 +1,8 @@
 require File.expand_path('../support/test_helper', __FILE__)
 
 class Draft2Test < Minitest::Test
-  def schema_version
-    :draft2
+  def validation_errors(schema, data, options)
+    super(schema, data, :version => :draft2)
   end
 
   def exclusive_minimum
