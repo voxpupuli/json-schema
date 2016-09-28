@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-03/schema#",
   "type": "object",
-  "extends": {"$ref":"inner.schema.json#"},
-  "additionalProperties": {
+  "extends": {"$ref":"inner_schema.json#"},
+  "patternProperties": {
     "outerA": {
       "description": "blah",
       "required": false,
@@ -20,7 +20,7 @@
       "minItems": 1,
       "maxItems": 50,
       "items": {
-        "extends": {"$ref":"inner.schema.json#"},
+        "extends": {"$ref":"inner_schema.json#"},
         "additionalProperties": false
       }
     },

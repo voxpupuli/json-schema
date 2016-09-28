@@ -4,7 +4,7 @@ class ExtendsNestedTest < Minitest::Test
 
   def assert_validity(valid, schema_name, data, msg)
     msg = "Schema should be #{valid ? :valid : :invalid}.\n(#{schema_name}) #{msg}"
-    schema = schema_fixture_path("#{schema_name}.schema.json")
+    schema = schema_fixture_path("#{schema_name}_schema.json")
     errors = JSON::Validator.fully_validate(schema, data)
 
     if valid
@@ -15,10 +15,8 @@ class ExtendsNestedTest < Minitest::Test
   end
 
   %w[
-    extends_and_additionalProperties-1-filename
-    extends_and_additionalProperties-1-ref
-    extends_and_additionalProperties-2-filename
-    extends_and_additionalProperties-2-ref
+    extends_and_additionalProperties_false
+    extends_and_patternProperties
   ].each do |schema_name|
     test_prefix = 'test_' + schema_name.gsub('-','_')
 
@@ -40,7 +38,7 @@ class ExtendsNestedTest < Minitest::Test
       end
     EOB
 
-    if schema_name['extends_and_additionalProperties-1']
+    if schema_name['extends_and_additionalProperties_false']
       class_eval <<-EOB
         def #{test_prefix}_invalid_outer
           assert_validity false, '#{schema_name}', {"whaaaaat"=>true}, "Outer defn allowing anything when it shouldn't"

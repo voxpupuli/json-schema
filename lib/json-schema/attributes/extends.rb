@@ -24,8 +24,6 @@ module JSON
       def self.get_extended_uri_and_schema(s, current_schema, validator)
         uri,schema = nil,nil
 
-        s = {'$ref' => s} if s.is_a?(String)
-
         if s.is_a?(Hash)
           uri = current_schema.uri
           if s['$ref']
