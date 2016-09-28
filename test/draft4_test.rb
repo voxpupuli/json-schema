@@ -284,6 +284,20 @@ class Draft4Test < Minitest::Test
     refute_valid schema, {"a" => 5, "b" => {"b" => {"a" => 'taco'}}}
   end
 
+  def test_property_named_ref
+    schema = {
+      "$schema" => "http://json-schema.org/draft-04/schema#",
+      "properties" => {
+        "$ref" => {
+          "type" => "integer"
+        }
+      }
+    }
+
+    assert_valid schema, { "$ref" => 1 }
+    refute_valid schema, { "$ref" => "#" }
+  end
+
   def test_format_datetime
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
