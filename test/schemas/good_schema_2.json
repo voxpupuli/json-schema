@@ -1,10 +1,9 @@
 {
-  "$schema" : "http://json-schema.org/draft-03/schema#",
   "type" : "object",
   "properties" : {
     "b" : {
-      "required" : true,
       "$ref" : "good_schema_1.json"
     }
-  }
+  },
+  "required": ["b"]
 }
