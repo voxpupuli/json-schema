@@ -1,21 +1,17 @@
 {
-  "$schema": "http://json-schema.org/draft-03/schema#",
   "type": "object",
   "extends": {"$ref":"inner_schema.json#"},
   "properties": {
     "outerA": {
       "description": "blah",
-      "required": false,
       "additionalProperties": false,
       "properties": {
         "outerA1": {
-		  "type":"boolean",
-          "required": false
+          "type":"boolean"
         }
       }
     },
     "outerB": {
-      "required": false,
       "type": "array",
       "minItems": 1,
       "maxItems": 50,
@@ -26,8 +22,7 @@
     },
     "outerC": {
       "description": "blah",
-      "type":"boolean",
-      "required": false
+      "type":"boolean"
     }
   },
   "additionalProperties": false

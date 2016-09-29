@@ -44,7 +44,6 @@ class ExtendedSchemaTest < Minitest::Test
   def test_unextended_schema
     # Verify that using the original schema disregards the `bitwise-and` property
     schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {
           "bitwise-and" => 1
