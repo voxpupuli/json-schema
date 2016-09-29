@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [2.7.0] - 2016-09-29
+
 ### Fixed
 - Made sure we really do clear the cache when instructed to
 - It's now possible to use reserved words in property names
