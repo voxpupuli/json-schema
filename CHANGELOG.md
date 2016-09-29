@@ -9,6 +9,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Made sure we really do clear the cache when instructed to
 - It's now possible to use reserved words in property names
 - Removed support for setting "extends" to a string (it's invalid json-schema - use a "$ref" instead)
+- Relaxed 'items' and 'allowedItems' validation to permit arrays to pass even
+  when they contain fewer elements than the 'items' array.  To require full tuples,
+  use 'minItems'.
 
 ### Changed
 - Made all `validate*` methods on `JSON::Validator` ultimately call `validate!`

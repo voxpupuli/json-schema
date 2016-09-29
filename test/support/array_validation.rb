@@ -25,7 +25,9 @@ module ArrayValidation
       assert_valid schema, ['b', 1]
       assert_valid schema, ['b', 1, nil]
       refute_valid schema, [1, 'b']
-      refute_valid schema, []
+      assert_valid schema, []
+      assert_valid schema, ['b']
+      assert_valid schema, ['b', 1, 25]
     end
 
     def test_minitems
@@ -62,6 +64,8 @@ module ArrayValidation
       }
 
       assert_valid schema, [1, 'string']
+      assert_valid schema, [1]
+      assert_valid schema, []
       refute_valid schema, [1, 'string', 2]
       refute_valid schema, ['string', 1]
     end
