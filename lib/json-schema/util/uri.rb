@@ -63,6 +63,11 @@ module JSON
 
         Addressable::URI.unescape(parsed_uri.path)
       end
+
+      def self.clear_cache
+        @parse_cache = {}
+        @normalize_cache = {}
+      end
     end
   end
 end
