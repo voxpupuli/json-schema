@@ -134,6 +134,9 @@ module JSON
       schema_uri = JSON::Util::URI.absolutize_ref(ref, parent_schema.uri)
       return true if self.class.schema_loaded?(schema_uri)
 
+      validator = self.class.validator_for_uri(schema_uri, false)
+      schema_uri = JSON::Util::URI.file_uri(validator.metaschema) if validator
+
       schema = @options[:schema_reader].read(schema_uri)
       self.class.add_schema(schema)
       build_schemas(schema)
