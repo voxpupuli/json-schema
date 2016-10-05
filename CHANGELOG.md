@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+- Made the `:clear_cache` option for `validate` also clear the URI parse cache
+
 ## [2.7.0] - 2016-09-29
 
 ### Fixed
