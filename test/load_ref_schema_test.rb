@@ -35,4 +35,11 @@ class LoadRefSchemaTest < Minitest::Test
 
     assert JSON::Validator.schema_loaded?(schema_url)
   end
+
+  def test_metaschema
+    schema = { "$ref" => "http://json-schema.org/draft-04/schema#" }
+    data = {}
+
+    assert_valid schema, data
+  end
 end
