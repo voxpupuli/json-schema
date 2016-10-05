@@ -327,28 +327,34 @@ module JSON
         @@default_validator
       end
 
-      def validator_for_uri(schema_uri)
+      def validator_for_uri(schema_uri, raise_not_found=true)
         return default_validator unless schema_uri
         u = JSON::Util::URI.parse(schema_uri)
         validator = validators["#{u.scheme}://#{u.host}#{u.path}"]
-        if validator.nil?
+        if validator.nil? && raise_not_found
           raise JSON::Schema::SchemaError.new("Schema not found: #{schema_uri}")
         else
           validator
         end
       end
 
-      def validator_for_name(schema_name)
+      def validator_for_name(schema_name, raise_not_found=true)
         return default_validator unless schema_name
-        validator = validators_for_names([schema_name]).first
-        if validator.nil?
+        schema_name = schema_name.to_s
+        validator = validators.values.detect do |v|
+          Array(v.names).include?(schema_name)
+        end
+        if validator.nil? && raise_not_found
           raise JSON::Schema::SchemaError.new("The requested JSON schema version is not supported")
         else
           validator
         end
       end
 
-      alias_method :validator_for, :validator_for_uri
+      def validator_for(schema_uri)
+        warn "[DEPRECATION NOTICE] JSON::Validator#validator_for has been replaced by JSON::Validator#validator_for_uri and will be removed in version >= 3. Please use the #validator_for_uri method instead."
+        validator_for_uri(schema_uri)
+      end
 
       def register_validator(v)
         @@validators["#{v.uri.scheme}://#{v.uri.host}#{v.uri.path}"] = v
@@ -360,19 +366,22 @@ module JSON
 
       def register_format_validator(format, validation_proc, versions = ["draft1", "draft2", "draft3", "draft4", nil])
         custom_format_validator = JSON::Schema::CustomFormat.new(validation_proc)
-        validators_for_names(versions).each do |validator|
+        versions.each do |version|
+          validator = validator_for_name(version)
           validator.formats[format.to_s] = custom_format_validator
         end
       end
 
       def deregister_format_validator(format, versions = ["draft1", "draft2", "draft3", "draft4", nil])
-        validators_for_names(versions).each do |validator|
+        versions.each do |version|
+          validator = validator_for_name(version)
           validator.formats[format.to_s] = validator.default_formats[format.to_s]
         end
       end
 
       def restore_default_formats(versions = ["draft1", "draft2", "draft3", "draft4", nil])
-        validators_for_names(versions).each do |validator|
+        versions.each do |version|
+          validator = validator_for_name(version)
           validator.formats = validator.default_formats.clone
         end
       end
@@ -475,22 +484,6 @@ module JSON
           @@serializer = lambda{|o| JSON.dump(o) }
         else
           @@serializer = lambda{|o| YAML.dump(o) }
-        end
-      end
-
-      private
-
-      def validators_for_names(names)
-        names = names.map { |name| name.to_s }
-        [].tap do |memo|
-          validators.each do |_, validator|
-            if (validator.names & names).any?
-              memo << validator
-            end
-          end
-          if names.include?('')
-            memo << default_validator
-          end
         end
       end
     end

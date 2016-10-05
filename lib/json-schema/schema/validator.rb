@@ -14,7 +14,7 @@ module JSON
       end
 
       def extend_schema_definition(schema_uri)
-        validator = JSON::Validator.validator_for(schema_uri)
+        validator = JSON::Validator.validator_for_uri(schema_uri)
         @attributes.merge!(validator.attributes)
       end
 
