@@ -7,6 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Made the `:clear_cache` option for `validate` also clear the URI parse cache
+- Moved `JSON::Validator.absolutize_ref` and the ref manipulating code in
+  `JSON::Schema::RefAttribute` into `JSON::Util::URI`
 
 ## [2.7.0] - 2016-09-29
 
