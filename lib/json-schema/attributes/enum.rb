@@ -4,7 +4,8 @@ module JSON
   class Schema
     class EnumAttribute < Attribute
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
-        enum = current_schema.schema['enum']
+        schema = current_schema.schema
+        enum = schema['enum']
         return if enum.include?(data)
 
         values = enum.map { |val|
@@ -16,7 +17,7 @@ module JSON
           end
         }.join(', ')
 
-        message = "The property '#{build_fragment(fragments)}' value #{data.inspect} did not match one of the following values: #{values}"
+        message = schema['invalidMessage'].present? ? schema['invalidMessage'] : "The property '#{build_fragment(fragments)}' value #{data.inspect} did not match one of the following values: #{values}"
         validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
       end
     end
