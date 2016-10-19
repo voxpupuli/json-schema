@@ -38,6 +38,7 @@ module JSON
         }
         @default_formats = {
           'date-time' => DateTimeV4Format,
+          'date' => DateV4Format,
           'ipv4' => IP4Format,
           'ipv6' => IP6Format,
           'uri' => UriFormat
