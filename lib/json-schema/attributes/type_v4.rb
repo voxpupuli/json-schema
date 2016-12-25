@@ -17,7 +17,7 @@ module JSON
         message = format(
           "The property '%s' of type %s did not match %s: %s",
           build_fragment(fragments),
-          data.class,
+          type_of_data(data),
           union ? 'one or more of the following types' : 'the following type',
           types
         )

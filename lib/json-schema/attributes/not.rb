@@ -14,7 +14,7 @@ module JSON
           if options[:record_errors] && errors_copy.length != processor.validation_errors.length
             processor.validation_errors.replace(errors_copy)
           else
-            message = "The property '#{build_fragment(fragments)}' of type #{data.class} matched the disallowed schema"
+            message = "The property '#{build_fragment(fragments)}' of type #{type_of_data(data)} matched the disallowed schema"
             failed = false
           end
         rescue ValidationError

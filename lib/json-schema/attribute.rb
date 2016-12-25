@@ -38,6 +38,16 @@ module JSON
         valid_classes = TYPE_CLASS_MAPPINGS.fetch(type) { return true }
         Array(valid_classes).any? { |c| data.is_a?(c) }
       end
+
+      # Lookup Schema type of given class instance
+      def self.type_of_data(data)
+        type, _ = TYPE_CLASS_MAPPINGS.map { |k,v| [k,v] }.sort_by { |(_, v)|
+          -Array(v).map { |klass| klass.ancestors.size }.max
+        }.find { |(_, v)|
+          Array(v).any? { |klass| data.kind_of?(klass) }
+        }
+        type
+      end
     end
   end
 end
