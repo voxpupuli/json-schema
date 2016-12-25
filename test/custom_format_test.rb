@@ -86,11 +86,13 @@ class CustomFormatTest < Minitest::Test
       assert(!JSON::Validator.validate(schema, data), "#{prefix} fails with 'custom' format validator and wrong data")
 
       errors = JSON::Validator.fully_validate(schema, data)
-      assert(errors.count == 1 && errors.first.match(/The property '#\/a' must be 42 in schema/), "#{prefix} records fromat error")
+      assert_equal(errors.count, 1)
+      assert_match(/The property '#\/a' must be 42 in schema/, errors.first, "#{prefix} records format error")
 
       data["a"] = 23
       errors = JSON::Validator.fully_validate(schema, data)
-      assert(errors.count == 1 && errors.first.match(/The property '#\/a' of type (?:integer|Fixnum) did not match the following type: string/), "#{prefix} records no fromat error on type mismatch")
+      assert_equal(errors.count, 1)
+      assert_match(/The property '#\/a' of type (?:Integer|Fixnum) did not match the following type: string/i, errors.first, "#{prefix} records no format error on type mismatch")
     end
   end
 

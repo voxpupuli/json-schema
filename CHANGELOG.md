@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- Ruby 2.4 support
+
 ### Changed
 - Made the `:clear_cache` option for `validate` also clear the URI parse cache
 - Moved `JSON::Validator.absolutize_ref` and the ref manipulating code in

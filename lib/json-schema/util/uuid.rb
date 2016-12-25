@@ -241,7 +241,6 @@ module JSON
     	alias urn to_uri
 
     	# Convert into 128-bit unsigned integer
-    	# Typically a Bignum instance, but can be a Fixnum.
     	def to_int
     		tmp = self.raw_bytes.unpack "C*"
     		tmp.inject do |r, i|

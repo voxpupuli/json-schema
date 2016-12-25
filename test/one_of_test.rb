@@ -48,7 +48,7 @@ class OneOfTest < Minitest::Test
     errors = JSON::Validator.fully_validate(schema, { "a" => 5 }, :errors_as_objects => true)
     nested_errors = errors[0][:errors]
     assert_equal([:oneof_0,:oneof_1,:oneof_2], nested_errors.keys, 'should have nested errors for each allOf subschema')
-    assert_match(/the property '#\/a' of type Fixnum did not match the following type: string/i, nested_errors[:oneof_0][0][:message])
+    assert_match(/the property '#\/a' of type (?:Integer|Fixnum) did not match the following type: string/i, nested_errors[:oneof_0][0][:message])
     assert_match(/the property '#\/a' did not have a minimum value of 10, inclusively/i, nested_errors[:oneof_2][0][:message])
   end
 
@@ -69,12 +69,13 @@ class OneOfTest < Minitest::Test
     }
 
     errors = JSON::Validator.fully_validate(schema, { "a" => 5 })
+    integer_type = RUBY_VERSION.to_f >= 2.4 ? 'Integer' : 'Fixnum'
     expected_message = """The property '#/' of type Hash did not match any of the required schemas. The schema specific errors were:
 
 - oneOf #0:
-    - The property '#/a' of type Fixnum did not match the following type: string
+    - The property '#/a' of type #{integer_type} did not match the following type: string
 - oneOf #1:
-    - The property '#/a' of type Fixnum did not match the following type: string
+    - The property '#/a' of type #{integer_type} did not match the following type: string
 - oneOf #2:
     - The property '#/a' did not have a minimum value of 10, inclusively"""
 
