@@ -92,7 +92,7 @@ class CustomFormatTest < Minitest::Test
       data["a"] = 23
       errors = JSON::Validator.fully_validate(schema, data)
       assert_equal(errors.count, 1)
-      assert_match(/The property '#\/a' of type (?:Integer|Fixnum) did not match the following type: string/i, errors.first, "#{prefix} records no format error on type mismatch")
+      assert_match(/The property '#\/a' of type integer did not match the following type: string/i, errors.first, "#{prefix} records no format error on type mismatch")
     end
   end
 
