@@ -18,10 +18,32 @@ class CommonTestSuiteTest < Minitest::Test
       "validation of host names",
       "validation of CSS colors"
     ],
+    "draft3/ref.json" => [
+      "ref overrides any sibling keywords/remote ref valid, maxItems ignored"
+    ],
     "draft4/optional/format.json" => [
       "validation of URIs",
       "validation of e-mail addresses",
       "validation of host names"
+    ],
+    "draft4/optional/ecmascript-regex.json" => [
+      "ECMA 262 regex non-compliance/ECMA 262 has no support for \\Z anchor from .NET"
+    ],
+    "draft4/ref.json" => [
+      "ref overrides any sibling keywords/remote ref valid, maxItems ignored",
+      "ref overrides any sibling keywords/ref valid, maxItems ignored"
+    ],
+    "draft6/optional/format.json" => [
+      "validation of URIs",
+      "validation of e-mail addresses",
+      "validation of host names"
+    ],
+    "draft6/optional/ecmascript-regex.json" => [
+      "ECMA 262 regex non-compliance/ECMA 262 has no support for \\Z anchor from .NET"
+    ],
+    "draft6/ref.json" => [
+      "ref overrides any sibling keywords/remote ref valid, maxItems ignored",
+      "ref overrides any sibling keywords/ref valid, maxItems ignored"
     ]
   })
 

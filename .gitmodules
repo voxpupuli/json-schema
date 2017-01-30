@@ -1,4 +1,4 @@
 [submodule "test/test-suite"]
 	path = test/test-suite
-	branch = develop
-	url = git://github.com/json-schema/JSON-Schema-Test-Suite.git
+	branch = master
+	url = git://github.com/json-schema-org/JSON-Schema-Test-Suite.git
