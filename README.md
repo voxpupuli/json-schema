@@ -1,3 +1,4 @@
+[![Gem Version](https://badge.fury.io/rb/json-schema.svg)](https://badge.fury.io/rb/json-schema)
 [![Travis](https://travis-ci.org/ruby-json-schema/json-schema.svg?branch=master)](https://travis-ci.org/ruby-json-schema/json-schema)
 [![Code Climate](https://codeclimate.com/github/ruby-json-schema/json-schema/badges/gpa.svg)](https://codeclimate.com/github/ruby-json-schema/json-schema)
 
