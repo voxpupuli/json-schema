@@ -3,10 +3,10 @@ require File.expand_path('../support/test_helper', __FILE__)
 
 class CustomFormatTest < Minitest::Test
   def setup
-    @all_versions = ['draft1', 'draft2', 'draft3', 'draft4', nil]
+    @all_versions = ['draft1', 'draft2', 'draft3', 'draft4', 'draft6', nil]
     @format_proc = lambda { |value| raise JSON::Schema::CustomFormatError.new("must be 42") unless value == "42" }
-    @schema_4 = {
-      "$schema" => "http://json-schema.org/draft-04/schema#",
+    @schema_6 = {
+      "$schema" => "http://json-schema.org/draft-06/schema#",
       "properties" => {
         "a" => {
           "type" => "string",
@@ -14,19 +14,22 @@ class CustomFormatTest < Minitest::Test
         },
       }
     }
-    @schema_3 = @schema_4.clone
+    @schema_4 = @schema_6.clone
+    @schema_4["$schema"] = "http://json-schema.org/draft-04/schema#"
+    @schema_3 = @schema_6.clone
     @schema_3["$schema"] = "http://json-schema.org/draft-03/schema#"
-    @schema_2 = @schema_4.clone
+    @schema_2 = @schema_6.clone
     @schema_2["$schema"] = "http://json-schema.org/draft-02/schema#"
-    @schema_1 = @schema_4.clone
+    @schema_1 = @schema_6.clone
     @schema_1["$schema"] = "http://json-schema.org/draft-01/schema#"
-    @default = @schema_4.clone
+    @default = @schema_6.clone
     @default.delete("$schema")
     @schemas = {
       "draft1" => @schema_1,
       "draft2" => @schema_2,
       "draft3" => @schema_3,
       "draft4" => @schema_4,
+      "draft6" => @schema_6,
       nil => @default,
     }
     JSON::Validator.restore_default_formats
