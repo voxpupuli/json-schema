@@ -68,16 +68,6 @@ module JSON
       def self.list_types(types)
         types.map { |type| type.is_a?(String) ? type : '(schema)' }.join(', ')
       end
-
-      # Lookup Schema type of given class instance
-      def self.type_of_data(data)
-        type, _ = TYPE_CLASS_MAPPINGS.map { |k,v| [k,v] }.sort_by { |(_, v)|
-          -Array(v).map { |klass| klass.ancestors.size }.max
-        }.find { |(_, v)|
-          Array(v).any? { |klass| data.kind_of?(klass) }
-        }
-        type
-      end
     end
   end
 end

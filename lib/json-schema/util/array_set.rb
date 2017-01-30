@@ -15,6 +15,6 @@ class ArraySet < Array
   private
 
   def convert_to_float_if_fixnum(value)
-    value.is_a?(Fixnum) ? value.to_f : value
+    value.is_a?(Integer) ? value.to_f : value
   end
 end
