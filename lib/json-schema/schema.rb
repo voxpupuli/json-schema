@@ -52,7 +52,7 @@ module JSON
     def to_array_schema
       array_schema = { 'type' => 'array', 'items' => schema }
       array_schema['$schema'] = schema['$schema'] unless schema['$schema'].nil?
-      JSON::Schema.new(array_schema, uri, validator)
+      self.class.new(array_schema, uri, validator)
     end
 
     def to_s
