@@ -9,7 +9,7 @@ module JSON
 
         property    = build_fragment(fragments)
         description = error_message(schema)
-        message = format("The property '%s' %s", property, description)
+        message = schema['invalidMessage'].present? ? schema['invalidMessage'] : format("The property '%s' %s", property, description)
         validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
       end
 
