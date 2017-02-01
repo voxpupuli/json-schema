@@ -18,6 +18,7 @@ class ExtendedSchemaTest < Minitest::Test
       @attributes["bitwise-and"] = BitwiseAndAttribute
       @names = ["http://test.com/test.json"]
       @uri = Addressable::URI.parse("http://test.com/test.json")
+      @names = ["http://test.com/test.json"]
     end
 
     JSON::Validator.register_validator(ExtendedSchema.new)
