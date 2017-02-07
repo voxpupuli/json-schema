@@ -5,6 +5,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- Ruby 2.4 support
+
 ### Changed
 - Made the `:clear_cache` option for `validate` also clear the URI parse cache
 - Moved `JSON::Validator.absolutize_ref` and the ref manipulating code in
@@ -12,6 +15,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Deprecated `JSON::Validator#validator_for` in favor of `JSON::Validator#validator_for_uri`
 - Deprecated `JSON::Validator.validate2` in favor of `JSON::Validator.validate!`
 - Deprecated `JSON::Schema::Validator#extend_schema_definition` in favour of subclassing
+- Made validation errors refer to json schema types not ruby types
 
 ## [2.7.0] - 2016-09-29
 
