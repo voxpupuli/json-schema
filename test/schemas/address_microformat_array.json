@@ -1,0 +1,8 @@
+{
+  "type": "array",
+  "items": {
+    "extends": [
+      {"$ref": "address_microformat.json"}
+    ]
+  }
+}
