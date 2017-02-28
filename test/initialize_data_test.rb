@@ -96,6 +96,21 @@ class InitializeDataTest < Minitest::Test
     assert_raises(JSON::Schema::JsonLoadError) { JSON::Validator.validate(schema, data, :uri => true) }
   end
 
+  def test_parse_invalid_scheme_string
+    schema = {'type' => 'string'}
+    data = 'pick one: [1, 2, 3]'
+
+    assert(JSON::Validator.validate(schema, data))
+
+    assert(JSON::Validator.validate(schema, data, :parse_data => false))
+
+    assert_raises(JSON::Schema::JsonParseError) do
+      JSON::Validator.validate(schema, data, :json => true)
+    end
+
+    assert_raises(JSON::Schema::UriError) { JSON::Validator.validate(schema, data, :uri => true) }
+  end
+
   def test_parse_integer
     schema = {'type' => 'integer'}
     data = 42
