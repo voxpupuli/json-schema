@@ -21,8 +21,7 @@ end
 
 Rake::TestTask.new do |t|
   t.libs << "."
-  # disabled warnings because addressable 2.4 has lots of them
-  t.warning = false
+  t.warning = true
   t.verbose = true
   t.test_files = FileList.new('test/*_test.rb')
 end
