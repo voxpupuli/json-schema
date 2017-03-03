@@ -27,6 +27,4 @@ Rake::TestTask.new do |t|
   t.test_files = FileList.new('test/*_test.rb')
 end
 
-task :test => :update_common_tests
-
 task :default => :test
