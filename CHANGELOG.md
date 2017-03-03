@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+### Fixed
+
+- Corrected the draft6 schema id to `http://json-schema.org/draft/schema#`
+
 ## [2.8.0] - 2017-02-07
 
 ### Added
