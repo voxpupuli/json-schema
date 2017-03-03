@@ -6,8 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Fixed
-
 - Corrected the draft6 schema id to `http://json-schema.org/draft/schema#`
+- Rescue URI error when initializing a data string that contains a colon 
 
 ## [2.8.0] - 2017-02-07
 
