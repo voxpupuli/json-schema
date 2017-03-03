@@ -9,7 +9,14 @@ task :update_common_tests do
   unless File.read(".git/config").include?('submodule "test/test-suite"')
     sh "git submodule init"
   end
-  sh "git submodule update --remote --quiet"
+
+  puts "Updating json-schema common test suite..."
+
+  begin
+    sh "git submodule update --remote --quiet"
+  rescue StandardError
+    STDERR.puts "Failed to update common test suite."
+  end
 end
 
 Rake::TestTask.new do |t|
