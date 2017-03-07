@@ -1,0 +1,109 @@
+# These are test files which we know fail spectacularly, either because we
+# don't support that functionality or because they require external
+# dependencies.  To allow finer-grained control over which tests to run,
+# you can replace `:all` with an array containing the names of individual
+# tests to skip.
+draft3:
+  ref:
+    - ref overrides any sibling keywords/remote ref valid, maxItems ignored
+  optional:
+    jsregex: :all
+    format:
+      - validation of regular expressions/a regular expression with unclosed parens is invalid
+      - validation of e-mail addresses/an invalid e-mail address
+      - validation of URIs/an invalid URI
+      - validation of URIs/an invalid protocol-relative URI Reference
+      - validation of URIs/an invalid URI though valid URI reference
+      - validation of host names/a host name with a component too long
+      - validation of host names/a host name containing illegal characters
+      - validation of host names/a host name starting with an illegal character
+      - validation of CSS colors/an invalid CSS color code
+      - validation of CSS colors/an invalid CSS color name
+      - validation of CSS colors/a CSS color name containing invalid characters
+draft4:
+  ref:
+    - ref overrides any sibling keywords/remote ref valid, maxItems ignored
+    - ref overrides any sibling keywords/ref valid, maxItems ignored
+  optional:
+    format:
+      - validation of URIs/an invalid URI
+      - validation of URIs/an invalid protocol-relative URI Reference
+      - validation of URIs/an invalid URI though valid URI reference
+      - validation of e-mail addresses/an invalid e-mail address
+      - validation of host names/a host name with a component too long
+      - validation of host names/a host name containing illegal characters
+      - validation of host names/a host name starting with an illegal character
+    ecmascript-regex:
+      - ECMA 262 regex non-compliance/ECMA 262 has no support for \Z anchor from .NET
+    bignum:
+      - float comparison with high precision on negative numbers/comparison works for very negative numbers
+      - float comparison with high precision/comparison works for high numbers
+draft6:
+  allOf:
+    - allOf with boolean schemas, some false/any value is invalid
+    - allOf with boolean schemas, all false/any value is invalid
+    - allOf with boolean schemas, all true/any value is valid
+  anyOf:
+    - anyOf with boolean schemas, all false/any value is invalid
+    - anyOf with boolean schemas, all true/any value is valid
+    - anyOf with boolean schemas, some true/any value is valid
+  boolean_schema: :all
+  const: :all
+  contains: :all
+  dependencies:
+    - dependencies with boolean subschemas/empty object is valid
+    - dependencies with boolean subschemas/object with both properties is invalid
+    - dependencies with boolean subschemas/object with property having schema false is invalid
+    - dependencies with boolean subschemas/object with property having schema true is valid
+    - dependencies with empty array/empty object
+    - dependencies with empty array/object with one property
+  exclusiveMaximum: :all
+  exclusiveMinimum: :all
+  items:
+    - items with boolean schema (false)/any non-empty array is invalid
+    - items with boolean schema (false)/empty array is valid
+    - items with boolean schema (true)/any array is valid
+    - items with boolean schema (true)/empty array is valid
+    - items with boolean schemas/array with one item is valid
+    - items with boolean schemas/array with two items is invalid
+    - items with boolean schemas/empty array is valid
+  not: :all
+  oneOf:
+    - oneOf with boolean schemas, all false/any value is invalid
+    - oneOf with boolean schemas, all true/any value is invalid
+    - oneOf with boolean schemas, one true/any value is valid
+    - oneOf with boolean schemas, more than one true/any value is invalid
+  patternProperties:
+    - patternProperties with boolean schemas/object with property matching schema false is invalid
+    - patternProperties with boolean schemas/object with both properties is invalid
+    - patternProperties with boolean schemas/object with property matching schema true is valid
+    - patternProperties with boolean schemas/empty object is valid
+  properties:
+    - properties with boolean schema/only 'true' property present is valid
+    - properties with boolean schema/only 'false' property present is invalid
+    - properties with boolean schema/no property present is valid
+    - properties with boolean schema/both properties present is invalid
+  propertyNames: :all
+  ref:
+    - ref overrides any sibling keywords/remote ref valid, maxItems ignored
+    - ref overrides any sibling keywords/ref valid, maxItems ignored
+    - $ref to boolean schema true/any value is valid
+    - $ref to boolean schema false/any value is invalid
+  required:
+    - required with empty array/property not required
+  optional:
+    bignum:
+      - float comparison with high precision/comparison works for high numbers
+      - float comparison with high precision on negative numbers/comparison works for very negative numbers
+    format:
+      - validation of URIs/an invalid URI
+      - validation of URIs/an invalid protocol-relative URI Reference
+      - validation of URIs/an invalid URI though valid URI reference
+      - validation of e-mail addresses/an invalid e-mail address
+      - validation of host names/a host name with a component too long
+      - validation of host names/a host name containing illegal characters
+      - validation of host names/a host name starting with an illegal character
+    ecmascript-regex:
+      - ECMA 262 regex non-compliance/ECMA 262 has no support for \Z anchor from .NET
+    zeroTerminatedFloats:
+      - some languages do not distinguish between different types of numeric value/a float is not an integer even without fractional part
