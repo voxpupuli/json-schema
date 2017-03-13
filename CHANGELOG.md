@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - All limit classes are now stored in their own files in 'json-schema/attributes/limits'
+- All attribute classes are now stored in their own files in 'json-schema/attributes'
 
 ### Fixed
 - Corrected the draft6 schema id to `http://json-schema.org/draft/schema#`
