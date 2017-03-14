@@ -3,7 +3,7 @@ require File.expand_path('../support/test_helper', __FILE__)
 
 class Draft4Test < Minitest::Test
   def validation_errors(schema, data, options)
-    super(schema, data, :version => :draft4)
+    super(schema, data, options.merge(:version => :draft4))
   end
 
   def exclusive_minimum
@@ -31,7 +31,9 @@ class Draft4Test < Minitest::Test
   include ObjectValidation::AdditionalPropertiesTests
   include ObjectValidation::PatternPropertiesTests
 
-  include StrictValidation
+  include StrictValidation::PropertiesTests
+  include StrictValidation::AdditionalPropertiesTests
+  include StrictValidation::PatternPropertiesTests
 
   include StringValidation::ValueTests
   include StringValidation::FormatTests
