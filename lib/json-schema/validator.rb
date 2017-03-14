@@ -578,7 +578,7 @@ module JSON
             begin
               json_uri = Util::URI.normalized_uri(data)
               data = self.class.parse(custom_open(json_uri))
-            rescue JSON::Schema::JsonLoadError
+            rescue JSON::Schema::JsonLoadError, JSON::Schema::UriError
               # Silently discard the error - use the data as-is
             end
           end
