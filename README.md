@@ -100,10 +100,14 @@ JSON::Validator.validate(schema, {})
 #
 
 require "json"
-File.write("schema.json", JSON.dump(schema))
+require "tempfile"
+
+schema_file = Tempfile.new(["schema", ".json"])
+schema_file.write(JSON.dump(schema))
+schema_file.close
 
 # => true
-JSON::Validator.validate('schema.json', '{ "a": 5 }')
+JSON::Validator.validate(schema_file.path, '{ "a": 5 }')
 
 #
 # raise an error when validation fails
@@ -247,10 +251,14 @@ end
 # with the `:uri` option, the json must be a uri or file path (not a hash or a json text)
 #
 
-File.write("data.json", '{ "a": 1 }')
+require "tempfile"
+
+data_file = Tempfile.new(["data", ".json"])
+data_file.write('{ "a": 1 }')
+data_file.close
 
 # => true
-JSON::Validator.validate(schema, "data.json", :uri => true)
+JSON::Validator.validate(schema, data_file.path, :uri => true)
 # => "Can't convert Hash into String."
 begin
   JSON::Validator.validate(schema, { "a"  => 1 }, :uri => true)
@@ -385,7 +393,8 @@ accomplished by registering all referenced schemas with the validator in
 advance:
 
 ```ruby
-schema = JSON::Schema.new(some_schema_definition, Addressable::URI.parse('http://example.com/my-schema'))
+schema_definition = { "type" => "string" }
+schema = JSON::Schema.new(schema_definition, Addressable::URI.parse('http://example.com/my-schema'))
 JSON::Validator.add_schema(schema)
 ```
 
@@ -400,7 +409,7 @@ JSON::Validator.schema_reader = JSON::Schema::Reader.new(:accept_uri => true, :a
 schema_reader = JSON::Schema::Reader.new(
   :accept_uri => proc { |uri| uri.host == 'my-website.com' }
 )
-JSON::Validator.validate(some_schema, some_object, :schema_reader => schema_reader)
+JSON::Validator.validate({ "type" => "string" }, "some data", :schema_reader => schema_reader)
 ```
 
 The `JSON::Schema::Reader` interface requires only an object which responds to
