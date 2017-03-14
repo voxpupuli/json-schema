@@ -1,8 +1,8 @@
-require 'json-schema/attribute'
+require 'json-schema/attributes/properties_optional'
 
 module JSON
   class Schema
-    class PropertiesAttribute < Attribute
+    class PropertiesAttribute < PropertiesOptionalAttribute
       def self.required?(schema, options)
         schema.fetch('required') { options[:strict] }
       end
@@ -33,33 +33,7 @@ module JSON
           end
         end
 
-        # When strict is true, ensure no undefined properties exist in the data
-        return unless options[:strict] == true && !schema.key?('additionalProperties')
-
-        diff = data.select do |k, v|
-          k = k.to_s
-
-          if schema.has_key?('patternProperties')
-            match = false
-            schema['patternProperties'].each do |property, property_schema|
-              regexp = Regexp.new(property)
-              if regexp.match(k)
-                match = true
-                break
-              end
-            end
-
-            !schema['properties'].has_key?(k) && !match
-          else
-            !schema['properties'].has_key?(k)
-          end
-        end
-
-        if diff.size > 0
-          properties = diff.keys.join(', ')
-          message = "The property '#{build_fragment(fragments)}' contained undefined properties: '#{properties}'"
-          validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
-        end
+        validate_unrecognized_properties(current_schema, data, fragments, processor, validator, options)
       end
     end
 
