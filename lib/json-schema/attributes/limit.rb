@@ -15,7 +15,7 @@ module JSON
 
       def self.invalid?(schema, data)
         exclusive = exclusive?(schema)
-        limit = limit(schema)
+        limit = limit(schema).to_i
 
         if limit_name.start_with?('max')
           exclusive ? data >= limit : data > limit
