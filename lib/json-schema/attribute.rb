@@ -1,4 +1,5 @@
 require 'json-schema/errors/validation_error'
+require 'ostruct'
 
 module JSON
   class Schema
@@ -28,7 +29,7 @@ module JSON
         "number" => Numeric,
         "integer" => Integer,
         "boolean" => [TrueClass, FalseClass],
-        "object" => Hash,
+        "object" => [Hash, OpenStruct],
         "array" => Array,
         "null" => NilClass,
         "any" => Object
