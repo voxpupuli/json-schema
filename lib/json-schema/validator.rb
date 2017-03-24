@@ -518,7 +518,7 @@ module JSON
     end
 
     def initialize_schema(schema)
-      if schema.is_a?(String)
+      if schema.is_a?(String) || schema.is_a?(Pathname)
         begin
           # Build a fake URI for this
           schema_uri = JSON::Util::URI.parse(fake_uuid(schema))
