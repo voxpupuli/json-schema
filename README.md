@@ -375,6 +375,18 @@ schema = {
 errors = JSON::Validator.fully_validate(schema, {"a" => "23"})
 ```
 
+Validating a JSON Schema
+------------------------
+
+To validate a JSON Schema against the JSON Schema Draft first retrieve the
+Draft Schema from the internal cache and then simply validate your Schema
+against it.
+
+```ruby
+draft_schema = JSON::Validator.validator_for_name("http://json-schema.org/draft-04/schema#").metaschema
+JSON::Validator.validate!(draft_schema, your_schema)
+```
+
 Controlling Remote Schema Reading
 ---------------------------------
 
