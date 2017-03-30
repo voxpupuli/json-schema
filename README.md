@@ -375,6 +375,33 @@ schema = {
 errors = JSON::Validator.fully_validate(schema, {"a" => "23"})
 ```
 
+Validating a JSON Schema
+------------------------
+
+To validate that a JSON Schema conforms to the JSON Schema standard,
+you need to validate your schema against the metaschema for the appropriate
+JSON Schema Draft. All of the normal validation methods can be used
+for this. First retrieve the appropriate metaschema from the internal
+cache (using `JSON::Validator.validator_for_name()` or
+`JSON::Validator.validator_for_uri()`) and then simply validate your
+schema against it.
+
+
+```ruby
+require "json-schema"
+
+schema = {
+  "type" => "object",
+  "properties" => {
+    "a" => {"type" => "integer"}
+  }
+}
+
+metaschema = JSON::Validator.validator_for_name("draft4").metaschema
+# => true
+JSON::Validator.validate(metaschema, schema)
+```
+
 Controlling Remote Schema Reading
 ---------------------------------
 
