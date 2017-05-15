@@ -60,6 +60,34 @@ class FragmentResolutionTest < Minitest::Test
     refute_valid schema, {}, :fragment => "#/foo/bar"
   end
 
+  def test_fragment_resolution_with_array
+    document = {
+      "definitions" => {
+        "schemas" => [
+          {
+            "type" => "object",
+            "required" => ["a"],
+            "properties" => {
+              "a" => {
+                "type" => "object",
+              }
+            }
+          },
+          {
+            "type" => "object",
+            "properties" => {
+              "b" => {"type" => "integer" }
+            }
+          }
+        ]
+      }
+    }
+
+    data = {"b" => 5}
+    refute_valid document, data, :fragment => "#/definitions/schemas/0"
+    assert_valid document, data, :fragment => "#/definitions/schemas/1"
+  end
+
   def test_array_fragment_resolution
     schema = {
       "type" => "object",
