@@ -108,4 +108,31 @@ class FragmentResolutionTest < Minitest::Test
     assert_valid schema, 5, :fragment => "#/properties/a/anyOf/0"
     refute_valid schema, 5, :fragment => "#/properties/a/anyOf/1"
   end
+  def test_fragment_resolution_with_special_chars
+    document = {
+      "de~fi/nitions" => {
+        "schemas" => [
+          {
+            "type" => "object",
+            "required" => ["a"],
+            "properties" => {
+              "a" => {
+                "type" => "object",
+              }
+            }
+          },
+          {
+            "type" => "object",
+            "properties" => {
+              "b" => {"type" => "integer" }
+            }
+          }
+        ]
+      }
+    }
+
+    data = {"b" => 5}
+    refute_valid document, data, :fragment => "#/de~0fi~1nitions/schemas/0"
+    assert_valid document, data, :fragment => "#/de~0fi~1nitions/schemas/1"
+  end
 end
