@@ -31,6 +31,10 @@ class JsonSchemaPointerTest < Minitest::Test
     pointer = JSON::Schema::Pointer.new(:fragment, "#/a%2520%20b/c~1d/e%7E0f/0")
     assert_equal(1, pointer.evaluate({'a%20 b' => {'c/d' => {'e~f' => [1]}}}))
   end
+  def test_evaluate_empty_strings_success
+    pointer = JSON::Schema::Pointer.new(:fragment, "#/a///0//")
+    assert_equal(1, pointer.evaluate({'a' => {'' => {'' => [{'' => {'' => 1}}]}}}))
+  end
   def test_evaluate_fail
     assert_raises(JSON::Schema::Pointer::ReferenceError) do
       pointer = JSON::Schema::Pointer.new(:fragment, "#/a%2520%20b/c~1d/e%7E0f/0")
