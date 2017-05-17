@@ -2,6 +2,7 @@ require 'addressable/uri'
 
 module JSON
   class Schema
+    # a JSON Pointer, as described by RFC 6901 https://tools.ietf.org/html/rfc6901
     class Pointer
       class Error < JSON::Schema::SchemaError
       end
@@ -10,6 +11,15 @@ module JSON
       class ReferenceError < Error
       end
 
+      # parse a fragment to an array of reference tokens
+      #
+      # #/foo/bar
+      #
+      # => ['foo', 'bar']
+      #
+      # #/foo%20bar
+      #
+      # => ['foo bar']
       def self.parse_fragment(fragment)
         fragment = Addressable::URI.unescape(fragment)
         match = fragment.match(/\A#/)
@@ -20,6 +30,15 @@ module JSON
         end
       end
 
+      # parse a pointer to an array of reference tokens
+      #
+      # /foo
+      #
+      # => ['foo']
+      #
+      # /foo~0bar/baz~1qux
+      #
+      # => ['foo~bar', 'baz/qux']
       def self.parse_pointer(pointer_string)
         tokens = pointer_string.split('/', -1).map! do |piece|
           piece.gsub('~1', '/').gsub('~0', '~')
@@ -33,6 +52,13 @@ module JSON
         end
       end
 
+      # initializes a JSON::Schema::Pointer from the given representation.
+      #
+      # type may be one of:
+      #
+      # - :fragment - the representation is a fragment containing a pointer (starting with #)
+      # - :pointer - the representation is a pointer (starting with /)
+      # - :reference_tokens - the representation is an array of tokens referencing a path in a document
       def initialize(type, representation)
         @type = type
         if type == :reference_tokens
@@ -49,6 +75,8 @@ module JSON
 
       attr_reader :reference_tokens
 
+      # takes a root json document and evaluates this pointer through the document, returning the value
+      # pointed to by this pointer.
       def evaluate(document)
         reference_tokens.inject(document) do |value, token|
           if value.is_a?(Array)
