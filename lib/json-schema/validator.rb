@@ -55,6 +55,11 @@ module JSON
       @data = initialize_data(data)
       @@mutex.synchronize { build_schemas(@base_schema) }
 
+      # If the :fragment option is set, try and validate against the fragment
+      if opts[:fragment]
+        @base_schema = schema_from_fragment(@base_schema, opts[:fragment])
+      end
+
       # validate the schema, if requested
       if @options[:validate_schema]
         if @base_schema.schema["$schema"]
@@ -63,11 +68,6 @@ module JSON
         metaschema = base_validator ? base_validator.metaschema : validator.metaschema
         # Don't clear the cache during metaschema validation!
         self.class.validate!(metaschema, @base_schema.schema, {:clear_cache => false})
-      end
-
-      # If the :fragment option is set, try and validate against the fragment
-      if opts[:fragment]
-        @base_schema = schema_from_fragment(@base_schema, opts[:fragment])
       end
     end
 
