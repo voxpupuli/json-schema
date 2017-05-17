@@ -12,6 +12,7 @@ require 'json-schema/errors/schema_parse_error'
 require 'json-schema/errors/json_load_error'
 require 'json-schema/errors/json_parse_error'
 require 'json-schema/util/uri'
+require 'json-schema/pointer'
 
 module JSON
 
@@ -73,36 +74,10 @@ module JSON
 
     def schema_from_fragment(base_schema, fragment)
       schema_uri = base_schema.uri
-      fragments = fragment.split("/")
 
-      # ensure the first element was a hash, per the fragment spec
-      if fragments.shift != "#"
-        raise JSON::Schema::SchemaError.new("Invalid fragment syntax in :fragment option")
-      end
+      pointer = JSON::Schema::Pointer.new(:fragment, fragment)
 
-      fragments.each do |f|
-        if base_schema.is_a?(JSON::Schema) #test if fragment is a JSON:Schema instance
-          if !base_schema.schema.has_key?(f)
-            raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
-          end
-          base_schema = base_schema.schema[f]
-        elsif base_schema.is_a?(Hash)
-          if !base_schema.has_key?(f)
-            raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
-          end
-          base_schema = base_schema[f]
-        elsif base_schema.is_a?(Array)
-          if base_schema[f.to_i].nil?
-            raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
-          end
-          base_schema = base_schema[f.to_i]
-        else
-          raise JSON::Schema::SchemaError.new("Invalid schema encountered when resolving :fragment option")
-        end
-      end
-      unless base_schema.is_a?(JSON::Schema)
-        base_schema = JSON::Schema.new(base_schema,schema_uri,@options[:version])
-      end
+      base_schema = JSON::Schema.new(pointer.evaluate(base_schema.schema), schema_uri, @options[:version])
 
       if @options[:list]
         base_schema.to_array_schema
