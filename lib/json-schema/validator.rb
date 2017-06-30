@@ -594,6 +594,8 @@ module JSON
       if uri.absolute? && Util::URI::SUPPORTED_PROTOCOLS.include?(uri.scheme)
         begin
           open(uri.to_s).read
+        rescue URI::InvalidURIError => e
+          raise JSON::Schema::UriError, e.message
         rescue OpenURI::HTTPError, Timeout::Error => e
           raise JSON::Schema::JsonLoadError, e.message
         end

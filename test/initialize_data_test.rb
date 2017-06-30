@@ -109,6 +109,8 @@ class InitializeDataTest < Minitest::Test
     end
 
     assert_raises(JSON::Schema::JsonLoadError) { JSON::Validator.validate(schema, data, :uri => true) }
+
+    assert(JSON::Validator.validate(schema, "http://a/%%30%30"))
   end
 
   def test_parse_invalid_scheme_string
