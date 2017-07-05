@@ -4,7 +4,10 @@
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v2.8.1...v3.0.0)
 
-**Breaking changes:**
+### Fixed
+- Rescue URI error when initializing a data string that contains a colon
+- Fragments with an odd number of components no longer raise an `undefined method `validate'`
+  error
 
 - json-schema.gemspec: Raise required ruby version to 2.5  [\#466](https://github.com/voxpupuli/json-schema/pull/466) ([bastelfreak](https://github.com/bastelfreak))
 - Call URI.open directly / Drop Ruby 2.4 support [\#462](https://github.com/voxpupuli/json-schema/pull/462) ([bastelfreak](https://github.com/bastelfreak))
