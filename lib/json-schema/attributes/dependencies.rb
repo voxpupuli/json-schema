@@ -34,11 +34,5 @@ module JSON
         value.is_a?(String) || value.is_a?(Array) || value.is_a?(Hash)
       end
     end
-
-    class DependenciesV4Attribute < DependenciesAttribute
-      def self.accept_value?(value)
-        value.is_a?(Array) || value.is_a?(Hash)
-      end
-    end
   end
 end

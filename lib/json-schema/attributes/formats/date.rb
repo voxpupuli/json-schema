@@ -1,4 +1,4 @@
-require 'json-schema/attribute'
+require 'json-schema/attributes/format'
 
 module JSON
   class Schema
