@@ -3,7 +3,7 @@ require File.expand_path('../support/test_helper', __FILE__)
 
 class Draft4Test < Minitest::Test
   def validation_errors(schema, data, options)
-    super(schema, data, :version => :draft4)
+    super(schema, data, options.merge(:version => :draft4))
   end
 
   def exclusive_minimum
@@ -31,7 +31,9 @@ class Draft4Test < Minitest::Test
   include ObjectValidation::AdditionalPropertiesTests
   include ObjectValidation::PatternPropertiesTests
 
-  include StrictValidation
+  include StrictValidation::PropertiesTests
+  include StrictValidation::AdditionalPropertiesTests
+  include StrictValidation::PatternPropertiesTests
 
   include StringValidation::ValueTests
   include StringValidation::FormatTests
@@ -94,16 +96,16 @@ class Draft4Test < Minitest::Test
     }
 
     data = {"a" => "a"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    refute_valid schema,data,:strict => true
 
     data = {"b" => "b"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    refute_valid schema,data,:strict => true
 
     data = {"a" => "a", "b" => "b"}
-    assert(JSON::Validator.validate(schema,data,:strict => true))
+    assert_valid schema,data,:strict => true
 
     data = {"a" => "a", "b" => "b", "c" => "c"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    refute_valid schema,data,:strict => true
   end
 
   def test_strict_properties_additional_props
@@ -117,19 +119,19 @@ class Draft4Test < Minitest::Test
     }
 
     data = {"a" => "a"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    refute_valid schema,data,:strict => true
 
     data = {"b" => "b"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    refute_valid schema,data,:strict => true
 
     data = {"a" => "a", "b" => "b"}
-    assert(JSON::Validator.validate(schema,data,:strict => true))
+    assert_valid schema,data,:strict => true
 
     data = {"a" => "a", "b" => "b", "c" => "c"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    refute_valid schema,data,:strict => true
 
     data = {"a" => "a", "b" => "b", "c" => 3}
-    assert(JSON::Validator.validate(schema,data,:strict => true))
+    assert_valid schema,data,:strict => true
   end
 
   def test_strict_properties_pattern_props
@@ -143,25 +145,25 @@ class Draft4Test < Minitest::Test
     }
 
     data = {"a" => "a"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    refute_valid schema,data,:strict => true
 
     data = {"b" => "b"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    refute_valid schema,data,:strict => true
 
     data = {"a" => "a", "b" => "b"}
-    assert(JSON::Validator.validate(schema,data,:strict => true))
+    assert_valid schema,data,:strict => true
 
     data = {"a" => "a", "b" => "b", "c" => "c"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    refute_valid schema,data,:strict => true
 
     data = {"a" => "a", "b" => "b", "c" => 3}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    refute_valid schema,data,:strict => true
 
     data = {"a" => "a", "b" => "b", "23 taco" => 3}
-    assert(JSON::Validator.validate(schema,data,:strict => true))
+    assert_valid schema,data,:strict => true
 
     data = {"a" => "a", "b" => "b", "23 taco" => "cheese"}
-    assert(!JSON::Validator.validate(schema,data,:strict => true))
+    refute_valid schema,data,:strict => true
   end
 
   def test_list_option
@@ -173,14 +175,14 @@ class Draft4Test < Minitest::Test
     }
 
     data = [{"a" => 1},{"a" => 2},{"a" => 3}]
-    assert(JSON::Validator.validate(schema,data,:list => true))
+    assert_valid schema,data,:list => true
     refute_valid schema, data
 
     data = {"a" => 1}
-    assert(!JSON::Validator.validate(schema,data,:list => true))
+    refute_valid schema,data,:list => true
 
     data = [{"a" => 1},{"b" => 2},{"a" => 3}]
-    assert(!JSON::Validator.validate(schema,data,:list => true))
+    refute_valid schema,data,:list => true
   end
 
   def test_default_with_strict_and_anyof
@@ -210,7 +212,7 @@ class Draft4Test < Minitest::Test
       "bar" => "baz"
     }
 
-    assert(JSON::Validator.validate(schema, data, :insert_defaults => true, :strict => true))
+    assert_valid schema, data, :insert_defaults => true, :strict => true
   end
 
   def test_default_with_anyof
@@ -238,7 +240,7 @@ class Draft4Test < Minitest::Test
 
     data = {}
 
-    assert(JSON::Validator.validate(schema, data, :insert_defaults => true, :strict => true))
+    assert_valid schema, data, :insert_defaults => true, :strict => true
     assert(data['foo'] == 'view')
   end
 
@@ -269,7 +271,7 @@ class Draft4Test < Minitest::Test
       "bar" => "baz"
     }
 
-    assert(JSON::Validator.validate(schema, data, :insert_defaults => true, :strict => true))
+    assert_valid schema, data, :insert_defaults => true, :strict => true
     assert(!data.key?('foo'))
   end
 
@@ -330,9 +332,9 @@ class Draft4Test < Minitest::Test
       "properties" => { "a" => {"type" => "string", "format" => "uri"}}
     }
 
-    assert(JSON::Validator.validate(schema,data1))
-    assert(!JSON::Validator.validate(schema,data2))
-    assert(JSON::Validator.validate(schema,data3))
+    assert_valid schema,data1
+    refute_valid schema,data2
+    assert_valid schema,data3
   end
 
   def test_schema
@@ -342,7 +344,7 @@ class Draft4Test < Minitest::Test
     }
 
     data = {"a" => "taco"}
-    assert(!JSON::Validator.validate(schema,data))
+    refute_valid schema,data
 
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
@@ -409,9 +411,9 @@ class Draft4Test < Minitest::Test
       "name" => "John Doe",
       "credit_card" => 5555555555555555
     }
-    assert(!JSON::Validator.validate(schema,data), 'test schema dependency with invalid data')
+    refute_valid schema,data, {}, 'test schema dependency with invalid data'
     data['billing_address'] = "Somewhere over the rainbow"
-    assert(JSON::Validator.validate(schema,data), 'test schema dependency with valid data')
+    assert_valid schema,data, {}, 'test schema dependency with valid data'
   end
 
   def test_default
@@ -427,7 +429,7 @@ class Draft4Test < Minitest::Test
     data = {:b => 2}
     assert_valid schema, data
     assert_nil(data["a"])
-    assert(JSON::Validator.validate(schema,data, :insert_defaults => true))
+    assert_valid schema,data, :insert_defaults => true
     assert_equal(42, data["a"])
     assert_equal(2, data[:b])
 
@@ -444,7 +446,7 @@ class Draft4Test < Minitest::Test
     data = {:b => 2}
     refute_valid schema, data
     assert_nil(data["a"])
-    assert(JSON::Validator.validate(schema,data, :insert_defaults => true))
+    assert_valid schema,data, :insert_defaults => true
     assert_equal(42, data["a"])
     assert_equal(2, data[:b])
 
@@ -461,7 +463,7 @@ class Draft4Test < Minitest::Test
     data = {:b => 2}
     refute_valid schema, data
     assert_nil(data["a"])
-    assert(!JSON::Validator.validate(schema,data, :insert_defaults => true))
+    refute_valid schema,data, :insert_defaults => true
     assert_nil(data["a"])
     assert_equal(2, data[:b])
 
@@ -477,7 +479,7 @@ class Draft4Test < Minitest::Test
     data = {:b => 2}
     assert_valid schema, data
     assert_nil(data["a"])
-    assert(!JSON::Validator.validate(schema,data, :insert_defaults => true))
+    refute_valid schema,data, :insert_defaults => true
     assert_equal("42",data["a"])
     assert_equal(2, data[:b])
 
@@ -497,7 +499,7 @@ class Draft4Test < Minitest::Test
     data = {:b => 2}
     refute_valid schema, data
     assert_nil(data["a"])
-    assert(JSON::Validator.validate(schema, data, :insert_defaults => true))
+    assert_valid schema, data, :insert_defaults => true
     assert_equal(false, data["a"])
     assert_equal(2, data[:b])
   end

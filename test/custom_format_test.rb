@@ -76,14 +76,14 @@ class CustomFormatTest < Minitest::Test
       schema = @schemas[version]
       prefix = "Validation for '#{version || 'default'}'"
 
-      assert(JSON::Validator.validate(schema, data), "#{prefix} succeeds with no 'custom' format validator registered")
+      assert_valid schema, data, {}, "#{prefix} succeeds with no 'custom' format validator registered"
 
       JSON::Validator.register_format_validator("custom", @format_proc, [version])
       data["a"] = "42"
-      assert(JSON::Validator.validate(schema, data), "#{prefix} succeeds with 'custom' format validator and correct data")
+      assert_valid schema, data, {}, "#{prefix} succeeds with 'custom' format validator and correct data"
 
       data["a"] = "23"
-      assert(!JSON::Validator.validate(schema, data), "#{prefix} fails with 'custom' format validator and wrong data")
+      refute_valid schema, data, {}, "#{prefix} fails with 'custom' format validator and wrong data"
 
       errors = JSON::Validator.fully_validate(schema, data)
       assert_equal(errors.count, 1)
@@ -105,18 +105,18 @@ class CustomFormatTest < Minitest::Test
       schema["properties"]["a"]["format"] = "ipv6"
       prefix = "Validation for '#{version || 'default'}'"
 
-      assert(JSON::Validator.validate(schema, data), "#{prefix} succeeds for default format with correct data")
+      assert_valid schema, data, {}, "#{prefix} succeeds for default format with correct data"
 
       data["a"] = "no_ip6_address"
-      assert(!JSON::Validator.validate(schema, data), "#{prefix} fails for default format and wrong data")
+      refute_valid schema, data, {}, "#{prefix} fails for default format and wrong data"
 
       data["a"] = "42"
       JSON::Validator.register_format_validator("ipv6", @format_proc, [version])
-      assert(JSON::Validator.validate(schema, data), "#{prefix} succeeds with overriden default format and correct data")
+      assert_valid schema, data, {}, "#{prefix} succeeds with overriden default format and correct data"
 
       JSON::Validator.deregister_format_validator("ipv6", [version])
       data["a"] = "2001:db8:85a3:0:0:8a2e:370:7334"
-      assert(JSON::Validator.validate(schema, data), "#{prefix} restores the default format on deregistration")
+      assert_valid schema, data, {}, "#{prefix} restores the default format on deregistration"
     end
   end
 end

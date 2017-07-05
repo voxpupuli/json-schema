@@ -41,13 +41,13 @@ class CommonTestSuiteTest < Minitest::Test
           define_method("test_#{err_id}") do
             skip if self.class.skip?(full_description, rel_file)
 
-            errors = JSON::Validator.fully_validate(schema,
-              t["data"],
-              :parse_data => false,
-              :validate_schema => true,
-              :version => version
-            )
-            assert_equal t["valid"], errors.empty?, "Common test suite case failed: #{err_id}"
+            opts = { :version => version }
+            msg = "Common test suite case failed: #{err_id}"
+            if t["valid"]
+              assert_valid schema, t["data"], opts, msg
+            else
+              refute_valid schema, t["data"], opts, msg
+            end
           end
         end
       end

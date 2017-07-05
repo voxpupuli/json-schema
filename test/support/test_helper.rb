@@ -34,14 +34,14 @@ class Minitest::Test
     File.join(File.dirname(__FILE__), '../data', filename)
   end
 
-  def assert_valid(schema, data, options = {}, msg = "#{data.inspect} should be valid for schema:\n#{schema.inspect}")
+  def assert_valid(schema, data, options = {}, msg = "#{data.inspect}\nshould be valid for schema:\n#{schema.inspect}\nwith options:\n#{options.inspect}")
     errors = validation_errors(schema, data, options)
-    assert_equal([], errors, msg)
+    assert_empty(errors, msg)
   end
 
-  def refute_valid(schema, data, options = {}, msg = "#{data.inspect} should be invalid for schema:\n#{schema.inspect}")
+  def refute_valid(schema, data, options = {}, msg = "#{data.inspect}\nshould be invalid for schema:\n#{schema.inspect}\nwith options:\n#{options.inspect}")
     errors = validation_errors(schema, data, options)
-    refute_equal([], errors, msg)
+    refute_empty(errors, msg)
   end
 
   def validation_errors(schema, data, options)
