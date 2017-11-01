@@ -87,7 +87,7 @@ module JSON
 
       def self.file_uri(uri)
         parsed_uri = parse(uri)
-        if not parsed_uri.scheme.nil?
+        if parsed_uri.scheme
           parsed_uri
         else
           Addressable::URI.convert_path(parsed_uri.path)
