@@ -87,8 +87,11 @@ module JSON
 
       def self.file_uri(uri)
         parsed_uri = parse(uri)
-
-        Addressable::URI.convert_path(parsed_uri.path)
+        if not parsed_uri.scheme.nil?
+          parsed_uri
+        else
+          Addressable::URI.convert_path(parsed_uri.path)
+        end
       end
 
       def self.unescape_uri(uri)
