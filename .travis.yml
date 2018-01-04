@@ -6,7 +6,7 @@ rvm:
   - "2.2"
   - "2.3"
   - "2.4.1"
-  - "jruby-9.1.12.0"
+  - "jruby-9.1.15.0"
 
 sudo: false
 
@@ -25,3 +25,7 @@ matrix:
       gemfile: "gemfiles/Gemfile.yajl-ruby.x"
     - rvm: "2.4.1"
       gemfile: "gemfiles/Gemfile.uuidtools.x"
+
+env:
+  global:
+    - JRUBY_OPTS="--debug"
