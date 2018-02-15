@@ -20,7 +20,12 @@ module JSON
       end
 
       def validate(current_schema, data, fragments, processor, options = {})
-        current_schema.schema.each do |attr_name,attribute|
+        schema = current_schema.schema
+        if options[:strict] && schema['required'].nil? && schema['properties']
+          schema['required'] = schema['properties'].keys
+        end
+
+        schema.each do |attr_name,attribute|
           if @attributes.has_key?(attr_name.to_s)
             @attributes[attr_name.to_s].validate(current_schema, data, fragments, processor, self, options)
           end
