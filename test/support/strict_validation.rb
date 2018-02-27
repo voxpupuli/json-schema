@@ -85,4 +85,26 @@ module StrictValidation
     assert(!JSON::Validator.validate(schema,data,:strict => true))
   end
 
+  def test_strict_properties_with_required_override
+    schema = {
+      "required" => ["a"],
+      "properties" => {
+        "a" => {"type" => "string"},
+        "b" => {"type" => "string"}
+      }
+    }
+
+    data = {"a" => "a"}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"b" => "b"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b"}
+    assert(JSON::Validator.validate(schema,data,:strict => true))
+
+    data = {"a" => "a", "b" => "b", "c" => "c"}
+    assert(!JSON::Validator.validate(schema,data,:strict => true))
+  end
+
 end
