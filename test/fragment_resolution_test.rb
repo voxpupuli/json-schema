@@ -19,11 +19,11 @@ class FragmentResolutionTest < Minitest::Test
     refute_valid schema, data
     assert_valid schema, data, :fragment => "#/properties/a"
 
-    assert_raises JSON::Schema::SchemaError do
+    assert_raises JSON::Schema::Pointer::PointerSyntaxError do
       JSON::Validator.validate!(schema,data,:fragment => "/properties/a")
     end
 
-    assert_raises JSON::Schema::SchemaError do
+    assert_raises JSON::Schema::Pointer::ReferenceError do
       JSON::Validator.validate!(schema,data,:fragment => "#/properties/b")
     end
   end
