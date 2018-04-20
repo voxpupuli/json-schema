@@ -4,6 +4,8 @@ Please keep to the changelog format described on [keepachangelog.com](http://kee
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+### Added
+- Draft6 validator now supports `propertyNames` validation.
 
 ## [2.8.1] - 2018-10-14
 
