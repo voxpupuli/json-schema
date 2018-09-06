@@ -35,6 +35,13 @@ class FilesTest < Minitest::Test
     refute_valid schema, %Q({"a": "poop"}), :json => true
   end
 
+  def test_data_from_oas_3
+    schema = {"$schema" => "https://raw.githubusercontent.com/googleapis/gnostic/master/OpenAPIv3/openapi-3.0.json","type" => "object", "properties" => {"a" => {"type" => "integer", "nullable" => true}}}
+    assert_valid schema_fixture_path('good_schema_1.json'), { "a" => 5 }
+    assert_valid schema, { "a" => nil }
+    refute_valid schema, { "a" => "bad" }
+  end
+
   def test_both_from_file
     assert_valid schema_fixture_path('good_schema_1.json'), data_fixture_path('good_data_1.json'), :uri => true
     refute_valid schema_fixture_path('good_schema_1.json'), data_fixture_path('bad_data_1.json'), :uri => true
