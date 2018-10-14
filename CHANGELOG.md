@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+## [2.8.1] - 2019-10-14
+
 ### Changed
 - All limit classes are now stored in their own files in 'json-schema/attributes/limits'
 - All attribute classes are now stored in their own files in 'json-schema/attributes'
