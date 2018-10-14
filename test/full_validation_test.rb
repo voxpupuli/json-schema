@@ -133,11 +133,13 @@ class FullValidationTest < Minitest::Test
 
     errors = JSON::Validator.fully_validate(schema,data,:errors_as_objects => true)
 
-    assert(errors.length == 2)
-    assert(errors[0][:failed_attribute] == "Required")
-    assert(errors[0][:fragment] == "#/")
-    assert(errors[1][:failed_attribute] == "TypeV4")
-    assert(errors[1][:fragment] == "#/c")
+    assert_equal errors.length, 2
+    assert_equal errors[0][:failed_attribute], "Required"
+    assert_equal errors[0][:fragment], "#/"
+    assert_equal errors[0][:property_fragment], "#/b"
+    assert_equal errors[1][:failed_attribute], "TypeV4"
+    assert_equal errors[1][:fragment], "#/c"
+    assert_equal errors[1][:property_fragment], "#/c"
   end
 
   def test_full_validation_with_nested_required_properties
@@ -163,8 +165,10 @@ class FullValidationTest < Minitest::Test
     errors = JSON::Validator.fully_validate(schema,data,:errors_as_objects => true)
     assert_equal 2, errors.length
     assert_equal '#/x', errors[0][:fragment]
+    assert_equal '#/x/b', errors[0][:property_fragment]
     assert_equal 'Required', errors[0][:failed_attribute]
     assert_equal '#/x/e', errors[1][:fragment]
+    assert_equal '#/x/e', errors[1][:property_fragment]
     assert_equal 'TypeV4', errors[1][:failed_attribute]
   end
 
@@ -196,8 +200,10 @@ class FullValidationTest < Minitest::Test
     errors = JSON::Validator.fully_validate(schema,data,:errors_as_objects => true)
     assert_equal 2, errors.length
     assert_equal '#/x/0', errors[0][:fragment]
+    assert_equal '#/x/0/b', errors[0][:property_fragment]
     assert_equal 'Required', errors[0][:failed_attribute]
     assert_equal '#/x/1/e', errors[1][:fragment]
+    assert_equal '#/x/1/e', errors[1][:property_fragment]
     assert_equal 'TypeV4', errors[1][:failed_attribute]
   end
 end

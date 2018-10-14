@@ -19,7 +19,7 @@ module JSON
 
           if !prop_defaults
             message = "The property '#{build_fragment(fragments)}' did not contain a required property of '#{property}'"
-            validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
+            validation_error(processor, message, fragments, current_schema, self, options[:record_errors], property)
           end
         end
       end
