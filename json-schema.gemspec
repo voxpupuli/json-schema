@@ -1,6 +1,6 @@
 require 'yaml'
 
-version_yaml = YAML.load(File.open('VERSION.yml').read)
+version_yaml = YAML.load(File.open(File.expand_path('../VERSION.yml', __FILE__)).read)
 version = "#{version_yaml['major']}.#{version_yaml['minor']}.#{version_yaml['patch']}"
 gem_name = "json-schema"
 
