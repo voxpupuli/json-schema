@@ -48,7 +48,6 @@ draft6:
     - anyOf with boolean schemas, all true/any value is valid
     - anyOf with boolean schemas, some true/any value is valid
   boolean_schema: :all
-  const: :all
   contains: :all
   dependencies:
     - dependencies with boolean subschemas/empty object is valid
@@ -107,3 +106,63 @@ draft6:
       - ECMA 262 regex non-compliance/ECMA 262 has no support for \Z anchor from .NET
     zeroTerminatedFloats:
       - some languages do not distinguish between different types of numeric value/a float is not an integer even without fractional part
+draft7:
+  additionalItems: :all
+  boolean_schema: :all
+  definitions: :all
+  exclusiveMinimum: :all
+  maxItems: :all
+  minItems: :all
+  not: :all
+  patternProperties: :all
+  refRemote: :all
+  additionalProperties: :all
+  const: :all
+  dependencies: :all
+  if-then-else: :all
+  maxLength: :all
+  minLength: :all
+  oneOf: :all
+  properties: :all
+  required: :all
+  allOf: :all
+  contains: :all
+  enum: :all
+  items: :all
+  maxProperties: :all
+  minProperties: :all
+  propertyNames: :all
+  type: :all
+  anyOf: :all
+  default: :all
+  exclusiveMaximum: :all
+  maximum: :all
+  minimum: :all
+  multipleOf: :all
+  pattern: :all
+  ref: :all
+  uniqueItems: :all
+  optional:
+    bignum: :all
+    content: :all
+    ecmascript-regex: :all
+    zeroTerminatedFloats: :all
+    format:
+      date: :all
+      date-time: :all
+      email: :all
+      hostname: :all
+      idn-email: :all
+      idn-hostname: :all
+      ipv4: :all
+      ipv6: :all
+      iri: :all
+      iri-reference: :all
+      json-pointer: :all
+      regex: :all
+      relative-json-pointer: :all
+      time: :all
+      uri: :all
+      uri-reference: :all
+      uri-template: :all
+
