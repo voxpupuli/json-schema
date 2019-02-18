@@ -27,7 +27,7 @@ module JSON
             validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
           end
 
-          if data.has_key?(property)
+          if data.has_key?(property) && !([true, false].include?(property_schema))
             expected_schema = JSON::Schema.new(property_schema, current_schema.uri, validator)
             expected_schema.validate(data[property], fragments + [property], processor, options)
           end

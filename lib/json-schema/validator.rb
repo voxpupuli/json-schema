@@ -197,7 +197,7 @@ module JSON
       end
 
       # Items are always schemas
-      if schema["items"]
+      if (items = schema["items"]) && !([true, false].include?(items))
         items = schema["items"].clone
         items = [items] unless items.is_a?(Array)
 
@@ -218,7 +218,7 @@ module JSON
       if obj.is_a?(Hash)
         schema_uri = parent_schema.uri.dup
         schema = JSON::Schema.new(obj, schema_uri, parent_schema.validator)
-        if obj['id']
+        if obj['id'] || obj['$id']
           self.class.add_schema(schema)
         end
         build_schemas(schema)
