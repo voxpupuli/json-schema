@@ -56,7 +56,6 @@ module StrictValidation
 
   def test_strict_properties_pattern_props
     schema = {
-      "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {"type" => "string"},
         "b" => {"type" => "string"}

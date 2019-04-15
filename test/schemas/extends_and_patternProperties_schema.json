@@ -1,0 +1,28 @@
+{
+  "type": "object",
+  "extends": {"$ref":"inner_schema.json#"},
+  "patternProperties": {
+    "outerA": {
+      "description": "blah",
+      "additionalProperties": false,
+      "properties": {
+        "outerA1": {
+          "type":"boolean"
+        }
+      }
+    },
+    "outerB": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 50,
+      "items": {
+        "extends": {"$ref":"inner_schema.json#"},
+        "additionalProperties": false
+      }
+    },
+    "outerC": {
+      "description": "blah",
+      "type":"boolean"
+    }
+  }
+}

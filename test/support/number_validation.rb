@@ -78,16 +78,5 @@ module NumberValidation
       # other types are disregarded
       assert_valid schema, {'a' => 'hi'}
     end
-
-    def test_multiple_of_zero
-      schema = {
-        'properties' => {
-          'a' => { multiple_of => 0 }
-        }
-      }
-
-      refute_valid schema, {'a' => 5}
-      refute_valid schema, {'a' => 0}
-    end
   end
 end

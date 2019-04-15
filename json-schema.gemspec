@@ -1,6 +1,6 @@
 require 'yaml'
 
-version_yaml = YAML.load(File.open('VERSION.yml').read)
+version_yaml = YAML.load(File.open(File.expand_path('../VERSION.yml', __FILE__)).read)
 version = "#{version_yaml['major']}.#{version_yaml['minor']}.#{version_yaml['patch']}"
 gem_name = "json-schema"
 
@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.files = Dir[ "lib/**/*", "resources/*.json" ]
   s.require_path = "lib"
   s.extra_rdoc_files = ["README.md","LICENSE.md"]
-  s.required_ruby_version = ">= 1.8.7"
+  s.required_ruby_version = ">= 1.9"
   s.license = "MIT"
   s.required_rubygems_version = ">= 1.8"
 
@@ -23,5 +23,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "webmock"
   s.add_development_dependency "bundler"
 
-  s.add_runtime_dependency "addressable", '~> 2.3.8'
+  s.add_runtime_dependency "addressable", '>= 2.4'
 end

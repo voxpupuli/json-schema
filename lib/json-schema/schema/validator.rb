@@ -14,7 +14,8 @@ module JSON
       end
 
       def extend_schema_definition(schema_uri)
-        validator = JSON::Validator.validator_for(schema_uri)
+        warn "[DEPRECATION NOTICE] The preferred way to extend a Validator is by subclassing, rather than #extend_schema_definition. This method will be removed in version >= 3."
+        validator = JSON::Validator.validator_for_uri(schema_uri)
         @attributes.merge!(validator.attributes)
       end
 

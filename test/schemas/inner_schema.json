@@ -1,0 +1,17 @@
+{
+  "type": "object",
+  "properties": {
+    "innerA": {
+      "description": "blah",
+      "type":"boolean"
+    },
+    "innerB": {
+      "description": "blah",
+      "type":"boolean"
+    },
+    "innerC": {
+      "description": "blah",
+      "type": "boolean"
+    }
+  }
+}
