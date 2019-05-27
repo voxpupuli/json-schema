@@ -10,6 +10,7 @@ module JSON
 
         begin
           ip = IPAddr.new(data)
+        rescue IPAddr::InvalidAddressError
         rescue ArgumentError => e
           raise e unless e.message == 'invalid address'
         end
