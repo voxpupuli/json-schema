@@ -10,9 +10,8 @@ module JSON
 
         begin
           ip = IPAddr.new(data)
-        rescue IPAddr::InvalidAddressError
-        rescue ArgumentError => e
-          raise e unless e.message == 'invalid address'
+        rescue => e
+          raise e unless e.message.start_with?("invalid address")
         end
 
         family = ip_version == 6 ? Socket::AF_INET6 : Socket::AF_INET
