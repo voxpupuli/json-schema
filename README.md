@@ -166,7 +166,7 @@ JSON::Validator.validate(schema, [{"a" => 1}, {"a" => 2}, {"a" => 3}])
 JSON::Validator.fully_validate(schema, { "a" => "taco" }, :errors_as_objects => true)
 
 #
-# with the `:strict` option, all properties are condisidered to have `"required": true` and all objects `"additionalProperties": false`
+# with the `:strict` option, all properties are considered to have `"required": true` and all objects `"additionalProperties": false`
 #
 
 # => true
