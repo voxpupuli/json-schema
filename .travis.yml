@@ -1,4 +1,5 @@
 language: "ruby"
+cache: bundler
 
 rvm:
   - "1.9"
@@ -12,9 +13,6 @@ rvm:
   - "jruby-9.1"
 
 sudo: false
-
-install:
-  - bundle install --retry=3
 
 matrix:
   include:
