@@ -80,4 +80,21 @@ class FragmentResolutionTest < Minitest::Test
     assert_valid schema, 5, :fragment => "#/properties/a/anyOf/0"
     refute_valid schema, 5, :fragment => "#/properties/a/anyOf/1"
   end
+
+  def test_fragment_with_escape_sequences_resolution
+    schema = {
+      "content" => {
+        "application/json" => {
+          "type" => "object",
+          "required" => ["a"],
+          "properties" => {
+            "a" => {"type" => "integer"}
+          }
+        }
+      }
+    }
+
+    assert_valid schema, {"a" => 1}, :fragment => "#/content/application~1json"
+    refute_valid schema, {}, :fragment => "#/content/application~1json"
+  end
 end

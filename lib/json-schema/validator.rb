@@ -73,7 +73,7 @@ module JSON
 
     def schema_from_fragment(base_schema, fragment)
       schema_uri = base_schema.uri
-      fragments = fragment.split("/")
+      fragments = fragment.split("/").map { |f| f.gsub('~0', '~').gsub('~1', '/') }
 
       # ensure the first element was a hash, per the fragment spec
       if fragments.shift != "#"
