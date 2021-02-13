@@ -7,11 +7,12 @@ module JSON
     class IPFormat < FormatAttribute
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         return unless data.is_a?(String)
-
+        error_type = RUBY_VERSION >= '3' ? IPAddr::InvalidAddressError : ArgumentError
+        error_message = RUBY_VERSION >= '3' ? "invalid address: #{data}" : 'invalid address'
         begin
           ip = IPAddr.new(data)
-        rescue ArgumentError => e
-          raise e unless e.message == 'invalid address'
+        rescue error_type => e
+          raise e unless e.message == error_message
         end
 
         family = ip_version == 6 ? Socket::AF_INET6 : Socket::AF_INET
