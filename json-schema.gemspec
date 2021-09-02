@@ -7,9 +7,9 @@ gem_name = "json-schema"
 Gem::Specification.new do |s|
   s.name = gem_name
   s.version = version
-  s.authors = ["Kenny Hoxworth"]
-  s.email = "hoxworth@gmail.com"
-  s.homepage = "http://github.com/ruby-json-schema/json-schema/tree/master"
+  s.authors = ["Kenny Hoxworth", "Vox Pupuli"]
+  s.email = "voxpupuli@groups.io"
+  s.homepage = "http://github.com/voxpupuli/json-schema/"
   s.summary = "Ruby JSON Schema Validator"
   s.files = Dir[ "lib/**/*", "resources/*.json" ]
   s.require_path = "lib"
