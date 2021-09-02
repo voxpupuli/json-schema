@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'voxpupuli'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Ruby 3.0
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+        env:
+          BUNDLE_WITHOUT: release
+      - name: Build gem
+        run: gem build *.gemspec
+      - name: Publish gem to rubygems.org
+        run: gem push *.gem
+        env:
+          GEM_HOST_API_KEY: '${{ secrets.RUBYGEMS_AUTH_TOKEN }}'
+      - name: Setup GitHub packages access
+        run: |
+          mkdir -p ~/.gem
+          echo ":github: Bearer ${{ secrets.GITHUB_TOKEN }}" >> ~/.gem/credentials
+          chmod 0600 ~/.gem/credentials
+      - name: Publish gem to GitHub packages
+        run: gem push --key github --host https://rubygems.pkg.github.com/voxpupuli *.gem

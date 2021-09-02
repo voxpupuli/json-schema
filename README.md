@@ -1,9 +1,11 @@
-[![Gem Version](https://badge.fury.io/rb/json-schema.svg)](https://badge.fury.io/rb/json-schema)
-[![Travis](https://travis-ci.org/ruby-json-schema/json-schema.svg?branch=master)](https://travis-ci.org/ruby-json-schema/json-schema)
-[![Code Climate](https://codeclimate.com/github/ruby-json-schema/json-schema/badges/gpa.svg)](https://codeclimate.com/github/ruby-json-schema/json-schema)
+# Ruby JSON Schema Validator
 
-Ruby JSON Schema Validator
-==========================
+[![License](https://img.shields.io/github/license/voxpupuli/json-schema.svg)](https://github.com/voxpupuli/json-schema/blob/master/LICENSE)
+[![Test](https://github.com/voxpupuli/json-schema/actions/workflows/test.yml/badge.svg)](https://github.com/voxpupuli/json-schema/actions/workflows/test.yml)
+[![Release](https://github.com/voxpupuli/json-schema/actions/workflows/release.yml/badge.svg)](https://github.com/voxpupuli/json-schema/actions/workflows/release.yml)
+[![RubyGem Version](https://img.shields.io/gem/v/json-schema.svg)](https://rubygems.org/gems/json-schema)
+[![RubyGem Downloads](https://img.shields.io/gem/dt/json-schema.svg)](https://rubygems.org/gems/json-schema)
+[![Donated by Iain Beeston](https://img.shields.io/badge/donated%20by-Iain%20Beeston-fb7047.svg)](#transfer-notice)
 
 This library is intended to provide Ruby with an interface for validating JSON
 objects against a JSON schema conforming to [JSON Schema Draft
@@ -472,3 +474,23 @@ value is of the correct datatype (e.g., an instance value is validated to be an
 integer or a float in the case of 'utc-millisec').
 
 Additionally, JSON::Validator does not handle any json hyperschema attributes.
+
+# Transfer Notice
+
+This plugin was originally authored by [Iain Beeston](https://github.com/iainbeeston).
+The maintainer preferred that [Vox Pupuli](https://voxpupuli.org/) take ownership of the module for future improvement and maintenance.
+Existing pull requests and issues were transferred, please fork and continue to contribute [here](https://github.com/voxpupuli/json-schema).
+
+# License
+
+This gem is licensed unter the [MIT license](LICENSE.md).
+
+## Release information
+
+To make a new release, please do:
+* update the version in VERSION.yml
+* Install gems with `bundle install --with release --path .vendor`
+* generate the changelog with `bundle exec rake changelog`
+* Check if the new version matches the closed issues/PRs in the changelog
+* Create a PR with it
+* After it got merged, push a tag. GitHub actions will do the actual release to rubygems and GitHub Packages
