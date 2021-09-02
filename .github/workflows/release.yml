@@ -15,8 +15,6 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.0'
-        env:
-          BUNDLE_WITHOUT: release
       - name: Build gem
         run: gem build *.gemspec
       - name: Publish gem to rubygems.org
@@ -29,4 +27,4 @@ jobs:
           echo ":github: Bearer ${{ secrets.GITHUB_TOKEN }}" >> ~/.gem/credentials
           chmod 0600 ~/.gem/credentials
       - name: Publish gem to GitHub packages
-        run: gem push --key github --host https://rubygems.pkg.github.com/voxpupuli *.gem
+        run: gem push --key github --host https://rubygems.pkg.github.com/${{ github.repository_owner }} *.gem
