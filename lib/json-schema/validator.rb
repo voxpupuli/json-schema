@@ -593,7 +593,7 @@ module JSON
       uri = Util::URI.normalized_uri(uri) if uri.is_a?(String)
       if uri.absolute? && Util::URI::SUPPORTED_PROTOCOLS.include?(uri.scheme)
         begin
-          open(uri.to_s).read
+          URI.open(uri.to_s).read
         rescue OpenURI::HTTPError, Timeout::Error => e
           raise JSON::Schema::JsonLoadError, e.message
         end
