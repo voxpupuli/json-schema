@@ -6,7 +6,11 @@ module JSON
     attr_accessor :schema, :uri, :validator
 
     def initialize(schema,uri,parent_validator=nil)
-      @schema = schema
+      unless schema.respond_to?(:to_hash)
+        raise ArgumentError, "schema must be a hash; got: #{schema.inspect}"
+      end
+
+      @schema = schema.to_hash
       @uri = uri
 
       # If there is an ID on this schema, use it to generate the URI
