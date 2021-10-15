@@ -16,6 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Rescue URI error when initializing a data string that contains a colon
 - Fragments with an odd number of components no longer raise an `undefined method `validate'`
   error
+- Data that looks like a URI but is invalid is now treated as a string
 
 ## [2.8.0] - 2017-02-07
 
