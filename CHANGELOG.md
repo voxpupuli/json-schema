@@ -16,6 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Rescue URI error when initializing a data string that contains a colon
 - Fragments with an odd number of components no longer raise an `undefined method `validate'`
   error
+- Made strict validation report errors for draft1 and draft2 schemas
 
 ## [2.8.0] - 2017-02-07
 
