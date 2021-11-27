@@ -29,6 +29,14 @@ default**, so schemas that do not declare a validator using the `$schema`
 keyword will use Draft-04 now instead of Draft-03. This is the reason for the
 major version upgrade.
 
+Version 3.0.0 Upgrade Notes
+---------------------------
+
+All individual changes are documented in the CHANGELOG.md. The biggest change
+is that the new version only supports Ruby 2.5 and newer. Take a look into the
+gemspec file to see the currently supported Ruby version and also
+`.github/workflows/test.yml` to see the Ruby versions we test on.
+
 Installation
 ------------
 
