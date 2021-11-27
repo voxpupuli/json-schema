@@ -118,7 +118,7 @@ module JSON
 
       def read_uri(uri)
         if accept_uri?(uri)
-          open(uri.to_s).read
+          URI.open(uri.to_s).read
         else
           raise JSON::Schema::ReadRefused.new(uri.to_s, :uri)
         end
