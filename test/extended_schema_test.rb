@@ -42,6 +42,24 @@ class ExtendedSchemaTest < Minitest::Test
     refute_valid schema, {"a" => 1, "b" => 5}
   end
 
+  def test_extended_schema_validation_with_fragment
+    schema = {
+      "$schema" => "http://test.com/test.json",
+      "definitions" => {
+        "odd-a" => {
+          "properties" => {
+            "a" => {
+              "bitwise-and" => 1
+            }
+          }
+        }
+      }
+    }
+
+    assert_valid schema, {"a" => 1}, :fragment => "#/definitions/odd-a"
+    refute_valid schema, {"a" => 0}, :fragment => "#/definitions/odd-a"
+  end
+
   def test_unextended_schema
     # Verify that using the original schema disregards the `bitwise-and` property
     schema = {
