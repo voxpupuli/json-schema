@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ["README.md","LICENSE.md"]
   s.required_ruby_version = ">= 2.5"
   s.license = "MIT"
-  s.required_rubygems_version = ">= 1.8"
+  s.required_rubygems_version = ">= 2.5"
 
   s.add_development_dependency "rake"
   s.add_development_dependency "minitest", '~> 5.0'
