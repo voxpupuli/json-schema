@@ -38,7 +38,7 @@ module JSON
     @@serializer = nil
     @@mutex = Mutex.new
 
-    def initialize(schema_data, data, opts={})
+    def initialize(schema_data, opts={})
       @options = @@default_opts.clone.merge(opts)
       @errors = []
 
@@ -51,15 +51,13 @@ module JSON
       @validation_options[:clear_cache] = true if !@@cache_schemas || @options[:clear_cache]
 
       @@mutex.synchronize { @base_schema = initialize_schema(schema_data, configured_validator) }
-      @original_data = data
-      @data = initialize_data(data)
       @@mutex.synchronize { build_schemas(@base_schema) }
 
       # validate the schema, if requested
       if @options[:validate_schema]
         # Don't clear the cache during metaschema validation!
-        meta_validator = self.class.new(@base_schema.validator.metaschema, @base_schema.schema, {:clear_cache => false})
-        meta_validator.validate
+        meta_validator = self.class.new(@base_schema.validator.metaschema, {:clear_cache => false})
+        meta_validator.validate(@base_schema.schema)
       end
 
       # If the :fragment option is set, try and validate against the fragment
@@ -103,8 +101,10 @@ module JSON
     end
 
     # Run a simple true/false validation of data against a schema
-    def validate
-      @base_schema.validate(@data,[],self,@validation_options)
+    def validate(data)
+      original_data = data
+      data = initialize_data(data)
+      @base_schema.validate(data,[],self,@validation_options)
 
       if @options[:record_errors]
         if @options[:errors_as_objects]
@@ -116,11 +116,13 @@ module JSON
         true
       end
     ensure
+      @errors = []
+
       if @validation_options[:clear_cache] == true
         self.class.clear_cache
       end
       if @validation_options[:insert_defaults]
-        self.class.merge_missing_values(@data, @original_data)
+        self.class.merge_missing_values(data, original_data)
       end
     end
 
@@ -244,8 +246,8 @@ module JSON
       end
 
       def validate!(schema, data,opts={})
-        validator = new(schema, data, opts)
-        validator.validate
+        validator = new(schema, opts)
+        validator.validate(data)
       end
 
       def validate2(schema, data, opts={})
