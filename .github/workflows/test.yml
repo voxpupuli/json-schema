@@ -17,6 +17,7 @@ jobs:
           - ruby: "2.5"
           - ruby: "2.6"
           - ruby: "2.7"
+          - ruby: "3.0"
             coverage: "yes"
     env:
       COVERAGE: ${{ matrix.coverage }}
