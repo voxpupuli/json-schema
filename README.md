@@ -19,7 +19,7 @@ Additional Resources
 --------------------
 
 - [Google Groups](https://groups.google.com/forum/#!forum/ruby-json-schema)
-- #ruby-json-schema on chat.freenode.net
+- #voxpupuli on irc.libera.chat
 
 Version 2.0.0 Upgrade Notes
 ---------------------------
@@ -49,8 +49,8 @@ gem install json-schema
 From the git repo:
 
 ```sh
-$ gem build json-schema.gemspec
-$ gem install json-schema-2.5.2.gem
+gem build json-schema.gemspec
+gem install json-schema-*.gem
 ```
 
 Validation
