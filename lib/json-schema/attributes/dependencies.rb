@@ -27,7 +27,7 @@ module JSON
       def self.validate_dependency(schema, data, property, value, fragments, processor, attribute, options)
         return if data.key?(value.to_s)
         message = "The property '#{build_fragment(fragments)}' has a property '#{property}' that depends on a missing property '#{value}'"
-        validation_error(processor, message, fragments, schema, attribute, options[:record_errors])
+        validation_error(processor, message, fragments, schema, attribute, options[:record_errors], property)
       end
 
       def self.accept_value?(value)

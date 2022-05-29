@@ -2,10 +2,11 @@ module JSON
   class Schema
     class ValidationError < StandardError
       INDENT = "    "
-      attr_accessor :fragments, :schema, :failed_attribute, :sub_errors, :message
+      attr_accessor :fragments, :schema, :failed_attribute, :sub_errors, :message, :property
 
-      def initialize(message, fragments, failed_attribute, schema)
+      def initialize(message, fragments, failed_attribute, schema, property = nil)
         @fragments = fragments.clone
+        @property = property
         @schema = schema
         @sub_errors = {}
         @failed_attribute = failed_attribute
@@ -27,7 +28,21 @@ module JSON
       end
 
       def to_hash
-        base = {:schema => @schema.uri, :fragment => ::JSON::Schema::Attribute.build_fragment(fragments), :message => message_with_schema, :failed_attribute => @failed_attribute.to_s.split(":").last.split("Attribute").first}
+        fragment_string = ::JSON::Schema::Attribute.build_fragment(fragments)
+        if property
+          property_fragments = fragments + [property]
+          property_fragment_string = ::JSON::Schema::Attribute.build_fragment(property_fragments)
+        else
+          property_fragment_string = fragment_string
+        end
+
+        base = {
+          :schema => @schema.uri,
+          :fragment => fragment_string,
+          :property_fragment => property_fragment_string,
+          :message => message_with_schema,
+          :failed_attribute => @failed_attribute.to_s.split(":").last.split("Attribute").first
+        }
         if !@sub_errors.empty?
           base[:errors] = @sub_errors.inject({}) do |hsh, (subschema, errors)|
             subschema_sym = subschema.downcase.gsub(/\W+/, '_').to_sym
