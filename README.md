@@ -9,7 +9,8 @@
 
 This library is intended to provide Ruby with an interface for validating JSON
 objects against a JSON schema conforming to [JSON Schema Draft
-4](http://tools.ietf.org/html/draft-zyp-json-schema-04). Legacy support for
+6](https://tools.ietf.org/html/draft-wright-json-schema-01). Legacy support for
+[JSON Schema Draft 4](http://tools.ietf.org/html/draft-zyp-json-schema-04),
 [JSON Schema Draft 3](http://tools.ietf.org/html/draft-zyp-json-schema-03),
 [JSON Schema Draft 2](http://tools.ietf.org/html/draft-zyp-json-schema-02), and
 [JSON Schema Draft 1](http://tools.ietf.org/html/draft-zyp-json-schema-01) is
