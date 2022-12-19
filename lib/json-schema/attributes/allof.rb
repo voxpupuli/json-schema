@@ -6,7 +6,7 @@ module JSON
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         # Create an hash to hold errors that are generated during validation
         errors = Hash.new { |hsh, k| hsh[k] = [] }
-        valid = true
+        invalid = false
 
         current_schema.schema['allOf'].each_with_index do |element, schema_index|
           schema = JSON::Schema.new(element,current_schema.uri,validator)
@@ -17,8 +17,8 @@ module JSON
 
           begin
             schema.validate(data,fragments,processor,options)
-          rescue ValidationError
-            valid = false
+          rescue ValidationError => e
+            invalid = e
           end
 
           diff = validation_errors(processor).count - pre_validation_error_count
@@ -28,8 +28,12 @@ module JSON
           end
         end
 
-        if !valid || !errors.empty?
-          message = "The property '#{build_fragment(fragments)}' of type #{type_of_data(data)} did not match all of the required schemas"
+        if invalid || !errors.empty?
+          if invalid
+            message = invalid.message
+          else
+            message = "The property '#{build_fragment(fragments)}' of type #{data.class} did not match all of the required schemas"
+          end
           validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
           validation_errors(processor).last.sub_errors = errors
         end
