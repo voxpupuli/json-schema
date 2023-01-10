@@ -3,6 +3,7 @@
 begin
   require 'simplecov'
   require 'simplecov-console'
+  require 'simplecov-lcov'
   require 'codecov'
 rescue LoadError
 else
@@ -18,10 +19,21 @@ else
     add_filter '/.vendor'
   end
 
-  SimpleCov.formatters = [
-    SimpleCov::Formatter::Console,
-    SimpleCov::Formatter::Codecov,
-  ]
+  if ENV['LOCAL_COVERAGE'] == 'yes'
+    SimpleCov::Formatter::LcovFormatter.config.report_with_single_file = true
+    SimpleCov::Formatter::LcovFormatter.config.single_report_path = 'coverage/lcov.info'
+    SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
+      SimpleCov::Formatter::HTMLFormatter,
+      SimpleCov::Formatter::LcovFormatter
+    ])
+  else
+    SimpleCov.formatters = [
+      SimpleCov::Formatter::Console,
+      SimpleCov::Formatter::Codecov,
+    ]
+  end
+
+
 end
 
 require 'minitest/autorun'
