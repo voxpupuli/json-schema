@@ -8,7 +8,13 @@ end
 
 group :coverage, optional: ENV['COVERAGE']!='yes' do
   gem 'simplecov-console', :require => false
-  gem 'codecov', :require => false
+  gem 'simplecov-lcov' , :require => false
+end
+
+group :local_coverage, optional: ENV['LOCAL_COVERAGE']!='yes' do
+  gem 'simplecov-console', :require => false
+  gem 'simplecov' , :require => false
+  gem 'simplecov-lcov' , :require => false
 end
 
 group :tests do
