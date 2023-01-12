@@ -4,10 +4,14 @@ begin
   require 'simplecov'
   require 'simplecov-console'
   require 'simplecov-lcov'
-  require 'codecov'
-rescue LoadError
+  if ENV['COVERAGE'] == 'yes'
+    require 'codecov'
+  end
+rescue LoadError => e
+  puts "Load error: #{e}"
 else
   SimpleCov.start do
+    puts "Starting!"
     track_files 'lib/**/*.rb'
 
     add_filter '/test'
