@@ -35,7 +35,8 @@ module JSON
           "dependencies" => JSON::Schema::DependenciesV4Attribute,
           "extends" => JSON::Schema::ExtendsAttribute,
           "const" => JSON::Schema::ConstAttribute,
-          "$ref" => JSON::Schema::RefAttribute
+          "$ref" => JSON::Schema::RefAttribute,
+          "propertyNames" => JSON::Schema::PropertyNames
         }
         @default_formats = {
           'date-time' => DateTimeV4Format,
