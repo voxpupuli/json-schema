@@ -33,5 +33,16 @@ class Draft6Test < Minitest::Test
 
     data = {"bar" => "value"}
     refute_valid schema, data
+
+    schema = {
+      "type" => "object",
+      "propertyNames" => false
+    }
+
+    data = {}
+    assert_valid schema, data
+
+    data = {"foo" => "value"}
+    refute_valid schema, data
   end
 end
