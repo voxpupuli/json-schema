@@ -106,3 +106,62 @@ draft6:
       - ECMA 262 regex non-compliance/ECMA 262 has no support for \Z anchor from .NET
     zeroTerminatedFloats:
       - some languages do not distinguish between different types of numeric value/a float is not an integer even without fractional part
+draft7:
+  optional:
+    format:
+      date: :all
+      date-time: :all
+      email: :all
+      hostname: :all
+      idn-email: :all
+      idn-hostname: :all
+      ipv4: :all
+      ipv6: :all
+      iri: :all
+      iri-reference: :all
+      json-pointer: :all
+      regex: :all
+      relative-json-pointer: :all
+      time: :all
+      uri: :all
+      uri-reference: :all
+      uri-template: :all
+    bignum: :all
+    content: :all
+    ecmascript-regex: :all
+    zeroTerminatedFloats: :all
+  additionalItems: :all
+  additionalProperties: :all
+  allOf: :all
+  anyOf: :all
+  boolean_schema: :all
+  const: :all
+  contains: :all
+  default: :all
+  definitions: :all
+  dependencies: :all
+  enum: :all
+  exclusiveMaximum: :all
+  exclusiveMinimum: :all
+  if-then-else: :all
+  items: :all
+  maximum: :all
+  maxItems: :all
+  maxLength: :all
+  maxProperties: :all
+  minimum: :all
+  minItems: :all
+  minLength: :all
+  minProperties: :all
+  multipleOf: :all
+  not: :all
+  oneOf: :all
+  pattern: :all
+  patternProperties: :all
+  properties: :all
+  propertyNames: :all
+  ref: :all
+  refRemote: :all
+  required: :all
+  type: :all
+  uniqueItems: :all
