@@ -34,6 +34,7 @@ module JSON
           "additionalItems" => JSON::Schema::AdditionalItemsAttribute,
           "dependencies" => JSON::Schema::DependenciesV4Attribute,
           "extends" => JSON::Schema::ExtendsAttribute,
+          "const" => JSON::Schema::ConstAttribute,
           "$ref" => JSON::Schema::RefAttribute,
           "propertyNames" => JSON::Schema::PropertyNames
         }

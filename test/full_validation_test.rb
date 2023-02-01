@@ -33,6 +33,41 @@ class FullValidationTest < Minitest::Test
     assert(errors.length == 2)
   end
 
+  def test_full_validation_with_instantiated_validator
+    data = {"b" => {"a" => 5}}
+    schema = {
+      "type" => "object",
+      "required" => ["b"],
+      "properties" => {
+        "b" => {
+        }
+      }
+    }
+
+    validator = JSON::Validator.new(schema, { record_errors: true })
+    assert(validator.validate(data).empty?)
+    assert(validator.validate(data).empty?)
+    assert(validator.validate(data).empty?)
+
+    data = {"c" => 5}
+    schema = {
+      "type" => "object",
+      "required" => ["b"],
+      "properties" => {
+        "b" => {
+        },
+        "c" => {
+          "type" => "string"
+        }
+      }
+    }
+
+    validator = JSON::Validator.new(schema, { record_errors: true })
+    assert(validator.validate(data).length == 2)
+    assert(validator.validate(data).length == 2)
+    assert(validator.validate(data).length == 2)
+  end
+
   def test_full_validation_with_union_types
     data = {"b" => 5}
     schema = {

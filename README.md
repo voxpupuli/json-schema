@@ -1,13 +1,16 @@
-[![Gem Version](https://badge.fury.io/rb/json-schema.svg)](https://badge.fury.io/rb/json-schema)
-[![Travis](https://travis-ci.org/ruby-json-schema/json-schema.svg?branch=master)](https://travis-ci.org/ruby-json-schema/json-schema)
-[![Code Climate](https://codeclimate.com/github/ruby-json-schema/json-schema/badges/gpa.svg)](https://codeclimate.com/github/ruby-json-schema/json-schema)
+# Ruby JSON Schema Validator
 
-Ruby JSON Schema Validator
-==========================
+[![License](https://img.shields.io/github/license/voxpupuli/json-schema.svg)](https://github.com/voxpupuli/json-schema/blob/master/LICENSE)
+[![Test](https://github.com/voxpupuli/json-schema/actions/workflows/test.yml/badge.svg)](https://github.com/voxpupuli/json-schema/actions/workflows/test.yml)
+[![Release](https://github.com/voxpupuli/json-schema/actions/workflows/release.yml/badge.svg)](https://github.com/voxpupuli/json-schema/actions/workflows/release.yml)
+[![RubyGem Version](https://img.shields.io/gem/v/json-schema.svg)](https://rubygems.org/gems/json-schema)
+[![RubyGem Downloads](https://img.shields.io/gem/dt/json-schema.svg)](https://rubygems.org/gems/json-schema)
+[![Donated by Iain Beeston](https://img.shields.io/badge/donated%20by-Iain%20Beeston-fb7047.svg)](#transfer-notice)
 
 This library is intended to provide Ruby with an interface for validating JSON
 objects against a JSON schema conforming to [JSON Schema Draft
-4](http://tools.ietf.org/html/draft-zyp-json-schema-04). Legacy support for
+6](https://tools.ietf.org/html/draft-wright-json-schema-01). Legacy support for
+[JSON Schema Draft 4](http://tools.ietf.org/html/draft-zyp-json-schema-04),
 [JSON Schema Draft 3](http://tools.ietf.org/html/draft-zyp-json-schema-03),
 [JSON Schema Draft 2](http://tools.ietf.org/html/draft-zyp-json-schema-02), and
 [JSON Schema Draft 1](http://tools.ietf.org/html/draft-zyp-json-schema-01) is
@@ -17,7 +20,7 @@ Additional Resources
 --------------------
 
 - [Google Groups](https://groups.google.com/forum/#!forum/ruby-json-schema)
-- #ruby-json-schema on chat.freenode.net
+- #voxpupuli on irc.libera.chat
 
 Version 2.0.0 Upgrade Notes
 ---------------------------
@@ -26,6 +29,14 @@ Please be aware that the upgrade to version 2.0.0 will use Draft-04 **by
 default**, so schemas that do not declare a validator using the `$schema`
 keyword will use Draft-04 now instead of Draft-03. This is the reason for the
 major version upgrade.
+
+Version 3.0.0 Upgrade Notes
+---------------------------
+
+All individual changes are documented in the CHANGELOG.md. The biggest change
+is that the new version only supports Ruby 2.5 and newer. Take a look into the
+gemspec file to see the currently supported Ruby version and also
+`.github/workflows/test.yml` to see the Ruby versions we test on.
 
 Installation
 ------------
@@ -39,8 +50,8 @@ gem install json-schema
 From the git repo:
 
 ```sh
-$ gem build json-schema.gemspec
-$ gem install json-schema-2.5.2.gem
+gem build json-schema.gemspec
+gem install json-schema-*.gem
 ```
 
 Validation
@@ -166,7 +177,7 @@ JSON::Validator.validate(schema, [{"a" => 1}, {"a" => 2}, {"a" => 3}])
 JSON::Validator.fully_validate(schema, { "a" => "taco" }, :errors_as_objects => true)
 
 #
-# with the `:strict` option, all properties are condisidered to have `"required": true` and all objects `"additionalProperties": false`
+# with the `:strict` option, all properties are considered to have `"required": true` and all objects `"additionalProperties": false`
 #
 
 # => true
@@ -472,3 +483,23 @@ value is of the correct datatype (e.g., an instance value is validated to be an
 integer or a float in the case of 'utc-millisec').
 
 Additionally, JSON::Validator does not handle any json hyperschema attributes.
+
+# Transfer Notice
+
+This plugin was originally authored by [Iain Beeston](https://github.com/iainbeeston).
+The maintainer preferred that [Vox Pupuli](https://voxpupuli.org/) take ownership of the module for future improvement and maintenance.
+Existing pull requests and issues were transferred, please fork and continue to contribute [here](https://github.com/voxpupuli/json-schema).
+
+# License
+
+This gem is licensed unter the [MIT license](LICENSE.md).
+
+## Release information
+
+To make a new release, please do:
+* update the version in VERSION.yml
+* Install gems with `bundle install --with release --path .vendor`
+* generate the changelog with `bundle exec rake changelog`
+* Check if the new version matches the closed issues/PRs in the changelog
+* Create a PR with it
+* After it got merged, push a tag. GitHub actions will do the actual release to rubygems and GitHub Packages
