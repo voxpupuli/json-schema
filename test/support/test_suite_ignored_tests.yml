@@ -107,46 +107,7 @@ draft6:
     zeroTerminatedFloats:
       - some languages do not distinguish between different types of numeric value/a float is not an integer even without fractional part
 draft7:
-  additionalItems: :all
-  boolean_schema: :all
-  definitions: :all
-  exclusiveMinimum: :all
-  maxItems: :all
-  minItems: :all
-  not: :all
-  patternProperties: :all
-  refRemote: :all
-  additionalProperties: :all
-  const: :all
-  dependencies: :all
-  if-then-else: :all
-  maxLength: :all
-  minLength: :all
-  oneOf: :all
-  properties: :all
-  required: :all
-  allOf: :all
-  contains: :all
-  enum: :all
-  items: :all
-  maxProperties: :all
-  minProperties: :all
-  propertyNames: :all
-  type: :all
-  anyOf: :all
-  default: :all
-  exclusiveMaximum: :all
-  maximum: :all
-  minimum: :all
-  multipleOf: :all
-  pattern: :all
-  ref: :all
-  uniqueItems: :all
   optional:
-    bignum: :all
-    content: :all
-    ecmascript-regex: :all
-    zeroTerminatedFloats: :all
     format:
       date: :all
       date-time: :all
@@ -165,4 +126,42 @@ draft7:
       uri: :all
       uri-reference: :all
       uri-template: :all
-
+    bignum: :all
+    content: :all
+    ecmascript-regex: :all
+    zeroTerminatedFloats: :all
+  additionalItems: :all
+  additionalProperties: :all
+  allOf: :all
+  anyOf: :all
+  boolean_schema: :all
+  const: :all
+  contains: :all
+  default: :all
+  definitions: :all
+  dependencies: :all
+  enum: :all
+  exclusiveMaximum: :all
+  exclusiveMinimum: :all
+  if-then-else: :all
+  items: :all
+  maximum: :all
+  maxItems: :all
+  maxLength: :all
+  maxProperties: :all
+  minimum: :all
+  minItems: :all
+  minLength: :all
+  minProperties: :all
+  multipleOf: :all
+  not: :all
+  oneOf: :all
+  pattern: :all
+  patternProperties: :all
+  properties: :all
+  propertyNames: :all
+  ref: :all
+  refRemote: :all
+  required: :all
+  type: :all
+  uniqueItems: :all
