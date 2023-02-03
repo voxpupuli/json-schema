@@ -48,7 +48,6 @@ draft6:
     - anyOf with boolean schemas, all true/any value is valid
     - anyOf with boolean schemas, some true/any value is valid
   boolean_schema: :all
-  const: :all
   contains: :all
   dependencies:
     - dependencies with boolean subschemas/empty object is valid
@@ -83,6 +82,7 @@ draft6:
     - properties with boolean schema/only 'false' property present is invalid
     - properties with boolean schema/no property present is valid
     - properties with boolean schema/both properties present is invalid
+  propertyNames: :all
   ref:
     - ref overrides any sibling keywords/remote ref valid, maxItems ignored
     - ref overrides any sibling keywords/ref valid, maxItems ignored
