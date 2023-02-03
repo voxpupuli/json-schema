@@ -24,7 +24,6 @@ module JSON
           "minLength" => JSON::Schema::MinLengthAttribute,
           "maxLength" => JSON::Schema::MaxLengthAttribute,
           "multipleOf" => JSON::Schema::MultipleOfAttribute,
-          "const" => JSON::Schema::ConstAttribute,
           "enum" => JSON::Schema::EnumAttribute,
           "properties" => JSON::Schema::PropertiesV4Attribute,
           "required" => JSON::Schema::RequiredAttribute,
