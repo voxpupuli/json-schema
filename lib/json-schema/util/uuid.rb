@@ -62,7 +62,7 @@ module JSON
         end
 
         def mask v, str
-          if RUBY_VERSION >= "1.9.0"
+          if RUBY_VERSION >= '1.9.0'
             return mask19 v, str
           else
             return mask18 v, str
@@ -106,7 +106,7 @@ module JSON
             rand(0x100000000),
             rand(0x100000000),
             rand(0x100000000),
-          ].pack "N4"
+          ].pack 'N4'
           raw = mask 4, rnd
           ret = new raw
           ret.freeze
@@ -145,13 +145,13 @@ module JSON
               # see Section 4.5 of RFC4122 for details.
               sha1 = Digest::SHA1.new
               256.times do
-                r = [rand(0x100000000)].pack "N"
+                r = [rand(0x100000000)].pack 'N'
                 sha1.update r
               end
               str = sha1.digest
               r = rand 14 # 20-6
               node = str[r, 6] || str
-              if RUBY_VERSION >= "1.9.0"
+              if RUBY_VERSION >= '1.9.0'
                 nnode = node.bytes.to_a
                 nnode[0] |= 0x01
                 node = ''
@@ -210,7 +210,7 @@ module JSON
         # The 'primitive constructor' of this class
         # Note UUID.pack(uuid.unpack) == uuid
         def pack tl, tm, th, ch, cl, n
-          raw = [tl, tm, th, ch, cl, n].pack "NnnCCa6"
+          raw = [tl, tm, th, ch, cl, n].pack 'NnnCCa6'
           ret = new raw
           ret.freeze
           ret
@@ -220,7 +220,7 @@ module JSON
       # The 'primitive deconstructor', or the dual to pack.
       # Note UUID.pack(uuid.unpack) == uuid
       def unpack
-        raw_bytes.unpack "NnnCCa6"
+        raw_bytes.unpack 'NnnCCa6'
       end
 
       # Generate the string representation (a.k.a GUID) of this UUID
@@ -228,19 +228,19 @@ module JSON
         a = unpack
         tmp = a[-1].unpack 'C*'
         a[-1] = sprintf '%02x%02x%02x%02x%02x%02x', *tmp
-        "%08x-%04x-%04x-%02x%02x-%s" % a
+        '%08x-%04x-%04x-%02x%02x-%s' % a
       end
       alias guid to_s
 
       # Convert into a RFC4122-comforming URN representation
       def to_uri
-        "urn:uuid:" + self.to_s
+        'urn:uuid:' + self.to_s
       end
       alias urn to_uri
 
       # Convert into 128-bit unsigned integer
       def to_int
-        tmp = self.raw_bytes.unpack "C*"
+        tmp = self.raw_bytes.unpack 'C*'
         tmp.inject do |r, i|
           r * 256 | i
         end
@@ -271,13 +271,13 @@ module JSON
       end
 
       # Pre-defined UUID Namespaces described in RFC4122 Appendix C.
-      NameSpace_DNS = parse "6ba7b810-9dad-11d1-80b4-00c04fd430c8"
-      NameSpace_URL = parse "6ba7b811-9dad-11d1-80b4-00c04fd430c8"
-      NameSpace_OID = parse "6ba7b812-9dad-11d1-80b4-00c04fd430c8"
-      NameSpace_X500 = parse "6ba7b814-9dad-11d1-80b4-00c04fd430c8"
+      NameSpace_DNS = parse '6ba7b810-9dad-11d1-80b4-00c04fd430c8'
+      NameSpace_URL = parse '6ba7b811-9dad-11d1-80b4-00c04fd430c8'
+      NameSpace_OID = parse '6ba7b812-9dad-11d1-80b4-00c04fd430c8'
+      NameSpace_X500 = parse '6ba7b814-9dad-11d1-80b4-00c04fd430c8'
 
       # The Nil UUID in RFC4122 Section 4.1.7
-      Nil = parse "00000000-0000-0000-0000-000000000000"
+      Nil = parse '00000000-0000-0000-0000-000000000000'
     end
   end
 end

@@ -825,13 +825,6 @@ Style/StringConcatenation:
     - 'lib/json-schema/util/uuid.rb'
     - 'test/schema_reader_test.rb'
 
-# Offense count: 2208
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.
-# SupportedStyles: single_quotes, double_quotes
-Style/StringLiterals:
-  Enabled: false
-
 # Offense count: 7
 # Cop supports --auto-correct.
 # Configuration parameters: MinSize.

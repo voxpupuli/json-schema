@@ -14,7 +14,7 @@ module JSON
           # Check for absolute path
           if normalized_uri.relative?
             data = normalized_uri
-            data = File.join(base_path, data) if data.path[0, 1] != "/"
+            data = File.join(base_path, data) if data.path[0, 1] != '/'
             normalized_uri = file_uri(data)
           end
           @normalize_cache[uri] = normalized_uri.freeze
@@ -42,10 +42,10 @@ module JSON
             ref_uri.merge!(base_uri)
 
             # Check for absolute path
-            path, fragment = ref.to_s.split("#")
+            path, fragment = ref.to_s.split('#')
             if path.nil? || path == ''
               ref_uri.path = base_uri.path
-            elsif path[0, 1] == "/"
+            elsif path[0, 1] == '/'
               ref_uri.path = Pathname.new(path).cleanpath.to_s
             else
               ref_uri.join!(path)
@@ -54,7 +54,7 @@ module JSON
             ref_uri.fragment = fragment
           end
 
-          ref_uri.fragment = "" if ref_uri.fragment.nil? || ref_uri.fragment.empty?
+          ref_uri.fragment = '' if ref_uri.fragment.nil? || ref_uri.fragment.empty?
         end
 
         ref_uri
@@ -81,7 +81,7 @@ module JSON
         if parsed_uri.fragment.nil? || parsed_uri.fragment.empty?
           parsed_uri
         else
-          parsed_uri.merge(:fragment => "")
+          parsed_uri.merge(:fragment => '')
         end
       end
 

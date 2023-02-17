@@ -74,7 +74,7 @@ class InitializeDataTest < Minitest::Test
     schema = {'type' => 'string'}
     data = 'http://foo.bar/'
 
-    stub_request(:get, "foo.bar").to_return(:body => '"hello world"', :status => 200)
+    stub_request(:get, 'foo.bar').to_return(:body => '"hello world"', :status => 200)
 
     assert(JSON::Validator.validate(schema, data))
 
@@ -91,13 +91,13 @@ class InitializeDataTest < Minitest::Test
     schema = {'type' => 'string'}
     data = 'http://foo.bar/'
 
-    stub_request(:get, "foo.bar").to_timeout
+    stub_request(:get, 'foo.bar').to_timeout
 
     assert(JSON::Validator.validate(schema, data))
 
     assert(JSON::Validator.validate(schema, data, :parse_data => false))
 
-    stub_request(:get, "foo.bar").to_return(:status => [500, "Internal Server Error"])
+    stub_request(:get, 'foo.bar').to_return(:status => [500, 'Internal Server Error'])
 
     assert(JSON::Validator.validate(schema, data))
 
@@ -260,7 +260,7 @@ class InitializeDataTest < Minitest::Test
     schema = {'type' => 'string'}
     data = 'http://foo.bar/'
 
-    stub_request(:get, "foo.bar").to_return(:body => '"hello world"', :status => 200)
+    stub_request(:get, 'foo.bar').to_return(:body => '"hello world"', :status => 200)
 
     v = JSON::Validator.new(schema)
     assert(v.validate(data))
@@ -283,7 +283,7 @@ class InitializeDataTest < Minitest::Test
     schema = {'type' => 'string'}
     data = 'http://foo.bar/'
 
-    stub_request(:get, "foo.bar").to_timeout
+    stub_request(:get, 'foo.bar').to_timeout
 
     v = JSON::Validator.new(schema)
     assert(v.validate(data))
@@ -293,7 +293,7 @@ class InitializeDataTest < Minitest::Test
     assert(v.validate(data))
     assert(v.validate(data))
 
-    stub_request(:get, "foo.bar").to_return(:status => [500, "Internal Server Error"])
+    stub_request(:get, 'foo.bar').to_return(:status => [500, 'Internal Server Error'])
 
     assert(v.validate(data))
     assert(v.validate(data))

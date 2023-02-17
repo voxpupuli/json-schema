@@ -29,10 +29,10 @@ class CommonTestSuiteTest < Minitest::Test
       rel_file = tfile[TEST_DIR.length+1..-1]
 
       test_list.each do |test|
-        schema = test["schema"]
-        base_description = test["description"]
+        schema = test['schema']
+        base_description = test['description']
 
-        test["tests"].each do |t|
+        test['tests'].each do |t|
           full_description = "#{base_description}/#{t['description']}"
 
           next if rel_file.include?('/optional/') && skip?(full_description, rel_file)
@@ -42,12 +42,12 @@ class CommonTestSuiteTest < Minitest::Test
             skip if self.class.skip?(full_description, rel_file)
 
             errors = JSON::Validator.fully_validate(schema,
-                                                    t["data"],
+                                                    t['data'],
                                                     :parse_data => false,
                                                     :validate_schema => true,
                                                     :version => version,
                                                    )
-            assert_equal t["valid"], errors.empty?, "Common test suite case failed: #{err_id}"
+            assert_equal t['valid'], errors.empty?, "Common test suite case failed: #{err_id}"
           end
         end
       end

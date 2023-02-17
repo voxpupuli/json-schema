@@ -24,14 +24,14 @@ module JSON
       end
 
       TYPE_CLASS_MAPPINGS = {
-        "string" => String,
-        "number" => Numeric,
-        "integer" => Integer,
-        "boolean" => [TrueClass, FalseClass],
-        "object" => Hash,
-        "array" => Array,
-        "null" => NilClass,
-        "any" => Object,
+        'string' => String,
+        'number' => Numeric,
+        'integer' => Integer,
+        'boolean' => [TrueClass, FalseClass],
+        'object' => Hash,
+        'array' => Array,
+        'null' => NilClass,
+        'any' => Object,
       }
 
       def self.data_valid_for_type?(data, type)

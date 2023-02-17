@@ -7,18 +7,18 @@ class LoadRefSchemaTest < Minitest::Test
         '$schema' => 'http://json-schema.org/draft-04/schema#',
         'type' => 'object',
         'properties' => {
-          "title" => {
-            "type" => "string",
+          'title' => {
+            'type' => 'string',
           },
         },
       },
-      Addressable::URI.parse("http://example.com/schema#"),
+      Addressable::URI.parse('http://example.com/schema#'),
     ))
   end
 
   def test_cached_schema
-    schema_url = "http://example.com/schema#"
-    schema = { "$ref" => schema_url }
+    schema_url = 'http://example.com/schema#'
+    schema = { '$ref' => schema_url }
     data = {}
     load_other_schema
     _validator = JSON::Validator.new(schema, data)
@@ -27,8 +27,8 @@ class LoadRefSchemaTest < Minitest::Test
   end
 
   def test_cached_schema_with_fragment
-    schema_url = "http://example.com/schema#"
-    schema = { "$ref" => "#{schema_url}/properties/title" }
+    schema_url = 'http://example.com/schema#'
+    schema = { '$ref' => "#{schema_url}/properties/title" }
     data = {}
     load_other_schema
     _validator = JSON::Validator.new(schema, data)
@@ -37,7 +37,7 @@ class LoadRefSchemaTest < Minitest::Test
   end
 
   def test_metaschema
-    schema = { "$ref" => "http://json-schema.org/draft-04/schema#" }
+    schema = { '$ref' => 'http://json-schema.org/draft-04/schema#' }
     data = {}
 
     assert_valid schema, data

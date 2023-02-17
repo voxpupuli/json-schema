@@ -66,11 +66,11 @@ module JSON
 
     def schema_from_fragment(base_schema, fragment)
       schema_uri = base_schema.uri
-      fragments = fragment.split("/").map { |f| f.gsub('~0', '~').gsub('~1', '/') }
+      fragments = fragment.split('/').map { |f| f.gsub('~0', '~').gsub('~1', '/') }
 
       # ensure the first element was a hash, per the fragment spec
-      if fragments.shift != "#"
-        raise JSON::Schema::SchemaError.new("Invalid fragment syntax in :fragment option")
+      if fragments.shift != '#'
+        raise JSON::Schema::SchemaError.new('Invalid fragment syntax in :fragment option')
       end
 
       schema_fragment = base_schema.schema
@@ -84,7 +84,7 @@ module JSON
       end
 
       unless schema_fragment.is_a?(Hash)
-        raise JSON::Schema::SchemaError.new("Invalid fragment resolution for :fragment option")
+        raise JSON::Schema::SchemaError.new('Invalid fragment resolution for :fragment option')
       end
 
       schema = JSON::Schema.new(schema_fragment, schema_uri, base_schema.validator)
@@ -141,13 +141,13 @@ module JSON
       schema = parent_schema.schema
 
       # Build ref schemas if they exist
-      if schema["$ref"]
-        load_ref_schema(parent_schema, schema["$ref"])
+      if schema['$ref']
+        load_ref_schema(parent_schema, schema['$ref'])
       end
 
-      case schema["extends"]
+      case schema['extends']
       when String
-        load_ref_schema(parent_schema, schema["extends"])
+        load_ref_schema(parent_schema, schema['extends'])
       when Array
         schema['extends'].each do |type|
           handle_schema(parent_schema, type)
@@ -155,7 +155,7 @@ module JSON
       end
 
       # Check for schemas in union types
-      ["type", "disallow"].each do |key|
+      ['type', 'disallow'].each do |key|
         if schema[key].is_a?(Array)
           schema[key].each do |type|
             if type.is_a?(Hash)
@@ -192,8 +192,8 @@ module JSON
       end
 
       # Items are always schemas
-      if schema["items"]
-        items = schema["items"].clone
+      if schema['items']
+        items = schema['items'].clone
         items = [items] unless items.is_a?(Array)
 
         items.each do |item|
@@ -202,8 +202,8 @@ module JSON
       end
 
       # Convert enum to a ArraySet
-      if schema["enum"].is_a?(Array)
-        schema["enum"] = ArraySet.new(schema["enum"])
+      if schema['enum'].is_a?(Array)
+        schema['enum'] = ArraySet.new(schema['enum'])
       end
     end
 
@@ -250,7 +250,7 @@ module JSON
       end
 
       def validate2(schema, data, opts={})
-        warn "[DEPRECATION NOTICE] JSON::Validator#validate2 has been replaced by JSON::Validator#validate! and will be removed in version >= 3. Please use the #validate! method instead."
+        warn '[DEPRECATION NOTICE] JSON::Validator#validate2 has been replaced by JSON::Validator#validate! and will be removed in version >= 3. Please use the #validate! method instead.'
         validate!(schema, data, opts)
       end
 
@@ -317,7 +317,7 @@ module JSON
       end
 
       def cache_schemas=(val)
-        warn "[DEPRECATION NOTICE] Schema caching is now a validation option. Schemas will still be cached if this is set to true, but this method will be removed in version >= 3. Please use the :clear_cache validation option instead."
+        warn '[DEPRECATION NOTICE] Schema caching is now a validation option. Schemas will still be cached if this is set to true, but this method will be removed in version >= 3. Please use the :clear_cache validation option instead.'
         @@cache_schemas = val == true ? true : false
       end
 
@@ -349,14 +349,14 @@ module JSON
           Array(v.names).include?(schema_name)
         end
         if validator.nil? && raise_not_found
-          raise JSON::Schema::SchemaError.new("The requested JSON schema version is not supported")
+          raise JSON::Schema::SchemaError.new('The requested JSON schema version is not supported')
         else
           validator
         end
       end
 
       def validator_for(schema_uri)
-        warn "[DEPRECATION NOTICE] JSON::Validator#validator_for has been replaced by JSON::Validator#validator_for_uri and will be removed in version >= 3. Please use the #validator_for_uri method instead."
+        warn '[DEPRECATION NOTICE] JSON::Validator#validator_for has been replaced by JSON::Validator#validator_for_uri and will be removed in version >= 3. Please use the #validator_for_uri method instead.'
         validator_for_uri(schema_uri)
       end
 
@@ -431,7 +431,7 @@ module JSON
             begin
               json = StringIO.new(s)
               parser = Yajl::Parser.new
-              parser.parse(json) or raise JSON::Schema::JsonParseError.new("The JSON could not be parsed by yajl")
+              parser.parse(json) or raise JSON::Schema::JsonParseError.new('The JSON could not be parsed by yajl')
             rescue Yajl::ParseError => e
               raise JSON::Schema::JsonParseError.new(e.message)
             end
@@ -554,7 +554,7 @@ module JSON
         end
         self.class.add_schema(schema)
       else
-        raise JSON::Schema::SchemaParseError, "Invalid schema - must be either a string or a hash"
+        raise JSON::Schema::SchemaParseError, 'Invalid schema - must be either a string or a hash'
       end
 
       schema

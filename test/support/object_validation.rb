@@ -30,7 +30,7 @@ module ObjectValidation
     def test_pattern_properties
       schema = {
         'patternProperties' => {
-          "\\d+ taco" => { 'type' => 'integer' },
+          '\\d+ taco' => { 'type' => 'integer' },
         },
       }
 
@@ -42,7 +42,7 @@ module ObjectValidation
     def test_pattern_properties_additional_properties_false
       schema = {
         'patternProperties' => {
-          "\\d+ taco" => { 'type' => 'integer' },
+          '\\d+ taco' => { 'type' => 'integer' },
         },
         'additionalProperties' => false,
       }
@@ -55,7 +55,7 @@ module ObjectValidation
     def test_pattern_properties_additional_properties_schema
       schema = {
         'patternProperties' => {
-          "\\d+ taco" => { 'type' => 'integer' },
+          '\\d+ taco' => { 'type' => 'integer' },
         },
         'additionalProperties' => { 'type' => 'string' },
       }
