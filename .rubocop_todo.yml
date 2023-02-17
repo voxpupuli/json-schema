@@ -83,11 +83,6 @@ Layout/MultilineOperationIndentation:
   Exclude:
     - 'lib/json-schema/attributes/properties.rb'
 
-# Offense count: 276
-# Cop supports --auto-correct.
-Layout/SpaceAfterComma:
-  Enabled: false
-
 # Offense count: 18
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.

@@ -15,10 +15,10 @@ module JSON
         valid = false
 
         one_of.each_with_index do |element, schema_index|
-          schema = JSON::Schema.new(element,current_schema.uri,validator)
+          schema = JSON::Schema.new(element, current_schema.uri, validator)
           pre_validation_error_count = validation_errors(processor).count
           begin
-            schema.validate(data,fragments,processor,options)
+            schema.validate(data, fragments, processor, options)
             success_data = data.is_a?(Hash) ? data.clone : data
             valid = true
           rescue ValidationError

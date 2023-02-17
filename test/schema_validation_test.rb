@@ -124,8 +124,8 @@ class SchemaValidationTest < Minitest::Test
 
   def test_draft03_validation
     data = {"b" => {"a" => 5}}
-    assert(JSON::Validator.validate(valid_schema_v3,data,:validate_schema => true, :version => :draft3))
-    assert(!JSON::Validator.validate(invalid_schema_v3,data,:validate_schema => true, :version => :draft3))
+    assert(JSON::Validator.validate(valid_schema_v3, data, :validate_schema => true, :version => :draft3))
+    assert(!JSON::Validator.validate(invalid_schema_v3, data, :validate_schema => true, :version => :draft3))
   end
 
   def test_validate_just_schema_draft03
@@ -139,8 +139,8 @@ class SchemaValidationTest < Minitest::Test
 
   def test_draft04_validation
     data = {"b" => {"a" => 5}}
-    assert(JSON::Validator.validate(valid_schema_v4,data,:validate_schema => true, :version => :draft4))
-    assert(!JSON::Validator.validate(invalid_schema_v4,data,:validate_schema => true, :version => :draft4))
+    assert(JSON::Validator.validate(valid_schema_v4, data, :validate_schema => true, :version => :draft4))
+    assert(!JSON::Validator.validate(invalid_schema_v4, data, :validate_schema => true, :version => :draft4))
   end
 
   def test_validate_just_schema_draft04
@@ -154,16 +154,16 @@ class SchemaValidationTest < Minitest::Test
 
   def test_validate_schema_3_without_version_option
     data = {"b" => {"a" => 5}}
-    assert(JSON::Validator.validate(valid_schema_v3,data,:validate_schema => true))
-    assert(!JSON::Validator.validate(invalid_schema_v3,data,:validate_schema => true))
+    assert(JSON::Validator.validate(valid_schema_v3, data, :validate_schema => true))
+    assert(!JSON::Validator.validate(invalid_schema_v3, data, :validate_schema => true))
   end
 
   def test_schema_validation_from_different_directory
     Dir.mktmpdir do |tmpdir|
       Dir.chdir(tmpdir) do
         data = {"b" => {"a" => 5}}
-        assert(JSON::Validator.validate(valid_schema_v4,data,:validate_schema => true, :version => :draft4))
-        assert(!JSON::Validator.validate(invalid_schema_v4,data,:validate_schema => true, :version => :draft4))
+        assert(JSON::Validator.validate(valid_schema_v4, data, :validate_schema => true, :version => :draft4))
+        assert(!JSON::Validator.validate(invalid_schema_v4, data, :validate_schema => true, :version => :draft4))
       end
     end
   end

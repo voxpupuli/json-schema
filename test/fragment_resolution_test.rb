@@ -20,11 +20,11 @@ class FragmentResolutionTest < Minitest::Test
     assert_valid schema, data, :fragment => "#/properties/a"
 
     assert_raises JSON::Schema::SchemaError do
-      JSON::Validator.validate!(schema,data,:fragment => "/properties/a")
+      JSON::Validator.validate!(schema, data, :fragment => "/properties/a")
     end
 
     assert_raises JSON::Schema::SchemaError do
-      JSON::Validator.validate!(schema,data,:fragment => "#/properties/b")
+      JSON::Validator.validate!(schema, data, :fragment => "#/properties/b")
     end
   end
 

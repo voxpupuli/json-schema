@@ -6,7 +6,7 @@ module JSON
   class Schema
     class RefAttribute < Attribute
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
-        uri,schema = get_referenced_uri_and_schema(current_schema.schema, current_schema, validator)
+        uri, schema = get_referenced_uri_and_schema(current_schema.schema, current_schema, validator)
 
         if schema
           schema.validate(data, fragments, processor, options)
@@ -20,7 +20,7 @@ module JSON
       end
 
       def self.get_referenced_uri_and_schema(s, current_schema, validator)
-        uri,schema = nil,nil
+        uri, schema = nil, nil
 
         temp_uri = JSON::Util::URI.normalize_ref(s['$ref'], current_schema.uri)
 
@@ -51,10 +51,10 @@ module JSON
 
           # We have the schema finally, build it and validate!
           uri = temp_uri
-          schema = JSON::Schema.new(target_schema,temp_uri,validator)
+          schema = JSON::Schema.new(target_schema, temp_uri, validator)
         end
 
-        [uri,schema]
+        [uri, schema]
       end
     end
   end

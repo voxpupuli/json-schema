@@ -17,9 +17,9 @@ class BadSchemaRefTest < Minitest::Test
       "items" => { "$ref" => "../google.json"},
     }
 
-    data = [1,2,3]
+    data = [1, 2, 3]
     error = assert_raises(JSON::Schema::ReadFailed) do
-      JSON::Validator.validate(schema,data)
+      JSON::Validator.validate(schema, data)
     end
 
     expanded_path = File.expand_path("../../google.json", __FILE__)
@@ -36,9 +36,9 @@ class BadSchemaRefTest < Minitest::Test
       "items" => { "$ref" => "http://ppcheesecheseunicornnuuuurrrrr.example.invalid/json.schema"},
     }
 
-    data = [1,2,3]
+    data = [1, 2, 3]
     error = assert_raises(JSON::Schema::ReadFailed) do
-      JSON::Validator.validate(schema,data)
+      JSON::Validator.validate(schema, data)
     end
 
     assert_equal(:uri, error.type)

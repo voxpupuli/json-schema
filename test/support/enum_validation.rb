@@ -3,7 +3,7 @@ module EnumValidation
     def test_enum_optional
       schema = {
         "properties" => {
-          "a" => {"enum" => [1,'boo',[1,2,3],{"a" => "b"}], "optional" => true},
+          "a" => {"enum" => [1, 'boo', [1, 2, 3], {"a" => "b"}], "optional" => true},
         },
       }
 
@@ -16,7 +16,7 @@ module EnumValidation
     def test_enum_optional
       schema = {
         "properties" => {
-          "a" => {"enum" => [1,'boo',[1,2,3],{"a" => "b"}]},
+          "a" => {"enum" => [1, 'boo', [1, 2, 3], {"a" => "b"}]},
         },
       }
 
@@ -29,7 +29,7 @@ module EnumValidation
     def test_enum_general
       schema = {
         "properties" => {
-          "a" => {"enum" => [1,'boo',[1,2,3],{"a" => "b"}]},
+          "a" => {"enum" => [1, 'boo', [1, 2, 3], {"a" => "b"}]},
         },
       }
 
@@ -39,7 +39,7 @@ module EnumValidation
       data["a"] = 'boo'
       assert_valid schema, data
 
-      data["a"] = [1,2,3]
+      data["a"] = [1, 2, 3]
       assert_valid schema, data
 
       data["a"] = {"a" => "b"}
@@ -121,7 +121,7 @@ module EnumValidation
     def test_enum_with_schema_validation
       schema = {
         "properties" => {
-          "a" => {"enum" => [1,'boo',[1,2,3],{"a" => "b"}]},
+          "a" => {"enum" => [1, 'boo', [1, 2, 3], {"a" => "b"}]},
         },
       }
       data = { "a" => 1 }
