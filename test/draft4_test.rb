@@ -613,16 +613,16 @@ class Draft4Test < Minitest::Test
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'properties' => {
         'a' => {'not' => {'anyOf' => [
-            {
-              'type' => ['string', 'boolean'],
+          {
+            'type' => ['string', 'boolean'],
+          },
+          {
+            'type' => 'object',
+            'properties' => {
+              'b' => {'type' => 'boolean'},
             },
-            {
-              'type' => 'object',
-              'properties' => {
-                'b' => {'type' => 'boolean'},
-              },
-            },
-          ]},
+          },
+        ]},
         },
       },
     }
