@@ -9,8 +9,8 @@ class CommonTestSuiteTest < Minitest::Test
   def setup
     Dir["#{TEST_DIR}/../remotes/**/*.json"].each do |path|
       schema = path.sub(%r{^.*/remotes/}, '')
-      stub_request(:get, "http://localhost:1234/#{schema}").
-        to_return(:body => File.read(path), :status => 200)
+      stub_request(:get, "http://localhost:1234/#{schema}")
+        .to_return(:body => File.read(path), :status => 200)
     end
   end
 

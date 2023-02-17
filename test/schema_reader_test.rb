@@ -5,8 +5,8 @@ class SchemaReaderTest < Minitest::Test
   ADDRESS_SCHEMA_PATH = File.expand_path('../schemas/address_microformat.json', __FILE__)
 
   def stub_address_request(body = File.read(ADDRESS_SCHEMA_PATH))
-    stub_request(:get, ADDRESS_SCHEMA_URI).
-      to_return(:body => body, :status => 200)
+    stub_request(:get, ADDRESS_SCHEMA_URI)
+      .to_return(:body => body, :status => 200)
   end
 
   def test_accept_all_uris
