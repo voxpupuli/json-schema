@@ -8,9 +8,9 @@ class SchemaValidationTest < Minitest::Test
       "type" => "object",
       "properties" => {
         "b" => {
-          "required" => true
-        }
-      }
+          "required" => true,
+        },
+      },
     }
   end
 
@@ -20,9 +20,9 @@ class SchemaValidationTest < Minitest::Test
       "type" => "object",
       "properties" => {
         "b" => {
-          "required" => "true"
-        }
-      }
+          "required" => "true",
+        },
+      },
     }
   end
 
@@ -32,7 +32,7 @@ class SchemaValidationTest < Minitest::Test
       "type" => "object",
       "required" => ["b"],
       "properties" => {
-      }
+      },
     }
   end
 
@@ -42,7 +42,7 @@ class SchemaValidationTest < Minitest::Test
       "type" => "object",
       "required" => "b",
       "properties" => {
-      }
+      },
     }
   end
 
@@ -57,75 +57,75 @@ class SchemaValidationTest < Minitest::Test
         :website,
         :biography,
         :created_at,
-        :demographic
+        :demographic,
       ],
       :properties => {
         :id => {
           :type => [
-            :integer
-          ]
+            :integer,
+          ],
         },
         :name => {
           :type => [
-            :string
-          ]
+            :string,
+          ],
         },
         :real_name => {
           :type => [
-            :string
-          ]
+            :string,
+          ],
         },
         :role => {
           :type => [
-            :string
-          ]
+            :string,
+          ],
         },
         :website => {
           :type => [
             :string,
-            :null
-          ]
+            :null,
+          ],
         },
         :created_at => {
           :type => [
-            :string
-          ]
+            :string,
+          ],
         },
         :biography => {
           :type => [
             :string,
-            :null
-          ]
-        }
+            :null,
+          ],
+        },
       },
       :relationships => {
         :demographic => {
           :type => :object,
           :required => [
             :id,
-            :gender
+            :gender,
           ],
           :properties => {
             :id => {
               :type => [
-                :integer
-              ]
+                :integer,
+              ],
             },
             :gender => {
               :type => [
-                :string
-              ]
-            }
-          }
-        }
-      }
+                :string,
+              ],
+            },
+          },
+        },
+      },
     }
   end
 
   def test_draft03_validation
     data = {"b" => {"a" => 5}}
-    assert(JSON::Validator.validate(valid_schema_v3,data,:validate_schema => true, :version => :draft3))
-    assert(!JSON::Validator.validate(invalid_schema_v3,data,:validate_schema => true, :version => :draft3))
+    assert(JSON::Validator.validate(valid_schema_v3, data, :validate_schema => true, :version => :draft3))
+    assert(!JSON::Validator.validate(invalid_schema_v3, data, :validate_schema => true, :version => :draft3))
   end
 
   def test_validate_just_schema_draft03
@@ -139,8 +139,8 @@ class SchemaValidationTest < Minitest::Test
 
   def test_draft04_validation
     data = {"b" => {"a" => 5}}
-    assert(JSON::Validator.validate(valid_schema_v4,data,:validate_schema => true, :version => :draft4))
-    assert(!JSON::Validator.validate(invalid_schema_v4,data,:validate_schema => true, :version => :draft4))
+    assert(JSON::Validator.validate(valid_schema_v4, data, :validate_schema => true, :version => :draft4))
+    assert(!JSON::Validator.validate(invalid_schema_v4, data, :validate_schema => true, :version => :draft4))
   end
 
   def test_validate_just_schema_draft04
@@ -154,16 +154,16 @@ class SchemaValidationTest < Minitest::Test
 
   def test_validate_schema_3_without_version_option
     data = {"b" => {"a" => 5}}
-    assert(JSON::Validator.validate(valid_schema_v3,data,:validate_schema => true))
-    assert(!JSON::Validator.validate(invalid_schema_v3,data,:validate_schema => true))
+    assert(JSON::Validator.validate(valid_schema_v3, data, :validate_schema => true))
+    assert(!JSON::Validator.validate(invalid_schema_v3, data, :validate_schema => true))
   end
 
   def test_schema_validation_from_different_directory
     Dir.mktmpdir do |tmpdir|
       Dir.chdir(tmpdir) do
         data = {"b" => {"a" => 5}}
-        assert(JSON::Validator.validate(valid_schema_v4,data,:validate_schema => true, :version => :draft4))
-        assert(!JSON::Validator.validate(invalid_schema_v4,data,:validate_schema => true, :version => :draft4))
+        assert(JSON::Validator.validate(valid_schema_v4, data, :validate_schema => true, :version => :draft4))
+        assert(!JSON::Validator.validate(invalid_schema_v4, data, :validate_schema => true, :version => :draft4))
       end
     end
   end
@@ -177,7 +177,7 @@ class SchemaValidationTest < Minitest::Test
       "website" => nil,
       "role" => "user",
       "biography" => nil,
-      "demographic" => nil
+      "demographic" => nil,
     }
     assert(JSON::Validator.validate!(symbolized_schema, data, :validate_schema => true))
   end

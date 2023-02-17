@@ -8,11 +8,11 @@ class LoadRefSchemaTest < Minitest::Test
         'type' => 'object',
         'properties' => {
           "title" => {
-            "type" => "string"
-          }
-        }
+            "type" => "string",
+          },
+        },
       },
-      Addressable::URI.parse("http://example.com/schema#")
+      Addressable::URI.parse("http://example.com/schema#"),
     ))
   end
 

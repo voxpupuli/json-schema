@@ -27,7 +27,7 @@ module JSON
       :insert_defaults => false,
       :clear_cache => false,
       :strict => false,
-      :parse_data => true
+      :parse_data => true,
     }
     @@validators = {}
     @@default_validator = nil
@@ -102,7 +102,7 @@ module JSON
     def validate(data)
       original_data = data
       data = initialize_data(data)
-      @base_schema.validate(data,[],self,@validation_options)
+      @base_schema.validate(data, [], self, @validation_options)
 
       if @options[:record_errors]
         if @options[:errors_as_objects]
@@ -228,7 +228,7 @@ module JSON
     end
 
     class << self
-      def validate(schema, data,opts={})
+      def validate(schema, data, opts={})
         begin
           validate!(schema, data, opts)
         rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
@@ -244,7 +244,7 @@ module JSON
         validate(schema, data, opts.merge(:uri => true))
       end
 
-      def validate!(schema, data,opts={})
+      def validate!(schema, data, opts={})
         validator = new(schema, opts)
         validator.validate(data)
       end
@@ -498,7 +498,7 @@ module JSON
       @@fake_uuid_generator = lambda{|s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
     else
       require 'json-schema/util/uuid'
-      @@fake_uuid_generator = lambda{|s| JSON::Util::UUID.create_v5(s,JSON::Util::UUID::Nil).to_s }
+      @@fake_uuid_generator = lambda{|s| JSON::Util::UUID.create_v5(s, JSON::Util::UUID::Nil).to_s }
     end
 
     def serialize schema

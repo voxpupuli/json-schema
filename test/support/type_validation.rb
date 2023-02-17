@@ -9,7 +9,7 @@ module TypeValidation
       'boolean' => true,
       'object'  => {},
       'array'   => [],
-      'null'    => nil
+      'null'    => nil,
     }
 
     TYPES.each do |name, value|
@@ -17,7 +17,7 @@ module TypeValidation
 
       define_method(:"test_#{name}_type_property") do
         schema = {
-          'properties' => { 'a' => { 'type' => name } }
+          'properties' => { 'a' => { 'type' => name } },
         }
         assert_valid schema, {'a' => value}
 
@@ -65,10 +65,10 @@ module TypeValidation
           'a' => {
             'type' => [
               {'type' => 'string'},
-              {'type' => 'object', 'properties' => { 'b' => { 'type' => 'integer' }}}
-            ]
-          }
-        }
+              {'type' => 'object', 'properties' => { 'b' => { 'type' => 'integer' }}},
+            ],
+          },
+        },
       }
 
       assert_valid schema, {'a' => 'test'}

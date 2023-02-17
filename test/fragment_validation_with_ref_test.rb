@@ -10,20 +10,20 @@ class FragmentValidationWithRefTest < Minitest::Test
           "type" => "object",
           "properties" => {
             "content" => {
-              "type" => "string"
+              "type" => "string",
             },
             "author" => {
-              "type" => "string"
-            }
-          }
+              "type" => "string",
+            },
+          },
         },
         "posts" => {
           "type" => "array",
           "items" => {
-            "$ref" => "#/definitions/post"
-          }
-        }
-      }
+            "$ref" => "#/definitions/post",
+          },
+        },
+      },
     }
   end
 
@@ -39,18 +39,18 @@ class FragmentValidationWithRefTest < Minitest::Test
               "schema" => {
                 "properties" => {
                   "content" => {
-                    "type" => "string"
+                    "type" => "string",
                   },
                   "author" => {
-                    "type" => "string"
-                  }
+                    "type" => "string",
+                  },
                 },
-                "required" => ["content", "author"]
-              }
-            }
-          ]
-        }
-      }
+                "required" => ["content", "author"],
+              },
+            },
+          ],
+        },
+      },
     }
   end
 
@@ -62,6 +62,6 @@ class FragmentValidationWithRefTest < Minitest::Test
   def test_validation_of_fragment_with_array
     data = {"content" => "ohai", "author" => "Bob"}
     assert_valid(whole_schema_with_array, data,
-                 :fragment => "#/definitions/omg/links/0/schema")
+                 :fragment => "#/definitions/omg/links/0/schema",)
   end
 end

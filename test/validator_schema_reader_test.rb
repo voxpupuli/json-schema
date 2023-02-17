@@ -8,7 +8,7 @@ class ValidatorSchemaReaderTest < Minitest::Test
       schema = {
         '$schema' => 'http://json-schema.org/draft-04/schema#',
         'type' => 'string',
-        'minLength' => 2
+        'minLength' => 2,
       }
 
       JSON::Schema.new(schema, Addressable::URI.parse(location.to_s))

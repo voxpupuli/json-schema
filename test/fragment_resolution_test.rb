@@ -9,10 +9,10 @@ class FragmentResolutionTest < Minitest::Test
         "a" => {
           "type" => "object",
           "properties" => {
-            "b" => {"type" => "integer" }
-          }
-        }
-      }
+            "b" => {"type" => "integer" },
+          },
+        },
+      },
     }
 
     data = {"b" => 5}
@@ -20,11 +20,11 @@ class FragmentResolutionTest < Minitest::Test
     assert_valid schema, data, :fragment => "#/properties/a"
 
     assert_raises JSON::Schema::SchemaError do
-      JSON::Validator.validate!(schema,data,:fragment => "/properties/a")
+      JSON::Validator.validate!(schema, data, :fragment => "/properties/a")
     end
 
     assert_raises JSON::Schema::SchemaError do
-      JSON::Validator.validate!(schema,data,:fragment => "#/properties/b")
+      JSON::Validator.validate!(schema, data, :fragment => "#/properties/b")
     end
   end
 
@@ -34,9 +34,9 @@ class FragmentResolutionTest < Minitest::Test
         "type" => "object",
         "required" => ["a"],
         "properties" => {
-          "a" => {"type" => "integer"}
-        }
-      }
+          "a" => {"type" => "integer"},
+        },
+      },
     }
 
     assert_valid schema, {"a" => 1}, :fragment => "#/foo"
@@ -50,10 +50,10 @@ class FragmentResolutionTest < Minitest::Test
           "type" => "object",
           "required" => ["a"],
           "properties" => {
-            "a" => {"type" => "integer"}
-          }
-        }
-      }
+            "a" => {"type" => "integer"},
+          },
+        },
+      },
     }
 
     assert_valid schema, {"a" => 1}, :fragment => "#/foo/bar"
@@ -68,10 +68,10 @@ class FragmentResolutionTest < Minitest::Test
         "a" => {
           "anyOf" => [
             {"type" => "integer"},
-            {"type" => "string"}
-          ]
-        }
-      }
+            {"type" => "string"},
+          ],
+        },
+      },
     }
 
     refute_valid schema, "foo", :fragment => "#/properties/a/anyOf/0"
@@ -88,10 +88,10 @@ class FragmentResolutionTest < Minitest::Test
           "type" => "object",
           "required" => ["a"],
           "properties" => {
-            "a" => {"type" => "integer"}
-          }
-        }
-      }
+            "a" => {"type" => "integer"},
+          },
+        },
+      },
     }
 
     assert_valid schema, {"a" => 1}, :fragment => "#/content/application~1json"

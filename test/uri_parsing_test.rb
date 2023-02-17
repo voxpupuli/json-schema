@@ -12,9 +12,9 @@ class UriParsingTest < Minitest::Test
       "properties" => {
         "a" => {
           "id" => "a",
-          "type" => "integer"
-        }
-      }
+          "type" => "integer",
+        },
+      },
     }
     data = { "a" => 5 }
     assert_valid schema, data
@@ -31,10 +31,10 @@ class UriParsingTest < Minitest::Test
           "items"=> {
             "anyOf"=> [
               { "$ref" => "test/schemas/ref john with spaces schema.json#" },
-            ]
-          }
-        }
-      }
+            ],
+          },
+        },
+      },
     }
     data = {"names" => [{"first" => "john"}]}
     assert_valid schema, data
@@ -50,11 +50,11 @@ class UriParsingTest < Minitest::Test
           "type"=> "array",
           "items"=> {
             "anyOf"=> [
-              { "$ref" => "test/schemas/ref john with spaces schema.json" }
-            ]
-          }
-        }
-      }
+              { "$ref" => "test/schemas/ref john with spaces schema.json" },
+            ],
+          },
+        },
+      },
     }
     data = {"names" => [{"first" => "john"}]}
     assert_valid schema, data

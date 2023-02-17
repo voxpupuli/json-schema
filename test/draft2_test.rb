@@ -42,8 +42,8 @@ class Draft2Test < Minitest::Test
     # Set up the default datatype
     schema = {
       "properties" => {
-        "a" => {"type" => "string"}
-      }
+        "a" => {"type" => "string"},
+      },
     }
     data = {}
 
@@ -53,8 +53,8 @@ class Draft2Test < Minitest::Test
 
     schema = {
       "properties" => {
-        "a" => {"type" => "integer", "optional" => "true"}
-      }
+        "a" => {"type" => "integer", "optional" => "true"},
+      },
     }
 
     data = {}
@@ -65,12 +65,12 @@ class Draft2Test < Minitest::Test
     # Set up the default datatype
     schema = {
       "properties" => {
-        "a" => {"disallow" => "integer"}
-      }
+        "a" => {"disallow" => "integer"},
+      },
     }
 
     data = {
-      "a" => nil
+      "a" => nil,
     }
 
     data["a"] = 'string'
@@ -79,7 +79,7 @@ class Draft2Test < Minitest::Test
     data["a"] = 5
     refute_valid schema, data
 
-    schema["properties"]["a"]["disallow"] = ["integer","string"]
+    schema["properties"]["a"]["disallow"] = ["integer", "string"]
     data["a"] = 'string'
     refute_valid schema, data
 
@@ -93,7 +93,7 @@ class Draft2Test < Minitest::Test
   def test_format_datetime
     schema = {
       "type" => "object",
-      "properties" => { "a" => {"type" => "string", "format" => "date-time"}}
+      "properties" => { "a" => {"type" => "string", "format" => "date-time"}},
     }
 
     assert_valid schema, {"a" => "2010-01-01T12:00:00Z"}

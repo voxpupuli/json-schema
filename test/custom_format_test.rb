@@ -13,7 +13,7 @@ class CustomFormatTest < Minitest::Test
           "type" => "string",
           "format" => "custom",
         },
-      }
+      },
     }
     @schema_4 = @schema_6.clone
     @schema_4["$schema"] = "http://json-schema.org/draft-04/schema#"
@@ -72,7 +72,7 @@ class CustomFormatTest < Minitest::Test
   def test_format_validation
     @all_versions.each do |version|
       data = {
-        "a" => "23"
+        "a" => "23",
       }
       schema = @schemas[version]
       prefix = "Validation for '#{version || 'default'}'"
@@ -100,7 +100,7 @@ class CustomFormatTest < Minitest::Test
   def test_override_default_format
     @all_versions.each do |version|
       data = {
-        "a" => "2001:db8:85a3:0:0:8a2e:370:7334"
+        "a" => "2001:db8:85a3:0:0:8a2e:370:7334",
       }
       schema = @schemas[version]
       schema["properties"]["a"]["format"] = "ipv6"

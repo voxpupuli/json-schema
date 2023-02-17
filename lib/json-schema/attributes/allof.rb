@@ -9,14 +9,14 @@ module JSON
         valid = true
 
         current_schema.schema['allOf'].each_with_index do |element, schema_index|
-          schema = JSON::Schema.new(element,current_schema.uri,validator)
+          schema = JSON::Schema.new(element, current_schema.uri, validator)
 
           # We're going to add a little cruft here to try and maintain any validation errors that occur in the allOf
           # We'll handle this by keeping an error count before and after validation, extracting those errors and pushing them onto an error array
           pre_validation_error_count = validation_errors(processor).count
 
           begin
-            schema.validate(data,fragments,processor,options)
+            schema.validate(data, fragments, processor, options)
           rescue ValidationError
             valid = false
           end

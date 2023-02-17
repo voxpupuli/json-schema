@@ -8,3 +8,15 @@ require:
 AllCops:
   TargetRubyVersion: 2.5
   NewCops: enable
+
+Style/TrailingCommaInHashLiteral:
+  Enabled: True
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInArrayLiteral:
+  Enabled: True
+  EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInArguments:
+  Enabled: True
+  EnforcedStyleForMultiline: consistent_comma

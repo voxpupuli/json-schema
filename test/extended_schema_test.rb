@@ -29,12 +29,12 @@ class ExtendedSchemaTest < Minitest::Test
       "$schema" => "http://test.com/test.json",
       "properties" => {
         "a" => {
-          "bitwise-and" => 1
+          "bitwise-and" => 1,
         },
         "b" => {
-          "type" => "string"
-        }
-      }
+          "type" => "string",
+        },
+      },
     }
 
     assert_valid schema, {"a" => 1, "b" => "taco"}
@@ -49,11 +49,11 @@ class ExtendedSchemaTest < Minitest::Test
         "odd-a" => {
           "properties" => {
             "a" => {
-              "bitwise-and" => 1
-            }
-          }
-        }
-      }
+              "bitwise-and" => 1,
+            },
+          },
+        },
+      },
     }
 
     assert_valid schema, {"a" => 1}, :fragment => "#/definitions/odd-a"
@@ -65,12 +65,12 @@ class ExtendedSchemaTest < Minitest::Test
     schema = {
       "properties" => {
         "a" => {
-          "bitwise-and" => 1
+          "bitwise-and" => 1,
         },
         "b" => {
-          "type" => "string"
-        }
-      }
+          "type" => "string",
+        },
+      },
     }
 
     assert_valid schema, {"a" => 0, "b" => "taco"}

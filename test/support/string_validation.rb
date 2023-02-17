@@ -3,8 +3,8 @@ module StringValidation
     def test_minlength
       schema = {
         'properties' => {
-          'a' => { 'minLength' => 1 }
-        }
+          'a' => { 'minLength' => 1 },
+        },
       }
 
       assert_valid schema, {'a' => 't'}
@@ -17,8 +17,8 @@ module StringValidation
     def test_maxlength
       schema = {
         'properties' => {
-          'a' => { 'maxLength' => 2 }
-        }
+          'a' => { 'maxLength' => 2 },
+        },
       }
 
       assert_valid schema, {'a' => 'tt'}
@@ -32,8 +32,8 @@ module StringValidation
     def test_pattern
       schema = {
         'properties' => {
-          'a' => { 'pattern' => "\\d+ taco" }
-        }
+          'a' => { 'pattern' => "\\d+ taco" },
+        },
       }
 
       assert_valid schema, {'a' => '156 taco bell'}
@@ -53,8 +53,8 @@ module StringValidation
     def test_format_unknown
       schema = {
         'properties' => {
-          'a' => { 'format' => 'unknown' }
-        }
+          'a' => { 'format' => 'unknown' },
+        },
       }
 
       assert_valid schema, {'a' => 'absolutely anything!'}
@@ -66,9 +66,9 @@ module StringValidation
         'properties' => {
           'a' => {
             'type'   => ['string', 'null'],
-            'format' => 'date-time'
-          }
-        }
+            'format' => 'date-time',
+          },
+        },
       }
 
       assert_valid schema, {'a' => nil}
@@ -78,8 +78,8 @@ module StringValidation
     def test_format_ipv4
       schema = {
         'properties' => {
-          'a' => { 'format' => ipv4_format }
-        }
+          'a' => { 'format' => ipv4_format },
+        },
       }
 
       assert_valid schema, {"a" => "1.1.1.1"}
@@ -95,8 +95,8 @@ module StringValidation
     def test_format_ipv6
       schema = {
         'properties' => {
-          'a' => { 'format' => 'ipv6' }
-        }
+          'a' => { 'format' => 'ipv6' },
+        },
       }
 
       assert_valid schema, {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff"}
@@ -119,8 +119,8 @@ module StringValidation
     def test_format_time
       schema = {
         'properties' => {
-          'a' => { 'format' => 'time' }
-        }
+          'a' => { 'format' => 'time' },
+        },
       }
 
       assert_valid schema, {"a" => "12:00:00"}
@@ -138,8 +138,8 @@ module StringValidation
     def test_format_date
       schema = {
         'properties' => {
-          'a' => { 'format' => 'date' }
-        }
+          'a' => { 'format' => 'date' },
+        },
       }
 
       assert_valid schema, {"a" => "2010-01-01"}

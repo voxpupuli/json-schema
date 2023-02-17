@@ -45,7 +45,7 @@ class CommonTestSuiteTest < Minitest::Test
                                                     t["data"],
                                                     :parse_data => false,
                                                     :validate_schema => true,
-                                                    :version => version
+                                                    :version => version,
                                                    )
             assert_equal t["valid"], errors.empty?, "Common test suite case failed: #{err_id}"
           end
