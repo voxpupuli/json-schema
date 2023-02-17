@@ -3,17 +3,18 @@ source 'https://rubygems.org'
 gemspec
 
 group :release do
-  gem 'github_changelog_generator', require: false
+  gem 'github_changelog_generator', :require => false
 end
 
-group :coverage, optional: ENV['COVERAGE']!='yes' do
+group :coverage, :optional => ENV['COVERAGE']!='yes' do
   gem 'simplecov-console', :require => false
   gem 'codecov', :require => false
 end
 
 group :tests do
-  gem 'rubocop', '~> 1.11.0'
-  gem 'rubocop-rspec', '~> 2.2.0'
-  gem 'rubocop-rake', '~> 0.5.1'
-  gem 'rubocop-performance', '~> 1.10.2'
+  gem 'rubocop', '~> 1.12.0' # newer version require Ruby 2.6
+  gem 'rubocop-rspec', '~> 2.4.0' # newer version require Ruby 2.6 or rubocop 1.19
+  gem 'rubocop-rake', '~> 0.6.0' # latest
+  gem 'rubocop-performance', '~> 1.13.0' # newer version requires Ruby 2.6
+  gem 'rubocop-minitest', '~> 0.19.0' # newer version requires Ruby 2.6
 end

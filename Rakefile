@@ -63,7 +63,19 @@ Rake::TestTask.new do |t|
   t.test_files = FileList.new('test/*_test.rb')
 end
 
-task update: [:update_common_tests, :update_meta_schemas]
+task :update => [:update_common_tests, :update_meta_schemas]
+
+require 'rubocop/rake_task'
+RuboCop::RakeTask.new(:rubocop) do |task|
+  # These make the rubocop experience maybe slightly less terrible
+  task.options = ['-D', '-S', '-E']
+
+  # Use Rubocop's Github Actions formatter if possible
+  if ENV['GITHUB_ACTIONS'] == 'true'
+    rubocop_spec = Gem::Specification.find_by_name('rubocop')
+    task.formatters << 'github' if Gem::Version.new(rubocop_spec.version) >= Gem::Version.new('1.2')
+  end
+end
 
 task :default => :test
 
