@@ -73,7 +73,7 @@ module JSON
           end
         end
       rescue Addressable::URI::InvalidURIError => e
-        raise JSON::Schema::UriError.new(e.message)
+        raise JSON::Schema::UriError, e.message
       end
 
       def self.strip_fragment(uri)

@@ -70,7 +70,7 @@ module JSON
 
       # ensure the first element was a hash, per the fragment spec
       if fragments.shift != '#'
-        raise JSON::Schema::SchemaError.new('Invalid fragment syntax in :fragment option')
+        raise JSON::Schema::SchemaError, 'Invalid fragment syntax in :fragment option'
       end
 
       schema_fragment = base_schema.schema
@@ -84,7 +84,7 @@ module JSON
       end
 
       unless schema_fragment.is_a?(Hash)
-        raise JSON::Schema::SchemaError.new('Invalid fragment resolution for :fragment option')
+        raise JSON::Schema::SchemaError, 'Invalid fragment resolution for :fragment option'
       end
 
       schema = JSON::Schema.new(schema_fragment, schema_uri, base_schema.validator)
@@ -335,7 +335,7 @@ module JSON
         u = JSON::Util::URI.parse(schema_uri)
         validator = validators["#{u.scheme}://#{u.host}#{u.path}"]
         if validator.nil? && raise_not_found
-          raise JSON::Schema::SchemaError.new("Schema not found: #{schema_uri}")
+          raise JSON::Schema::SchemaError, "Schema not found: #{schema_uri}"
         else
           validator
         end
@@ -349,7 +349,7 @@ module JSON
           Array(v.names).include?(schema_name)
         end
         if validator.nil? && raise_not_found
-          raise JSON::Schema::SchemaError.new('The requested JSON schema version is not supported')
+          raise JSON::Schema::SchemaError, 'The requested JSON schema version is not supported'
         else
           validator
         end
@@ -407,7 +407,7 @@ module JSON
           if @@available_json_backends.include?(backend)
             @@json_backend = backend
           else
-            raise JSON::Schema::JsonParseError.new("The JSON backend '#{backend}' could not be found.")
+            raise JSON::Schema::JsonParseError, "The JSON backend '#{backend}' could not be found."
           end
         end
       end
@@ -417,7 +417,7 @@ module JSON
           begin
             MultiJson.respond_to?(:adapter) ? MultiJson.load(s) : MultiJson.decode(s)
           rescue MultiJson::ParseError => e
-            raise JSON::Schema::JsonParseError.new(e.message)
+            raise JSON::Schema::JsonParseError, e.message
           end
         else
           case @@json_backend.to_s
@@ -425,18 +425,18 @@ module JSON
             begin
               JSON.parse(s, quirks_mode: true)
             rescue JSON::ParserError => e
-              raise JSON::Schema::JsonParseError.new(e.message)
+              raise JSON::Schema::JsonParseError, e.message
             end
           when 'yajl'
             begin
               json = StringIO.new(s)
               parser = Yajl::Parser.new
-              parser.parse(json) or raise JSON::Schema::JsonParseError.new('The JSON could not be parsed by yajl')
+              parser.parse(json) or raise(JSON::Schema::JsonParseError, 'The JSON could not be parsed by yajl')
             rescue Yajl::ParseError => e
-              raise JSON::Schema::JsonParseError.new(e.message)
+              raise JSON::Schema::JsonParseError, e.message
             end
           else
-            raise JSON::Schema::JsonParseError.new("No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json")
+            raise JSON::Schema::JsonParseError, "No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json"
           end
         end
       end

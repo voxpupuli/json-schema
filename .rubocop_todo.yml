@@ -498,17 +498,6 @@ Style/PreferredHashMethods:
     - 'lib/json-schema/attributes/required.rb'
     - 'lib/json-schema/schema/validator.rb'
 
-# Offense count: 13
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, AllowedCompactTypes.
-# SupportedStyles: compact, exploded
-Style/RaiseArgs:
-  Exclude:
-    - 'lib/json-schema/attributes/ref.rb'
-    - 'lib/json-schema/util/uri.rb'
-    - 'lib/json-schema/validator.rb'
-    - 'test/custom_format_test.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 Style/RedundantBegin:
