@@ -45,8 +45,8 @@ class Draft4Test < Minitest::Test
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "required" => ["a"],
       "properties" => {
-        "a" => {}
-      }
+        "a" => {},
+      },
     }
     data = {}
 
@@ -57,8 +57,8 @@ class Draft4Test < Minitest::Test
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "properties" => {
-        "a" => {"type" => "integer"}
-      }
+        "a" => {"type" => "integer"},
+      },
     }
 
     data = {}
@@ -90,8 +90,8 @@ class Draft4Test < Minitest::Test
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "properties" => {
         "a" => {"type" => "string"},
-        "b" => {"type" => "string"}
-      }
+        "b" => {"type" => "string"},
+      },
     }
 
     data = {"a" => "a"}
@@ -112,9 +112,9 @@ class Draft4Test < Minitest::Test
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "properties" => {
         "a" => {"type" => "string"},
-        "b" => {"type" => "string"}
+        "b" => {"type" => "string"},
       },
-      "additionalProperties" => {"type" => "integer"}
+      "additionalProperties" => {"type" => "integer"},
     }
 
     data = {"a" => "a"}
@@ -138,9 +138,9 @@ class Draft4Test < Minitest::Test
       "$schema" => "http://json-schema.org/draft-03/schema#",
       "properties" => {
         "a" => {"type" => "string"},
-        "b" => {"type" => "string"}
+        "b" => {"type" => "string"},
       },
-      "patternProperties" => {"\\d+ taco" => {"type" => "integer"}}
+      "patternProperties" => {"\\d+ taco" => {"type" => "integer"}},
     }
 
     data = {"a" => "a"}
@@ -170,7 +170,7 @@ class Draft4Test < Minitest::Test
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
       "required" => ["a"],
-      "properties" => { "a" => {"type" => "integer"} }
+      "properties" => { "a" => {"type" => "integer"} },
     }
 
     data = [{"a" => 1},{"a" => 2},{"a" => 3}]
@@ -192,23 +192,23 @@ class Draft4Test < Minitest::Test
           "properties" => {
             "foo" => {
               "enum" => ["view", "search"],
-              "default" => "view"
-            }
-          }
+              "default" => "view",
+            },
+          },
         },
         {
           "type" => "object",
           "properties" => {
             "bar" => {
-              "type" => "string"
-            }
-          }
+              "type" => "string",
+            },
+          },
         }
-      ]
+      ],
     }
 
     data = {
-      "bar" => "baz"
+      "bar" => "baz",
     }
 
     assert(JSON::Validator.validate(schema, data, :insert_defaults => true, :strict => true))
@@ -222,19 +222,19 @@ class Draft4Test < Minitest::Test
           "properties" => {
             "foo" => {
               "enum" => ["view", "search"],
-              "default" => "view"
-            }
-          }
+              "default" => "view",
+            },
+          },
         },
         {
           "type" => "object",
           "properties" => {
             "bar" => {
-              "type" => "string"
-            }
-          }
+              "type" => "string",
+            },
+          },
         }
-      ]
+      ],
     }
 
     data = {}
@@ -250,24 +250,24 @@ class Draft4Test < Minitest::Test
           "type" => "object",
           "properties" => {
             "bar" => {
-              "type" => "string"
-            }
-          }
+              "type" => "string",
+            },
+          },
         },
         {
           "type" => "object",
           "properties" => {
             "foo" => {
               "enum" => ["view", "search"],
-              "default" => "view"
-            }
-          }
+              "default" => "view",
+            },
+          },
         }
-      ]
+      ],
     }
 
     data = {
-      "bar" => "baz"
+      "bar" => "baz",
     }
 
     assert(JSON::Validator.validate(schema, data, :insert_defaults => true, :strict => true))
@@ -278,7 +278,7 @@ class Draft4Test < Minitest::Test
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
-      "properties" => { "a" => {"type" => "integer"}, "b" => {"$ref" => "#"}}
+      "properties" => { "a" => {"type" => "integer"}, "b" => {"$ref" => "#"}},
     }
 
     assert_valid schema, {"a" => 5, "b" => {"b" => {"a" => 1}}}
@@ -290,9 +290,9 @@ class Draft4Test < Minitest::Test
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "properties" => {
         "$ref" => {
-          "type" => "integer"
-        }
-      }
+          "type" => "integer",
+        },
+      },
     }
 
     assert_valid schema, { "$ref" => 1 }
@@ -303,7 +303,7 @@ class Draft4Test < Minitest::Test
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
-      "properties" => { "a" => {"type" => "string", "format" => "date-time"}}
+      "properties" => { "a" => {"type" => "string", "format" => "date-time"}},
     }
 
     assert_valid schema, {"a" => "2010-01-01T12:00:00Z"}
@@ -328,7 +328,7 @@ class Draft4Test < Minitest::Test
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "object",
-      "properties" => { "a" => {"type" => "string", "format" => "uri"}}
+      "properties" => { "a" => {"type" => "string", "format" => "uri"}},
     }
 
     assert(JSON::Validator.validate(schema,data1))
@@ -339,7 +339,7 @@ class Draft4Test < Minitest::Test
   def test_schema
     schema = {
       "$schema" => "http://json-schema.org/THIS-IS-NOT-A-SCHEMA",
-      "type" => "object"
+      "type" => "object",
     }
 
     data = {"a" => "taco"}
@@ -347,7 +347,7 @@ class Draft4Test < Minitest::Test
 
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
-      "type" => "object"
+      "type" => "object",
     }
     assert_valid schema, data
   end
@@ -358,11 +358,11 @@ class Draft4Test < Minitest::Test
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer"},
-        "b" => {"type" => "integer"}
+        "b" => {"type" => "integer"},
       },
       "dependencies" => {
-        "a" => ["b"]
-      }
+        "a" => ["b"],
+      },
     }
 
     data = {"a" => 1, "b" => 2}
@@ -376,11 +376,11 @@ class Draft4Test < Minitest::Test
       "properties" => {
         "a" => {"type" => "integer"},
         "b" => {"type" => "integer"},
-        "c" => {"type" => "integer"}
+        "c" => {"type" => "integer"},
       },
       "dependencies" => {
-        "a" => ["b","c"]
-      }
+        "a" => ["b","c"],
+      },
     }
 
     data = {"a" => 1, "c" => 2}
@@ -394,21 +394,21 @@ class Draft4Test < Minitest::Test
       "type"=> "object",
       "properties"=> {
         "name"=> { "type"=> "string" },
-        "credit_card"=> { "type"=> "number" }
+        "credit_card"=> { "type"=> "number" },
       },
       "required"=> ["name"],
       "dependencies"=> {
         "credit_card"=> {
           "properties"=> {
-            "billing_address"=> { "type"=> "string" }
+            "billing_address"=> { "type"=> "string" },
           },
-          "required"=> ["billing_address"]
-        }
-      }
+          "required"=> ["billing_address"],
+        },
+      },
     }
     data = {
       "name" => "John Doe",
-      "credit_card" => 5555555555555555
+      "credit_card" => 5555555555555555,
     }
     assert(!JSON::Validator.validate(schema,data), 'test schema dependency with invalid data')
     data['billing_address'] = "Somewhere over the rainbow"
@@ -421,8 +421,8 @@ class Draft4Test < Minitest::Test
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer", "default" => 42},
-        "b" => {"type" => "integer"}
-      }
+        "b" => {"type" => "integer"},
+      },
     }
 
     data = {:b => 2}
@@ -438,8 +438,8 @@ class Draft4Test < Minitest::Test
       "required" => ["a"],
       "properties" => {
         "a" => {"type" => "integer", "default" => 42},
-        "b" => {"type" => "integer"}
-      }
+        "b" => {"type" => "integer"},
+      },
     }
 
     data = {:b => 2}
@@ -455,8 +455,8 @@ class Draft4Test < Minitest::Test
       "required" => ["a"],
       "properties" => {
         "a" => {"type" => "integer", "default" => 42, "readonly" => true},
-        "b" => {"type" => "integer"}
-      }
+        "b" => {"type" => "integer"},
+      },
     }
 
     data = {:b => 2}
@@ -471,8 +471,8 @@ class Draft4Test < Minitest::Test
       "type" => "object",
       "properties" => {
         "a" => {"type" => "integer", "default" => "42"},
-        "b" => {"type" => "integer"}
-      }
+        "b" => {"type" => "integer"},
+      },
     }
 
     data = {:b => 2}
@@ -490,8 +490,8 @@ class Draft4Test < Minitest::Test
       "required" => ["a"],
       "properties" => {
         "a" => {"type" => "boolean", "default" => false},
-        "b" => {"type" => "integer"}
-      }
+        "b" => {"type" => "integer"},
+      },
     }
 
     data = {:b => 2}
@@ -508,12 +508,12 @@ class Draft4Test < Minitest::Test
       "allOf" => [
         {
           "properties" => {"a" => {"type" => "string"}},
-          "required" => ["a"]
+          "required" => ["a"],
         },
         {
-          "properties" => {"b" => {"type" => "integer"}}
+          "properties" => {"b" => {"type" => "integer"}},
         }
-      ]
+      ],
     }
 
     data = {"a" => "hello", "b" => 5}
@@ -535,12 +535,12 @@ class Draft4Test < Minitest::Test
       "anyOf" => [
         {
           "properties" => {"a" => {"type" => "string"}},
-          "required" => ["a"]
+          "required" => ["a"],
         },
         {
-          "properties" => {"b" => {"type" => "integer"}}
+          "properties" => {"b" => {"type" => "integer"}},
         }
-      ]
+      ],
     }
 
     data = {"a" => "hello", "b" => 5}
@@ -565,12 +565,12 @@ class Draft4Test < Minitest::Test
       "oneOf" => [
         {
           "properties" => {"a" => {"type" => "string"}},
-          "required" => ["a"]
+          "required" => ["a"],
         },
         {
-          "properties" => {"b" => {"type" => "integer"}}
+          "properties" => {"b" => {"type" => "integer"}},
         }
-      ]
+      ],
     }
 
     data = {"a" => "hello", "b" => 5}
@@ -595,8 +595,8 @@ class Draft4Test < Minitest::Test
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "properties" => {
-        "a" => {"not" => { "type" => ["string", "boolean"]}}
-      }
+        "a" => {"not" => { "type" => ["string", "boolean"]}},
+      },
     }
 
     data = {"a" => 1}
@@ -614,17 +614,17 @@ class Draft4Test < Minitest::Test
       "properties" => {
         "a" => {"not" => {"anyOf" => [
             {
-              "type" => ["string","boolean"]
+              "type" => ["string","boolean"],
             },
             {
               "type" => "object",
               "properties" => {
-                "b" => {"type" => "boolean"}
-              }
+                "b" => {"type" => "boolean"},
+              },
             }
-          ]}
-        }
-      }
+          ]},
+        },
+      },
     }
 
     data = {"a" => 1}
@@ -648,8 +648,8 @@ class Draft4Test < Minitest::Test
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "properties" => {
-        "a" => {"not" => { "type" => ["string", "boolean"]}}
-      }
+        "a" => {"not" => { "type" => ["string", "boolean"]}},
+      },
     }
 
     data = {"a" => 1}
@@ -670,9 +670,9 @@ class Draft4Test < Minitest::Test
         "positiveInteger" => {
           "type" => "integer",
           "minimum" => 0,
-          "exclusiveMinimum" => true
-        }
-      }
+          "exclusiveMinimum" => true,
+        },
+      },
     }
 
     data = [1,2,3]

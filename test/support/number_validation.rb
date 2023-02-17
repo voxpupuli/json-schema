@@ -3,8 +3,8 @@ module NumberValidation
     def test_minimum
       schema = {
         'properties' => {
-          'a' => { 'minimum' => 5 }
-        }
+          'a' => { 'minimum' => 5 },
+        },
       }
 
       assert_valid schema, {'a' => 5}
@@ -20,8 +20,8 @@ module NumberValidation
     def test_exclusive_minimum
       schema = {
         'properties' => {
-          'a' => { 'minimum' => 5 }.merge(exclusive_minimum)
-        }
+          'a' => { 'minimum' => 5 }.merge(exclusive_minimum),
+        },
       }
 
       assert_valid schema, {'a' => 6}
@@ -32,8 +32,8 @@ module NumberValidation
     def test_maximum
       schema = {
         'properties' => {
-          'a' => { 'maximum' => 5 }
-        }
+          'a' => { 'maximum' => 5 },
+        },
       }
 
       assert_valid schema, {'a' => 4}
@@ -46,8 +46,8 @@ module NumberValidation
     def test_exclusive_maximum
       schema = {
         'properties' => {
-          'a' => { 'maximum' => 5 }.merge(exclusive_maximum)
-        }
+          'a' => { 'maximum' => 5 }.merge(exclusive_maximum),
+        },
       }
 
       assert_valid schema, {'a' => 4}
@@ -66,8 +66,8 @@ module NumberValidation
     def test_multiple_of
       schema = {
         'properties' => {
-          'a' => { multiple_of => 1.1 }
-        }
+          'a' => { multiple_of => 1.1 },
+        },
       }
 
       assert_valid schema, {'a' => 0}

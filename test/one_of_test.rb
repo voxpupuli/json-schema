@@ -20,7 +20,7 @@ class OneOfTest < Minitest::Test
         {
           "properties" => {"a" => {"type" => "string", "pattern" => "baz"}},
         }
-      ]
+      ],
     }
 
     assert_valid schema, { "a" => "foo" }
@@ -42,7 +42,7 @@ class OneOfTest < Minitest::Test
         {
           "properties" => {"a" => {"type" => "number", "minimum" => 10}},
         }
-      ]
+      ],
     }
 
     errors = JSON::Validator.fully_validate(schema, { "a" => 5 }, :errors_as_objects => true)
@@ -65,7 +65,7 @@ class OneOfTest < Minitest::Test
         {
           "properties" => {"a" => {"type" => "number", "minimum" => 10}},
         }
-      ]
+      ],
     }
 
     errors = JSON::Validator.fully_validate(schema, { "a" => 5 })

@@ -13,7 +13,7 @@ class Draft6Test < Minitest::Test
       "properties" => {
         "a" => {"const" => "foo"},
         "b" => {"const" => 6},
-      }
+      },
     }
 
     data = {:a => "foo", :b => 6}
@@ -26,7 +26,7 @@ class Draft6Test < Minitest::Test
   def test_property_names
     schema = {
       "type" => "object",
-      "propertyNames" => {"const" => "foo"}
+      "propertyNames" => {"const" => "foo"},
     }
 
     data = {"foo" => "value"}
@@ -37,7 +37,7 @@ class Draft6Test < Minitest::Test
 
     schema = {
       "type" => "object",
-      "propertyNames" => false
+      "propertyNames" => false,
     }
 
     data = {}

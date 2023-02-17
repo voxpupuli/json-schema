@@ -33,13 +33,13 @@ module JSON
           "additionalItems" => JSON::Schema::AdditionalItemsAttribute,
           "dependencies" => JSON::Schema::DependenciesV4Attribute,
           "extends" => JSON::Schema::ExtendsAttribute,
-          "$ref" => JSON::Schema::RefAttribute
+          "$ref" => JSON::Schema::RefAttribute,
         }
         @default_formats = {
           'date-time' => DateTimeV4Format,
           'ipv4' => IP4Format,
           'ipv6' => IP6Format,
-          'uri' => UriFormat
+          'uri' => UriFormat,
         }
         @formats = @default_formats.clone
         @uri = JSON::Util::URI.parse("http://json-schema.org/draft-04/schema#")

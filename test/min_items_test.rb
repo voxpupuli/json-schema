@@ -5,7 +5,7 @@ class MinItemsTest < Minitest::Test
     schema = {
       "type" => "array",
       "minItems" => 1,
-      "items" => { "type" => "object" }
+      "items" => { "type" => "object" },
     }
 
     errors = JSON::Validator.fully_validate(schema, [nil])

@@ -27,7 +27,7 @@ module JSON
       :insert_defaults => false,
       :clear_cache => false,
       :strict => false,
-      :parse_data => true
+      :parse_data => true,
     }
     @@validators = {}
     @@default_validator = nil

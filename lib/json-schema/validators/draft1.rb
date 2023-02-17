@@ -21,7 +21,7 @@ module JSON
           "pattern" => JSON::Schema::PatternAttribute,
           "additionalProperties" => JSON::Schema::AdditionalPropertiesAttribute,
           "items" => JSON::Schema::ItemsAttribute,
-          "extends" => JSON::Schema::ExtendsAttribute
+          "extends" => JSON::Schema::ExtendsAttribute,
         }
         @default_formats = {
           'date-time' => DateTimeFormat,
@@ -29,7 +29,7 @@ module JSON
           'time' => TimeFormat,
           'ip-address' => IP4Format,
           'ipv6' => IP6Format,
-          'uri' => UriFormat
+          'uri' => UriFormat,
         }
         @formats = @default_formats.clone
         @uri = JSON::Util::URI.parse("http://json-schema.org/draft-01/schema#")

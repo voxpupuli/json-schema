@@ -8,9 +8,9 @@ class SchemaValidationTest < Minitest::Test
       "type" => "object",
       "properties" => {
         "b" => {
-          "required" => true
-        }
-      }
+          "required" => true,
+        },
+      },
     }
   end
 
@@ -20,9 +20,9 @@ class SchemaValidationTest < Minitest::Test
       "type" => "object",
       "properties" => {
         "b" => {
-          "required" => "true"
-        }
-      }
+          "required" => "true",
+        },
+      },
     }
   end
 
@@ -32,7 +32,7 @@ class SchemaValidationTest < Minitest::Test
       "type" => "object",
       "required" => ["b"],
       "properties" => {
-      }
+      },
     }
   end
 
@@ -42,7 +42,7 @@ class SchemaValidationTest < Minitest::Test
       "type" => "object",
       "required" => "b",
       "properties" => {
-      }
+      },
     }
   end
 
@@ -63,40 +63,40 @@ class SchemaValidationTest < Minitest::Test
         :id => {
           :type => [
             :integer
-          ]
+          ],
         },
         :name => {
           :type => [
             :string
-          ]
+          ],
         },
         :real_name => {
           :type => [
             :string
-          ]
+          ],
         },
         :role => {
           :type => [
             :string
-          ]
+          ],
         },
         :website => {
           :type => [
             :string,
             :null
-          ]
+          ],
         },
         :created_at => {
           :type => [
             :string
-          ]
+          ],
         },
         :biography => {
           :type => [
             :string,
             :null
-          ]
-        }
+          ],
+        },
       },
       :relationships => {
         :demographic => {
@@ -109,16 +109,16 @@ class SchemaValidationTest < Minitest::Test
             :id => {
               :type => [
                 :integer
-              ]
+              ],
             },
             :gender => {
               :type => [
                 :string
-              ]
-            }
-          }
-        }
-      }
+              ],
+            },
+          },
+        },
+      },
     }
   end
 
@@ -177,7 +177,7 @@ class SchemaValidationTest < Minitest::Test
       "website" => nil,
       "role" => "user",
       "biography" => nil,
-      "demographic" => nil
+      "demographic" => nil,
     }
     assert(JSON::Validator.validate!(symbolized_schema, data, :validate_schema => true))
   end

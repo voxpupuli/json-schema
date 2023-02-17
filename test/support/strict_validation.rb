@@ -4,8 +4,8 @@ module StrictValidation
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "properties" => {
         "a" => {"type" => "string"},
-        "b" => {"type" => "string"}
-      }
+        "b" => {"type" => "string"},
+      },
     }
 
     data = {"a" => "a"}
@@ -33,9 +33,9 @@ module StrictValidation
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "properties" => {
         "a" => {"type" => "string"},
-        "b" => {"type" => "string"}
+        "b" => {"type" => "string"},
       },
-      "additionalProperties" => {"type" => "integer"}
+      "additionalProperties" => {"type" => "integer"},
     }
 
     data = {"a" => "a"}
@@ -58,9 +58,9 @@ module StrictValidation
     schema = {
       "properties" => {
         "a" => {"type" => "string"},
-        "b" => {"type" => "string"}
+        "b" => {"type" => "string"},
       },
-      "patternProperties" => {"\\d+ taco" => {"type" => "integer"}}
+      "patternProperties" => {"\\d+ taco" => {"type" => "integer"}},
     }
 
     data = {"a" => "a"}

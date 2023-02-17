@@ -7,8 +7,8 @@ class RubySchemaTest < Minitest::Test
       "required" => ["a"],
       "properties" => {
         "a" => {"type" => "integer", "default" => 42},
-        "b" => {"type" => "integer"}
-      }
+        "b" => {"type" => "integer"},
+      },
     }
 
     assert_valid schema, { "a" => 5 }
@@ -20,8 +20,8 @@ class RubySchemaTest < Minitest::Test
       :required => ["a"],
       :properties => {
         :a => {:type => "integer", :default => 42},
-        :b => {:type => "integer"}
-      }
+        :b => {:type => "integer"},
+      },
     }
 
     assert_valid schema, { :a => 5 }
@@ -37,21 +37,21 @@ class RubySchemaTest < Minitest::Test
             {
               :properties => {
                 :b => {
-                  :type => "integer"
-                }
-              }
+                  :type => "integer",
+                },
+              },
             }
-          ]
-        }
-      }
+          ],
+        },
+      },
     }
 
     data = {
       :a => [
         {
-          :b => 1
+          :b => 1,
         }
-      ]
+      ],
     }
 
     assert_valid schema, data, :validate_schema => true

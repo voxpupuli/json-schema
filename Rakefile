@@ -24,7 +24,7 @@ task :update_meta_schemas do
   puts "Updating meta-schemas..."
 
   id_mappings = {
-    'http://json-schema.org/draft/schema#' => 'https://raw.githubusercontent.com/json-schema-org/json-schema-spec/master/schema.json'
+    'http://json-schema.org/draft/schema#' => 'https://raw.githubusercontent.com/json-schema-org/json-schema-spec/master/schema.json',
   }
 
   require 'open-uri'

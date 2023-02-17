@@ -863,17 +863,6 @@ Style/TrailingCommaInArrayLiteral:
     - 'test/support/test_helper.rb'
     - 'test/uri_parsing_test.rb'
 
-# Offense count: 15
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, no_comma
-Style/TrailingCommaInHashLiteral:
-  Exclude:
-    - 'test/custom_format_test.rb'
-    - 'test/draft6_test.rb'
-    - 'test/full_validation_test.rb'
-    - 'test/one_of_test.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 # Configuration parameters: AllowNamedUnderscoreVariables.

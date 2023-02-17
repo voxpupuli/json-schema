@@ -19,7 +19,7 @@ module ArrayValidation
         'items' => [
           { 'type' => 'string' },
           { 'type' => 'integer' }
-        ]
+        ],
       }
 
       assert_valid schema, ['b', 1]
@@ -60,7 +60,7 @@ module ArrayValidation
           { 'type' => 'integer' },
           { 'type' => 'string' }
         ],
-        'additionalItems' => false
+        'additionalItems' => false,
       }
 
       assert_valid schema, [1, 'string']
@@ -76,7 +76,7 @@ module ArrayValidation
           { 'type' => 'integer' },
           { 'type' => 'string' }
         ],
-        'additionalItems' => { 'type' => 'integer' }
+        'additionalItems' => { 'type' => 'integer' },
       }
 
       assert_valid schema, [1, 'string']

@@ -8,8 +8,8 @@ class FullValidationTest < Minitest::Test
       "required" => ["b"],
       "properties" => {
         "b" => {
-        }
-      }
+        },
+      },
     }
 
     errors = JSON::Validator.fully_validate(schema,data)
@@ -23,9 +23,9 @@ class FullValidationTest < Minitest::Test
         "b" => {
         },
         "c" => {
-          "type" => "string"
-        }
-      }
+          "type" => "string",
+        },
+      },
     }
 
     errors = JSON::Validator.fully_validate(schema,data)
@@ -39,8 +39,8 @@ class FullValidationTest < Minitest::Test
       "required" => ["b"],
       "properties" => {
         "b" => {
-        }
-      }
+        },
+      },
     }
 
     validator = JSON::Validator.new(schema, { :record_errors => true })
@@ -56,9 +56,9 @@ class FullValidationTest < Minitest::Test
         "b" => {
         },
         "c" => {
-          "type" => "string"
-        }
-      }
+          "type" => "string",
+        },
+      },
     }
 
     validator = JSON::Validator.new(schema, { :record_errors => true })
@@ -73,9 +73,9 @@ class FullValidationTest < Minitest::Test
       "type" => "object",
       "properties" => {
         "b" => {
-          "type" => ["null","integer"]
-        }
-      }
+          "type" => ["null","integer"],
+        },
+      },
     }
 
     errors = JSON::Validator.fully_validate(schema,data)
@@ -85,9 +85,9 @@ class FullValidationTest < Minitest::Test
       "type" => "object",
       "properties" => {
         "b" => {
-          "type" => ["integer","null"]
-        }
-      }
+          "type" => ["integer","null"],
+        },
+      },
     }
 
     errors = JSON::Validator.fully_validate(schema,data)
@@ -107,18 +107,18 @@ class FullValidationTest < Minitest::Test
             {
               "type" => "object",
               "properties" => {
-                "c" => {"type" => "string"}
-              }
+                "c" => {"type" => "string"},
+              },
             },
             {
               "type" => "object",
               "properties" => {
-                "d" => {"type" => "integer"}
-              }
+                "d" => {"type" => "integer"},
+              },
             }
-          ]
-        }
-      }
+          ],
+        },
+      },
     }
 
     data = {"b" => {"c" => "taco"}}
@@ -144,8 +144,8 @@ class FullValidationTest < Minitest::Test
       "required" => ["b"],
       "properties" => {
         "b" => {
-        }
-      }
+        },
+      },
     }
 
     errors = JSON::Validator.fully_validate(schema,data,:errors_as_objects => true)
@@ -159,9 +159,9 @@ class FullValidationTest < Minitest::Test
         "b" => {
         },
         "c" => {
-          "type" => "string"
-        }
-      }
+          "type" => "string",
+        },
+      },
     }
 
     errors = JSON::Validator.fully_validate(schema,data,:errors_as_objects => true)
@@ -187,9 +187,9 @@ class FullValidationTest < Minitest::Test
             "c" => {"type"=>"integer"},
             "d" => {"type"=>"integer"},
             "e" => {"type"=>"integer"},
-          }
-        }
-      }
+          },
+        },
+      },
     }
     data = {"x" => {"a"=>5, "d"=>5, "e"=>"what?"}}
 
@@ -217,10 +217,10 @@ class FullValidationTest < Minitest::Test
               "c" => {"type"=>"integer"},
               "d" => {"type"=>"integer"},
               "e" => {"type"=>"integer"},
-            }
-          }
-        }
-      }
+            },
+          },
+        },
+      },
     }
     missing_b= {"a"=>5}
     e_is_wrong_type= {"a"=>5,"b"=>5,"e"=>"what?"}

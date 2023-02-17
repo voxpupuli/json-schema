@@ -9,10 +9,10 @@ class FragmentResolutionTest < Minitest::Test
         "a" => {
           "type" => "object",
           "properties" => {
-            "b" => {"type" => "integer" }
-          }
-        }
-      }
+            "b" => {"type" => "integer" },
+          },
+        },
+      },
     }
 
     data = {"b" => 5}
@@ -34,9 +34,9 @@ class FragmentResolutionTest < Minitest::Test
         "type" => "object",
         "required" => ["a"],
         "properties" => {
-          "a" => {"type" => "integer"}
-        }
-      }
+          "a" => {"type" => "integer"},
+        },
+      },
     }
 
     assert_valid schema, {"a" => 1}, :fragment => "#/foo"
@@ -50,10 +50,10 @@ class FragmentResolutionTest < Minitest::Test
           "type" => "object",
           "required" => ["a"],
           "properties" => {
-            "a" => {"type" => "integer"}
-          }
-        }
-      }
+            "a" => {"type" => "integer"},
+          },
+        },
+      },
     }
 
     assert_valid schema, {"a" => 1}, :fragment => "#/foo/bar"
@@ -69,9 +69,9 @@ class FragmentResolutionTest < Minitest::Test
           "anyOf" => [
             {"type" => "integer"},
             {"type" => "string"}
-          ]
-        }
-      }
+          ],
+        },
+      },
     }
 
     refute_valid schema, "foo", :fragment => "#/properties/a/anyOf/0"
@@ -88,10 +88,10 @@ class FragmentResolutionTest < Minitest::Test
           "type" => "object",
           "required" => ["a"],
           "properties" => {
-            "a" => {"type" => "integer"}
-          }
-        }
-      }
+            "a" => {"type" => "integer"},
+          },
+        },
+      },
     }
 
     assert_valid schema, {"a" => 1}, :fragment => "#/content/application~1json"

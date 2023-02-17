@@ -31,7 +31,7 @@ module JSON
         "object" => Hash,
         "array" => Array,
         "null" => NilClass,
-        "any" => Object
+        "any" => Object,
       }
 
       def self.data_valid_for_type?(data, type)

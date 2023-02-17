@@ -14,7 +14,7 @@ class BadSchemaRefTest < Minitest::Test
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "array",
-      "items" => { "$ref" => "../google.json"}
+      "items" => { "$ref" => "../google.json"},
     }
 
     data = [1,2,3]
@@ -33,7 +33,7 @@ class BadSchemaRefTest < Minitest::Test
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
       "type" => "array",
-      "items" => { "$ref" => "http://ppcheesecheseunicornnuuuurrrrr.example.invalid/json.schema"}
+      "items" => { "$ref" => "http://ppcheesecheseunicornnuuuurrrrr.example.invalid/json.schema"},
     }
 
     data = [1,2,3]
