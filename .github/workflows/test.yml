@@ -23,6 +23,7 @@ jobs:
           - ruby: "3.0"
           - ruby: "3.1"
             coverage: "yes"
+          - ruby: "3.2"
     env:
       COVERAGE: ${{ matrix.coverage }}
     steps:
