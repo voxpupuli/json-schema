@@ -137,7 +137,6 @@ class SchemaValidationTest < Minitest::Test
     assert_match(/the property .*required.*did not match/i, errors.first)
   end
 
-
   def test_draft04_validation
     data = {"b" => {"a" => 5}}
     assert(JSON::Validator.validate(valid_schema_v4,data,:validate_schema => true, :version => :draft4))

@@ -210,8 +210,6 @@ class Draft3Test < Minitest::Test
 
   end
 
-
-
   def test_extends
     schema = {
       "$schema" => "http://json-schema.org/draft-03/schema#",
@@ -256,7 +254,6 @@ class Draft3Test < Minitest::Test
     data = [{"a" => 1},{"b" => 2},{"a" => 3}]
     assert(!JSON::Validator.validate(schema,data,:list => true))
   end
-
 
   def test_self_reference
     schema = {
@@ -323,8 +320,6 @@ class Draft3Test < Minitest::Test
     assert(!JSON::Validator.validate(schema,data2))
     assert(JSON::Validator.validate(schema,data3))
   end
-
-
 
   def test_schema
     schema = {

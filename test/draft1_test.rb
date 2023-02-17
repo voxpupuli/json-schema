@@ -86,8 +86,6 @@ class Draft1Test < Minitest::Test
     assert_valid schema, data
   end
 
-
-
   def test_disallow
     # Set up the default datatype
     schema = {

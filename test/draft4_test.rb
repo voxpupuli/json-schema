@@ -530,7 +530,6 @@ class Draft4Test < Minitest::Test
     refute_valid schema, data
   end
 
-
   def test_any_of
     schema = {
       "$schema" => "http://json-schema.org/draft-04/schema#",
@@ -560,7 +559,6 @@ class Draft4Test < Minitest::Test
     data = {"a" => 5, "b" => "taco"}
     refute_valid schema, data
   end
-
 
   def test_one_of
     schema = {
@@ -592,7 +590,6 @@ class Draft4Test < Minitest::Test
     data = {"a" => 5, "b" => "taco"}
     refute_valid schema, data
   end
-
 
   def test_not
     # Start with a simple not

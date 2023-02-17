@@ -6,17 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 9
-# Cop supports --auto-correct.
-# Configuration parameters: EmptyLineBetweenMethodDefs, EmptyLineBetweenClassDefs, EmptyLineBetweenModuleDefs, AllowAdjacentOneLineDefs, NumberOfEmptyLines.
-Layout/EmptyLineBetweenDefs:
-  Exclude:
-    - 'test/draft1_test.rb'
-    - 'test/draft3_test.rb'
-    - 'test/draft4_test.rb'
-    - 'test/full_validation_test.rb'
-    - 'test/schema_validation_test.rb'
-
 # Offense count: 28
 # Cop supports --auto-correct.
 Layout/EmptyLines:

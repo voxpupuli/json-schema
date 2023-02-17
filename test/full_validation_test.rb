@@ -138,7 +138,6 @@ class FullValidationTest < Minitest::Test
     assert(errors.length == 1)
   end
 
-
   def test_full_validation_with_object_errors
     data = {"b" => {"a" => 5}}
     schema = {
