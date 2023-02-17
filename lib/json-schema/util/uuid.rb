@@ -227,7 +227,7 @@ module JSON
       def to_s
         a = unpack
         tmp = a[-1].unpack 'C*'
-        a[-1] = sprintf '%02x%02x%02x%02x%02x%02x', *tmp
+        a[-1] = format '%02x%02x%02x%02x%02x%02x', *tmp
         '%08x-%04x-%04x-%02x%02x-%s' % a
       end
       alias guid to_s
