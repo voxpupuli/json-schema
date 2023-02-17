@@ -8,12 +8,6 @@
 
 # Offense count: 2
 # Cop supports --auto-correct.
-Layout/CommentIndentation:
-  Exclude:
-    - 'lib/json-schema/util/uuid.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: leading, trailing
 Layout/DotPosition:
