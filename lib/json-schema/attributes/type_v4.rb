@@ -19,7 +19,7 @@ module JSON
           build_fragment(fragments),
           type_of_data(data),
           union ? 'one or more of the following types' : 'the following type',
-          types
+          types,
         )
 
         validation_error(processor, message, fragments, current_schema, self, options[:record_errors])

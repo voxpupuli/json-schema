@@ -37,7 +37,7 @@ class SchemaReaderTest < Minitest::Test
 
   def test_accept_uri_proc
     reader = JSON::Schema::Reader.new(
-      :accept_uri => proc { |uri| uri.host == 'json-schema.org' }
+      :accept_uri => proc { |uri| uri.host == 'json-schema.org' },
     )
 
     assert reader.accept_uri?(Addressable::URI.parse('http://json-schema.org/address'))
@@ -48,7 +48,7 @@ class SchemaReaderTest < Minitest::Test
     test_root = Pathname.new(__FILE__).expand_path.dirname
 
     reader = JSON::Schema::Reader.new(
-      :accept_file => proc { |path| path.to_s.start_with?(test_root.to_s) }
+      :accept_file => proc { |path| path.to_s.start_with?(test_root.to_s) },
     )
 
     assert reader.accept_file?(test_root.join('anything.json'))

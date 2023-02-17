@@ -12,7 +12,7 @@ class LoadRefSchemaTest < Minitest::Test
           },
         },
       },
-      Addressable::URI.parse("http://example.com/schema#")
+      Addressable::URI.parse("http://example.com/schema#"),
     ))
   end
 
