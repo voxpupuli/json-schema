@@ -155,7 +155,7 @@ module JSON
       end
 
       # Check for schemas in union types
-      ['type', 'disallow'].each do |key|
+      %w[type disallow].each do |key|
         if schema[key].is_a?(Array)
           schema[key].each do |type|
             if type.is_a?(Hash)

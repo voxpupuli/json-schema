@@ -103,7 +103,7 @@ class Draft1Test < Minitest::Test
     data['a'] = 5
     refute_valid schema, data
 
-    schema['properties']['a']['disallow'] = ['integer', 'string']
+    schema['properties']['a']['disallow'] = %w[integer string]
     data['a'] = 'string'
     refute_valid schema, data
 

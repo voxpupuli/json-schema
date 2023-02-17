@@ -14,7 +14,7 @@ class StringifyTest < Minitest::Test
       :a,
       'b',
     ]
-    assert_equal(['a', 'b'], JSON::Schema.stringify(array), 'symbols in an array should be converted to strings')
+    assert_equal(%w[a b], JSON::Schema.stringify(array), 'symbols in an array should be converted to strings')
   end
 
   def test_stringify_on_hash_of_arrays
