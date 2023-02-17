@@ -459,12 +459,6 @@ Style/DefWithParentheses:
 Style/Documentation:
   Enabled: false
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/EachWithObject:
-  Exclude:
-    - 'lib/json-schema/errors/validation_error.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 Style/EmptyLiteral:

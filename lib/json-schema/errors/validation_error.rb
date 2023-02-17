@@ -29,10 +29,9 @@ module JSON
       def to_hash
         base = {schema: @schema.uri, fragment: ::JSON::Schema::Attribute.build_fragment(fragments), message: message_with_schema, failed_attribute: @failed_attribute.to_s.split(':').last.split('Attribute').first}
         if !@sub_errors.empty?
-          base[:errors] = @sub_errors.inject({}) do |hsh, (subschema, errors)|
+          base[:errors] = @sub_errors.each_with_object({}) do |(subschema, errors), hsh|
             subschema_sym = subschema.downcase.gsub(/\W+/, '_').to_sym
             hsh[subschema_sym] = Array(errors).map{|e| e.to_hash}
-            hsh
           end
         end
         base
