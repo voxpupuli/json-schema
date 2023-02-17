@@ -622,8 +622,7 @@ class Draft4Test < Minitest::Test
               'b' => {'type' => 'boolean'},
             },
           },
-        ]},
-        },
+        ]} },
       },
     }
 
