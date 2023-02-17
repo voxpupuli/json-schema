@@ -51,7 +51,7 @@ module TypeValidation
     def test_any_type
       schema = { 'type' => 'any' }
 
-      SimpleTypeTests::TYPES.values.each do |value|
+      SimpleTypeTests::TYPES.each_value do |value|
         assert_valid schema, value
       end
     end

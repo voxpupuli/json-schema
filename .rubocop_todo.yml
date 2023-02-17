@@ -526,12 +526,6 @@ Style/GlobalStdStream:
 Style/GuardClause:
   Enabled: false
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/HashEachMethods:
-  Exclude:
-    - 'test/support/type_validation.rb'
-
 # Offense count: 19
 # Cop supports --auto-correct.
 Style/IfUnlessModifier:
