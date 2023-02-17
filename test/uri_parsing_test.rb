@@ -1,4 +1,5 @@
 # coding: utf-8
+
 require File.expand_path('../support/test_helper', __FILE__)
 
 class UriParsingTest < Minitest::Test

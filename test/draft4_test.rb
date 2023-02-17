@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 require File.expand_path('../support/test_helper', __FILE__)
 
 class Draft4Test < Minitest::Test

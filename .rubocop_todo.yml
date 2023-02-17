@@ -25,16 +25,6 @@ Layout/EmptyLineAfterGuardClause:
     - 'lib/json-schema/util/uuid.rb'
     - 'lib/json-schema/validator.rb'
 
-# Offense count: 5
-# Cop supports --auto-correct.
-Layout/EmptyLineAfterMagicComment:
-  Exclude:
-    - 'test/custom_format_test.rb'
-    - 'test/draft3_test.rb'
-    - 'test/draft4_test.rb'
-    - 'test/draft6_test.rb'
-    - 'test/uri_parsing_test.rb'
-
 # Offense count: 9
 # Cop supports --auto-correct.
 # Configuration parameters: EmptyLineBetweenMethodDefs, EmptyLineBetweenClassDefs, EmptyLineBetweenModuleDefs, AllowAdjacentOneLineDefs, NumberOfEmptyLines.
