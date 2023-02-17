@@ -431,12 +431,6 @@ Style/ColonMethodCall:
     - 'lib/json-schema.rb'
     - 'lib/json-schema/validator.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/CommentedKeyword:
-  Exclude:
-    - 'lib/json-schema/util/uuid.rb'
-
 # Offense count: 5
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SingleLineConditionsOnly, IncludeTernaryExpressions.

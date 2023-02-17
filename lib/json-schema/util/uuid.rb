@@ -36,7 +36,8 @@ module JSON
       private_class_method :new
 
       class << self
-        def mask19 v, str # :nodoc
+        # :nodoc
+        def mask19 v, str
           nstr = str.bytes.to_a
           version = [0, 16, 32, 48, 64, 80][v]
           nstr[6] &= 0b00001111
@@ -50,7 +51,8 @@ module JSON
           str
         end
 
-        def mask18 v, str # :nodoc
+        # :nodoc
+        def mask18 v, str
           version = [0, 16, 32, 48, 64, 80][v]
           str[6] &= 0b00001111
           str[6] |= version
