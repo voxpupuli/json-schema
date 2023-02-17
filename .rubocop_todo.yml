@@ -14,14 +14,6 @@ Layout/MultilineMethodCallBraceLayout:
   Exclude:
     - 'test/common_test_suite_test.rb'
 
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: aligned, indented
-Layout/MultilineOperationIndentation:
-  Exclude:
-    - 'lib/json-schema/attributes/properties.rb'
-
 # Offense count: 18
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
