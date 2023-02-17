@@ -889,12 +889,6 @@ Style/WordArray:
   EnforcedStyle: percent
   MinSize: 3
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/ZeroLengthPredicate:
-  Exclude:
-    - 'lib/json-schema/attributes/properties.rb'
-
 # Offense count: 74
 # Cop supports --auto-correct.
 # Configuration parameters: AutoCorrect, AllowHeredoc, AllowURI, URISchemes, IgnoreCopDirectives, IgnoredPatterns.
