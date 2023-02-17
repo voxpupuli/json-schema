@@ -572,12 +572,6 @@ Style/SelfAssignment:
     - 'lib/json-schema/attributes/type.rb'
     - 'lib/json-schema/util/uuid.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/StderrPuts:
-  Exclude:
-    - 'Rakefile'
-
 # Offense count: 4
 # Cop supports --auto-correct.
 Style/StringConcatenation:

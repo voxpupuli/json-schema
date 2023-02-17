@@ -15,7 +15,7 @@ task :update_common_tests do
   begin
     sh 'git submodule update --remote --quiet'
   rescue StandardError
-    $stderr.puts 'Failed to update common test suite.'
+    warn 'Failed to update common test suite.'
   end
 end
 
@@ -51,7 +51,7 @@ task :update_meta_schemas do
     if t.value
       puts t[:uri]
     else
-      $stderr.puts "Failed to update meta-schema #{t[:uri]}"
+      warn "Failed to update meta-schema #{t[:uri]}"
     end
   end
 end
