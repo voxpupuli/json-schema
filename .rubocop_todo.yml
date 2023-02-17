@@ -562,18 +562,6 @@ Style/RedundantSelf:
 
 # Offense count: 10
 # Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, AllowInnerSlashes.
-# SupportedStyles: slashes, percent_r, mixed
-Style/RegexpLiteral:
-  Exclude:
-    - 'lib/json-schema/util/uuid.rb'
-    - 'test/all_of_ref_schema_test.rb'
-    - 'test/any_of_ref_schema_test.rb'
-    - 'test/custom_format_test.rb'
-    - 'test/one_of_test.rb'
-
-# Offense count: 10
-# Cop supports --auto-correct.
 Style/SelfAssignment:
   Exclude:
     - 'lib/json-schema/attributes/additionalproperties.rb'
