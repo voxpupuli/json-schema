@@ -517,23 +517,6 @@ Style/RedundantRegexpEscape:
   Exclude:
     - 'lib/json-schema/attributes/formats/date_time.rb'
 
-# Offense count: 15
-# Cop supports --auto-correct.
-Style/RedundantSelf:
-  Exclude:
-    - 'lib/json-schema/util/array_set.rb'
-    - 'lib/json-schema/util/uuid.rb'
-    - 'lib/json-schema/validators/draft1.rb'
-    - 'lib/json-schema/validators/draft2.rb'
-    - 'lib/json-schema/validators/draft3.rb'
-    - 'lib/json-schema/validators/draft4.rb'
-    - 'lib/json-schema/validators/draft6.rb'
-    - 'lib/json-schema/validators/hyper-draft1.rb'
-    - 'lib/json-schema/validators/hyper-draft2.rb'
-    - 'lib/json-schema/validators/hyper-draft3.rb'
-    - 'lib/json-schema/validators/hyper-draft4.rb'
-    - 'lib/json-schema/validators/hyper-draft6.rb'
-
 # Offense count: 10
 # Cop supports --auto-correct.
 Style/SelfAssignment:

@@ -7,7 +7,7 @@ class ArraySet < Array
   def include?(obj)
     if !defined? @values
       @values = Set.new
-      self.each { |x| @values << convert_to_float_if_numeric(x) }
+      each { |x| @values << convert_to_float_if_numeric(x) }
     end
     @values.include?(convert_to_float_if_numeric(obj))
   end

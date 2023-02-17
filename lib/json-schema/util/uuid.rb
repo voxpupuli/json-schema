@@ -236,13 +236,13 @@ module JSON
 
       # Convert into a RFC4122-comforming URN representation
       def to_uri
-        'urn:uuid:' + self.to_s
+        'urn:uuid:' + to_s
       end
       alias urn to_uri
 
       # Convert into 128-bit unsigned integer
       def to_int
-        tmp = self.raw_bytes.unpack 'C*'
+        tmp = raw_bytes.unpack 'C*'
         tmp.inject do |r, i|
           r * 256 | i
         end
