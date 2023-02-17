@@ -2,7 +2,7 @@ require File.expand_path('../support/test_helper', __FILE__)
 
 class FullValidationTest < Minitest::Test
   def test_full_validation
-    data = {'b' => {'a' => 5}}
+    data = { 'b' => { 'a' => 5 } }
     schema = {
       'type' => 'object',
       'required' => ['b'],
@@ -15,7 +15,7 @@ class FullValidationTest < Minitest::Test
     errors = JSON::Validator.fully_validate(schema, data)
     assert(errors.empty?)
 
-    data = {'c' => 5}
+    data = { 'c' => 5 }
     schema = {
       'type' => 'object',
       'required' => ['b'],
@@ -33,7 +33,7 @@ class FullValidationTest < Minitest::Test
   end
 
   def test_full_validation_with_instantiated_validator
-    data = {'b' => {'a' => 5}}
+    data = { 'b' => { 'a' => 5 } }
     schema = {
       'type' => 'object',
       'required' => ['b'],
@@ -48,7 +48,7 @@ class FullValidationTest < Minitest::Test
     assert(validator.validate(data).empty?)
     assert(validator.validate(data).empty?)
 
-    data = {'c' => 5}
+    data = { 'c' => 5 }
     schema = {
       'type' => 'object',
       'required' => ['b'],
@@ -68,7 +68,7 @@ class FullValidationTest < Minitest::Test
   end
 
   def test_full_validation_with_union_types
-    data = {'b' => 5}
+    data = { 'b' => 5 }
     schema = {
       'type' => 'object',
       'properties' => {
@@ -93,7 +93,7 @@ class FullValidationTest < Minitest::Test
     errors = JSON::Validator.fully_validate(schema, data)
     assert(errors.empty?)
 
-    data = {'b' => 'a string'}
+    data = { 'b' => 'a string' }
 
     errors = JSON::Validator.fully_validate(schema, data)
     assert(errors.length == 1)
@@ -107,13 +107,13 @@ class FullValidationTest < Minitest::Test
             {
               'type' => 'object',
               'properties' => {
-                'c' => {'type' => 'string'},
+                'c' => { 'type' => 'string' },
               },
             },
             {
               'type' => 'object',
               'properties' => {
-                'd' => {'type' => 'integer'},
+                'd' => { 'type' => 'integer' },
               },
             },
           ],
@@ -121,24 +121,24 @@ class FullValidationTest < Minitest::Test
       },
     }
 
-    data = {'b' => {'c' => 'taco'}}
+    data = { 'b' => { 'c' => 'taco' } }
 
     errors = JSON::Validator.fully_validate(schema, data)
     assert(errors.empty?)
 
-    data = {'b' => {'d' => 6}}
+    data = { 'b' => { 'd' => 6 } }
 
     errors = JSON::Validator.fully_validate(schema, data)
     assert(errors.empty?)
 
-    data = {'b' => {'c' => 6, 'd' => 'OH GOD'}}
+    data = { 'b' => { 'c' => 6, 'd' => 'OH GOD' } }
 
     errors = JSON::Validator.fully_validate(schema, data)
     assert(errors.length == 1)
   end
 
   def test_full_validation_with_object_errors
-    data = {'b' => {'a' => 5}}
+    data = { 'b' => { 'a' => 5 } }
     schema = {
       'type' => 'object',
       'required' => ['b'],
@@ -151,7 +151,7 @@ class FullValidationTest < Minitest::Test
     errors = JSON::Validator.fully_validate(schema, data, errors_as_objects: true)
     assert(errors.empty?)
 
-    data = {'c' => 5}
+    data = { 'c' => 5 }
     schema = {
       'type' => 'object',
       'required' => ['b'],
@@ -182,16 +182,16 @@ class FullValidationTest < Minitest::Test
           'type' => 'object',
           'required' => ['a', 'b'],
           'properties' => {
-            'a' => {'type' => 'integer'},
-            'b' => {'type' => 'integer'},
-            'c' => {'type' => 'integer'},
-            'd' => {'type' => 'integer'},
-            'e' => {'type' => 'integer'},
+            'a' => { 'type' => 'integer' },
+            'b' => { 'type' => 'integer' },
+            'c' => { 'type' => 'integer' },
+            'd' => { 'type' => 'integer' },
+            'e' => { 'type' => 'integer' },
           },
         },
       },
     }
-    data = {'x' => {'a' => 5, 'd' => 5, 'e' => 'what?'}}
+    data = { 'x' => { 'a' => 5, 'd' => 5, 'e' => 'what?' } }
 
     errors = JSON::Validator.fully_validate(schema, data, errors_as_objects: true)
     assert_equal 2, errors.length
@@ -212,19 +212,19 @@ class FullValidationTest < Minitest::Test
             'type' => 'object',
             'required' => ['a', 'b'],
             'properties' => {
-              'a' => {'type' => 'integer'},
-              'b' => {'type' => 'integer'},
-              'c' => {'type' => 'integer'},
-              'd' => {'type' => 'integer'},
-              'e' => {'type' => 'integer'},
+              'a' => { 'type' => 'integer' },
+              'b' => { 'type' => 'integer' },
+              'c' => { 'type' => 'integer' },
+              'd' => { 'type' => 'integer' },
+              'e' => { 'type' => 'integer' },
             },
           },
         },
       },
     }
-    missing_b = {'a' => 5}
-    e_is_wrong_type = {'a' => 5, 'b' => 5, 'e' => 'what?'}
-    data = {'x' => [missing_b, e_is_wrong_type]}
+    missing_b = { 'a' => 5 }
+    e_is_wrong_type = { 'a' => 5, 'b' => 5, 'e' => 'what?' }
+    data = { 'x' => [missing_b, e_is_wrong_type] }
 
     errors = JSON::Validator.fully_validate(schema, data, errors_as_objects: true)
     assert_equal 2, errors.length

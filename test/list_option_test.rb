@@ -12,10 +12,10 @@ class ListOptionTest < Minitest::Test
     schema = JSON::Schema.new(schema_hash, uri)
     JSON::Validator.add_schema(schema)
 
-    data = {'a' => 1}
+    data = { 'a' => 1 }
     assert_valid uri.to_s, data, clear_cache: false
 
-    data = [{'a' => 1}]
+    data = [{ 'a' => 1 }]
     assert_valid uri.to_s, data, list: true
   end
 end

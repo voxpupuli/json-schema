@@ -43,7 +43,7 @@ module JSON
       configured_validator = self.class.validator_for_name(@options[:version])
       @options[:schema_reader] ||= self.class.schema_reader
 
-      @validation_options = @options[:record_errors] ? {record_errors: true} : {}
+      @validation_options = @options[:record_errors] ? { record_errors: true } : {}
       @validation_options[:insert_defaults] = true if @options[:insert_defaults]
       @validation_options[:strict] = true if @options[:strict] == true
       @validation_options[:clear_cache] = true if !@@cache_schemas || @options[:clear_cache]
@@ -54,7 +54,7 @@ module JSON
       # validate the schema, if requested
       if @options[:validate_schema]
         # Don't clear the cache during metaschema validation!
-        meta_validator = self.class.new(@base_schema.validator.metaschema, {clear_cache: false})
+        meta_validator = self.class.new(@base_schema.validator.metaschema, { clear_cache: false })
         meta_validator.validate(@base_schema.schema)
       end
 

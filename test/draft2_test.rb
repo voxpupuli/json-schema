@@ -42,7 +42,7 @@ class Draft2Test < Minitest::Test
     # Set up the default datatype
     schema = {
       'properties' => {
-        'a' => {'type' => 'string'},
+        'a' => { 'type' => 'string' },
       },
     }
     data = {}
@@ -53,7 +53,7 @@ class Draft2Test < Minitest::Test
 
     schema = {
       'properties' => {
-        'a' => {'type' => 'integer', 'optional' => 'true'},
+        'a' => { 'type' => 'integer', 'optional' => 'true' },
       },
     }
 
@@ -65,7 +65,7 @@ class Draft2Test < Minitest::Test
     # Set up the default datatype
     schema = {
       'properties' => {
-        'a' => {'disallow' => 'integer'},
+        'a' => { 'disallow' => 'integer' },
       },
     }
 
@@ -93,17 +93,17 @@ class Draft2Test < Minitest::Test
   def test_format_datetime
     schema = {
       'type' => 'object',
-      'properties' => { 'a' => {'type' => 'string', 'format' => 'date-time'}},
+      'properties' => { 'a' => { 'type' => 'string', 'format' => 'date-time' } },
     }
 
-    assert_valid schema, {'a' => '2010-01-01T12:00:00Z'}
-    refute_valid schema, {'a' => '2010-01-32T12:00:00Z'}
-    refute_valid schema, {'a' => '2010-13-01T12:00:00Z'}
-    refute_valid schema, {'a' => '2010-01-01T24:00:00Z'}
-    refute_valid schema, {'a' => '2010-01-01T12:60:00Z'}
-    refute_valid schema, {'a' => '2010-01-01T12:00:60Z'}
-    refute_valid schema, {'a' => '2010-01-01T12:00:00z'}
-    refute_valid schema, {'a' => '2010-01-0112:00:00Z'}
-    refute_valid schema, {'a' => "2010-01-01T12:00:00Z\nabc"}
+    assert_valid schema, { 'a' => '2010-01-01T12:00:00Z' }
+    refute_valid schema, { 'a' => '2010-01-32T12:00:00Z' }
+    refute_valid schema, { 'a' => '2010-13-01T12:00:00Z' }
+    refute_valid schema, { 'a' => '2010-01-01T24:00:00Z' }
+    refute_valid schema, { 'a' => '2010-01-01T12:60:00Z' }
+    refute_valid schema, { 'a' => '2010-01-01T12:00:60Z' }
+    refute_valid schema, { 'a' => '2010-01-01T12:00:00z' }
+    refute_valid schema, { 'a' => '2010-01-0112:00:00Z' }
+    refute_valid schema, { 'a' => "2010-01-01T12:00:00Z\nabc" }
   end
 end

@@ -11,7 +11,7 @@ module ArrayValidation
       refute_valid schema, ['a', 1]
 
       # other types are disregarded
-      assert_valid schema, {'a' => 'foo'}
+      assert_valid schema, { 'a' => 'foo' }
     end
 
     def test_items_multiple_schemas
@@ -104,9 +104,9 @@ module ArrayValidation
       assert_valid schema, [[1], [2]]
       refute_valid schema, [[1], [1]]
 
-      assert_valid schema, [{'b' => 1}, {'c' => 2}]
-      assert_valid schema, [{'b' => 1}, {'c' => 1}]
-      refute_valid schema, [{'b' => 1}, {'b' => 1}]
+      assert_valid schema, [{ 'b' => 1 }, { 'c' => 2 }]
+      assert_valid schema, [{ 'b' => 1 }, { 'c' => 1 }]
+      refute_valid schema, [{ 'b' => 1 }, { 'b' => 1 }]
     end
   end
 end

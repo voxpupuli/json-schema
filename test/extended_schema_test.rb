@@ -37,9 +37,9 @@ class ExtendedSchemaTest < Minitest::Test
       },
     }
 
-    assert_valid schema, {'a' => 1, 'b' => 'taco'}
-    refute_valid schema, {'a' => 0, 'b' => 'taco'}
-    refute_valid schema, {'a' => 1, 'b' => 5}
+    assert_valid schema, { 'a' => 1, 'b' => 'taco' }
+    refute_valid schema, { 'a' => 0, 'b' => 'taco' }
+    refute_valid schema, { 'a' => 1, 'b' => 5 }
   end
 
   def test_extended_schema_validation_with_fragment
@@ -56,8 +56,8 @@ class ExtendedSchemaTest < Minitest::Test
       },
     }
 
-    assert_valid schema, {'a' => 1}, fragment: '#/definitions/odd-a'
-    refute_valid schema, {'a' => 0}, fragment: '#/definitions/odd-a'
+    assert_valid schema, { 'a' => 1 }, fragment: '#/definitions/odd-a'
+    refute_valid schema, { 'a' => 0 }, fragment: '#/definitions/odd-a'
   end
 
   def test_unextended_schema
@@ -73,8 +73,8 @@ class ExtendedSchemaTest < Minitest::Test
       },
     }
 
-    assert_valid schema, {'a' => 0, 'b' => 'taco'}
-    assert_valid schema, {'a' => 1, 'b' => 'taco'}
-    refute_valid schema, {'a' => 1, 'b' => 5}
+    assert_valid schema, { 'a' => 0, 'b' => 'taco' }
+    assert_valid schema, { 'a' => 1, 'b' => 'taco' }
+    refute_valid schema, { 'a' => 1, 'b' => 5 }
   end
 end

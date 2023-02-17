@@ -19,10 +19,10 @@ module TypeValidation
         schema = {
           'properties' => { 'a' => { 'type' => name } },
         }
-        assert_valid schema, {'a' => value}
+        assert_valid schema, { 'a' => value }
 
         other_values.each do |other_value|
-          refute_valid schema, {'a' => other_value}
+          refute_valid schema, { 'a' => other_value }
         end
       end
 
@@ -64,18 +64,18 @@ module TypeValidation
         'properties' => {
           'a' => {
             'type' => [
-              {'type' => 'string'},
-              {'type' => 'object', 'properties' => { 'b' => { 'type' => 'integer' }}},
+              { 'type' => 'string' },
+              { 'type' => 'object', 'properties' => { 'b' => { 'type' => 'integer' } } },
             ],
           },
         },
       }
 
-      assert_valid schema, {'a' => 'test'}
-      refute_valid schema, {'a' => 5}
+      assert_valid schema, { 'a' => 'test' }
+      refute_valid schema, { 'a' => 5 }
 
-      assert_valid schema, {'a' => {'b' => 5}}
-      refute_valid schema, {'a' => {'b' => 'taco'}}
+      assert_valid schema, { 'a' => { 'b' => 5 } }
+      refute_valid schema, { 'a' => { 'b' => 'taco' } }
     end
   end
 end

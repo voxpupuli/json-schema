@@ -2,7 +2,7 @@ require File.expand_path('../support/test_helper', __FILE__)
 
 class InitializeDataTest < Minitest::Test
   def test_parse_character_string
-    schema = {'type' => 'string'}
+    schema = { 'type' => 'string' }
     data = 'hello world'
 
     assert(JSON::Validator.validate(schema, data))
@@ -17,7 +17,7 @@ class InitializeDataTest < Minitest::Test
   end
 
   def test_parse_integer_string
-    schema = {'type' => 'integer'}
+    schema = { 'type' => 'integer' }
     data = '42'
 
     assert(JSON::Validator.validate(schema, data))
@@ -43,7 +43,7 @@ class InitializeDataTest < Minitest::Test
   end
 
   def test_parse_json_string
-    schema = {'type' => 'string'}
+    schema = { 'type' => 'string' }
     data = '"hello world"'
 
     assert(JSON::Validator.validate(schema, data))
@@ -56,7 +56,7 @@ class InitializeDataTest < Minitest::Test
   end
 
   def test_parse_plain_text_string
-    schema = {'type' => 'string'}
+    schema = { 'type' => 'string' }
     data = 'kapow'
 
     assert(JSON::Validator.validate(schema, data))
@@ -71,7 +71,7 @@ class InitializeDataTest < Minitest::Test
   end
 
   def test_parse_valid_uri_string
-    schema = {'type' => 'string'}
+    schema = { 'type' => 'string' }
     data = 'http://foo.bar/'
 
     stub_request(:get, 'foo.bar').to_return(body: '"hello world"', status: 200)
@@ -88,7 +88,7 @@ class InitializeDataTest < Minitest::Test
   end
 
   def test_parse_invalid_uri_string
-    schema = {'type' => 'string'}
+    schema = { 'type' => 'string' }
     data = 'http://foo.bar/'
 
     stub_request(:get, 'foo.bar').to_timeout
@@ -111,7 +111,7 @@ class InitializeDataTest < Minitest::Test
   end
 
   def test_parse_invalid_scheme_string
-    schema = {'type' => 'string'}
+    schema = { 'type' => 'string' }
     data = 'pick one: [1, 2, 3]'
 
     assert(JSON::Validator.validate(schema, data))
@@ -126,7 +126,7 @@ class InitializeDataTest < Minitest::Test
   end
 
   def test_parse_integer
-    schema = {'type' => 'integer'}
+    schema = { 'type' => 'integer' }
     data = 42
 
     assert(JSON::Validator.validate(schema, data))
@@ -152,7 +152,7 @@ class InitializeDataTest < Minitest::Test
   end
 
   def test_parse_character_string_with_instantiated_validator
-    schema = {'type' => 'string'}
+    schema = { 'type' => 'string' }
     data = 'hello world'
 
     v = JSON::Validator.new(schema)
@@ -173,7 +173,7 @@ class InitializeDataTest < Minitest::Test
   end
 
   def test_parse_integer_string_with_instantiated_validator
-    schema = {'type' => 'integer'}
+    schema = { 'type' => 'integer' }
     data = '42'
 
     v = JSON::Validator.new(schema)
@@ -215,7 +215,7 @@ class InitializeDataTest < Minitest::Test
   end
 
   def test_parse_json_string_with_instantiated_validator
-    schema = {'type' => 'string'}
+    schema = { 'type' => 'string' }
     data = '"hello world"'
 
     v = JSON::Validator.new(schema)
@@ -236,7 +236,7 @@ class InitializeDataTest < Minitest::Test
   end
 
   def test_parse_plain_text_string_with_instantiated_validator
-    schema = {'type' => 'string'}
+    schema = { 'type' => 'string' }
     data = 'kapow'
 
     v = JSON::Validator.new(schema)
@@ -257,7 +257,7 @@ class InitializeDataTest < Minitest::Test
   end
 
   def test_parse_valid_uri_string_with_instantiated_validator
-    schema = {'type' => 'string'}
+    schema = { 'type' => 'string' }
     data = 'http://foo.bar/'
 
     stub_request(:get, 'foo.bar').to_return(body: '"hello world"', status: 200)
@@ -280,7 +280,7 @@ class InitializeDataTest < Minitest::Test
   end
 
   def test_parse_invalid_uri_string_with_instantiated_validator
-    schema = {'type' => 'string'}
+    schema = { 'type' => 'string' }
     data = 'http://foo.bar/'
 
     stub_request(:get, 'foo.bar').to_timeout
@@ -312,7 +312,7 @@ class InitializeDataTest < Minitest::Test
   end
 
   def test_parse_invalid_scheme_string_with_instantiated_validator
-    schema = {'type' => 'string'}
+    schema = { 'type' => 'string' }
     data = 'pick one: [1, 2, 3]'
 
     v = JSON::Validator.new(schema)
@@ -333,7 +333,7 @@ class InitializeDataTest < Minitest::Test
   end
 
   def test_parse_integer_with_instantiated_validator
-    schema = {'type' => 'integer'}
+    schema = { 'type' => 'integer' }
     data = 42
 
     v = JSON::Validator.new(schema)

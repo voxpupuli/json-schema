@@ -57,7 +57,7 @@ class Draft4Test < Minitest::Test
     schema = {
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'properties' => {
-        'a' => {'type' => 'integer'},
+        'a' => { 'type' => 'integer' },
       },
     }
 
@@ -68,42 +68,42 @@ class Draft4Test < Minitest::Test
   def test_min_properties
     schema = { 'minProperties' => 2 }
 
-    assert_valid schema, {'a' => 1, 'b' => 2}
-    assert_valid schema, {'a' => 1, 'b' => 2, 'c' => 3}
+    assert_valid schema, { 'a' => 1, 'b' => 2 }
+    assert_valid schema, { 'a' => 1, 'b' => 2, 'c' => 3 }
 
-    refute_valid schema, {'a' => 1}
+    refute_valid schema, { 'a' => 1 }
     refute_valid schema, {}
   end
 
   def test_max_properties
     schema = { 'maxProperties' => 2 }
 
-    assert_valid schema, {'a' => 1, 'b' => 2}
-    assert_valid schema, {'a' => 1}
+    assert_valid schema, { 'a' => 1, 'b' => 2 }
+    assert_valid schema, { 'a' => 1 }
     assert_valid schema, {}
 
-    refute_valid schema, {'a' => 1, 'b' => 2, 'c' => 3}
+    refute_valid schema, { 'a' => 1, 'b' => 2, 'c' => 3 }
   end
 
   def test_strict_properties
     schema = {
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'properties' => {
-        'a' => {'type' => 'string'},
-        'b' => {'type' => 'string'},
+        'a' => { 'type' => 'string' },
+        'b' => { 'type' => 'string' },
       },
     }
 
-    data = {'a' => 'a'}
+    data = { 'a' => 'a' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
 
-    data = {'b' => 'b'}
+    data = { 'b' => 'b' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
 
-    data = {'a' => 'a', 'b' => 'b'}
+    data = { 'a' => 'a', 'b' => 'b' }
     assert(JSON::Validator.validate(schema, data, strict: true))
 
-    data = {'a' => 'a', 'b' => 'b', 'c' => 'c'}
+    data = { 'a' => 'a', 'b' => 'b', 'c' => 'c' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
   end
 
@@ -111,25 +111,25 @@ class Draft4Test < Minitest::Test
     schema = {
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'properties' => {
-        'a' => {'type' => 'string'},
-        'b' => {'type' => 'string'},
+        'a' => { 'type' => 'string' },
+        'b' => { 'type' => 'string' },
       },
-      'additionalProperties' => {'type' => 'integer'},
+      'additionalProperties' => { 'type' => 'integer' },
     }
 
-    data = {'a' => 'a'}
+    data = { 'a' => 'a' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
 
-    data = {'b' => 'b'}
+    data = { 'b' => 'b' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
 
-    data = {'a' => 'a', 'b' => 'b'}
+    data = { 'a' => 'a', 'b' => 'b' }
     assert(JSON::Validator.validate(schema, data, strict: true))
 
-    data = {'a' => 'a', 'b' => 'b', 'c' => 'c'}
+    data = { 'a' => 'a', 'b' => 'b', 'c' => 'c' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
 
-    data = {'a' => 'a', 'b' => 'b', 'c' => 3}
+    data = { 'a' => 'a', 'b' => 'b', 'c' => 3 }
     assert(JSON::Validator.validate(schema, data, strict: true))
   end
 
@@ -137,31 +137,31 @@ class Draft4Test < Minitest::Test
     schema = {
       '$schema' => 'http://json-schema.org/draft-03/schema#',
       'properties' => {
-        'a' => {'type' => 'string'},
-        'b' => {'type' => 'string'},
+        'a' => { 'type' => 'string' },
+        'b' => { 'type' => 'string' },
       },
-      'patternProperties' => {'\\d+ taco' => {'type' => 'integer'}},
+      'patternProperties' => { '\\d+ taco' => { 'type' => 'integer' } },
     }
 
-    data = {'a' => 'a'}
+    data = { 'a' => 'a' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
 
-    data = {'b' => 'b'}
+    data = { 'b' => 'b' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
 
-    data = {'a' => 'a', 'b' => 'b'}
+    data = { 'a' => 'a', 'b' => 'b' }
     assert(JSON::Validator.validate(schema, data, strict: true))
 
-    data = {'a' => 'a', 'b' => 'b', 'c' => 'c'}
+    data = { 'a' => 'a', 'b' => 'b', 'c' => 'c' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
 
-    data = {'a' => 'a', 'b' => 'b', 'c' => 3}
+    data = { 'a' => 'a', 'b' => 'b', 'c' => 3 }
     assert(!JSON::Validator.validate(schema, data, strict: true))
 
-    data = {'a' => 'a', 'b' => 'b', '23 taco' => 3}
+    data = { 'a' => 'a', 'b' => 'b', '23 taco' => 3 }
     assert(JSON::Validator.validate(schema, data, strict: true))
 
-    data = {'a' => 'a', 'b' => 'b', '23 taco' => 'cheese'}
+    data = { 'a' => 'a', 'b' => 'b', '23 taco' => 'cheese' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
   end
 
@@ -170,17 +170,17 @@ class Draft4Test < Minitest::Test
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'type' => 'object',
       'required' => ['a'],
-      'properties' => { 'a' => {'type' => 'integer'} },
+      'properties' => { 'a' => { 'type' => 'integer' } },
     }
 
-    data = [{'a' => 1}, {'a' => 2}, {'a' => 3}]
+    data = [{ 'a' => 1 }, { 'a' => 2 }, { 'a' => 3 }]
     assert(JSON::Validator.validate(schema, data, list: true))
     refute_valid schema, data
 
-    data = {'a' => 1}
+    data = { 'a' => 1 }
     assert(!JSON::Validator.validate(schema, data, list: true))
 
-    data = [{'a' => 1}, {'b' => 2}, {'a' => 3}]
+    data = [{ 'a' => 1 }, { 'b' => 2 }, { 'a' => 3 }]
     assert(!JSON::Validator.validate(schema, data, list: true))
   end
 
@@ -278,11 +278,11 @@ class Draft4Test < Minitest::Test
     schema = {
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'type' => 'object',
-      'properties' => { 'a' => {'type' => 'integer'}, 'b' => {'$ref' => '#'}},
+      'properties' => { 'a' => { 'type' => 'integer' }, 'b' => { '$ref' => '#' } },
     }
 
-    assert_valid schema, {'a' => 5, 'b' => {'b' => {'a' => 1}}}
-    refute_valid schema, {'a' => 5, 'b' => {'b' => {'a' => 'taco'}}}
+    assert_valid schema, { 'a' => 5, 'b' => { 'b' => { 'a' => 1 } } }
+    refute_valid schema, { 'a' => 5, 'b' => { 'b' => { 'a' => 'taco' } } }
   end
 
   def test_property_named_ref
@@ -303,32 +303,32 @@ class Draft4Test < Minitest::Test
     schema = {
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'type' => 'object',
-      'properties' => { 'a' => {'type' => 'string', 'format' => 'date-time'}},
+      'properties' => { 'a' => { 'type' => 'string', 'format' => 'date-time' } },
     }
 
-    assert_valid schema, {'a' => '2010-01-01T12:00:00Z'}
-    assert_valid schema, {'a' => '2010-01-01T12:00:00.1Z'}
-    refute_valid schema, {'a' => '2010-01-01T12:00:00,1Z'}
-    refute_valid schema, {'a' => '2010-01-01T12:00:00+0000'}
-    assert_valid schema, {'a' => '2010-01-01T12:00:00+00:00'}
-    refute_valid schema, {'a' => '2010-01-32T12:00:00Z'}
-    refute_valid schema, {'a' => '2010-13-01T12:00:00Z'}
-    assert_valid schema, {'a' => '2010-01-01T24:00:00Z'}
-    refute_valid schema, {'a' => '2010-01-01T12:60:00Z'}
-    assert_valid schema, {'a' => '2010-01-01T12:00:60Z'}
-    assert_valid schema, {'a' => '2010-01-01T12:00:00z'}
-    refute_valid schema, {'a' => '2010-01-0112:00:00Z'}
+    assert_valid schema, { 'a' => '2010-01-01T12:00:00Z' }
+    assert_valid schema, { 'a' => '2010-01-01T12:00:00.1Z' }
+    refute_valid schema, { 'a' => '2010-01-01T12:00:00,1Z' }
+    refute_valid schema, { 'a' => '2010-01-01T12:00:00+0000' }
+    assert_valid schema, { 'a' => '2010-01-01T12:00:00+00:00' }
+    refute_valid schema, { 'a' => '2010-01-32T12:00:00Z' }
+    refute_valid schema, { 'a' => '2010-13-01T12:00:00Z' }
+    assert_valid schema, { 'a' => '2010-01-01T24:00:00Z' }
+    refute_valid schema, { 'a' => '2010-01-01T12:60:00Z' }
+    assert_valid schema, { 'a' => '2010-01-01T12:00:60Z' }
+    assert_valid schema, { 'a' => '2010-01-01T12:00:00z' }
+    refute_valid schema, { 'a' => '2010-01-0112:00:00Z' }
   end
 
   def test_format_uri
-    data1 = {'a' => 'http://gitbuh.com'}
-    data2 = {'a' => '::boo'}
-    data3 = {'a' => 'http://ja.wikipedia.org/wiki/メインページ'}
+    data1 = { 'a' => 'http://gitbuh.com' }
+    data2 = { 'a' => '::boo' }
+    data3 = { 'a' => 'http://ja.wikipedia.org/wiki/メインページ' }
 
     schema = {
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'type' => 'object',
-      'properties' => { 'a' => {'type' => 'string', 'format' => 'uri'}},
+      'properties' => { 'a' => { 'type' => 'string', 'format' => 'uri' } },
     }
 
     assert(JSON::Validator.validate(schema, data1))
@@ -342,7 +342,7 @@ class Draft4Test < Minitest::Test
       'type' => 'object',
     }
 
-    data = {'a' => 'taco'}
+    data = { 'a' => 'taco' }
     assert(!JSON::Validator.validate(schema, data))
 
     schema = {
@@ -357,35 +357,35 @@ class Draft4Test < Minitest::Test
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'type' => 'object',
       'properties' => {
-        'a' => {'type' => 'integer'},
-        'b' => {'type' => 'integer'},
+        'a' => { 'type' => 'integer' },
+        'b' => { 'type' => 'integer' },
       },
       'dependencies' => {
         'a' => ['b'],
       },
     }
 
-    data = {'a' => 1, 'b' => 2}
+    data = { 'a' => 1, 'b' => 2 }
     assert_valid schema, data
-    data = {'a' => 1}
+    data = { 'a' => 1 }
     refute_valid schema, data
 
     schema = {
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'type' => 'object',
       'properties' => {
-        'a' => {'type' => 'integer'},
-        'b' => {'type' => 'integer'},
-        'c' => {'type' => 'integer'},
+        'a' => { 'type' => 'integer' },
+        'b' => { 'type' => 'integer' },
+        'c' => { 'type' => 'integer' },
       },
       'dependencies' => {
         'a' => ['b', 'c'],
       },
     }
 
-    data = {'a' => 1, 'c' => 2}
+    data = { 'a' => 1, 'c' => 2 }
     refute_valid schema, data
-    data = {'a' => 1, 'b' => 2, 'c' => 3}
+    data = { 'a' => 1, 'b' => 2, 'c' => 3 }
     assert_valid schema, data
   end
 
@@ -420,12 +420,12 @@ class Draft4Test < Minitest::Test
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'type' => 'object',
       'properties' => {
-        'a' => {'type' => 'integer', 'default' => 42},
-        'b' => {'type' => 'integer'},
+        'a' => { 'type' => 'integer', 'default' => 42 },
+        'b' => { 'type' => 'integer' },
       },
     }
 
-    data = {b: 2}
+    data = { b: 2 }
     assert_valid schema, data
     assert_nil(data['a'])
     assert(JSON::Validator.validate(schema, data, insert_defaults: true))
@@ -437,12 +437,12 @@ class Draft4Test < Minitest::Test
       'type' => 'object',
       'required' => ['a'],
       'properties' => {
-        'a' => {'type' => 'integer', 'default' => 42},
-        'b' => {'type' => 'integer'},
+        'a' => { 'type' => 'integer', 'default' => 42 },
+        'b' => { 'type' => 'integer' },
       },
     }
 
-    data = {b: 2}
+    data = { b: 2 }
     refute_valid schema, data
     assert_nil(data['a'])
     assert(JSON::Validator.validate(schema, data, insert_defaults: true))
@@ -454,12 +454,12 @@ class Draft4Test < Minitest::Test
       'type' => 'object',
       'required' => ['a'],
       'properties' => {
-        'a' => {'type' => 'integer', 'default' => 42, 'readonly' => true},
-        'b' => {'type' => 'integer'},
+        'a' => { 'type' => 'integer', 'default' => 42, 'readonly' => true },
+        'b' => { 'type' => 'integer' },
       },
     }
 
-    data = {b: 2}
+    data = { b: 2 }
     refute_valid schema, data
     assert_nil(data['a'])
     assert(!JSON::Validator.validate(schema, data, insert_defaults: true))
@@ -470,12 +470,12 @@ class Draft4Test < Minitest::Test
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'type' => 'object',
       'properties' => {
-        'a' => {'type' => 'integer', 'default' => '42'},
-        'b' => {'type' => 'integer'},
+        'a' => { 'type' => 'integer', 'default' => '42' },
+        'b' => { 'type' => 'integer' },
       },
     }
 
-    data = {b: 2}
+    data = { b: 2 }
     assert_valid schema, data
     assert_nil(data['a'])
     assert(!JSON::Validator.validate(schema, data, insert_defaults: true))
@@ -489,12 +489,12 @@ class Draft4Test < Minitest::Test
       'type' => 'object',
       'required' => ['a'],
       'properties' => {
-        'a' => {'type' => 'boolean', 'default' => false},
-        'b' => {'type' => 'integer'},
+        'a' => { 'type' => 'boolean', 'default' => false },
+        'b' => { 'type' => 'integer' },
       },
     }
 
-    data = {b: 2}
+    data = { b: 2 }
     refute_valid schema, data
     assert_nil(data['a'])
     assert(JSON::Validator.validate(schema, data, insert_defaults: true))
@@ -507,25 +507,25 @@ class Draft4Test < Minitest::Test
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'allOf' => [
         {
-          'properties' => {'a' => {'type' => 'string'}},
+          'properties' => { 'a' => { 'type' => 'string' } },
           'required' => ['a'],
         },
         {
-          'properties' => {'b' => {'type' => 'integer'}},
+          'properties' => { 'b' => { 'type' => 'integer' } },
         },
       ],
     }
 
-    data = {'a' => 'hello', 'b' => 5}
+    data = { 'a' => 'hello', 'b' => 5 }
     assert_valid schema, data
 
-    data = {'a' => 'hello'}
+    data = { 'a' => 'hello' }
     assert_valid schema, data
 
-    data = {'a' => 'hello', 'b' => 'taco'}
+    data = { 'a' => 'hello', 'b' => 'taco' }
     refute_valid schema, data
 
-    data = {'b' => 5}
+    data = { 'b' => 5 }
     refute_valid schema, data
   end
 
@@ -534,28 +534,28 @@ class Draft4Test < Minitest::Test
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'anyOf' => [
         {
-          'properties' => {'a' => {'type' => 'string'}},
+          'properties' => { 'a' => { 'type' => 'string' } },
           'required' => ['a'],
         },
         {
-          'properties' => {'b' => {'type' => 'integer'}},
+          'properties' => { 'b' => { 'type' => 'integer' } },
         },
       ],
     }
 
-    data = {'a' => 'hello', 'b' => 5}
+    data = { 'a' => 'hello', 'b' => 5 }
     assert_valid schema, data
 
-    data = {'a' => 'hello'}
+    data = { 'a' => 'hello' }
     assert_valid schema, data
 
-    data = {'a' => 'hello', 'b' => 'taco'}
+    data = { 'a' => 'hello', 'b' => 'taco' }
     assert_valid schema, data
 
-    data = {'b' => 5}
+    data = { 'b' => 5 }
     assert_valid schema, data
 
-    data = {'a' => 5, 'b' => 'taco'}
+    data = { 'a' => 5, 'b' => 'taco' }
     refute_valid schema, data
   end
 
@@ -564,29 +564,29 @@ class Draft4Test < Minitest::Test
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'oneOf' => [
         {
-          'properties' => {'a' => {'type' => 'string'}},
+          'properties' => { 'a' => { 'type' => 'string' } },
           'required' => ['a'],
         },
         {
-          'properties' => {'b' => {'type' => 'integer'}},
+          'properties' => { 'b' => { 'type' => 'integer' } },
         },
       ],
     }
 
-    data = {'a' => 'hello', 'b' => 5}
+    data = { 'a' => 'hello', 'b' => 5 }
     refute_valid schema, data
 
     # This passes because b is not required, thus matches both schemas
-    data = {'a' => 'hello'}
+    data = { 'a' => 'hello' }
     refute_valid schema, data
 
-    data = {'a' => 'hello', 'b' => 'taco'}
+    data = { 'a' => 'hello', 'b' => 'taco' }
     assert_valid schema, data
 
-    data = {'b' => 5}
+    data = { 'b' => 5 }
     assert_valid schema, data
 
-    data = {'a' => 5, 'b' => 'taco'}
+    data = { 'a' => 5, 'b' => 'taco' }
     refute_valid schema, data
   end
 
@@ -595,50 +595,50 @@ class Draft4Test < Minitest::Test
     schema = {
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'properties' => {
-        'a' => {'not' => { 'type' => ['string', 'boolean']}},
+        'a' => { 'not' => { 'type' => ['string', 'boolean'] } },
       },
     }
 
-    data = {'a' => 1}
+    data = { 'a' => 1 }
     assert_valid schema, data
 
-    data = {'a' => 'hi!'}
+    data = { 'a' => 'hi!' }
     refute_valid schema, data
 
-    data = {'a' => true}
+    data = { 'a' => true }
     refute_valid schema, data
 
     # Sub-schema not
     schema = {
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'properties' => {
-        'a' => {'not' => {'anyOf' => [
+        'a' => { 'not' => { 'anyOf' => [
           {
             'type' => ['string', 'boolean'],
           },
           {
             'type' => 'object',
             'properties' => {
-              'b' => {'type' => 'boolean'},
+              'b' => { 'type' => 'boolean' },
             },
           },
-        ]} },
+        ] } },
       },
     }
 
-    data = {'a' => 1}
+    data = { 'a' => 1 }
     assert_valid schema, data
 
-    data = {'a' => 'hi!'}
+    data = { 'a' => 'hi!' }
     refute_valid schema, data
 
-    data = {'a' => true}
+    data = { 'a' => true }
     refute_valid schema, data
 
-    data = {'a' => {'b' => true}}
+    data = { 'a' => { 'b' => true } }
     refute_valid schema, data
 
-    data = {'a' => {'b' => 5}}
+    data = { 'a' => { 'b' => 5 } }
     assert_valid schema, data
   end
 
@@ -647,15 +647,15 @@ class Draft4Test < Minitest::Test
     schema = {
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'properties' => {
-        'a' => {'not' => { 'type' => ['string', 'boolean']}},
+        'a' => { 'not' => { 'type' => ['string', 'boolean'] } },
       },
     }
 
-    data = {'a' => 1}
+    data = { 'a' => 1 }
     errors = JSON::Validator.fully_validate(schema, data)
     assert_equal(0, errors.length)
 
-    data = {'a' => 'taco'}
+    data = { 'a' => 'taco' }
     errors = JSON::Validator.fully_validate(schema, data)
     assert_equal(1, errors.length)
   end
@@ -664,7 +664,7 @@ class Draft4Test < Minitest::Test
     schema = {
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'type' => 'array',
-      'items' => { '$ref' => '#/definitions/positiveInteger'},
+      'items' => { '$ref' => '#/definitions/positiveInteger' },
       'definitions' => {
         'positiveInteger' => {
           'type' => 'integer',
