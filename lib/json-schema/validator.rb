@@ -106,9 +106,9 @@ module JSON
 
       if @options[:record_errors]
         if @options[:errors_as_objects]
-          @errors.map {|e| e.to_hash}
+          @errors.map { |e| e.to_hash }
         else
-          @errors.map {|e| e.to_string}
+          @errors.map { |e| e.to_string }
         end
       else
         true
@@ -482,11 +482,11 @@ module JSON
         end
 
         if @@json_backend == 'yajl'
-          @@serializer = lambda {|o| Yajl::Encoder.encode(o) }
+          @@serializer = lambda { |o| Yajl::Encoder.encode(o) }
         elsif @@json_backend == 'json'
-          @@serializer = lambda {|o| JSON.dump(o) }
+          @@serializer = lambda { |o| JSON.dump(o) }
         else
-          @@serializer = lambda {|o| YAML.dump(o) }
+          @@serializer = lambda { |o| YAML.dump(o) }
         end
       end
     end
@@ -495,10 +495,10 @@ module JSON
 
     if Gem::Specification::find_all_by_name('uuidtools').any?
       require 'uuidtools'
-      @@fake_uuid_generator = lambda {|s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
+      @@fake_uuid_generator = lambda { |s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
     else
       require 'json-schema/util/uuid'
-      @@fake_uuid_generator = lambda {|s| JSON::Util::UUID.create_v5(s, JSON::Util::UUID::Nil).to_s }
+      @@fake_uuid_generator = lambda { |s| JSON::Util::UUID.create_v5(s, JSON::Util::UUID::Nil).to_s }
     end
 
     def serialize schema

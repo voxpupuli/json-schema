@@ -31,7 +31,7 @@ module JSON
         if !@sub_errors.empty?
           base[:errors] = @sub_errors.each_with_object({}) do |(subschema, errors), hsh|
             subschema_sym = subschema.downcase.gsub(/\W+/, '_').to_sym
-            hsh[subschema_sym] = Array(errors).map {|e| e.to_hash}
+            hsh[subschema_sym] = Array(errors).map { |e| e.to_hash }
           end
         end
         base
