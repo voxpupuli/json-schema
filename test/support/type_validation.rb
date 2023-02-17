@@ -65,7 +65,7 @@ module TypeValidation
           'a' => {
             'type' => [
               {'type' => 'string'},
-              {'type' => 'object', 'properties' => { 'b' => { 'type' => 'integer' }}}
+              {'type' => 'object', 'properties' => { 'b' => { 'type' => 'integer' }}},
             ],
           },
         },

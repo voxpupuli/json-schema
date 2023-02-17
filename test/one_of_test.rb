@@ -19,7 +19,7 @@ class OneOfTest < Minitest::Test
         },
         {
           "properties" => {"a" => {"type" => "string", "pattern" => "baz"}},
-        }
+        },
       ],
     }
 
@@ -41,7 +41,7 @@ class OneOfTest < Minitest::Test
         },
         {
           "properties" => {"a" => {"type" => "number", "minimum" => 10}},
-        }
+        },
       ],
     }
 
@@ -64,7 +64,7 @@ class OneOfTest < Minitest::Test
         },
         {
           "properties" => {"a" => {"type" => "number", "minimum" => 10}},
-        }
+        },
       ],
     }
 

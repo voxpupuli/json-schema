@@ -57,44 +57,44 @@ class SchemaValidationTest < Minitest::Test
         :website,
         :biography,
         :created_at,
-        :demographic
+        :demographic,
       ],
       :properties => {
         :id => {
           :type => [
-            :integer
+            :integer,
           ],
         },
         :name => {
           :type => [
-            :string
+            :string,
           ],
         },
         :real_name => {
           :type => [
-            :string
+            :string,
           ],
         },
         :role => {
           :type => [
-            :string
+            :string,
           ],
         },
         :website => {
           :type => [
             :string,
-            :null
+            :null,
           ],
         },
         :created_at => {
           :type => [
-            :string
+            :string,
           ],
         },
         :biography => {
           :type => [
             :string,
-            :null
+            :null,
           ],
         },
       },
@@ -103,17 +103,17 @@ class SchemaValidationTest < Minitest::Test
           :type => :object,
           :required => [
             :id,
-            :gender
+            :gender,
           ],
           :properties => {
             :id => {
               :type => [
-                :integer
+                :integer,
               ],
             },
             :gender => {
               :type => [
-                :string
+                :string,
               ],
             },
           },

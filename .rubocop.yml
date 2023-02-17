@@ -12,3 +12,7 @@ AllCops:
 Style/TrailingCommaInHashLiteral:
   Enabled: True
   EnforcedStyleForMultiline: consistent_comma
+
+Style/TrailingCommaInArrayLiteral:
+  Enabled: True
+  EnforcedStyleForMultiline: consistent_comma

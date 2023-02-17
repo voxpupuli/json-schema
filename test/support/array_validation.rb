@@ -18,7 +18,7 @@ module ArrayValidation
       schema = {
         'items' => [
           { 'type' => 'string' },
-          { 'type' => 'integer' }
+          { 'type' => 'integer' },
         ],
       }
 
@@ -58,7 +58,7 @@ module ArrayValidation
       schema = {
         'items' => [
           { 'type' => 'integer' },
-          { 'type' => 'string' }
+          { 'type' => 'string' },
         ],
         'additionalItems' => false,
       }
@@ -74,7 +74,7 @@ module ArrayValidation
       schema = {
         'items' => [
           { 'type' => 'integer' },
-          { 'type' => 'string' }
+          { 'type' => 'string' },
         ],
         'additionalItems' => { 'type' => 'integer' },
       }

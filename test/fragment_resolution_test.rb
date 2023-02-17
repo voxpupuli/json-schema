@@ -68,7 +68,7 @@ class FragmentResolutionTest < Minitest::Test
         "a" => {
           "anyOf" => [
             {"type" => "integer"},
-            {"type" => "string"}
+            {"type" => "string"},
           ],
         },
       },

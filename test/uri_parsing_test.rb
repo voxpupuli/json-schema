@@ -50,7 +50,7 @@ class UriParsingTest < Minitest::Test
           "type"=> "array",
           "items"=> {
             "anyOf"=> [
-              { "$ref" => "test/schemas/ref john with spaces schema.json" }
+              { "$ref" => "test/schemas/ref john with spaces schema.json" },
             ],
           },
         },

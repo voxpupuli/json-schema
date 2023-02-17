@@ -40,7 +40,7 @@ class RubySchemaTest < Minitest::Test
                   :type => "integer",
                 },
               },
-            }
+            },
           ],
         },
       },
@@ -50,7 +50,7 @@ class RubySchemaTest < Minitest::Test
       :a => [
         {
           :b => 1,
-        }
+        },
       ],
     }
 

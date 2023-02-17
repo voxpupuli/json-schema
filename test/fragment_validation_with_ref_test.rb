@@ -47,7 +47,7 @@ class FragmentValidationWithRefTest < Minitest::Test
                 },
                 "required" => ["content", "author"],
               },
-            }
+            },
           ],
         },
       },

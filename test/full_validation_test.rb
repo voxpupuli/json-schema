@@ -115,7 +115,7 @@ class FullValidationTest < Minitest::Test
               "properties" => {
                 "d" => {"type" => "integer"},
               },
-            }
+            },
           ],
         },
       },

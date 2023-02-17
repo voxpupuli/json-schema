@@ -60,7 +60,7 @@ class Draft3Test < Minitest::Test
       'items' => {
         'type' => [
           { 'type' => 'object', 'properties' => { "b" => { "type" => "integer" } } },
-          { 'type' => 'object', 'properties' => { "c" => { "type" => "string" } } }
+          { 'type' => 'object', 'properties' => { "c" => { "type" => "string" } } },
         ],
         'additionalProperties' => false,
       },

@@ -203,7 +203,7 @@ class Draft4Test < Minitest::Test
               "type" => "string",
             },
           },
-        }
+        },
       ],
     }
 
@@ -233,7 +233,7 @@ class Draft4Test < Minitest::Test
               "type" => "string",
             },
           },
-        }
+        },
       ],
     }
 
@@ -262,7 +262,7 @@ class Draft4Test < Minitest::Test
               "default" => "view",
             },
           },
-        }
+        },
       ],
     }
 
@@ -512,7 +512,7 @@ class Draft4Test < Minitest::Test
         },
         {
           "properties" => {"b" => {"type" => "integer"}},
-        }
+        },
       ],
     }
 
@@ -539,7 +539,7 @@ class Draft4Test < Minitest::Test
         },
         {
           "properties" => {"b" => {"type" => "integer"}},
-        }
+        },
       ],
     }
 
@@ -569,7 +569,7 @@ class Draft4Test < Minitest::Test
         },
         {
           "properties" => {"b" => {"type" => "integer"}},
-        }
+        },
       ],
     }
 
@@ -621,7 +621,7 @@ class Draft4Test < Minitest::Test
               "properties" => {
                 "b" => {"type" => "boolean"},
               },
-            }
+            },
           ]},
         },
       },
