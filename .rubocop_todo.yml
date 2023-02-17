@@ -522,12 +522,6 @@ Style/RedundantConditional:
   Exclude:
     - 'lib/json-schema/validator.rb'
 
-# Offense count: 4
-# Cop supports --auto-correct.
-Style/RedundantPercentQ:
-  Exclude:
-    - 'test/files_test.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/RedundantRegexpEscape:
