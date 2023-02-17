@@ -8,14 +8,6 @@
 
 # Offense count: 2
 # Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, IndentationWidth.
-# SupportedStyles: with_first_argument, with_fixed_indentation
-Layout/ArgumentAlignment:
-  Exclude:
-    - 'test/common_test_suite_test.rb'
-
-# Offense count: 2
-# Cop supports --auto-correct.
 Layout/CommentIndentation:
   Exclude:
     - 'lib/json-schema/util/uuid.rb'
