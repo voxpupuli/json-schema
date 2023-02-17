@@ -14,19 +14,6 @@ Layout/MultilineMethodCallBraceLayout:
   Exclude:
     - 'test/common_test_suite_test.rb'
 
-# Offense count: 48
-# Cop supports --auto-correct.
-# Configuration parameters: AllowForAlignment, EnforcedStyleForExponentOperator.
-# SupportedStylesForExponentOperator: space, no_space
-Layout/SpaceAroundOperators:
-  Exclude:
-    - 'Gemfile'
-    - 'lib/json-schema/util/uuid.rb'
-    - 'test/common_test_suite_test.rb'
-    - 'test/draft4_test.rb'
-    - 'test/full_validation_test.rb'
-    - 'test/uri_parsing_test.rb'
-
 # Offense count: 11
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, EnforcedStyleForEmptyBraces.

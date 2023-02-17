@@ -182,16 +182,16 @@ class FullValidationTest < Minitest::Test
           'type' => 'object',
           'required' => ['a', 'b'],
           'properties' => {
-            'a' => {'type'=>'integer'},
-            'b' => {'type'=>'integer'},
-            'c' => {'type'=>'integer'},
-            'd' => {'type'=>'integer'},
-            'e' => {'type'=>'integer'},
+            'a' => {'type' => 'integer'},
+            'b' => {'type' => 'integer'},
+            'c' => {'type' => 'integer'},
+            'd' => {'type' => 'integer'},
+            'e' => {'type' => 'integer'},
           },
         },
       },
     }
-    data = {'x' => {'a'=>5, 'd'=>5, 'e'=>'what?'}}
+    data = {'x' => {'a' => 5, 'd' => 5, 'e' => 'what?'}}
 
     errors = JSON::Validator.fully_validate(schema, data, errors_as_objects: true)
     assert_equal 2, errors.length
@@ -212,18 +212,18 @@ class FullValidationTest < Minitest::Test
             'type' => 'object',
             'required' => ['a', 'b'],
             'properties' => {
-              'a' => {'type'=>'integer'},
-              'b' => {'type'=>'integer'},
-              'c' => {'type'=>'integer'},
-              'd' => {'type'=>'integer'},
-              'e' => {'type'=>'integer'},
+              'a' => {'type' => 'integer'},
+              'b' => {'type' => 'integer'},
+              'c' => {'type' => 'integer'},
+              'd' => {'type' => 'integer'},
+              'e' => {'type' => 'integer'},
             },
           },
         },
       },
     }
-    missing_b= {'a'=>5}
-    e_is_wrong_type= {'a'=>5, 'b'=>5, 'e'=>'what?'}
+    missing_b = {'a' => 5}
+    e_is_wrong_type = {'a' => 5, 'b' => 5, 'e' => 'what?'}
     data = {'x' => [missing_b, e_is_wrong_type]}
 
     errors = JSON::Validator.fully_validate(schema, data, errors_as_objects: true)
