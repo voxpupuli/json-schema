@@ -43,7 +43,7 @@ module JSON
         type, _ = TYPE_CLASS_MAPPINGS.map { |k, v| [k, v] }.sort_by { |(_, v)|
           -Array(v).map { |klass| klass.ancestors.size }.max
         }.find { |(_, v)|
-          Array(v).any? { |klass| data.kind_of?(klass) }
+          Array(v).any? { |klass| data.is_a?(klass) }
         }
         type
       end

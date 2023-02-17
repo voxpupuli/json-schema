@@ -410,15 +410,6 @@ Style/ClassAndModuleChildren:
   Exclude:
     - 'test/support/test_helper.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: is_a?, kind_of?
-Style/ClassCheck:
-  Exclude:
-    - 'lib/json-schema/attribute.rb'
-    - 'lib/json-schema/schema.rb'
-
 # Offense count: 23
 Style/ClassVars:
   Exclude:
