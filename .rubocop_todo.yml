@@ -449,12 +449,6 @@ Style/ConditionalAssignment:
     - 'lib/json-schema/schema.rb'
     - 'lib/json-schema/validator.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-Style/DefWithParentheses:
-  Exclude:
-    - 'lib/json-schema/schema/validator.rb'
-
 # Offense count: 70
 Style/Documentation:
   Enabled: false
