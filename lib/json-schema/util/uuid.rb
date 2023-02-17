@@ -115,12 +115,12 @@ module JSON
         end
         alias :create_v4 :create_random
 
-        def read_state fp       # :nodoc:
+        def read_state fp # :nodoc:
           fp.rewind
           Marshal.load fp.read
         end
 
-        def write_state fp, c, m  # :nodoc:
+        def write_state fp, c, m # :nodoc:
           fp.rewind
           str = Marshal.dump [c, m]
           fp.write str
