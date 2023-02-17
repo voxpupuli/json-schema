@@ -15,7 +15,6 @@ require 'json-schema/errors/json_parse_error'
 require 'json-schema/util/uri'
 
 module JSON
-
   class Validator
     @@schemas = {}
     @@cache_schemas = true
