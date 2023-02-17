@@ -534,15 +534,6 @@ Style/RedundantRegexpEscape:
   Exclude:
     - 'lib/json-schema/attributes/formats/date_time.rb'
 
-# Offense count: 5
-# Cop supports --auto-correct.
-# Configuration parameters: AllowMultipleReturnValues.
-Style/RedundantReturn:
-  Exclude:
-    - 'lib/json-schema/util/uri.rb'
-    - 'lib/json-schema/util/uuid.rb'
-    - 'lib/json-schema/validator.rb'
-
 # Offense count: 15
 # Cop supports --auto-correct.
 Style/RedundantSelf:

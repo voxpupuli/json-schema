@@ -232,7 +232,7 @@ module JSON
         begin
           validate!(schema, data, opts)
         rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
-          return false
+          false
         end
       end
 
