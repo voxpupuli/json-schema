@@ -4,12 +4,12 @@ module TypeValidation
   module SimpleTypeTests
     TYPES = {
       'integer' => 5,
-      'number'  => 5.0,
-      'string'  => 'str',
+      'number' => 5.0,
+      'string' => 'str',
       'boolean' => true,
-      'object'  => {},
-      'array'   => [],
-      'null'    => nil,
+      'object' => {},
+      'array' => [],
+      'null' => nil,
     }
 
     TYPES.each do |name, value|

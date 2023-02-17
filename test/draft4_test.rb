@@ -391,18 +391,18 @@ class Draft4Test < Minitest::Test
 
   def test_schema_dependency
     schema = {
-      'type'=> 'object',
-      'properties'=> {
-        'name'=> { 'type'=> 'string' },
-        'credit_card'=> { 'type'=> 'number' },
+      'type' => 'object',
+      'properties' => {
+        'name' => { 'type'=> 'string' },
+        'credit_card' => { 'type'=> 'number' },
       },
-      'required'=> ['name'],
-      'dependencies'=> {
-        'credit_card'=> {
-          'properties'=> {
-            'billing_address'=> { 'type'=> 'string' },
+      'required' => ['name'],
+      'dependencies' => {
+        'credit_card' => {
+          'properties' => {
+            'billing_address' => { 'type'=> 'string' },
           },
-          'required'=> ['billing_address'],
+          'required' => ['billing_address'],
         },
       },
     }
