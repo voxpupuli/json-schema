@@ -36,7 +36,7 @@ module JSON
     @@serializer = nil
     @@mutex = Mutex.new
 
-    def initialize(schema_data, opts={})
+    def initialize(schema_data, opts = {})
       @options = @@default_opts.clone.merge(opts)
       @errors = []
 
@@ -228,7 +228,7 @@ module JSON
     end
 
     class << self
-      def validate(schema, data, opts={})
+      def validate(schema, data, opts = {})
         begin
           validate!(schema, data, opts)
         rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
@@ -236,47 +236,47 @@ module JSON
         end
       end
 
-      def validate_json(schema, data, opts={})
+      def validate_json(schema, data, opts = {})
         validate(schema, data, opts.merge(json: true))
       end
 
-      def validate_uri(schema, data, opts={})
+      def validate_uri(schema, data, opts = {})
         validate(schema, data, opts.merge(uri: true))
       end
 
-      def validate!(schema, data, opts={})
+      def validate!(schema, data, opts = {})
         validator = new(schema, opts)
         validator.validate(data)
       end
 
-      def validate2(schema, data, opts={})
+      def validate2(schema, data, opts = {})
         warn '[DEPRECATION NOTICE] JSON::Validator#validate2 has been replaced by JSON::Validator#validate! and will be removed in version >= 3. Please use the #validate! method instead.'
         validate!(schema, data, opts)
       end
 
-      def validate_json!(schema, data, opts={})
+      def validate_json!(schema, data, opts = {})
         validate!(schema, data, opts.merge(json: true))
       end
 
-      def validate_uri!(schema, data, opts={})
+      def validate_uri!(schema, data, opts = {})
         validate!(schema, data, opts.merge(uri: true))
       end
 
-      def fully_validate(schema, data, opts={})
+      def fully_validate(schema, data, opts = {})
         validate!(schema, data, opts.merge(record_errors: true))
       end
 
-      def fully_validate_schema(schema, opts={})
+      def fully_validate_schema(schema, opts = {})
         data = schema
         schema = validator_for_name(opts[:version]).metaschema
         fully_validate(schema, data, opts)
       end
 
-      def fully_validate_json(schema, data, opts={})
+      def fully_validate_json(schema, data, opts = {})
         fully_validate(schema, data, opts.merge(json: true))
       end
 
-      def fully_validate_uri(schema, data, opts={})
+      def fully_validate_uri(schema, data, opts = {})
         fully_validate(schema, data, opts.merge(uri: true))
       end
 
@@ -329,7 +329,7 @@ module JSON
         @@default_validator
       end
 
-      def validator_for_uri(schema_uri, raise_not_found=true)
+      def validator_for_uri(schema_uri, raise_not_found = true)
         return default_validator unless schema_uri
 
         u = JSON::Util::URI.parse(schema_uri)
@@ -341,7 +341,7 @@ module JSON
         end
       end
 
-      def validator_for_name(schema_name, raise_not_found=true)
+      def validator_for_name(schema_name, raise_not_found = true)
         return default_validator unless schema_name
 
         schema_name = schema_name.to_s

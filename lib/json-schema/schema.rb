@@ -4,7 +4,7 @@ module JSON
   class Schema
     attr_accessor :schema, :uri, :validator
 
-    def initialize(schema, uri, parent_validator=nil)
+    def initialize(schema, uri, parent_validator = nil)
       @schema = schema
       @uri = uri
 

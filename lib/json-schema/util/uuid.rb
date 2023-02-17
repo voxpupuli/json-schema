@@ -137,7 +137,7 @@ module JSON
         # invokation. If you want to speed  this up, try remounting tmpdir with a
         # memory based filesystem  (such as tmpfs).  STILL slow?  then no way but
         # rewrite it with c :)
-        def create clock=nil, time=nil, mac_addr=nil
+        def create clock = nil, time = nil, mac_addr = nil
           c = t = m = nil
           Dir.chdir Dir.tmpdir do
             unless FileTest.exist? STATE_FILE then

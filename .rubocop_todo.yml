@@ -14,16 +14,6 @@ Layout/MultilineMethodCallBraceLayout:
   Exclude:
     - 'test/common_test_suite_test.rb'
 
-# Offense count: 18
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: space, no_space
-Layout/SpaceAroundEqualsInParameterDefault:
-  Exclude:
-    - 'lib/json-schema/schema.rb'
-    - 'lib/json-schema/util/uuid.rb'
-    - 'lib/json-schema/validator.rb'
-
 # Offense count: 48
 # Cop supports --auto-correct.
 # Configuration parameters: AllowForAlignment, EnforcedStyleForExponentOperator.
