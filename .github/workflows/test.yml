@@ -17,6 +17,7 @@ jobs:
           - ruby: truffleruby+graalvm
           - ruby: jruby
           - ruby: "2.5"
+            rake_task: "rubocop test"
           - ruby: "2.6"
           - ruby: "2.7"
           - ruby: "3.0"
@@ -32,6 +33,6 @@ jobs:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
       - name: Run tests
-        run: bundle exec rake
+        run: bundle exec rake ${{ matrix.rake_task }}
       - name: Build gem
         run: gem build *.gemspec
