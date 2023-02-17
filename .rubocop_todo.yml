@@ -6,25 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 18
-# Cop supports --auto-correct.
-Layout/EmptyLineAfterGuardClause:
-  Exclude:
-    - 'lib/json-schema/attributes/additionalitems.rb'
-    - 'lib/json-schema/attributes/dependencies.rb'
-    - 'lib/json-schema/attributes/disallow.rb'
-    - 'lib/json-schema/attributes/format.rb'
-    - 'lib/json-schema/attributes/formats/date.rb'
-    - 'lib/json-schema/attributes/formats/date_time.rb'
-    - 'lib/json-schema/attributes/formats/date_time_v4.rb'
-    - 'lib/json-schema/attributes/formats/uri.rb'
-    - 'lib/json-schema/attributes/items.rb'
-    - 'lib/json-schema/attributes/patternproperties.rb'
-    - 'lib/json-schema/attributes/required.rb'
-    - 'lib/json-schema/attributes/type.rb'
-    - 'lib/json-schema/util/uuid.rb'
-    - 'lib/json-schema/validator.rb'
-
 # Offense count: 9
 # Cop supports --auto-correct.
 # Configuration parameters: EmptyLineBetweenMethodDefs, EmptyLineBetweenClassDefs, EmptyLineBetweenModuleDefs, AllowAdjacentOneLineDefs, NumberOfEmptyLines.

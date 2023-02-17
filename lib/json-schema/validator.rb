@@ -171,6 +171,7 @@ module JSON
       # are themselves schemas.
       %w[definitions properties patternProperties].each do |key|
         next unless value = schema[key]
+
         value.each do |k, inner_schema|
           handle_schema(parent_schema, inner_schema)
         end
@@ -179,12 +180,14 @@ module JSON
       # Schema properties whose values are themselves schemas.
       %w[additionalProperties additionalItems dependencies extends].each do |key|
         next unless schema[key].is_a?(Hash)
+
         handle_schema(parent_schema, schema[key])
       end
 
       # Schema properties whose values may be an array of schemas.
       %w[allOf anyOf oneOf not].each do |key|
         next unless value = schema[key]
+
         Array(value).each do |inner_schema|
           handle_schema(parent_schema, inner_schema)
         end
@@ -332,6 +335,7 @@ module JSON
 
       def validator_for_uri(schema_uri, raise_not_found=true)
         return default_validator unless schema_uri
+
         u = JSON::Util::URI.parse(schema_uri)
         validator = validators["#{u.scheme}://#{u.host}#{u.path}"]
         if validator.nil? && raise_not_found
@@ -343,6 +347,7 @@ module JSON
 
       def validator_for_name(schema_name, raise_not_found=true)
         return default_validator unless schema_name
+
         schema_name = schema_name.to_s
         validator = validators.values.detect do |v|
           Array(v.names).include?(schema_name)

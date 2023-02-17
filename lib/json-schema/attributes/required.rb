@@ -11,6 +11,7 @@ module JSON
 
         schema['required'].each do |property, property_schema|
           next if data.has_key?(property.to_s)
+
           prop_defaults = options[:insert_defaults] &&
                           defined_properties &&
                           defined_properties[property] &&

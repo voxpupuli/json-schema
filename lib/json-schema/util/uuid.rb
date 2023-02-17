@@ -255,6 +255,7 @@ module JSON
         a = unpack
         v = (a[2] & 0xF000).to_s(16)[0].chr.to_i
         return v if (1..5).include? v
+
         return nil
       end
 
