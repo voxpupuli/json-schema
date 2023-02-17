@@ -23,7 +23,7 @@ class MergeMissingValuesTest < Minitest::Test
   end
 
   def test_merge_missing_values_for_new_values
-    original = {:hello => 'world'}
+    original = {hello: 'world'}
     updated = {'hello' => 'world', 'foo' => 'bar'}
     JSON::Validator.merge_missing_values(updated, original)
     assert_equal({:hello => 'world', 'foo' => 'bar'}, original)
@@ -37,9 +37,9 @@ class MergeMissingValuesTest < Minitest::Test
   end
 
   def test_merge_missing_values_for_nested_hash
-    original = {:hello => 'world', :foo => ['bar', :baz, {:uno => {:due => 3}}]}
+    original = {hello: 'world', foo: ['bar', :baz, {uno: {due: 3}}]}
     updated = {'hello' => 'world', 'foo' => ['bar', 'baz', {'uno' => {'due' => 3, 'this_is' => 'new'}}], 'ack' => 'sed'}
     JSON::Validator.merge_missing_values(updated, original)
-    assert_equal({:hello => 'world', :foo => ['bar', :baz, {:uno => {:due => 3, 'this_is' => 'new'}}], 'ack' => 'sed'}, original)
+    assert_equal({:hello => 'world', :foo => ['bar', :baz, {uno: {:due => 3, 'this_is' => 'new'}}], 'ack' => 'sed'}, original)
   end
 end

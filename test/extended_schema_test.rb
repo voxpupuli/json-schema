@@ -56,8 +56,8 @@ class ExtendedSchemaTest < Minitest::Test
       },
     }
 
-    assert_valid schema, {'a' => 1}, :fragment => '#/definitions/odd-a'
-    refute_valid schema, {'a' => 0}, :fragment => '#/definitions/odd-a'
+    assert_valid schema, {'a' => 1}, fragment: '#/definitions/odd-a'
+    refute_valid schema, {'a' => 0}, fragment: '#/definitions/odd-a'
   end
 
   def test_unextended_schema

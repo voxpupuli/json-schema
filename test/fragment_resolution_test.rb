@@ -17,14 +17,14 @@ class FragmentResolutionTest < Minitest::Test
 
     data = {'b' => 5}
     refute_valid schema, data
-    assert_valid schema, data, :fragment => '#/properties/a'
+    assert_valid schema, data, fragment: '#/properties/a'
 
     assert_raises JSON::Schema::SchemaError do
-      JSON::Validator.validate!(schema, data, :fragment => '/properties/a')
+      JSON::Validator.validate!(schema, data, fragment: '/properties/a')
     end
 
     assert_raises JSON::Schema::SchemaError do
-      JSON::Validator.validate!(schema, data, :fragment => '#/properties/b')
+      JSON::Validator.validate!(schema, data, fragment: '#/properties/b')
     end
   end
 
@@ -39,8 +39,8 @@ class FragmentResolutionTest < Minitest::Test
       },
     }
 
-    assert_valid schema, {'a' => 1}, :fragment => '#/foo'
-    refute_valid schema, {}, :fragment => '#/foo'
+    assert_valid schema, {'a' => 1}, fragment: '#/foo'
+    refute_valid schema, {}, fragment: '#/foo'
   end
 
   def test_even_level_fragment_resolution
@@ -56,8 +56,8 @@ class FragmentResolutionTest < Minitest::Test
       },
     }
 
-    assert_valid schema, {'a' => 1}, :fragment => '#/foo/bar'
-    refute_valid schema, {}, :fragment => '#/foo/bar'
+    assert_valid schema, {'a' => 1}, fragment: '#/foo/bar'
+    refute_valid schema, {}, fragment: '#/foo/bar'
   end
 
   def test_array_fragment_resolution
@@ -74,11 +74,11 @@ class FragmentResolutionTest < Minitest::Test
       },
     }
 
-    refute_valid schema, 'foo', :fragment => '#/properties/a/anyOf/0'
-    assert_valid schema, 'foo', :fragment => '#/properties/a/anyOf/1'
+    refute_valid schema, 'foo', fragment: '#/properties/a/anyOf/0'
+    assert_valid schema, 'foo', fragment: '#/properties/a/anyOf/1'
 
-    assert_valid schema, 5, :fragment => '#/properties/a/anyOf/0'
-    refute_valid schema, 5, :fragment => '#/properties/a/anyOf/1'
+    assert_valid schema, 5, fragment: '#/properties/a/anyOf/0'
+    refute_valid schema, 5, fragment: '#/properties/a/anyOf/1'
   end
 
   def test_fragment_with_escape_sequences_resolution
@@ -94,7 +94,7 @@ class FragmentResolutionTest < Minitest::Test
       },
     }
 
-    assert_valid schema, {'a' => 1}, :fragment => '#/content/application~1json'
-    refute_valid schema, {}, :fragment => '#/content/application~1json'
+    assert_valid schema, {'a' => 1}, fragment: '#/content/application~1json'
+    refute_valid schema, {}, fragment: '#/content/application~1json'
   end
 end

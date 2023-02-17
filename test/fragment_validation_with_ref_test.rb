@@ -56,12 +56,12 @@ class FragmentValidationWithRefTest < Minitest::Test
 
   def test_validation_of_fragment
     data = [{'content' => 'ohai', 'author' => 'Bob'}]
-    assert_valid whole_schema, data, :fragment => '#/definitions/posts'
+    assert_valid whole_schema, data, fragment: '#/definitions/posts'
   end
 
   def test_validation_of_fragment_with_array
     data = {'content' => 'ohai', 'author' => 'Bob'}
     assert_valid(whole_schema_with_array, data,
-                 :fragment => '#/definitions/omg/links/0/schema',)
+                 fragment: '#/definitions/omg/links/0/schema',)
   end
 end

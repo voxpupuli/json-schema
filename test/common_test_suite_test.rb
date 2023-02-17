@@ -10,7 +10,7 @@ class CommonTestSuiteTest < Minitest::Test
     Dir["#{TEST_DIR}/../remotes/**/*.json"].each do |path|
       schema = path.sub(%r{^.*/remotes/}, '')
       stub_request(:get, "http://localhost:1234/#{schema}")
-        .to_return(:body => File.read(path), :status => 200)
+        .to_return(body: File.read(path), status: 200)
     end
   end
 
@@ -43,9 +43,9 @@ class CommonTestSuiteTest < Minitest::Test
 
             errors = JSON::Validator.fully_validate(schema,
                                                     t['data'],
-                                                    :parse_data => false,
-                                                    :validate_schema => true,
-                                                    :version => version,
+                                                    parse_data: false,
+                                                    validate_schema: true,
+                                                    version: version,
                                                    )
             assert_equal t['valid'], errors.empty?, "Common test suite case failed: #{err_id}"
           end

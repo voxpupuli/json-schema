@@ -18,7 +18,7 @@ class AllOfRefSchemaTest < Minitest::Test
   end
 
   def test_all_of_ref_subschema_errors
-    errors = JSON::Validator.fully_validate(schema, data, :errors_as_objects => true)
+    errors = JSON::Validator.fully_validate(schema, data, errors_as_objects: true)
     nested_errors = errors[0][:errors]
     assert_equal([:allof_0], nested_errors.keys, 'should have nested errors for each allOf subschema')
     assert_match(/the property '#\/name' of type string did not match the following type: integer/i, nested_errors[:allof_0][0][:message])

@@ -16,28 +16,28 @@ class RubySchemaTest < Minitest::Test
 
   def test_symbol_keys
     schema = {
-      :type => 'object',
-      :required => ['a'],
-      :properties => {
-        :a => {:type => 'integer', :default => 42},
-        :b => {:type => 'integer'},
+      type: 'object',
+      required: ['a'],
+      properties: {
+        a: {type: 'integer', default: 42},
+        b: {type: 'integer'},
       },
     }
 
-    assert_valid schema, { :a => 5 }
+    assert_valid schema, { a: 5 }
   end
 
   def test_symbol_keys_in_hash_within_array
     schema = {
-      :type => 'object',
-      :properties => {
-        :a => {
-          :type => 'array',
-          :items => [
+      type: 'object',
+      properties: {
+        a: {
+          type: 'array',
+          items: [
             {
-              :properties => {
-                :b => {
-                  :type => 'integer',
+              properties: {
+                b: {
+                  type: 'integer',
                 },
               },
             },
@@ -47,14 +47,14 @@ class RubySchemaTest < Minitest::Test
     }
 
     data = {
-      :a => [
+      a: [
         {
-          :b => 1,
+          b: 1,
         },
       ],
     }
 
-    assert_valid schema, data, :validate_schema => true
+    assert_valid schema, data, validate_schema: true
   end
 
   def test_schema_of_unrecognized_type

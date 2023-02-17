@@ -81,7 +81,7 @@ module JSON
         if parsed_uri.fragment.nil? || parsed_uri.fragment.empty?
           parsed_uri
         else
-          parsed_uri.merge(:fragment => '')
+          parsed_uri.merge(fragment: '')
         end
       end
 

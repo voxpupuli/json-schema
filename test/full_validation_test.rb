@@ -43,7 +43,7 @@ class FullValidationTest < Minitest::Test
       },
     }
 
-    validator = JSON::Validator.new(schema, { :record_errors => true })
+    validator = JSON::Validator.new(schema, { record_errors: true })
     assert(validator.validate(data).empty?)
     assert(validator.validate(data).empty?)
     assert(validator.validate(data).empty?)
@@ -61,7 +61,7 @@ class FullValidationTest < Minitest::Test
       },
     }
 
-    validator = JSON::Validator.new(schema, { :record_errors => true })
+    validator = JSON::Validator.new(schema, { record_errors: true })
     assert(validator.validate(data).length == 2)
     assert(validator.validate(data).length == 2)
     assert(validator.validate(data).length == 2)
@@ -148,7 +148,7 @@ class FullValidationTest < Minitest::Test
       },
     }
 
-    errors = JSON::Validator.fully_validate(schema, data, :errors_as_objects => true)
+    errors = JSON::Validator.fully_validate(schema, data, errors_as_objects: true)
     assert(errors.empty?)
 
     data = {'c' => 5}
@@ -164,7 +164,7 @@ class FullValidationTest < Minitest::Test
       },
     }
 
-    errors = JSON::Validator.fully_validate(schema, data, :errors_as_objects => true)
+    errors = JSON::Validator.fully_validate(schema, data, errors_as_objects: true)
 
     assert(errors.length == 2)
     assert(errors[0][:failed_attribute] == 'Required')
@@ -193,7 +193,7 @@ class FullValidationTest < Minitest::Test
     }
     data = {'x' => {'a'=>5, 'd'=>5, 'e'=>'what?'}}
 
-    errors = JSON::Validator.fully_validate(schema, data, :errors_as_objects => true)
+    errors = JSON::Validator.fully_validate(schema, data, errors_as_objects: true)
     assert_equal 2, errors.length
     assert_equal '#/x', errors[0][:fragment]
     assert_equal 'Required', errors[0][:failed_attribute]
@@ -226,7 +226,7 @@ class FullValidationTest < Minitest::Test
     e_is_wrong_type= {'a'=>5, 'b'=>5, 'e'=>'what?'}
     data = {'x' => [missing_b, e_is_wrong_type]}
 
-    errors = JSON::Validator.fully_validate(schema, data, :errors_as_objects => true)
+    errors = JSON::Validator.fully_validate(schema, data, errors_as_objects: true)
     assert_equal 2, errors.length
     assert_equal '#/x/0', errors[0][:fragment]
     assert_equal 'Required', errors[0][:failed_attribute]
