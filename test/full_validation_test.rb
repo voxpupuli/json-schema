@@ -44,7 +44,7 @@ class FullValidationTest < Minitest::Test
       }
     }
 
-    validator = JSON::Validator.new(schema, { record_errors: true })
+    validator = JSON::Validator.new(schema, { :record_errors => true })
     assert(validator.validate(data).empty?)
     assert(validator.validate(data).empty?)
     assert(validator.validate(data).empty?)
@@ -62,7 +62,7 @@ class FullValidationTest < Minitest::Test
       }
     }
 
-    validator = JSON::Validator.new(schema, { record_errors: true })
+    validator = JSON::Validator.new(schema, { :record_errors => true })
     assert(validator.validate(data).length == 2)
     assert(validator.validate(data).length == 2)
     assert(validator.validate(data).length == 2)

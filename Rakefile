@@ -63,7 +63,7 @@ Rake::TestTask.new do |t|
   t.test_files = FileList.new('test/*_test.rb')
 end
 
-task update: [:update_common_tests, :update_meta_schemas]
+task :update => [:update_common_tests, :update_meta_schemas]
 
 require 'rubocop/rake_task'
 RuboCop::RakeTask.new(:rubocop) do |task|
