@@ -402,14 +402,6 @@ Style/CaseLikeIf:
   Exclude:
     - 'lib/json-schema/validator.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: nested, compact
-Style/ClassAndModuleChildren:
-  Exclude:
-    - 'test/support/test_helper.rb'
-
 # Offense count: 23
 Style/ClassVars:
   Exclude:
