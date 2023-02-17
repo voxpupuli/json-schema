@@ -1,6 +1,5 @@
 module JSON
   class Schema
-
     class HyperDraft1 < Draft1
       def initialize
         super

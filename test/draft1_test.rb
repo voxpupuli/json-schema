@@ -73,7 +73,6 @@ class Draft1Test < Minitest::Test
     data["a"] = 3.455
     refute_valid schema, data
 
-
     schema["properties"]["a"]["maxDecimal"] = 0
 
     data["a"] = 4.0
@@ -85,8 +84,6 @@ class Draft1Test < Minitest::Test
     data["a"] = 5
     assert_valid schema, data
   end
-
-
 
   def test_disallow
     # Set up the default datatype
@@ -100,13 +97,11 @@ class Draft1Test < Minitest::Test
       "a" => nil
     }
 
-
     data["a"] = 'string'
     assert_valid schema, data
 
     data["a"] = 5
     refute_valid schema, data
-
 
     schema["properties"]["a"]["disallow"] = ["integer","string"]
     data["a"] = 'string'
@@ -117,7 +112,6 @@ class Draft1Test < Minitest::Test
 
     data["a"] = false
     assert_valid schema, data
-
   end
 
   def test_format_datetime
@@ -136,5 +130,4 @@ class Draft1Test < Minitest::Test
     refute_valid schema, {"a" => "2010-01-0112:00:00Z"}
     refute_valid schema, {"a" => "2010-01-01T12:00:00Z\nabc"}
   end
-
 end

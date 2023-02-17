@@ -16,6 +16,7 @@ module JSON
               Date.parse(parts[0])
             rescue ArgumentError => e
               raise e unless e.message == 'invalid date'
+
               validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors])
               return
             end

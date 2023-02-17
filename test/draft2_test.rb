@@ -73,13 +73,11 @@ class Draft2Test < Minitest::Test
       "a" => nil
     }
 
-
     data["a"] = 'string'
     assert_valid schema, data
 
     data["a"] = 5
     refute_valid schema, data
-
 
     schema["properties"]["a"]["disallow"] = ["integer","string"]
     data["a"] = 'string'
@@ -108,5 +106,4 @@ class Draft2Test < Minitest::Test
     refute_valid schema, {"a" => "2010-01-0112:00:00Z"}
     refute_valid schema, {"a" => "2010-01-01T12:00:00Z\nabc"}
   end
-
 end

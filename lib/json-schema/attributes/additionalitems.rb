@@ -19,6 +19,7 @@ module JSON
           additional_items_schema = JSON::Schema.new(schema['additionalItems'], current_schema.uri, validator)
           data.each_with_index do |item, i|
             next if i < schema['items'].length
+
             additional_items_schema.validate(item, fragments + [i.to_s], processor, options)
           end
         end

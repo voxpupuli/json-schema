@@ -84,5 +84,4 @@ module StrictValidation
     data = {"a" => "a", "b" => "b", "23 taco" => "cheese"}
     assert(!JSON::Validator.validate(schema,data,:strict => true))
   end
-
 end

@@ -9,8 +9,8 @@ class CommonTestSuiteTest < Minitest::Test
   def setup
     Dir["#{TEST_DIR}/../remotes/**/*.json"].each do |path|
       schema = path.sub(%r{^.*/remotes/}, '')
-      stub_request(:get, "http://localhost:1234/#{schema}").
-        to_return(:body => File.read(path), :status => 200)
+      stub_request(:get, "http://localhost:1234/#{schema}")
+        .to_return(:body => File.read(path), :status => 200)
     end
   end
 
@@ -42,11 +42,11 @@ class CommonTestSuiteTest < Minitest::Test
             skip if self.class.skip?(full_description, rel_file)
 
             errors = JSON::Validator.fully_validate(schema,
-              t["data"],
-              :parse_data => false,
-              :validate_schema => true,
-              :version => version
-            )
+                                                    t["data"],
+                                                    :parse_data => false,
+                                                    :validate_schema => true,
+                                                    :version => version
+                                                   )
             assert_equal t["valid"], errors.empty?, "Common test suite case failed: #{err_id}"
           end
         end

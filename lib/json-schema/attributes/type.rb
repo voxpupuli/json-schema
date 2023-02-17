@@ -51,6 +51,7 @@ module JSON
 
         if options[:disallow]
           return if !valid
+
           message = "The property '#{build_fragment(fragments)}' matched one or more of the following types: #{list_types(types)}"
           validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
         elsif !valid

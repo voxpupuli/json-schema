@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 require File.expand_path('../support/test_helper', __FILE__)
 
 class Draft3Test < Minitest::Test
@@ -189,13 +190,11 @@ class Draft3Test < Minitest::Test
       "a" => nil
     }
 
-
     data["a"] = 'string'
     assert_valid schema, data
 
     data["a"] = 5
     refute_valid schema, data
-
 
     schema["properties"]["a"]["disallow"] = ["integer","string"]
     data["a"] = 'string'
@@ -206,10 +205,7 @@ class Draft3Test < Minitest::Test
 
     data["a"] = false
     assert_valid schema, data
-
   end
-
-
 
   def test_extends
     schema = {
@@ -255,7 +251,6 @@ class Draft3Test < Minitest::Test
     data = [{"a" => 1},{"b" => 2},{"a" => 3}]
     assert(!JSON::Validator.validate(schema,data,:list => true))
   end
-
 
   def test_self_reference
     schema = {
@@ -322,8 +317,6 @@ class Draft3Test < Minitest::Test
     assert(!JSON::Validator.validate(schema,data2))
     assert(JSON::Validator.validate(schema,data3))
   end
-
-
 
   def test_schema
     schema = {
@@ -442,8 +435,5 @@ class Draft3Test < Minitest::Test
     assert(!JSON::Validator.validate(schema,data, :insert_defaults => true))
     assert_equal("42",data["a"])
     assert_equal(2, data[:b])
-
   end
-
-
 end

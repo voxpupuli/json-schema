@@ -1,7 +1,6 @@
 require File.expand_path('../support/test_helper', __FILE__)
 
 class FullValidationTest < Minitest::Test
-
   def test_full_validation
     data = {"b" => {"a" => 5}}
     schema = {
@@ -137,7 +136,6 @@ class FullValidationTest < Minitest::Test
     errors = JSON::Validator.fully_validate(schema,data)
     assert(errors.length == 1)
   end
-
 
   def test_full_validation_with_object_errors
     data = {"b" => {"a" => 5}}
