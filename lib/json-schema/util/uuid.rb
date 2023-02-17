@@ -29,10 +29,9 @@ require 'tmpdir'
 
 module JSON
   module Util
-  
     # Pure ruby UUID generator, which is compatible with RFC4122
     UUID = Struct.new :raw_bytes
-  
+
     class UUID
       private_class_method :new
 

@@ -149,13 +149,6 @@ Layout/SpaceInsideReferenceBrackets:
   Exclude:
     - 'json-schema.gemspec'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-# Configuration parameters: AllowInHeredoc.
-Layout/TrailingWhitespace:
-  Exclude:
-    - 'lib/json-schema/util/uuid.rb'
-
 # Offense count: 1
 Lint/AmbiguousBlockAssociation:
   Exclude:
