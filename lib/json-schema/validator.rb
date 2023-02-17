@@ -19,15 +19,15 @@ module JSON
     @@schemas = {}
     @@cache_schemas = true
     @@default_opts = {
-      :list => false,
-      :version => nil,
-      :validate_schema => false,
-      :record_errors => false,
-      :errors_as_objects => false,
-      :insert_defaults => false,
-      :clear_cache => false,
-      :strict => false,
-      :parse_data => true,
+      list: false,
+      version: nil,
+      validate_schema: false,
+      record_errors: false,
+      errors_as_objects: false,
+      insert_defaults: false,
+      clear_cache: false,
+      strict: false,
+      parse_data: true,
     }
     @@validators = {}
     @@default_validator = nil
@@ -43,7 +43,7 @@ module JSON
       configured_validator = self.class.validator_for_name(@options[:version])
       @options[:schema_reader] ||= self.class.schema_reader
 
-      @validation_options = @options[:record_errors] ? {:record_errors => true} : {}
+      @validation_options = @options[:record_errors] ? {record_errors: true} : {}
       @validation_options[:insert_defaults] = true if @options[:insert_defaults]
       @validation_options[:strict] = true if @options[:strict] == true
       @validation_options[:clear_cache] = true if !@@cache_schemas || @options[:clear_cache]
@@ -54,7 +54,7 @@ module JSON
       # validate the schema, if requested
       if @options[:validate_schema]
         # Don't clear the cache during metaschema validation!
-        meta_validator = self.class.new(@base_schema.validator.metaschema, {:clear_cache => false})
+        meta_validator = self.class.new(@base_schema.validator.metaschema, {clear_cache: false})
         meta_validator.validate(@base_schema.schema)
       end
 
@@ -237,11 +237,11 @@ module JSON
       end
 
       def validate_json(schema, data, opts={})
-        validate(schema, data, opts.merge(:json => true))
+        validate(schema, data, opts.merge(json: true))
       end
 
       def validate_uri(schema, data, opts={})
-        validate(schema, data, opts.merge(:uri => true))
+        validate(schema, data, opts.merge(uri: true))
       end
 
       def validate!(schema, data, opts={})
@@ -255,15 +255,15 @@ module JSON
       end
 
       def validate_json!(schema, data, opts={})
-        validate!(schema, data, opts.merge(:json => true))
+        validate!(schema, data, opts.merge(json: true))
       end
 
       def validate_uri!(schema, data, opts={})
-        validate!(schema, data, opts.merge(:uri => true))
+        validate!(schema, data, opts.merge(uri: true))
       end
 
       def fully_validate(schema, data, opts={})
-        validate!(schema, data, opts.merge(:record_errors => true))
+        validate!(schema, data, opts.merge(record_errors: true))
       end
 
       def fully_validate_schema(schema, opts={})
@@ -273,11 +273,11 @@ module JSON
       end
 
       def fully_validate_json(schema, data, opts={})
-        fully_validate(schema, data, opts.merge(:json => true))
+        fully_validate(schema, data, opts.merge(json: true))
       end
 
       def fully_validate_uri(schema, data, opts={})
-        fully_validate(schema, data, opts.merge(:uri => true))
+        fully_validate(schema, data, opts.merge(uri: true))
       end
 
       def schema_reader
@@ -423,7 +423,7 @@ module JSON
           case @@json_backend.to_s
           when 'json'
             begin
-              JSON.parse(s, :quirks_mode => true)
+              JSON.parse(s, quirks_mode: true)
             rescue JSON::ParserError => e
               raise JSON::Schema::JsonParseError.new(e.message)
             end

@@ -11,7 +11,7 @@ class AnyOfRefSchemaTest < Minitest::Test
 
   def test_any_of_ref_subschema_errors
     data = %({"names": ["jack"]})
-    errors = JSON::Validator.fully_validate(schema, data, :errors_as_objects => true)
+    errors = JSON::Validator.fully_validate(schema, data, errors_as_objects: true)
     nested_errors = errors[0][:errors]
     assert_equal([:anyof_0, :anyof_1, :anyof_2], nested_errors.keys, 'should have nested errors for each anyOf subschema')
     assert_match(/the property '#\/names\/0' value "jack" did not match the regex 'john'/i, nested_errors[:anyof_0][0][:message])

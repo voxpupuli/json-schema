@@ -40,14 +40,14 @@ class ValidatorSchemaReaderTest < Minitest::Test
   def test_validate_with_reader
     reader = MockReader.new
     schema = { '$ref' => 'http://any.url/at/all' }
-    assert_valid schema, 'abc', :schema_reader => reader
-    refute_valid schema, 'a', :schema_reader => reader
+    assert_valid schema, 'abc', schema_reader: reader
+    refute_valid schema, 'a', schema_reader: reader
   end
 
   def test_validate_list_with_reader
     reader = MockReader.new
     schema = { '$ref' => 'http://any.url/at/all' }
-    assert_valid schema, ['abc', 'def'], :schema_reader => reader, :list => true
-    refute_valid schema, ['abc', 'a'], :schema_reader => reader, :list => true
+    assert_valid schema, ['abc', 'def'], schema_reader: reader, list: true
+    refute_valid schema, ['abc', 'a'], schema_reader: reader, list: true
   end
 end

@@ -125,7 +125,7 @@ module EnumValidation
         },
       }
       data = { 'a' => 1 }
-      assert_valid(schema, data, :validate_schema => true)
+      assert_valid(schema, data, validate_schema: true)
     end
   end
 end

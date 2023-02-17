@@ -29,7 +29,7 @@ class StringifyTest < Minitest::Test
     array = [
       :a,
       {
-        :b => :bar,
+        b: :bar,
       },
     ]
     assert_equal(['a', {'b' => 'bar'}], JSON::Schema.stringify(array), 'symbols keys in a nested hash should be converted to strings')
@@ -37,9 +37,9 @@ class StringifyTest < Minitest::Test
 
   def test_stringify_on_hash_of_hashes
     hash = {
-      :a => {
-        :b => {
-          :foo => :bar,
+      a: {
+        b: {
+          foo: :bar,
         },
       },
     }
