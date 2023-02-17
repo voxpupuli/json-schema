@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email = 'voxpupuli@groups.io'
   s.homepage = 'http://github.com/voxpupuli/json-schema/'
   s.summary = 'Ruby JSON Schema Validator'
-  s.files = Dir[ 'lib/**/*', 'resources/*.json' ]
+  s.files = Dir['lib/**/*', 'resources/*.json']
   s.require_path = 'lib'
   s.extra_rdoc_files = ['README.md', 'LICENSE.md']
   s.required_ruby_version = '>= 2.5'
