@@ -52,7 +52,6 @@ module JSON
 
         extra_properties
       end
-
     end
   end
 end

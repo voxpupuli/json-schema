@@ -438,5 +438,4 @@ class Draft3Test < Minitest::Test
     assert_equal(2, data[:b])
 
   end
-
 end

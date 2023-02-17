@@ -1,7 +1,6 @@
 require File.expand_path('../support/test_helper', __FILE__)
 
 class InitializeDataTest < Minitest::Test
-
   def test_parse_character_string
     schema = {'type' => 'string'}
     data = 'hello world'

@@ -81,5 +81,4 @@ class OneOfTest < Minitest::Test
     assert_equal(expected_message, errors[0])
 
   end
-
 end

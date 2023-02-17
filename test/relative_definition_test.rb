@@ -1,7 +1,6 @@
 require File.expand_path('../support/test_helper', __FILE__)
 
 class RelativeDefinitionTest < Minitest::Test
-
   def test_definition_schema
     assert_valid schema_fixture_path('definition_schema.json'), {"a" => 5}
   end
@@ -15,5 +14,4 @@ class RelativeDefinitionTest < Minitest::Test
     assert_valid schema, {"a" => 5}
     refute_valid schema, {"a" => "foo"}
   end
-
 end

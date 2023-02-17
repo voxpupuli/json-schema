@@ -1,7 +1,6 @@
 require File.expand_path('../support/test_helper', __FILE__)
 
 class FullValidationTest < Minitest::Test
-
   def test_full_validation
     data = {"b" => {"a" => 5}}
     schema = {

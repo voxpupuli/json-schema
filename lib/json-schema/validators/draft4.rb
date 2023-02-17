@@ -2,7 +2,6 @@ require 'json-schema/schema/validator'
 
 module JSON
   class Schema
-
     class Draft4 < Validator
       def initialize
         super
@@ -51,6 +50,5 @@ module JSON
       JSON::Validator.register_validator(self.new)
       JSON::Validator.register_default_validator(self.new)
     end
-
   end
 end

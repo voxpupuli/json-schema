@@ -106,5 +106,4 @@ class Draft2Test < Minitest::Test
     refute_valid schema, {"a" => "2010-01-0112:00:00Z"}
     refute_valid schema, {"a" => "2010-01-01T12:00:00Z\nabc"}
   end
-
 end
