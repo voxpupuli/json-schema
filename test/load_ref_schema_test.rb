@@ -3,17 +3,17 @@ require File.expand_path('../support/test_helper', __FILE__)
 class LoadRefSchemaTest < Minitest::Test
   def load_other_schema
     JSON::Validator.add_schema(JSON::Schema.new(
-      {
-        '$schema' => 'http://json-schema.org/draft-04/schema#',
-        'type' => 'object',
-        'properties' => {
-          'title' => {
-            'type' => 'string',
-          },
-        },
-      },
-      Addressable::URI.parse('http://example.com/schema#'),
-    ))
+                                 {
+                                   '$schema' => 'http://json-schema.org/draft-04/schema#',
+                                   'type' => 'object',
+                                   'properties' => {
+                                     'title' => {
+                                       'type' => 'string',
+                                     },
+                                   },
+                                 },
+                                 Addressable::URI.parse('http://example.com/schema#'),
+                               ))
   end
 
   def test_cached_schema
