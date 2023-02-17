@@ -9,7 +9,7 @@ module JSON
       @uri = uri
 
       # If there is an ID on this schema, use it to generate the URI
-      if @schema['id'] && @schema['id'].is_a?(String)
+      if @schema['id'].is_a?(String)
         temp_uri = JSON::Util::URI.parse(@schema['id'])
         if temp_uri.relative?
           temp_uri = uri.join(temp_uri)

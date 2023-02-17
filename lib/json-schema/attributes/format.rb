@@ -8,7 +8,7 @@ module JSON
 
         format = current_schema.schema['format'].to_s
         validator = validator.formats[format]
-        validator.validate(current_schema, data, fragments, processor, validator, options) unless validator.nil?
+        validator&.validate(current_schema, data, fragments, processor, validator, options)
       end
     end
   end
