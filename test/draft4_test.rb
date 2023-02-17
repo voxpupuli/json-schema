@@ -481,7 +481,6 @@ class Draft4Test < Minitest::Test
     assert(!JSON::Validator.validate(schema,data, :insert_defaults => true))
     assert_equal("42",data["a"])
     assert_equal(2, data[:b])
-
   end
 
   def test_boolean_false_default

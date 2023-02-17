@@ -79,6 +79,5 @@ class OneOfTest < Minitest::Test
     - The property '#/a' did not have a minimum value of 10, inclusively"""
 
     assert_equal(expected_message, errors[0])
-
   end
 end

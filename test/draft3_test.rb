@@ -205,7 +205,6 @@ class Draft3Test < Minitest::Test
 
     data["a"] = false
     assert_valid schema, data
-
   end
 
   def test_extends
@@ -436,6 +435,5 @@ class Draft3Test < Minitest::Test
     assert(!JSON::Validator.validate(schema,data, :insert_defaults => true))
     assert_equal("42",data["a"])
     assert_equal(2, data[:b])
-
   end
 end

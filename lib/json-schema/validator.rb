@@ -206,7 +206,6 @@ module JSON
       if schema["enum"].is_a?(Array)
         schema["enum"] = ArraySet.new(schema["enum"])
       end
-
     end
 
     # Either load a reference schema or create a new schema

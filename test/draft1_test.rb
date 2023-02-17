@@ -112,7 +112,6 @@ class Draft1Test < Minitest::Test
 
     data["a"] = false
     assert_valid schema, data
-
   end
 
   def test_format_datetime
