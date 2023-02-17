@@ -515,12 +515,6 @@ Style/FormatStringToken:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/GlobalStdStream:
-  Exclude:
-    - 'Rakefile'
-
 # Offense count: 26
 # Configuration parameters: MinBodyLength.
 Style/GuardClause:
