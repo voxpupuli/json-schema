@@ -10,7 +10,7 @@ module JSON
         if data.is_a?(String)
           error_message = "The property '#{build_fragment(fragments)}' must be a date/time in the ISO-8601 format of YYYY-MM-DDThh:mm:ssZ or YYYY-MM-DDThh:mm:ss.ssZ"
           if (m = REGEXP.match(data))
-            parts = data.split("T")
+            parts = data.split('T')
 
             begin
               Date.parse(parts[0])

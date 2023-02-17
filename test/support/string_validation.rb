@@ -32,7 +32,7 @@ module StringValidation
     def test_pattern
       schema = {
         'properties' => {
-          'a' => { 'pattern' => "\\d+ taco" },
+          'a' => { 'pattern' => '\\d+ taco' },
         },
       }
 
@@ -82,11 +82,11 @@ module StringValidation
         },
       }
 
-      assert_valid schema, {"a" => "1.1.1.1"}
-      refute_valid schema, {"a" => "1.1.1"}
-      refute_valid schema, {"a" => "1.1.1.300"}
-      refute_valid schema, {"a" => "1.1.1"}
-      refute_valid schema, {"a" => "1.1.1.1b"}
+      assert_valid schema, {'a' => '1.1.1.1'}
+      refute_valid schema, {'a' => '1.1.1'}
+      refute_valid schema, {'a' => '1.1.1.300'}
+      refute_valid schema, {'a' => '1.1.1'}
+      refute_valid schema, {'a' => '1.1.1.1b'}
 
       # other types are disregarded
       assert_valid schema, {'a' => 5}
@@ -99,17 +99,17 @@ module StringValidation
         },
       }
 
-      assert_valid schema, {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff"}
-      assert_valid schema, {"a" => "1111:0:8888:0:0:0:eeee:ffff"}
-      assert_valid schema, {"a" => "1111:2222:8888::eeee:ffff"}
-      assert_valid schema, {"a" => "::1"}
+      assert_valid schema, {'a' => '1111:2222:8888:9999:aaaa:cccc:eeee:ffff'}
+      assert_valid schema, {'a' => '1111:0:8888:0:0:0:eeee:ffff'}
+      assert_valid schema, {'a' => '1111:2222:8888::eeee:ffff'}
+      assert_valid schema, {'a' => '::1'}
 
-      refute_valid schema, {"a" => "1111:2222:8888:99999:aaaa:cccc:eeee:ffff"}
-      refute_valid schema, {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:gggg"}
-      refute_valid schema, {"a" => "1111:2222::9999::cccc:eeee:ffff"}
-      refute_valid schema, {"a" => "1111:2222:8888:9999:aaaa:cccc:eeee:ffff:bbbb"}
-      refute_valid schema, {"a" => "42"}
-      refute_valid schema, {"a" => "b"}
+      refute_valid schema, {'a' => '1111:2222:8888:99999:aaaa:cccc:eeee:ffff'}
+      refute_valid schema, {'a' => '1111:2222:8888:9999:aaaa:cccc:eeee:gggg'}
+      refute_valid schema, {'a' => '1111:2222::9999::cccc:eeee:ffff'}
+      refute_valid schema, {'a' => '1111:2222:8888:9999:aaaa:cccc:eeee:ffff:bbbb'}
+      refute_valid schema, {'a' => '42'}
+      refute_valid schema, {'a' => 'b'}
     end
   end
 
@@ -123,16 +123,16 @@ module StringValidation
         },
       }
 
-      assert_valid schema, {"a" => "12:00:00"}
-      refute_valid schema, {"a" => "12:00"}
-      refute_valid schema, {"a" => "12:00:60"}
-      refute_valid schema, {"a" => "12:60:00"}
-      refute_valid schema, {"a" => "24:00:00"}
-      refute_valid schema, {"a" => "0:00:00"}
-      refute_valid schema, {"a" => "-12:00:00"}
-      refute_valid schema, {"a" => "12:00:00b"}
-      assert_valid schema, {"a" => "12:00:00"}
-      refute_valid schema, {"a" => "12:00:00\nabc"}
+      assert_valid schema, {'a' => '12:00:00'}
+      refute_valid schema, {'a' => '12:00'}
+      refute_valid schema, {'a' => '12:00:60'}
+      refute_valid schema, {'a' => '12:60:00'}
+      refute_valid schema, {'a' => '24:00:00'}
+      refute_valid schema, {'a' => '0:00:00'}
+      refute_valid schema, {'a' => '-12:00:00'}
+      refute_valid schema, {'a' => '12:00:00b'}
+      assert_valid schema, {'a' => '12:00:00'}
+      refute_valid schema, {'a' => "12:00:00\nabc"}
     end
 
     def test_format_date
@@ -142,13 +142,13 @@ module StringValidation
         },
       }
 
-      assert_valid schema, {"a" => "2010-01-01"}
-      refute_valid schema, {"a" => "2010-01-32"}
-      refute_valid schema, {"a" => "n2010-01-01"}
-      refute_valid schema, {"a" => "2010-1-01"}
-      refute_valid schema, {"a" => "2010-01-1"}
-      refute_valid schema, {"a" => "2010-01-01n"}
-      refute_valid schema, {"a" => "2010-01-01\nabc"}
+      assert_valid schema, {'a' => '2010-01-01'}
+      refute_valid schema, {'a' => '2010-01-32'}
+      refute_valid schema, {'a' => 'n2010-01-01'}
+      refute_valid schema, {'a' => '2010-1-01'}
+      refute_valid schema, {'a' => '2010-01-1'}
+      refute_valid schema, {'a' => '2010-01-01n'}
+      refute_valid schema, {'a' => "2010-01-01\nabc"}
     end
   end
 end

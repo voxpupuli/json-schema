@@ -4,24 +4,24 @@ require 'rake/testtask'
 
 Bundler::GemHelper.install_tasks
 
-desc "Updates the json-schema common test suite to the latest version"
+desc 'Updates the json-schema common test suite to the latest version'
 task :update_common_tests do
-  unless File.read(".git/config").include?('submodule "test/test-suite"')
-    sh "git submodule init"
+  unless File.read('.git/config').include?('submodule "test/test-suite"')
+    sh 'git submodule init'
   end
 
-  puts "Updating json-schema common test suite..."
+  puts 'Updating json-schema common test suite...'
 
   begin
-    sh "git submodule update --remote --quiet"
+    sh 'git submodule update --remote --quiet'
   rescue StandardError
-    STDERR.puts "Failed to update common test suite."
+    STDERR.puts 'Failed to update common test suite.'
   end
 end
 
-desc "Update meta-schemas to the latest version"
+desc 'Update meta-schemas to the latest version'
 task :update_meta_schemas do
-  puts "Updating meta-schemas..."
+  puts 'Updating meta-schemas...'
 
   id_mappings = {
     'http://json-schema.org/draft/schema#' => 'https://raw.githubusercontent.com/json-schema-org/json-schema-spec/master/schema.json',
@@ -57,7 +57,7 @@ task :update_meta_schemas do
 end
 
 Rake::TestTask.new do |t|
-  t.libs << "."
+  t.libs << '.'
   t.warning = true
   t.verbose = true
   t.test_files = FileList.new('test/*_test.rb')

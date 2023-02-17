@@ -12,7 +12,7 @@ class UriUtilTest < Minitest::Test
   end
 
   def test_normalized_uri
-    str = "https://www.google.com/search"
+    str = 'https://www.google.com/search'
     uri = Addressable::URI.new(:scheme => 'https',
                                :host => 'www.google.com',
                                :path => 'search',)
@@ -20,7 +20,7 @@ class UriUtilTest < Minitest::Test
   end
 
   def test_normalized_uri_with_empty_fragment
-    str = "https://www.google.com/search#"
+    str = 'https://www.google.com/search#'
     uri = Addressable::URI.new(:scheme => 'https',
                                :host => 'www.google.com',
                                :path => 'search',
@@ -29,7 +29,7 @@ class UriUtilTest < Minitest::Test
   end
 
   def test_normalized_uri_with_fragment
-    str = "https://www.google.com/search#foo"
+    str = 'https://www.google.com/search#foo'
     uri = Addressable::URI.new(:scheme => 'https',
                                :host => 'www.google.com',
                                :path => 'search',
@@ -38,7 +38,7 @@ class UriUtilTest < Minitest::Test
   end
 
   def test_normalized_uri_for_absolute_path
-    str = "/foo/bar.json"
+    str = '/foo/bar.json'
     uri = Addressable::URI.new(:scheme => 'file',
                                :host => '',
                                :path => '/foo/bar.json',)
@@ -46,7 +46,7 @@ class UriUtilTest < Minitest::Test
   end
 
   def test_normalized_uri_for_relative_path
-    str = "foo/bar.json"
+    str = 'foo/bar.json'
     uri = Addressable::URI.new(:scheme => 'file',
                                :host => '',
                                :path => '/home/foo/bar.json',)
@@ -54,7 +54,7 @@ class UriUtilTest < Minitest::Test
   end
 
   def test_normalized_uri_for_file_path_with_host
-    str = "file://localhost/foo/bar.json"
+    str = 'file://localhost/foo/bar.json'
     uri = Addressable::URI.new(:scheme => 'file',
                                :host => 'localhost',
                                :path => '/foo/bar.json',)
@@ -62,7 +62,7 @@ class UriUtilTest < Minitest::Test
   end
 
   def test_uri_parse
-    str = "https://www.google.com/search"
+    str = 'https://www.google.com/search'
     uri = Addressable::URI.new(:scheme => 'https',
                                :host => 'www.google.com',
                                :path => 'search',)
@@ -70,7 +70,7 @@ class UriUtilTest < Minitest::Test
   end
 
   def test_invalid_uri_parse
-    uri = ":::::::"
+    uri = ':::::::'
     assert_raises(JSON::Schema::UriError) do
       JSON::Util::URI.parse(uri)
     end
@@ -107,7 +107,7 @@ class UriUtilTest < Minitest::Test
 
     assert_equal(cached_uri, JSON::Util::URI.normalized_uri('foo'))
 
-    validation_errors({"type" => "string"}, "foo", :clear_cache => true)
+    validation_errors({'type' => 'string'}, 'foo', :clear_cache => true)
 
     refute_equal(cached_uri, JSON::Util::URI.normalized_uri('foo'))
   end
@@ -119,7 +119,7 @@ class UriUtilTest < Minitest::Test
 
     assert_equal(cached_uri, JSON::Util::URI.parse('foo'))
 
-    validation_errors({"type" => "string"}, "foo", :clear_cache => true)
+    validation_errors({'type' => 'string'}, 'foo', :clear_cache => true)
 
     refute_equal(cached_uri, JSON::Util::URI.parse('foo'))
   end

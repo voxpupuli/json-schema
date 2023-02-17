@@ -22,14 +22,14 @@ class AnyOfRefSchemaTest < Minitest::Test
   def test_any_of_ref_message
     data = %({"names": ["jack"]})
     errors = JSON::Validator.fully_validate(schema, data)
-    expected_message = """The property '#/names/0' of type string did not match one or more of the required schemas. The schema specific errors were:
+    expected_message = ''"The property '#/names/0' of type string did not match one or more of the required schemas. The schema specific errors were:
 
 - anyOf #0:
     - The property '#/names/0' value \"jack\" did not match the regex 'john'
 - anyOf #1:
     - The property '#/names/0' value \"jack\" did not match the regex 'jane'
 - anyOf #2:
-    - The property '#/names/0' value \"jack\" did not match the regex 'jimmy'"""
+    - The property '#/names/0' value \"jack\" did not match the regex 'jimmy'"''
     assert_equal(expected_message, errors[0])
   end
 end

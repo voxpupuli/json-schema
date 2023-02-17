@@ -25,14 +25,14 @@ module JSON
         temp_uri = JSON::Util::URI.normalize_ref(s['$ref'], current_schema.uri)
 
         # Grab the parent schema from the schema list
-        schema_key = temp_uri.to_s.split("#")[0] + "#"
+        schema_key = temp_uri.to_s.split('#')[0] + '#'
 
         ref_schema = JSON::Validator.schema_for_uri(schema_key)
 
         if ref_schema
           # Perform fragment resolution to retrieve the appropriate level for the schema
           target_schema = ref_schema.schema
-          fragments = JSON::Util::URI.parse(JSON::Util::URI.unescape_uri(temp_uri)).fragment.split("/")
+          fragments = JSON::Util::URI.parse(JSON::Util::URI.unescape_uri(temp_uri)).fragment.split('/')
           fragment_path = ''
           fragments.each do |fragment|
             if fragment && fragment != ''
