@@ -73,7 +73,6 @@ class Draft1Test < Minitest::Test
     data["a"] = 3.455
     refute_valid schema, data
 
-
     schema["properties"]["a"]["maxDecimal"] = 0
 
     data["a"] = 4.0
@@ -98,13 +97,11 @@ class Draft1Test < Minitest::Test
       "a" => nil
     }
 
-
     data["a"] = 'string'
     assert_valid schema, data
 
     data["a"] = 5
     refute_valid schema, data
-
 
     schema["properties"]["a"]["disallow"] = ["integer","string"]
     data["a"] = 'string'

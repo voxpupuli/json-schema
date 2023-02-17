@@ -88,7 +88,6 @@ module EnumValidation
       data["a"] = 0
       assert_valid schema, data
 
-
       data["a"] = 1.0
       assert_valid schema, data
 
@@ -111,7 +110,6 @@ module EnumValidation
 
       data["a"] = 0.0
       refute_valid schema, data
-
 
       data["a"] = 1
       assert_valid schema, data

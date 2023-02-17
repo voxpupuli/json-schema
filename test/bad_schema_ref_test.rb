@@ -1,7 +1,6 @@
 require File.expand_path('../support/test_helper', __FILE__)
 require 'socket'
 
-
 class BadSchemaRefTest < Minitest::Test
   def setup
     WebMock.allow_net_connect!

@@ -190,13 +190,11 @@ class Draft3Test < Minitest::Test
       "a" => nil
     }
 
-
     data["a"] = 'string'
     assert_valid schema, data
 
     data["a"] = 5
     refute_valid schema, data
-
 
     schema["properties"]["a"]["disallow"] = ["integer","string"]
     data["a"] = 'string'
@@ -440,6 +438,5 @@ class Draft3Test < Minitest::Test
     assert_equal(2, data[:b])
 
   end
-
 
 end

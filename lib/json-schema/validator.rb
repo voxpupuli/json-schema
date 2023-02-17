@@ -230,7 +230,6 @@ module JSON
       @errors
     end
 
-
     class << self
       def validate(schema, data,opts={})
         begin
@@ -478,7 +477,6 @@ module JSON
           rescue LoadError
           end
         end
-
 
         if Gem::Specification::find_all_by_name('yajl-ruby').any?
           require 'yajl'

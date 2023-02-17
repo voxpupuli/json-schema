@@ -23,7 +23,6 @@
 # 2009-02-20:  Modified by Pablo Lorenzoni <pablo@propus.com.br>  to  correctly
 # include the version in the raw_bytes.
 
-
 require 'digest/md5'
 require 'digest/sha1'
 require 'tmpdir'

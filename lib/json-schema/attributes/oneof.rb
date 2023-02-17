@@ -35,8 +35,6 @@ module JSON
           data = original_data
         end
 
-
-
         if validation_error_count == one_of.length - 1
           data = success_data
           return

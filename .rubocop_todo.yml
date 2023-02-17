@@ -6,22 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 28
-# Cop supports --auto-correct.
-Layout/EmptyLines:
-  Exclude:
-    - 'lib/json-schema/attributes/oneof.rb'
-    - 'lib/json-schema/util/uuid.rb'
-    - 'lib/json-schema/validator.rb'
-    - 'test/bad_schema_ref_test.rb'
-    - 'test/draft1_test.rb'
-    - 'test/draft2_test.rb'
-    - 'test/draft3_test.rb'
-    - 'test/draft4_test.rb'
-    - 'test/full_validation_test.rb'
-    - 'test/schema_validation_test.rb'
-    - 'test/support/enum_validation.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle.
