@@ -471,14 +471,6 @@ Style/EmptyLiteral:
   Exclude:
     - 'test/type_attribute_test.rb'
 
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: compact, expanded
-Style/EmptyMethod:
-  Exclude:
-    - 'lib/json-schema/attribute.rb'
-
 # Offense count: 5
 # Cop supports --auto-correct.
 Style/Encoding:

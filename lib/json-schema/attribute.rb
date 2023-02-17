@@ -3,8 +3,7 @@ require 'json-schema/errors/validation_error'
 module JSON
   class Schema
     class Attribute
-      def self.validate(current_schema, data, fragments, processor, validator, options = {})
-      end
+      def self.validate(current_schema, data, fragments, processor, validator, options = {}); end
 
       def self.build_fragment(fragments)
         "#/#{fragments.join('/')}"
