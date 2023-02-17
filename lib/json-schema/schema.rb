@@ -9,7 +9,7 @@ module JSON
       @uri = uri
 
       # If there is an ID on this schema, use it to generate the URI
-      if @schema['id'] && @schema['id'].kind_of?(String)
+      if @schema['id'] && @schema['id'].is_a?(String)
         temp_uri = JSON::Util::URI.parse(@schema['id'])
         if temp_uri.relative?
           temp_uri = uri.join(temp_uri)
@@ -35,7 +35,7 @@ module JSON
     def self.stringify(schema)
       case schema
       when Hash then
-        Hash[schema.map { |key, value| [key.to_s, stringify(schema[key])] }]
+        schema.map { |key, value| [key.to_s, stringify(schema[key])] }.to_h
       when Array then
         schema.map do |schema_item|
           stringify(schema_item)

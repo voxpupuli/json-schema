@@ -3,8 +3,7 @@ require 'json-schema/errors/validation_error'
 module JSON
   class Schema
     class Attribute
-      def self.validate(current_schema, data, fragments, processor, validator, options = {})
-      end
+      def self.validate(current_schema, data, fragments, processor, validator, options = {}); end
 
       def self.build_fragment(fragments)
         "#/#{fragments.join('/')}"
@@ -41,11 +40,11 @@ module JSON
 
       # Lookup Schema type of given class instance
       def self.type_of_data(data)
-        type, _ = TYPE_CLASS_MAPPINGS.map { |k, v| [k, v] }.sort_by { |(_, v)|
+        type, _ = TYPE_CLASS_MAPPINGS.map { |k, v| [k, v] }.sort_by do |(_, v)|
           -Array(v).map { |klass| klass.ancestors.size }.max
-        }.find { |(_, v)|
-          Array(v).any? { |klass| data.kind_of?(klass) }
-        }
+        end.find do |(_, v)|
+          Array(v).any? { |klass| data.is_a?(klass) }
+        end
         type
       end
     end

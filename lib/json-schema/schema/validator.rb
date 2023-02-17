@@ -4,7 +4,7 @@ module JSON
       attr_accessor :attributes, :formats, :uri, :names
       attr_reader :default_formats
 
-      def initialize()
+      def initialize
         @attributes = {}
         @formats = {}
         @default_formats = {}
