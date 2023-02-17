@@ -26,7 +26,7 @@ class CommonTestSuiteTest < Minitest::Test
     version = File.basename(suite).to_sym
     Dir["#{suite}/**/*.json"].each do |tfile|
       test_list = JSON.parse(File.read(tfile))
-      rel_file = tfile[TEST_DIR.length+1..-1]
+      rel_file = tfile[TEST_DIR.length + 1..-1]
 
       test_list.each do |test|
         schema = test['schema']

@@ -7,14 +7,14 @@ module NumberValidation
         },
       }
 
-      assert_valid schema, {'a' => 5}
-      assert_valid schema, {'a' => 6}
+      assert_valid schema, { 'a' => 5 }
+      assert_valid schema, { 'a' => 6 }
 
-      refute_valid schema, {'a' => 4}
-      refute_valid schema, {'a' => 4.99999}
+      refute_valid schema, { 'a' => 4 }
+      refute_valid schema, { 'a' => 4.99999 }
 
       # other types are disregarded
-      assert_valid schema, {'a' => 'str'}
+      assert_valid schema, { 'a' => 'str' }
     end
 
     def test_exclusive_minimum
@@ -24,9 +24,9 @@ module NumberValidation
         },
       }
 
-      assert_valid schema, {'a' => 6}
-      assert_valid schema, {'a' => 5.0001}
-      refute_valid schema, {'a' => 5}
+      assert_valid schema, { 'a' => 6 }
+      assert_valid schema, { 'a' => 5.0001 }
+      refute_valid schema, { 'a' => 5 }
     end
 
     def test_maximum
@@ -36,11 +36,11 @@ module NumberValidation
         },
       }
 
-      assert_valid schema, {'a' => 4}
-      assert_valid schema, {'a' => 5}
+      assert_valid schema, { 'a' => 4 }
+      assert_valid schema, { 'a' => 5 }
 
-      refute_valid schema, {'a' => 6}
-      refute_valid schema, {'a' => 5.0001}
+      refute_valid schema, { 'a' => 6 }
+      refute_valid schema, { 'a' => 5.0001 }
     end
 
     def test_exclusive_maximum
@@ -50,9 +50,9 @@ module NumberValidation
         },
       }
 
-      assert_valid schema, {'a' => 4}
-      assert_valid schema, {'a' => 4.99999}
-      refute_valid schema, {'a' => 5}
+      assert_valid schema, { 'a' => 4 }
+      assert_valid schema, { 'a' => 4.99999 }
+      refute_valid schema, { 'a' => 5 }
     end
   end
 
@@ -70,13 +70,13 @@ module NumberValidation
         },
       }
 
-      assert_valid schema, {'a' => 0}
+      assert_valid schema, { 'a' => 0 }
 
-      assert_valid schema, {'a' => 2.2}
-      refute_valid schema, {'a' => 3.4}
+      assert_valid schema, { 'a' => 2.2 }
+      refute_valid schema, { 'a' => 3.4 }
 
       # other types are disregarded
-      assert_valid schema, {'a' => 'hi'}
+      assert_valid schema, { 'a' => 'hi' }
     end
   end
 end

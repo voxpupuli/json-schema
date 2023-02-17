@@ -6,8 +6,8 @@ class RubySchemaTest < Minitest::Test
       'type' => 'object',
       'required' => ['a'],
       'properties' => {
-        'a' => {'type' => 'integer', 'default' => 42},
-        'b' => {'type' => 'integer'},
+        'a' => { 'type' => 'integer', 'default' => 42 },
+        'b' => { 'type' => 'integer' },
       },
     }
 
@@ -19,8 +19,8 @@ class RubySchemaTest < Minitest::Test
       type: 'object',
       required: ['a'],
       properties: {
-        a: {type: 'integer', default: 42},
-        b: {type: 'integer'},
+        a: { type: 'integer', default: 42 },
+        b: { type: 'integer' },
       },
     }
 

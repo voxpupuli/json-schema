@@ -11,28 +11,28 @@ class Draft6Test < Minitest::Test
     schema = {
       'type' => 'object',
       'properties' => {
-        'a' => {'const' => 'foo'},
-        'b' => {'const' => 6},
+        'a' => { 'const' => 'foo' },
+        'b' => { 'const' => 6 },
       },
     }
 
-    data = {a: 'foo', b: 6}
+    data = { a: 'foo', b: 6 }
     assert_valid schema, data
 
-    data = {a: 6, b: 'foo'}
+    data = { a: 6, b: 'foo' }
     refute_valid schema, data
   end
 
   def test_property_names
     schema = {
       'type' => 'object',
-      'propertyNames' => {'const' => 'foo'},
+      'propertyNames' => { 'const' => 'foo' },
     }
 
-    data = {'foo' => 'value'}
+    data = { 'foo' => 'value' }
     assert_valid schema, data
 
-    data = {'bar' => 'value'}
+    data = { 'bar' => 'value' }
     refute_valid schema, data
 
     schema = {
@@ -43,7 +43,7 @@ class Draft6Test < Minitest::Test
     data = {}
     assert_valid schema, data
 
-    data = {'foo' => 'value'}
+    data = { 'foo' => 'value' }
     refute_valid schema, data
   end
 end

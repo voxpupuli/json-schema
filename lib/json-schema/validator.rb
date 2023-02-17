@@ -36,14 +36,14 @@ module JSON
     @@serializer = nil
     @@mutex = Mutex.new
 
-    def initialize(schema_data, opts={})
+    def initialize(schema_data, opts = {})
       @options = @@default_opts.clone.merge(opts)
       @errors = []
 
       configured_validator = self.class.validator_for_name(@options[:version])
       @options[:schema_reader] ||= self.class.schema_reader
 
-      @validation_options = @options[:record_errors] ? {record_errors: true} : {}
+      @validation_options = @options[:record_errors] ? { record_errors: true } : {}
       @validation_options[:insert_defaults] = true if @options[:insert_defaults]
       @validation_options[:strict] = true if @options[:strict] == true
       @validation_options[:clear_cache] = true if !@@cache_schemas || @options[:clear_cache]
@@ -54,7 +54,7 @@ module JSON
       # validate the schema, if requested
       if @options[:validate_schema]
         # Don't clear the cache during metaschema validation!
-        meta_validator = self.class.new(@base_schema.validator.metaschema, {clear_cache: false})
+        meta_validator = self.class.new(@base_schema.validator.metaschema, { clear_cache: false })
         meta_validator.validate(@base_schema.schema)
       end
 
@@ -106,9 +106,9 @@ module JSON
 
       if @options[:record_errors]
         if @options[:errors_as_objects]
-          @errors.map{|e| e.to_hash}
+          @errors.map { |e| e.to_hash }
         else
-          @errors.map{|e| e.to_string}
+          @errors.map { |e| e.to_string }
         end
       else
         true
@@ -228,7 +228,7 @@ module JSON
     end
 
     class << self
-      def validate(schema, data, opts={})
+      def validate(schema, data, opts = {})
         begin
           validate!(schema, data, opts)
         rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
@@ -236,47 +236,47 @@ module JSON
         end
       end
 
-      def validate_json(schema, data, opts={})
+      def validate_json(schema, data, opts = {})
         validate(schema, data, opts.merge(json: true))
       end
 
-      def validate_uri(schema, data, opts={})
+      def validate_uri(schema, data, opts = {})
         validate(schema, data, opts.merge(uri: true))
       end
 
-      def validate!(schema, data, opts={})
+      def validate!(schema, data, opts = {})
         validator = new(schema, opts)
         validator.validate(data)
       end
 
-      def validate2(schema, data, opts={})
+      def validate2(schema, data, opts = {})
         warn '[DEPRECATION NOTICE] JSON::Validator#validate2 has been replaced by JSON::Validator#validate! and will be removed in version >= 3. Please use the #validate! method instead.'
         validate!(schema, data, opts)
       end
 
-      def validate_json!(schema, data, opts={})
+      def validate_json!(schema, data, opts = {})
         validate!(schema, data, opts.merge(json: true))
       end
 
-      def validate_uri!(schema, data, opts={})
+      def validate_uri!(schema, data, opts = {})
         validate!(schema, data, opts.merge(uri: true))
       end
 
-      def fully_validate(schema, data, opts={})
+      def fully_validate(schema, data, opts = {})
         validate!(schema, data, opts.merge(record_errors: true))
       end
 
-      def fully_validate_schema(schema, opts={})
+      def fully_validate_schema(schema, opts = {})
         data = schema
         schema = validator_for_name(opts[:version]).metaschema
         fully_validate(schema, data, opts)
       end
 
-      def fully_validate_json(schema, data, opts={})
+      def fully_validate_json(schema, data, opts = {})
         fully_validate(schema, data, opts.merge(json: true))
       end
 
-      def fully_validate_uri(schema, data, opts={})
+      def fully_validate_uri(schema, data, opts = {})
         fully_validate(schema, data, opts.merge(uri: true))
       end
 
@@ -329,7 +329,7 @@ module JSON
         @@default_validator
       end
 
-      def validator_for_uri(schema_uri, raise_not_found=true)
+      def validator_for_uri(schema_uri, raise_not_found = true)
         return default_validator unless schema_uri
 
         u = JSON::Util::URI.parse(schema_uri)
@@ -341,7 +341,7 @@ module JSON
         end
       end
 
-      def validator_for_name(schema_name, raise_not_found=true)
+      def validator_for_name(schema_name, raise_not_found = true)
         return default_validator unless schema_name
 
         schema_name = schema_name.to_s
@@ -368,7 +368,7 @@ module JSON
         @@default_validator = v
       end
 
-      def register_format_validator(format, validation_proc, versions = (@@validators.flat_map{ |k, v| v.names.first } + [nil]))
+      def register_format_validator(format, validation_proc, versions = (@@validators.flat_map { |k, v| v.names.first } + [nil]))
         custom_format_validator = JSON::Schema::CustomFormat.new(validation_proc)
         versions.each do |version|
           validator = validator_for_name(version)
@@ -376,14 +376,14 @@ module JSON
         end
       end
 
-      def deregister_format_validator(format, versions = (@@validators.flat_map{ |k, v| v.names.first } + [nil]))
+      def deregister_format_validator(format, versions = (@@validators.flat_map { |k, v| v.names.first } + [nil]))
         versions.each do |version|
           validator = validator_for_name(version)
           validator.formats[format.to_s] = validator.default_formats[format.to_s]
         end
       end
 
-      def restore_default_formats(versions = (@@validators.flat_map{ |k, v| v.names.first } + [nil]))
+      def restore_default_formats(versions = (@@validators.flat_map { |k, v| v.names.first } + [nil]))
         versions.each do |version|
           validator = validator_for_name(version)
           validator.formats = validator.default_formats.clone
@@ -482,11 +482,11 @@ module JSON
         end
 
         if @@json_backend == 'yajl'
-          @@serializer = lambda{|o| Yajl::Encoder.encode(o) }
+          @@serializer = lambda { |o| Yajl::Encoder.encode(o) }
         elsif @@json_backend == 'json'
-          @@serializer = lambda{|o| JSON.dump(o) }
+          @@serializer = lambda { |o| JSON.dump(o) }
         else
-          @@serializer = lambda{|o| YAML.dump(o) }
+          @@serializer = lambda { |o| YAML.dump(o) }
         end
       end
     end
@@ -495,10 +495,10 @@ module JSON
 
     if Gem::Specification::find_all_by_name('uuidtools').any?
       require 'uuidtools'
-      @@fake_uuid_generator = lambda{|s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
+      @@fake_uuid_generator = lambda { |s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
     else
       require 'json-schema/util/uuid'
-      @@fake_uuid_generator = lambda{|s| JSON::Util::UUID.create_v5(s, JSON::Util::UUID::Nil).to_s }
+      @@fake_uuid_generator = lambda { |s| JSON::Util::UUID.create_v5(s, JSON::Util::UUID::Nil).to_s }
     end
 
     def serialize schema

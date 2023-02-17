@@ -107,7 +107,7 @@ class UriUtilTest < Minitest::Test
 
     assert_equal(cached_uri, JSON::Util::URI.normalized_uri('foo'))
 
-    validation_errors({'type' => 'string'}, 'foo', clear_cache: true)
+    validation_errors({ 'type' => 'string' }, 'foo', clear_cache: true)
 
     refute_equal(cached_uri, JSON::Util::URI.normalized_uri('foo'))
   end
@@ -119,7 +119,7 @@ class UriUtilTest < Minitest::Test
 
     assert_equal(cached_uri, JSON::Util::URI.parse('foo'))
 
-    validation_errors({'type' => 'string'}, 'foo', clear_cache: true)
+    validation_errors({ 'type' => 'string' }, 'foo', clear_cache: true)
 
     refute_equal(cached_uri, JSON::Util::URI.parse('foo'))
   end

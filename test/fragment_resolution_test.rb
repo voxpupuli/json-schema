@@ -9,13 +9,13 @@ class FragmentResolutionTest < Minitest::Test
         'a' => {
           'type' => 'object',
           'properties' => {
-            'b' => {'type' => 'integer' },
+            'b' => { 'type' => 'integer' },
           },
         },
       },
     }
 
-    data = {'b' => 5}
+    data = { 'b' => 5 }
     refute_valid schema, data
     assert_valid schema, data, fragment: '#/properties/a'
 
@@ -34,12 +34,12 @@ class FragmentResolutionTest < Minitest::Test
         'type' => 'object',
         'required' => ['a'],
         'properties' => {
-          'a' => {'type' => 'integer'},
+          'a' => { 'type' => 'integer' },
         },
       },
     }
 
-    assert_valid schema, {'a' => 1}, fragment: '#/foo'
+    assert_valid schema, { 'a' => 1 }, fragment: '#/foo'
     refute_valid schema, {}, fragment: '#/foo'
   end
 
@@ -50,13 +50,13 @@ class FragmentResolutionTest < Minitest::Test
           'type' => 'object',
           'required' => ['a'],
           'properties' => {
-            'a' => {'type' => 'integer'},
+            'a' => { 'type' => 'integer' },
           },
         },
       },
     }
 
-    assert_valid schema, {'a' => 1}, fragment: '#/foo/bar'
+    assert_valid schema, { 'a' => 1 }, fragment: '#/foo/bar'
     refute_valid schema, {}, fragment: '#/foo/bar'
   end
 
@@ -67,8 +67,8 @@ class FragmentResolutionTest < Minitest::Test
       'properties' => {
         'a' => {
           'anyOf' => [
-            {'type' => 'integer'},
-            {'type' => 'string'},
+            { 'type' => 'integer' },
+            { 'type' => 'string' },
           ],
         },
       },
@@ -88,13 +88,13 @@ class FragmentResolutionTest < Minitest::Test
           'type' => 'object',
           'required' => ['a'],
           'properties' => {
-            'a' => {'type' => 'integer'},
+            'a' => { 'type' => 'integer' },
           },
         },
       },
     }
 
-    assert_valid schema, {'a' => 1}, fragment: '#/content/application~1json'
+    assert_valid schema, { 'a' => 1 }, fragment: '#/content/application~1json'
     refute_valid schema, {}, fragment: '#/content/application~1json'
   end
 end

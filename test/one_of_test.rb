@@ -12,13 +12,13 @@ class OneOfTest < Minitest::Test
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'oneOf' => [
         {
-          'properties' => {'a' => {'type' => 'string', 'pattern' => 'foo'}},
+          'properties' => { 'a' => { 'type' => 'string', 'pattern' => 'foo' } },
         },
         {
-          'properties' => {'a' => {'type' => 'string', 'pattern' => 'bar'}},
+          'properties' => { 'a' => { 'type' => 'string', 'pattern' => 'bar' } },
         },
         {
-          'properties' => {'a' => {'type' => 'string', 'pattern' => 'baz'}},
+          'properties' => { 'a' => { 'type' => 'string', 'pattern' => 'baz' } },
         },
       ],
     }
@@ -34,13 +34,13 @@ class OneOfTest < Minitest::Test
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'oneOf' => [
         {
-          'properties' => {'a' => {'type' => 'string', 'pattern' => 'foo'}},
+          'properties' => { 'a' => { 'type' => 'string', 'pattern' => 'foo' } },
         },
         {
-          'properties' => {'a' => {'type' => 'string', 'pattern' => 'bar'}},
+          'properties' => { 'a' => { 'type' => 'string', 'pattern' => 'bar' } },
         },
         {
-          'properties' => {'a' => {'type' => 'number', 'minimum' => 10}},
+          'properties' => { 'a' => { 'type' => 'number', 'minimum' => 10 } },
         },
       ],
     }
@@ -57,13 +57,13 @@ class OneOfTest < Minitest::Test
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'oneOf' => [
         {
-          'properties' => {'a' => {'type' => 'string', 'pattern' => 'foo'}},
+          'properties' => { 'a' => { 'type' => 'string', 'pattern' => 'foo' } },
         },
         {
-          'properties' => {'a' => {'type' => 'string', 'pattern' => 'bar'}},
+          'properties' => { 'a' => { 'type' => 'string', 'pattern' => 'bar' } },
         },
         {
-          'properties' => {'a' => {'type' => 'number', 'minimum' => 10}},
+          'properties' => { 'a' => { 'type' => 'number', 'minimum' => 10 } },
         },
       ],
     }
