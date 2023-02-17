@@ -608,13 +608,6 @@ Style/StringConcatenation:
     - 'lib/json-schema/util/uuid.rb'
     - 'test/schema_reader_test.rb'
 
-# Offense count: 7
-# Cop supports --auto-correct.
-# Configuration parameters: MinSize.
-# SupportedStyles: percent, brackets
-Style/SymbolArray:
-  EnforcedStyle: brackets
-
 # Offense count: 3
 # Cop supports --auto-correct.
 # Configuration parameters: AllowMethodsWithArguments, IgnoredMethods.
