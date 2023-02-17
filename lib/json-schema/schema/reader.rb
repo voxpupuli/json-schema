@@ -28,6 +28,7 @@ module JSON
     # a schema should not be read.
     class ReadRefused < ReadError
       private
+
       def error_message
         "Read of #{type_string} at #{location} refused"
       end
@@ -36,6 +37,7 @@ module JSON
     # Raised by {JSON::Schema::Reader} when an attempt to read a schema fails
     class ReadFailed < ReadError
       private
+
       def error_message
         "Read of #{type_string} at #{location} failed"
       end
