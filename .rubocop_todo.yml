@@ -528,13 +528,6 @@ Style/GuardClause:
 
 # Offense count: 1
 # Cop supports --auto-correct.
-# Configuration parameters: AllowSplatArgument.
-Style/HashConversion:
-  Exclude:
-    - 'lib/json-schema/schema.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
 Style/HashEachMethods:
   Exclude:
     - 'test/support/type_validation.rb'
