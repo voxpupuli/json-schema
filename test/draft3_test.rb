@@ -308,9 +308,9 @@ class Draft3Test < Minitest::Test
     data3 = {'a' => 'http://ja.wikipedia.org/wiki/メインページ'}
 
     schema = {
-        '$schema' => 'http://json-schema.org/draft-03/schema#',
-        'type' => 'object',
-        'properties' => { 'a' => {'type' => 'string', 'format' => 'uri'}},
+      '$schema' => 'http://json-schema.org/draft-03/schema#',
+      'type' => 'object',
+      'properties' => { 'a' => {'type' => 'string', 'format' => 'uri'}},
     }
 
     assert(JSON::Validator.validate(schema, data1))
