@@ -65,7 +65,7 @@ module StringValidation
       schema = {
         'properties' => {
           'a' => {
-            'type' => ['string', 'null'],
+            'type' => %w[string null],
             'format' => 'date-time',
           },
         },

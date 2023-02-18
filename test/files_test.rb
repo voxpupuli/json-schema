@@ -18,8 +18,8 @@ class FilesTest < Minitest::Test
 
   def test_data_from_json_v3
     schema = { '$schema' => 'http://json-schema.org/draft-03/schema#', 'type' => 'object', 'properties' => { 'a' => { 'type' => 'integer' } } }
-    assert_valid schema, %Q({"a": 5}), json: true
-    refute_valid schema, %Q({"a": "poop"}), json: true
+    assert_valid schema, '{"a": 5}', json: true
+    refute_valid schema, '{"a": "poop"}', json: true
   end
 
   def test_data_from_file_v4
@@ -30,8 +30,8 @@ class FilesTest < Minitest::Test
 
   def test_data_from_json_v4
     schema = { '$schema' => 'http://json-schema.org/draft-04/schema#', 'type' => 'object', 'properties' => { 'a' => { 'type' => 'integer' } } }
-    assert_valid schema, %Q({"a": 5}), json: true
-    refute_valid schema, %Q({"a": "poop"}), json: true
+    assert_valid schema, '{"a": 5}', json: true
+    refute_valid schema, '{"a": "poop"}', json: true
   end
 
   def test_both_from_file

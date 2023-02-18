@@ -44,7 +44,7 @@ module JSON
               end
               fragment_path = fragment_path + "/#{fragment}"
               if target_schema.nil?
-                raise SchemaError.new("The fragment '#{fragment_path}' does not exist on schema #{ref_schema.uri.to_s}")
+                raise SchemaError, "The fragment '#{fragment_path}' does not exist on schema #{ref_schema.uri.to_s}"
               end
             end
           end

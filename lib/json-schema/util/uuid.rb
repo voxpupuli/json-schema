@@ -65,9 +65,9 @@ module JSON
 
         def mask v, str
           if RUBY_VERSION >= '1.9.0'
-            return mask19 v, str
+            mask19 v, str
           else
-            return mask18 v, str
+            mask18 v, str
           end
         end
         private :mask, :mask18, :mask19
@@ -201,8 +201,8 @@ module JSON
         # A  simple GUID  parser:  just ignores  unknown  characters and  convert
         # hexadecimal dump into 16-octet object.
         def parse obj
-          str = obj.to_s.sub %r/\Aurn:uuid:/, ''
-          str.gsub! %r/[^0-9A-Fa-f]/, ''
+          str = obj.to_s.sub(/\Aurn:uuid:/, '')
+          str.gsub!(/[^0-9A-Fa-f]/, '')
           raw = str[0..31].lines.to_a.pack 'H*'
           ret = new raw
           ret.freeze
@@ -236,13 +236,13 @@ module JSON
 
       # Convert into a RFC4122-comforming URN representation
       def to_uri
-        'urn:uuid:' + self.to_s
+        'urn:uuid:' + to_s
       end
       alias urn to_uri
 
       # Convert into 128-bit unsigned integer
       def to_int
-        tmp = self.raw_bytes.unpack 'C*'
+        tmp = raw_bytes.unpack 'C*'
         tmp.inject do |r, i|
           r * 256 | i
         end
@@ -256,7 +256,7 @@ module JSON
         v = (a[2] & 0xF000).to_s(16)[0].chr.to_i
         return v if (1..5).include? v
 
-        return nil
+        nil
       end
 
       # Two  UUIDs  are  said  to  be  equal if  and  only  if  their  (byte-order

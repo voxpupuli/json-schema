@@ -62,7 +62,7 @@ module JSON
 
       def self.parse(uri)
         if uri.is_a?(Addressable::URI)
-          return uri.dup
+          uri.dup
         else
           @parse_cache ||= {}
           parsed_uri = @parse_cache[uri]
@@ -73,7 +73,7 @@ module JSON
           end
         end
       rescue Addressable::URI::InvalidURIError => e
-        raise JSON::Schema::UriError.new(e.message)
+        raise JSON::Schema::UriError, e.message
       end
 
       def self.strip_fragment(uri)

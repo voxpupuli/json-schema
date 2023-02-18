@@ -38,7 +38,7 @@ module TypeValidation
     end
 
     def test_type_union
-      schema = { 'type' => ['integer', 'string'] }
+      schema = { 'type' => %w[integer string] }
       assert_valid schema, 5
       assert_valid schema, 'str'
       refute_valid schema, nil

@@ -498,17 +498,6 @@ Style/PreferredHashMethods:
     - 'lib/json-schema/attributes/required.rb'
     - 'lib/json-schema/schema/validator.rb'
 
-# Offense count: 13
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, AllowedCompactTypes.
-# SupportedStyles: compact, exploded
-Style/RaiseArgs:
-  Exclude:
-    - 'lib/json-schema/attributes/ref.rb'
-    - 'lib/json-schema/util/uri.rb'
-    - 'lib/json-schema/validator.rb'
-    - 'test/custom_format_test.rb'
-
 # Offense count: 2
 # Cop supports --auto-correct.
 Style/RedundantBegin:
@@ -522,65 +511,11 @@ Style/RedundantConditional:
   Exclude:
     - 'lib/json-schema/validator.rb'
 
-# Offense count: 4
-# Cop supports --auto-correct.
-Style/RedundantPercentQ:
-  Exclude:
-    - 'test/files_test.rb'
-
 # Offense count: 1
 # Cop supports --auto-correct.
 Style/RedundantRegexpEscape:
   Exclude:
     - 'lib/json-schema/attributes/formats/date_time.rb'
-
-# Offense count: 5
-# Cop supports --auto-correct.
-# Configuration parameters: AllowMultipleReturnValues.
-Style/RedundantReturn:
-  Exclude:
-    - 'lib/json-schema/util/uri.rb'
-    - 'lib/json-schema/util/uuid.rb'
-    - 'lib/json-schema/validator.rb'
-
-# Offense count: 15
-# Cop supports --auto-correct.
-Style/RedundantSelf:
-  Exclude:
-    - 'lib/json-schema/util/array_set.rb'
-    - 'lib/json-schema/util/uuid.rb'
-    - 'lib/json-schema/validators/draft1.rb'
-    - 'lib/json-schema/validators/draft2.rb'
-    - 'lib/json-schema/validators/draft3.rb'
-    - 'lib/json-schema/validators/draft4.rb'
-    - 'lib/json-schema/validators/draft6.rb'
-    - 'lib/json-schema/validators/hyper-draft1.rb'
-    - 'lib/json-schema/validators/hyper-draft2.rb'
-    - 'lib/json-schema/validators/hyper-draft3.rb'
-    - 'lib/json-schema/validators/hyper-draft4.rb'
-    - 'lib/json-schema/validators/hyper-draft6.rb'
-
-# Offense count: 10
-# Cop supports --auto-correct.
-# Configuration parameters: EnforcedStyle, AllowInnerSlashes.
-# SupportedStyles: slashes, percent_r, mixed
-Style/RegexpLiteral:
-  Exclude:
-    - 'lib/json-schema/util/uuid.rb'
-    - 'test/all_of_ref_schema_test.rb'
-    - 'test/any_of_ref_schema_test.rb'
-    - 'test/custom_format_test.rb'
-    - 'test/one_of_test.rb'
-
-# Offense count: 3
-# Cop supports --auto-correct.
-# Configuration parameters: ConvertCodeThatCanStartToReturnNil, AllowedMethods.
-# AllowedMethods: present?, blank?, presence, try, try!
-Style/SafeNavigation:
-  Exclude:
-    - 'lib/json-schema/attributes/additionalproperties.rb'
-    - 'lib/json-schema/attributes/format.rb'
-    - 'lib/json-schema/schema.rb'
 
 # Offense count: 10
 # Cop supports --auto-correct.
@@ -594,12 +529,6 @@ Style/SelfAssignment:
     - 'lib/json-schema/attributes/type.rb'
     - 'lib/json-schema/util/uuid.rb'
 
-# Offense count: 2
-# Cop supports --auto-correct.
-Style/StderrPuts:
-  Exclude:
-    - 'Rakefile'
-
 # Offense count: 4
 # Cop supports --auto-correct.
 Style/StringConcatenation:
@@ -607,13 +536,6 @@ Style/StringConcatenation:
     - 'lib/json-schema/attributes/ref.rb'
     - 'lib/json-schema/util/uuid.rb'
     - 'test/schema_reader_test.rb'
-
-# Offense count: 7
-# Cop supports --auto-correct.
-# Configuration parameters: MinSize.
-# SupportedStyles: percent, brackets
-Style/SymbolArray:
-  EnforcedStyle: brackets
 
 # Offense count: 3
 # Cop supports --auto-correct.
@@ -623,21 +545,6 @@ Style/SymbolProc:
   Exclude:
     - 'lib/json-schema/errors/validation_error.rb'
     - 'lib/json-schema/validator.rb'
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AllowNamedUnderscoreVariables.
-Style/TrailingUnderscoreVariable:
-  Exclude:
-    - 'lib/json-schema/attribute.rb'
-
-# Offense count: 25
-# Cop supports --auto-correct.
-# Configuration parameters: WordRegex.
-# SupportedStyles: percent, brackets
-Style/WordArray:
-  EnforcedStyle: percent
-  MinSize: 3
 
 # Offense count: 76
 # Cop supports --auto-correct.

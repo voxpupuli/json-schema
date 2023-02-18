@@ -73,7 +73,7 @@ class FullValidationTest < Minitest::Test
       'type' => 'object',
       'properties' => {
         'b' => {
-          'type' => ['null', 'integer'],
+          'type' => %w[null integer],
         },
       },
     }
@@ -85,7 +85,7 @@ class FullValidationTest < Minitest::Test
       'type' => 'object',
       'properties' => {
         'b' => {
-          'type' => ['integer', 'null'],
+          'type' => %w[integer null],
         },
       },
     }
@@ -180,7 +180,7 @@ class FullValidationTest < Minitest::Test
       'properties' => {
         'x' => {
           'type' => 'object',
-          'required' => ['a', 'b'],
+          'required' => %w[a b],
           'properties' => {
             'a' => { 'type' => 'integer' },
             'b' => { 'type' => 'integer' },
@@ -210,7 +210,7 @@ class FullValidationTest < Minitest::Test
           'type' => 'array',
           'items' => {
             'type' => 'object',
-            'required' => ['a', 'b'],
+            'required' => %w[a b],
             'properties' => {
               'a' => { 'type' => 'integer' },
               'b' => { 'type' => 'integer' },

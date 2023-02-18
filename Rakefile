@@ -15,7 +15,7 @@ task :update_common_tests do
   begin
     sh 'git submodule update --remote --quiet'
   rescue StandardError
-    $stderr.puts 'Failed to update common test suite.'
+    warn 'Failed to update common test suite.'
   end
 end
 
@@ -51,7 +51,7 @@ task :update_meta_schemas do
     if t.value
       puts t[:uri]
     else
-      $stderr.puts "Failed to update meta-schema #{t[:uri]}"
+      warn "Failed to update meta-schema #{t[:uri]}"
     end
   end
 end
@@ -63,7 +63,7 @@ Rake::TestTask.new do |t|
   t.test_files = FileList.new('test/*_test.rb')
 end
 
-task update: [:update_common_tests, :update_meta_schemas]
+task update: %i[update_common_tests update_meta_schemas]
 
 require 'rubocop/rake_task'
 RuboCop::RakeTask.new(:rubocop) do |task|

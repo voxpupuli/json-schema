@@ -196,7 +196,7 @@ class Draft3Test < Minitest::Test
     data['a'] = 5
     refute_valid schema, data
 
-    schema['properties']['a']['disallow'] = ['integer', 'string']
+    schema['properties']['a']['disallow'] = %w[integer string]
     data['a'] = 'string'
     refute_valid schema, data
 
@@ -361,7 +361,7 @@ class Draft3Test < Minitest::Test
         'c' => { 'type' => 'integer' },
       },
       'dependencies' => {
-        'a' => ['b', 'c'],
+        'a' => %w[b c],
       },
     }
 

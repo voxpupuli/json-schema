@@ -49,15 +49,15 @@ class SchemaValidationTest < Minitest::Test
   def symbolized_schema
     {
       type: :object,
-      required: [
-        :id,
-        :name,
-        :real_name,
-        :role,
-        :website,
-        :biography,
-        :created_at,
-        :demographic,
+      required: %i[
+        id
+        name
+        real_name
+        role
+        website
+        biography
+        created_at
+        demographic
       ],
       properties: {
         id: {
@@ -81,9 +81,9 @@ class SchemaValidationTest < Minitest::Test
           ],
         },
         website: {
-          type: [
-            :string,
-            :null,
+          type: %i[
+            string
+            null
           ],
         },
         created_at: {
@@ -92,18 +92,18 @@ class SchemaValidationTest < Minitest::Test
           ],
         },
         biography: {
-          type: [
-            :string,
-            :null,
+          type: %i[
+            string
+            null
           ],
         },
       },
       relationships: {
         demographic: {
           type: :object,
-          required: [
-            :id,
-            :gender,
+          required: %i[
+            id
+            gender
           ],
           properties: {
             id: {

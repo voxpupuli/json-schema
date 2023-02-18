@@ -33,11 +33,9 @@ module JSON
           extra_properties = extra_properties - schema['properties'].keys
         end
 
-        if schema['patternProperties']
-          schema['patternProperties'].each_key do |key|
-            regexp = Regexp.new(key)
-            extra_properties.reject! { |prop| regexp.match(prop) }
-          end
+        schema['patternProperties']&.each_key do |key|
+          regexp = Regexp.new(key)
+          extra_properties.reject! { |prop| regexp.match(prop) }
         end
 
         if extended_schemas = schema['extends']

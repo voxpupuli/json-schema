@@ -40,7 +40,7 @@ module JSON
 
       # Lookup Schema type of given class instance
       def self.type_of_data(data)
-        type, _ = TYPE_CLASS_MAPPINGS.map { |k, v| [k, v] }.sort_by do |(_, v)|
+        type, = TYPE_CLASS_MAPPINGS.map { |k, v| [k, v] }.sort_by do |(_, v)|
           -Array(v).map { |klass| klass.ancestors.size }.max
         end.find do |(_, v)|
           Array(v).any? { |klass| data.is_a?(klass) }

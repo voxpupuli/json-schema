@@ -38,7 +38,7 @@ module JSON
         @metaschema_name = 'draft-02.json'
       end
 
-      JSON::Validator.register_validator(self.new)
+      JSON::Validator.register_validator(new)
     end
   end
 end

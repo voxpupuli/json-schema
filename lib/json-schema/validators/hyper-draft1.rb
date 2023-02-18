@@ -6,7 +6,7 @@ module JSON
         @uri = JSON::Util::URI.parse('http://json-schema.org/draft-01/hyper-schema#')
       end
 
-      JSON::Validator.register_validator(self.new)
+      JSON::Validator.register_validator(new)
     end
   end
 end

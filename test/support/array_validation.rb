@@ -5,7 +5,7 @@ module ArrayValidation
 
       assert_valid schema, []
       assert_valid schema, ['a']
-      assert_valid schema, ['a', 'b']
+      assert_valid schema, %w[a b]
 
       refute_valid schema, [1]
       refute_valid schema, ['a', 1]
@@ -98,8 +98,8 @@ module ArrayValidation
       assert_valid schema, [4, 4.1]
       refute_valid schema, [4, 4]
 
-      assert_valid schema, ['a', 'ab']
-      refute_valid schema, ['a', 'a']
+      assert_valid schema, %w[a ab]
+      refute_valid schema, %w[a a]
 
       assert_valid schema, [[1], [2]]
       refute_valid schema, [[1], [1]]

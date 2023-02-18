@@ -5,7 +5,7 @@ require File.expand_path('../support/test_helper', __FILE__)
 class CustomFormatTest < Minitest::Test
   def setup
     @all_versions = ['draft1', 'draft2', 'draft3', 'draft4', 'draft6', nil]
-    @format_proc = lambda { |value| raise JSON::Schema::CustomFormatError.new('must be 42') unless value == '42' }
+    @format_proc = lambda { |value| raise JSON::Schema::CustomFormatError, 'must be 42' unless value == '42' }
     @schema_6 = {
       '$schema' => 'http://json-schema.org/draft/schema#',
       'properties' => {
@@ -88,12 +88,12 @@ class CustomFormatTest < Minitest::Test
 
       errors = JSON::Validator.fully_validate(schema, data)
       assert_equal(errors.count, 1)
-      assert_match(/The property '#\/a' must be 42 in schema/, errors.first, "#{prefix} records format error")
+      assert_match(%r{The property '#/a' must be 42 in schema}, errors.first, "#{prefix} records format error")
 
       data['a'] = 23
       errors = JSON::Validator.fully_validate(schema, data)
       assert_equal(errors.count, 1)
-      assert_match(/The property '#\/a' of type integer did not match the following type: string/i, errors.first, "#{prefix} records no format error on type mismatch")
+      assert_match(%r{The property '#/a' of type integer did not match the following type: string}i, errors.first, "#{prefix} records no format error on type mismatch")
     end
   end
 

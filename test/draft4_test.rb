@@ -191,7 +191,7 @@ class Draft4Test < Minitest::Test
           'type' => 'object',
           'properties' => {
             'foo' => {
-              'enum' => ['view', 'search'],
+              'enum' => %w[view search],
               'default' => 'view',
             },
           },
@@ -221,7 +221,7 @@ class Draft4Test < Minitest::Test
           'type' => 'object',
           'properties' => {
             'foo' => {
-              'enum' => ['view', 'search'],
+              'enum' => %w[view search],
               'default' => 'view',
             },
           },
@@ -258,7 +258,7 @@ class Draft4Test < Minitest::Test
           'type' => 'object',
           'properties' => {
             'foo' => {
-              'enum' => ['view', 'search'],
+              'enum' => %w[view search],
               'default' => 'view',
             },
           },
@@ -379,7 +379,7 @@ class Draft4Test < Minitest::Test
         'c' => { 'type' => 'integer' },
       },
       'dependencies' => {
-        'a' => ['b', 'c'],
+        'a' => %w[b c],
       },
     }
 
@@ -595,7 +595,7 @@ class Draft4Test < Minitest::Test
     schema = {
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'properties' => {
-        'a' => { 'not' => { 'type' => ['string', 'boolean'] } },
+        'a' => { 'not' => { 'type' => %w[string boolean] } },
       },
     }
 
@@ -614,7 +614,7 @@ class Draft4Test < Minitest::Test
       'properties' => {
         'a' => { 'not' => { 'anyOf' => [
           {
-            'type' => ['string', 'boolean'],
+            'type' => %w[string boolean],
           },
           {
             'type' => 'object',
@@ -647,7 +647,7 @@ class Draft4Test < Minitest::Test
     schema = {
       '$schema' => 'http://json-schema.org/draft-04/schema#',
       'properties' => {
-        'a' => { 'not' => { 'type' => ['string', 'boolean'] } },
+        'a' => { 'not' => { 'type' => %w[string boolean] } },
       },
     }
 
