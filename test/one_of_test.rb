@@ -4,6 +4,7 @@ class OneOfTest < Minitest::Test
   def test_one_of_links_schema
     schema = schema_fixture_path('one_of_ref_links_schema.json')
     data   = data_fixture_path('one_of_ref_links_data.json')
+
     assert_valid schema, data
   end
 
@@ -47,6 +48,7 @@ class OneOfTest < Minitest::Test
 
     errors = JSON::Validator.fully_validate(schema, { 'a' => 5 }, errors_as_objects: true)
     nested_errors = errors[0][:errors]
+
     assert_equal(%i[oneof_0 oneof_1 oneof_2], nested_errors.keys, 'should have nested errors for each allOf subschema')
     assert_match(%r{the property '#/a' of type Integer did not match the following type: string}i, nested_errors[:oneof_0][0][:message])
     assert_match(%r{the property '#/a' did not have a minimum value of 10, inclusively}i, nested_errors[:oneof_2][0][:message])

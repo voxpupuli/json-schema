@@ -56,11 +56,13 @@ module Minitest
 
     def assert_valid(schema, data, options = {}, msg = "#{data.inspect} should be valid for schema:\n#{schema.inspect}")
       errors = validation_errors(schema, data, options)
-      assert_equal([], errors, msg)
+
+      assert_empty(errors, msg)
     end
 
     def refute_valid(schema, data, options = {}, msg = "#{data.inspect} should be invalid for schema:\n#{schema.inspect}")
       errors = validation_errors(schema, data, options)
+
       refute_equal([], errors, msg)
     end
 
