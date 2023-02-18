@@ -8,6 +8,7 @@ module EnumValidation
       }
 
       data = {}
+
       assert_valid schema, data
     end
   end
@@ -21,6 +22,7 @@ module EnumValidation
       }
 
       data = {}
+
       assert_valid schema, data
     end
   end
@@ -34,18 +36,23 @@ module EnumValidation
       }
 
       data = { 'a' => 1 }
+
       assert_valid schema, data
 
       data['a'] = 'boo'
+
       assert_valid schema, data
 
       data['a'] = [1, 2, 3]
+
       assert_valid schema, data
 
       data['a'] = { 'a' => 'b' }
+
       assert_valid schema, data
 
       data['a'] = 'taco'
+
       refute_valid schema, data
     end
 
@@ -60,15 +67,19 @@ module EnumValidation
       }
 
       data = { 'a' => 0 }
+
       assert_valid schema, data
 
       data['a'] = 0.0
+
       assert_valid schema, data
 
       data['a'] = 1
+
       assert_valid schema, data
 
       data['a'] = 1.0
+
       assert_valid schema, data
     end
 
@@ -83,15 +94,19 @@ module EnumValidation
       }
 
       data = { 'a' => 0.0 }
+
       assert_valid schema, data
 
       data['a'] = 0
+
       assert_valid schema, data
 
       data['a'] = 1.0
+
       assert_valid schema, data
 
       data['a'] = 1
+
       assert_valid schema, data
     end
 
@@ -106,15 +121,19 @@ module EnumValidation
       }
 
       data = { 'a' => 0 }
+
       assert_valid schema, data
 
       data['a'] = 0.0
+
       refute_valid schema, data
 
       data['a'] = 1
+
       assert_valid schema, data
 
       data['a'] = 1.0
+
       refute_valid schema, data
     end
 
@@ -125,6 +144,7 @@ module EnumValidation
         },
       }
       data = { 'a' => 1 }
+
       assert_valid(schema, data, validate_schema: true)
     end
   end
