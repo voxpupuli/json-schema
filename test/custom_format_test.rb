@@ -38,35 +38,40 @@ class CustomFormatTest < Minitest::Test
 
   def test_single_registration
     @all_versions.each do |version|
-      assert(JSON::Validator.validator_for_name(version).formats['custom'].nil?, "Format 'custom' for #{version || 'default'} should be nil")
+      assert_nil(JSON::Validator.validator_for_name(version).formats['custom'], "Format 'custom' for #{version || 'default'} should be nil")
       JSON::Validator.register_format_validator('custom', @format_proc, [version])
+
       assert(JSON::Validator.validator_for_name(version).formats['custom'].is_a?(JSON::Schema::CustomFormat), "Format 'custom' should be registered for #{version || 'default'}")
       (@all_versions - [version]).each do |other_version|
-        assert(JSON::Validator.validator_for_name(other_version).formats['custom'].nil?, "Format 'custom' should still be nil for #{other_version || 'default'}")
+        assert_nil(JSON::Validator.validator_for_name(other_version).formats['custom'], "Format 'custom' should still be nil for #{other_version || 'default'}")
       end
       JSON::Validator.deregister_format_validator('custom', [version])
-      assert(JSON::Validator.validator_for_name(version).formats['custom'].nil?, "Format 'custom' should be deregistered for #{version || 'default'}")
+
+      assert_nil(JSON::Validator.validator_for_name(version).formats['custom'], "Format 'custom' should be deregistered for #{version || 'default'}")
     end
   end
 
   def test_register_for_all_by_default
     JSON::Validator.register_format_validator('custom', @format_proc)
+
     @all_versions.each do |version|
       assert(JSON::Validator.validator_for_name(version).formats['custom'].is_a?(JSON::Schema::CustomFormat), "Format 'custom' should be registered for #{version || 'default'}")
     end
     JSON::Validator.restore_default_formats
+
     @all_versions.each do |version|
-      assert(JSON::Validator.validator_for_name(version).formats['custom'].nil?, "Format 'custom' should still be nil for #{version || 'default'}")
+      assert_nil(JSON::Validator.validator_for_name(version).formats['custom'], "Format 'custom' should still be nil for #{version || 'default'}")
     end
   end
 
   def test_multi_registration
     unregistered_version = @all_versions.delete('draft1')
     JSON::Validator.register_format_validator('custom', @format_proc, @all_versions)
+
     @all_versions.each do |version|
       assert(JSON::Validator.validator_for_name(version).formats['custom'].is_a?(JSON::Schema::CustomFormat), "Format 'custom' should be registered for #{version || 'default'}")
     end
-    assert(JSON::Validator.validator_for_name(unregistered_version).formats['custom'].nil?, "Format 'custom' should still be nil for #{unregistered_version}")
+    assert_nil(JSON::Validator.validator_for_name(unregistered_version).formats['custom'], "Format 'custom' should still be nil for #{unregistered_version}")
   end
 
   def test_format_validation
@@ -81,18 +86,22 @@ class CustomFormatTest < Minitest::Test
 
       JSON::Validator.register_format_validator('custom', @format_proc, [version])
       data['a'] = '42'
+
       assert(JSON::Validator.validate(schema, data), "#{prefix} succeeds with 'custom' format validator and correct data")
 
       data['a'] = '23'
+
       assert(!JSON::Validator.validate(schema, data), "#{prefix} fails with 'custom' format validator and wrong data")
 
       errors = JSON::Validator.fully_validate(schema, data)
-      assert_equal(errors.count, 1)
+
+      assert_equal(1, errors.count)
       assert_match(%r{The property '#/a' must be 42 in schema}, errors.first, "#{prefix} records format error")
 
       data['a'] = 23
       errors = JSON::Validator.fully_validate(schema, data)
-      assert_equal(errors.count, 1)
+
+      assert_equal(1, errors.count)
       assert_match(%r{The property '#/a' of type integer did not match the following type: string}i, errors.first, "#{prefix} records no format error on type mismatch")
     end
   end
@@ -109,14 +118,17 @@ class CustomFormatTest < Minitest::Test
       assert(JSON::Validator.validate(schema, data), "#{prefix} succeeds for default format with correct data")
 
       data['a'] = 'no_ip6_address'
+
       assert(!JSON::Validator.validate(schema, data), "#{prefix} fails for default format and wrong data")
 
       data['a'] = '42'
       JSON::Validator.register_format_validator('ipv6', @format_proc, [version])
+
       assert(JSON::Validator.validate(schema, data), "#{prefix} succeeds with overridden default format and correct data")
 
       JSON::Validator.deregister_format_validator('ipv6', [version])
       data['a'] = '2001:db8:85a3:0:0:8a2e:370:7334'
+
       assert(JSON::Validator.validate(schema, data), "#{prefix} restores the default format on deregistration")
     end
   end

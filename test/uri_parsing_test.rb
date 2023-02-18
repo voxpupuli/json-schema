@@ -17,6 +17,7 @@ class UriParsingTest < Minitest::Test
       },
     }
     data = { 'a' => 5 }
+
     assert_valid schema, data
   end
 
@@ -37,6 +38,7 @@ class UriParsingTest < Minitest::Test
       },
     }
     data = { 'names' => [{ 'first' => 'john' }] }
+
     assert_valid schema, data
   end
 
@@ -57,12 +59,14 @@ class UriParsingTest < Minitest::Test
       },
     }
     data = { 'names' => [{ 'first' => 'john' }] }
+
     assert_valid schema, data
   end
 
   def test_schema_from_file_with_spaces
     data = { 'first' => 'john' }
     schema = 'test/schemas/ref john with spaces schema.json'
+
     assert_valid schema, data
   end
 end

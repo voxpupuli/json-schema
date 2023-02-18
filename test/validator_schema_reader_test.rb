@@ -25,6 +25,7 @@ class ValidatorSchemaReaderTest < Minitest::Test
 
   def test_default_schema_reader
     reader = JSON::Validator.schema_reader
+
     assert reader.accept_uri?(Addressable::URI.parse('http://example.com'))
     assert reader.accept_file?(Pathname.new('/etc/passwd'))
   end
@@ -33,6 +34,7 @@ class ValidatorSchemaReaderTest < Minitest::Test
     JSON::Validator.schema_reader = MockReader.new
 
     schema = { '$ref' => 'http://any.url/at/all' }
+
     assert_valid schema, 'abc'
     refute_valid schema, 'a'
   end
@@ -40,6 +42,7 @@ class ValidatorSchemaReaderTest < Minitest::Test
   def test_validate_with_reader
     reader = MockReader.new
     schema = { '$ref' => 'http://any.url/at/all' }
+
     assert_valid schema, 'abc', schema_reader: reader
     refute_valid schema, 'a', schema_reader: reader
   end
@@ -47,6 +50,7 @@ class ValidatorSchemaReaderTest < Minitest::Test
   def test_validate_list_with_reader
     reader = MockReader.new
     schema = { '$ref' => 'http://any.url/at/all' }
+
     assert_valid schema, %w[abc def], schema_reader: reader, list: true
     refute_valid schema, %w[abc a], schema_reader: reader, list: true
   end

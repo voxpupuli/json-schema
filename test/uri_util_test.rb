@@ -6,6 +6,7 @@ class UriUtilTest < Minitest::Test
     uri = Addressable::URI.new(scheme: 'https',
                                host: 'www.google.com',
                                path: 'search',)
+
     assert_equal uri, JSON::Util::URI.normalized_uri(str, '/home')
   end
 
@@ -15,6 +16,7 @@ class UriUtilTest < Minitest::Test
                                host: 'www.google.com',
                                path: 'search',
                                fragment: nil,)
+
     assert_equal uri, JSON::Util::URI.normalized_uri(str, '/home')
   end
 
@@ -24,6 +26,7 @@ class UriUtilTest < Minitest::Test
                                host: 'www.google.com',
                                path: 'search',
                                fragment: 'foo',)
+
     assert_equal uri, JSON::Util::URI.normalized_uri(str, '/home')
   end
 
@@ -32,6 +35,7 @@ class UriUtilTest < Minitest::Test
     uri = Addressable::URI.new(scheme: 'file',
                                host: '',
                                path: '/foo/bar.json',)
+
     assert_equal uri, JSON::Util::URI.normalized_uri(str, '/home')
   end
 
@@ -40,6 +44,7 @@ class UriUtilTest < Minitest::Test
     uri = Addressable::URI.new(scheme: 'file',
                                host: '',
                                path: '/home/foo/bar.json',)
+
     assert_equal uri, JSON::Util::URI.normalized_uri(str, '/home')
   end
 
@@ -48,6 +53,7 @@ class UriUtilTest < Minitest::Test
     uri = Addressable::URI.new(scheme: 'file',
                                host: 'localhost',
                                path: '/foo/bar.json',)
+
     assert_equal uri, JSON::Util::URI.normalized_uri(str, '/home')
   end
 
@@ -56,6 +62,7 @@ class UriUtilTest < Minitest::Test
     uri = Addressable::URI.new(scheme: 'https',
                                host: 'www.google.com',
                                path: 'search',)
+
     assert_equal uri, JSON::Util::URI.parse(str)
   end
 

@@ -14,17 +14,21 @@ class CachingTestTest < Minitest::Test
 
   def test_caching
     set_schema('type' => 'string')
+
     assert_valid(schema_path, 'foo', clear_cache: false)
 
     set_schema('type' => 'number')
+
     refute_valid(schema_path, 123)
   end
 
   def test_clear_cache
     set_schema('type' => 'string')
+
     assert_valid(schema_path, 'foo', clear_cache: true)
 
     set_schema('type' => 'number')
+
     assert_valid(schema_path, 123)
   end
 
@@ -34,9 +38,11 @@ class CachingTestTest < Minitest::Test
     end
 
     set_schema('type' => 'string')
+
     assert_valid(schema_path, 'foo', clear_cache: false)
 
     set_schema('type' => 'number')
+
     assert_valid(schema_path, 123)
   ensure
     suppress_warnings do
