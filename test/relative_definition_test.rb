@@ -11,6 +11,7 @@ class RelativeDefinitionTest < Minitest::Test
 
   def test_relative_definition
     schema = schema_fixture_path('relative_definition_schema.json')
+
     assert_valid schema, { 'a' => 5 }
     refute_valid schema, { 'a' => 'foo' }
   end

@@ -156,10 +156,12 @@ class InitializeDataTest < Minitest::Test
     data = 'hello world'
 
     v = JSON::Validator.new(schema)
+
     assert(v.validate(data))
     assert(v.validate(data))
 
     v = JSON::Validator.new(schema, { parse_data: false })
+
     assert(v.validate(data))
     assert(v.validate(data))
 
@@ -177,6 +179,7 @@ class InitializeDataTest < Minitest::Test
     data = '42'
 
     v = JSON::Validator.new(schema)
+
     assert(v.validate(data))
     assert(v.validate(data))
 
@@ -185,6 +188,7 @@ class InitializeDataTest < Minitest::Test
     assert_raises(JSON::Schema::ValidationError) { v.validate(data) }
 
     v = JSON::Validator.new(schema, { json: true })
+
     assert(v.validate(data))
     assert(v.validate(data))
 
@@ -198,6 +202,7 @@ class InitializeDataTest < Minitest::Test
     data = '{"a": "b"}'
 
     v = JSON::Validator.new(schema)
+
     assert(v.validate(data))
     assert(v.validate(data))
 
@@ -206,6 +211,7 @@ class InitializeDataTest < Minitest::Test
     assert_raises(JSON::Schema::ValidationError) { v.validate(data) }
 
     v = JSON::Validator.new(schema, { json: true })
+
     assert(v.validate(data))
     assert(v.validate(data))
 
@@ -219,14 +225,17 @@ class InitializeDataTest < Minitest::Test
     data = '"hello world"'
 
     v = JSON::Validator.new(schema)
+
     assert(v.validate(data))
     assert(v.validate(data))
 
     v = JSON::Validator.new(schema, { parse_data: false })
+
     assert(v.validate(data))
     assert(v.validate(data))
 
     v = JSON::Validator.new(schema, { json: true })
+
     assert(v.validate(data))
     assert(v.validate(data))
 
@@ -240,10 +249,12 @@ class InitializeDataTest < Minitest::Test
     data = 'kapow'
 
     v = JSON::Validator.new(schema)
+
     assert(v.validate(data))
     assert(v.validate(data))
 
     v = JSON::Validator.new(schema, { parse_data: false })
+
     assert(v.validate(data))
     assert(v.validate(data))
 
@@ -263,10 +274,12 @@ class InitializeDataTest < Minitest::Test
     stub_request(:get, 'foo.bar').to_return(body: '"hello world"', status: 200)
 
     v = JSON::Validator.new(schema)
+
     assert(v.validate(data))
     assert(v.validate(data))
 
     v = JSON::Validator.new(schema, { parse_data: false })
+
     assert(v.validate(data))
     assert(v.validate(data))
 
@@ -275,6 +288,7 @@ class InitializeDataTest < Minitest::Test
     assert_raises(JSON::Schema::JsonParseError) { v.validate(data) }
 
     v = JSON::Validator.new(schema, { uri: true })
+
     assert(v.validate(data))
     assert(v.validate(data))
   end
@@ -286,10 +300,12 @@ class InitializeDataTest < Minitest::Test
     stub_request(:get, 'foo.bar').to_timeout
 
     v = JSON::Validator.new(schema)
+
     assert(v.validate(data))
     assert(v.validate(data))
 
     v = JSON::Validator.new(schema, { parse_data: false })
+
     assert(v.validate(data))
     assert(v.validate(data))
 
@@ -299,6 +315,7 @@ class InitializeDataTest < Minitest::Test
     assert(v.validate(data))
 
     v = JSON::Validator.new(schema, { parse_data: false })
+
     assert(v.validate(data))
     assert(v.validate(data))
 
@@ -316,10 +333,12 @@ class InitializeDataTest < Minitest::Test
     data = 'pick one: [1, 2, 3]'
 
     v = JSON::Validator.new(schema)
+
     assert(v.validate(data))
     assert(v.validate(data))
 
     v = JSON::Validator.new(schema, { parse_data: false })
+
     assert(v.validate(data))
     assert(v.validate(data))
 
@@ -337,10 +356,12 @@ class InitializeDataTest < Minitest::Test
     data = 42
 
     v = JSON::Validator.new(schema)
+
     assert(v.validate(data))
     assert(v.validate(data))
 
     v = JSON::Validator.new(schema, { parse_data: false })
+
     assert(v.validate(data))
     assert(v.validate(data))
 
@@ -358,10 +379,12 @@ class InitializeDataTest < Minitest::Test
     data = { 'a' => 'b' }
 
     v = JSON::Validator.new(schema)
+
     assert(v.validate(data))
     assert(v.validate(data))
 
     v = JSON::Validator.new(schema, { parse_data: false })
+
     assert(v.validate(data))
     assert(v.validate(data))
 
