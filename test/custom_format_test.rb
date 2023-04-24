@@ -7,11 +7,11 @@ class CustomFormatTest < Minitest::Test
     @all_versions = ['draft1', 'draft2', 'draft3', 'draft4', 'draft6', nil]
     @format_proc = lambda { |value| raise JSON::Schema::CustomFormatError, 'must be 42' unless value == '42' }
     @schema_6 = {
-      "$schema" => "http://json-schema.org/draft-06/schema#",
-      "properties" => {
-        "a" => {
-          "type" => "string",
-          "format" => "custom",
+      '$schema' => 'http://json-schema.org/draft-06/schema#',
+      'properties' => {
+        'a' => {
+          'type' => 'string',
+          'format' => 'custom',
         },
       },
     }
