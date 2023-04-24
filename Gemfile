@@ -12,10 +12,7 @@ group :coverage, optional: ENV['COVERAGE'] != 'yes' do
   gem 'simplecov-console', require: false
 end
 
-group :tests do
-  gem 'rubocop', '~> 1.45.0'
-  gem 'rubocop-rspec', '~> 2.18.1'
-  gem 'rubocop-rake', '~> 0.6.0'
-  gem 'rubocop-performance', '~> 1.16.0'
+group :development do
+  gem 'voxpupuli-rubocop', '~> 1.2'
   gem 'rubocop-minitest', '~> 0.27.0'
 end
