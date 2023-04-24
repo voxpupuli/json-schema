@@ -1,6 +1,38 @@
 # Changelog
 
-## [v3.0.0](https://github.com/voxpupuli/json-schema/tree/v3.0.0) (2022-02-16)
+## [v4.0.0](https://github.com/voxpupuli/json-schema/tree/v4.0.0) (2023-04-24)
+
+[Full Changelog](https://github.com/voxpupuli/json-schema/compare/v3.0.0...v4.0.0)
+
+**Breaking changes:**
+
+- Removed `data` ivar from JSON::Validator so that multiple `validate` call become faster [\#465](https://github.com/voxpupuli/json-schema/pull/465) ([ganmacs](https://github.com/ganmacs))
+
+**Implemented enhancements:**
+
+- Fix more rubocop violations [\#484](https://github.com/voxpupuli/json-schema/pull/484) ([bastelfreak](https://github.com/bastelfreak))
+- Fix multiple rubocop violations [\#483](https://github.com/voxpupuli/json-schema/pull/483) ([bastelfreak](https://github.com/bastelfreak))
+- Add Ruby 3.2 to CI matrix [\#482](https://github.com/voxpupuli/json-schema/pull/482) ([bastelfreak](https://github.com/bastelfreak))
+- Enable RuboCop in CI [\#480](https://github.com/voxpupuli/json-schema/pull/480) ([bastelfreak](https://github.com/bastelfreak))
+- docs: mention draft 06 support [\#476](https://github.com/voxpupuli/json-schema/pull/476) ([levenleven](https://github.com/levenleven))
+- Add const validator to draft6. [\#425](https://github.com/voxpupuli/json-schema/pull/425) ([torce](https://github.com/torce))
+- Add propertyNames validator to draft6 [\#407](https://github.com/voxpupuli/json-schema/pull/407) ([torce](https://github.com/torce))
+
+**Fixed bugs:**
+
+- Changed draft-06 url back from /draft/schema\# to /draft-06/schema\# [\#388](https://github.com/voxpupuli/json-schema/pull/388) ([iainbeeston](https://github.com/iainbeeston))
+
+**Merged pull requests:**
+
+- fix more rubocop violations [\#490](https://github.com/voxpupuli/json-schema/pull/490) ([bastelfreak](https://github.com/bastelfreak))
+- fix rubocop whitespace violations [\#489](https://github.com/voxpupuli/json-schema/pull/489) ([bastelfreak](https://github.com/bastelfreak))
+- Fix more rubocop violations [\#488](https://github.com/voxpupuli/json-schema/pull/488) ([bastelfreak](https://github.com/bastelfreak))
+- rubocop: Fix Style/HashSyntax [\#487](https://github.com/voxpupuli/json-schema/pull/487) ([bastelfreak](https://github.com/bastelfreak))
+- CI: Run on PRs and merges to master [\#486](https://github.com/voxpupuli/json-schema/pull/486) ([bastelfreak](https://github.com/bastelfreak))
+- rubocop: Fix Style/StringLiterals [\#485](https://github.com/voxpupuli/json-schema/pull/485) ([bastelfreak](https://github.com/bastelfreak))
+- CI: Only run on pull requests & Use latest GitHub workflows [\#481](https://github.com/voxpupuli/json-schema/pull/481) ([bastelfreak](https://github.com/bastelfreak))
+
+## [v3.0.0](https://github.com/voxpupuli/json-schema/tree/v3.0.0) (2022-05-03)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v2.8.1...v3.0.0)
 
@@ -11,7 +43,7 @@
 
 **Implemented enhancements:**
 
-- Add const attribute support [\#471](https://github.com/voxpupuli/json-schema/pull/471) ([jeremie-stripe](https://github.com/jeremie-stripe)))
+- Add const attribute support [\#471](https://github.com/voxpupuli/json-schema/pull/471) ([jeremie-stripe](https://github.com/jeremie-stripe))
 - Add truffleruby/jruby to CI [\#469](https://github.com/voxpupuli/json-schema/pull/469) ([bastelfreak](https://github.com/bastelfreak))
 - Add Ruby 3.1 to CI matrix [\#468](https://github.com/voxpupuli/json-schema/pull/468) ([bastelfreak](https://github.com/bastelfreak))
 - Add Ruby 3.0 to CI matrix [\#467](https://github.com/voxpupuli/json-schema/pull/467) ([bastelfreak](https://github.com/bastelfreak))
@@ -46,7 +78,6 @@
 - Fix for string invalid scheme error when string contains colon [\#373](https://github.com/voxpupuli/json-schema/pull/373) ([benSlaughter](https://github.com/benSlaughter))
 - Added simplecov [\#343](https://github.com/voxpupuli/json-schema/pull/343) ([iainbeeston](https://github.com/iainbeeston))
 - Extracted all limits out to their own file [\#342](https://github.com/voxpupuli/json-schema/pull/342) ([iainbeeston](https://github.com/iainbeeston))
-- Fixes for 1.9 [\#1](https://github.com/voxpupuli/json-schema/pull/1) ([jarib](https://github.com/jarib))
 
 ## [v2.8.1](https://github.com/voxpupuli/json-schema/tree/v2.8.1) (2018-10-14)
 
