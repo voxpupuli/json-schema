@@ -96,15 +96,23 @@ class Draft4Test < Minitest::Test
 
     data = { 'a' => 'a' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
+    assert(!JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(JSON::Validator.validate(schema, data, noAdditionalProperties: true))
 
     data = { 'b' => 'b' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
+    assert(!JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(JSON::Validator.validate(schema, data, noAdditionalProperties: true))
 
     data = { 'a' => 'a', 'b' => 'b' }
     assert(JSON::Validator.validate(schema, data, strict: true))
+    assert(JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(JSON::Validator.validate(schema, data, noAdditionalProperties: true))
 
     data = { 'a' => 'a', 'b' => 'b', 'c' => 'c' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
+    assert(JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(!JSON::Validator.validate(schema, data, noAdditionalProperties: true))
   end
 
   def test_strict_properties_additional_props
@@ -119,18 +127,28 @@ class Draft4Test < Minitest::Test
 
     data = { 'a' => 'a' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
+    assert(!JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(JSON::Validator.validate(schema, data, noAdditionalProperties: true))
 
     data = { 'b' => 'b' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
+    assert(!JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(JSON::Validator.validate(schema, data, noAdditionalProperties: true))
 
     data = { 'a' => 'a', 'b' => 'b' }
     assert(JSON::Validator.validate(schema, data, strict: true))
+    assert(JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(JSON::Validator.validate(schema, data, noAdditionalProperties: true))
 
     data = { 'a' => 'a', 'b' => 'b', 'c' => 'c' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
+    assert(!JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(!JSON::Validator.validate(schema, data, noAdditionalProperties: true))
 
     data = { 'a' => 'a', 'b' => 'b', 'c' => 3 }
     assert(JSON::Validator.validate(schema, data, strict: true))
+    assert(JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(JSON::Validator.validate(schema, data, noAdditionalProperties: true))
   end
 
   def test_strict_properties_pattern_props
@@ -145,24 +163,38 @@ class Draft4Test < Minitest::Test
 
     data = { 'a' => 'a' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
+    assert(!JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(JSON::Validator.validate(schema, data, noAdditionalProperties: true))
 
     data = { 'b' => 'b' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
+    assert(!JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(JSON::Validator.validate(schema, data, noAdditionalProperties: true))
 
     data = { 'a' => 'a', 'b' => 'b' }
     assert(JSON::Validator.validate(schema, data, strict: true))
+    assert(JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(JSON::Validator.validate(schema, data, noAdditionalProperties: true))
 
     data = { 'a' => 'a', 'b' => 'b', 'c' => 'c' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
+    assert(JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(!JSON::Validator.validate(schema, data, noAdditionalProperties: true))
 
     data = { 'a' => 'a', 'b' => 'b', 'c' => 3 }
     assert(!JSON::Validator.validate(schema, data, strict: true))
+    assert(JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(!JSON::Validator.validate(schema, data, noAdditionalProperties: true))
 
     data = { 'a' => 'a', 'b' => 'b', '23 taco' => 3 }
     assert(JSON::Validator.validate(schema, data, strict: true))
+    assert(JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(JSON::Validator.validate(schema, data, noAdditionalProperties: true))
 
     data = { 'a' => 'a', 'b' => 'b', '23 taco' => 'cheese' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
+    assert(!JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(!JSON::Validator.validate(schema, data, noAdditionalProperties: true))
   end
 
   def test_list_option

@@ -63,7 +63,7 @@ module StrictValidation
 
     data = { 'a' => 'a', 'b' => 'b', 'c' => 'c' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
-    assert(JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(!JSON::Validator.validate(schema, data, allPropertiesRequired: true))
     assert(!JSON::Validator.validate(schema, data, noAdditionalProperties: true))
 
     data = { 'a' => 'a', 'b' => 'b', 'c' => 3 }
@@ -113,7 +113,7 @@ module StrictValidation
 
     data = { 'a' => 'a', 'b' => 'b', '23 taco' => 'cheese' }
     assert(!JSON::Validator.validate(schema, data, strict: true))
-    assert(JSON::Validator.validate(schema, data, allPropertiesRequired: true))
+    assert(!JSON::Validator.validate(schema, data, allPropertiesRequired: true))
     assert(!JSON::Validator.validate(schema, data, noAdditionalProperties: true))
   end
 end
