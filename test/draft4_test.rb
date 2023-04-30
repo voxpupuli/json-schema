@@ -2,89 +2,7 @@
 
 require File.expand_path('../support/test_helper', __FILE__)
 
-class Draft4Test < Minitest::Test
-  def validation_errors(schema, data, options)
-    super(schema, data, version: :draft4)
-  end
-
-  def exclusive_minimum
-    { 'exclusiveMinimum' => true }
-  end
-
-  def exclusive_maximum
-    { 'exclusiveMaximum' => true }
-  end
-
-  def ipv4_format
-    'ipv4'
-  end
-
-  include ArrayValidation::ItemsTests
-  include ArrayValidation::AdditionalItemsTests
-  include ArrayValidation::UniqueItemsTests
-
-  include EnumValidation::General
-  include EnumValidation::V3_V4
-
-  include NumberValidation::MinMaxTests
-  include NumberValidation::MultipleOfTests
-
-  include ObjectValidation::AdditionalPropertiesTests
-  include ObjectValidation::PatternPropertiesTests
-
-  include StrictValidation
-
-  include StringValidation::ValueTests
-  include StringValidation::FormatTests
-
-  include TypeValidation::SimpleTypeTests
-
-  def test_required
-    # Set up the default datatype
-    schema = {
-      '$schema' => 'http://json-schema.org/draft-04/schema#',
-      'required' => ['a'],
-      'properties' => {
-        'a' => {},
-      },
-    }
-    data = {}
-
-    refute_valid schema, data
-    data['a'] = 'Hello'
-    assert_valid schema, data
-
-    schema = {
-      '$schema' => 'http://json-schema.org/draft-04/schema#',
-      'properties' => {
-        'a' => { 'type' => 'integer' },
-      },
-    }
-
-    data = {}
-    assert_valid schema, data
-  end
-
-  def test_min_properties
-    schema = { 'minProperties' => 2 }
-
-    assert_valid schema, { 'a' => 1, 'b' => 2 }
-    assert_valid schema, { 'a' => 1, 'b' => 2, 'c' => 3 }
-
-    refute_valid schema, { 'a' => 1 }
-    refute_valid schema, {}
-  end
-
-  def test_max_properties
-    schema = { 'maxProperties' => 2 }
-
-    assert_valid schema, { 'a' => 1, 'b' => 2 }
-    assert_valid schema, { 'a' => 1 }
-    assert_valid schema, {}
-
-    refute_valid schema, { 'a' => 1, 'b' => 2, 'c' => 3 }
-  end
-
+module StrictValidationV4
   def test_strict_properties
     schema = {
       '$schema' => 'http://json-schema.org/draft-04/schema#',
@@ -195,6 +113,91 @@ class Draft4Test < Minitest::Test
     assert(!JSON::Validator.validate(schema, data, strict: true))
     assert(!JSON::Validator.validate(schema, data, allPropertiesRequired: true))
     assert(!JSON::Validator.validate(schema, data, noAdditionalProperties: true))
+  end
+end
+
+class Draft4Test < Minitest::Test
+  def validation_errors(schema, data, options)
+    super(schema, data, version: :draft4)
+  end
+
+  def exclusive_minimum
+    { 'exclusiveMinimum' => true }
+  end
+
+  def exclusive_maximum
+    { 'exclusiveMaximum' => true }
+  end
+
+  def ipv4_format
+    'ipv4'
+  end
+
+  include ArrayValidation::ItemsTests
+  include ArrayValidation::AdditionalItemsTests
+  include ArrayValidation::UniqueItemsTests
+
+  include EnumValidation::General
+  include EnumValidation::V3_V4
+
+  include NumberValidation::MinMaxTests
+  include NumberValidation::MultipleOfTests
+
+  include ObjectValidation::AdditionalPropertiesTests
+  include ObjectValidation::PatternPropertiesTests
+
+  include StrictValidation
+  include StrictValidationV4
+
+  include StringValidation::ValueTests
+  include StringValidation::FormatTests
+
+  include TypeValidation::SimpleTypeTests
+
+  def test_required
+    # Set up the default datatype
+    schema = {
+      '$schema' => 'http://json-schema.org/draft-04/schema#',
+      'required' => ['a'],
+      'properties' => {
+        'a' => {},
+      },
+    }
+    data = {}
+
+    refute_valid schema, data
+    data['a'] = 'Hello'
+    assert_valid schema, data
+
+    schema = {
+      '$schema' => 'http://json-schema.org/draft-04/schema#',
+      'properties' => {
+        'a' => { 'type' => 'integer' },
+      },
+    }
+
+    data = {}
+    assert_valid schema, data
+  end
+
+  def test_min_properties
+    schema = { 'minProperties' => 2 }
+
+    assert_valid schema, { 'a' => 1, 'b' => 2 }
+    assert_valid schema, { 'a' => 1, 'b' => 2, 'c' => 3 }
+
+    refute_valid schema, { 'a' => 1 }
+    refute_valid schema, {}
+  end
+
+  def test_max_properties
+    schema = { 'maxProperties' => 2 }
+
+    assert_valid schema, { 'a' => 1, 'b' => 2 }
+    assert_valid schema, { 'a' => 1 }
+    assert_valid schema, {}
+
+    refute_valid schema, { 'a' => 1, 'b' => 2, 'c' => 3 }
   end
 
   def test_list_option
