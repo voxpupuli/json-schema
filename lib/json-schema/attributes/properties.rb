@@ -4,7 +4,7 @@ module JSON
   class Schema
     class PropertiesAttribute < Attribute
       def self.required?(schema, options)
-        schema.fetch('required') { options[:strict] }
+        schema.fetch('required') { options[:allPropertiesRequired] }
       end
 
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
@@ -33,8 +33,8 @@ module JSON
           end
         end
 
-        # When strict is true, ensure no undefined properties exist in the data
-        return unless options[:strict] == true && !schema.key?('additionalProperties')
+        # When noAdditionalProperties is true, ensure no undefined properties exist in the data
+        return unless options[:noAdditionalProperties] == true && !schema.key?('additionalProperties')
 
         diff = data.select do |k, v|
           k = k.to_s
