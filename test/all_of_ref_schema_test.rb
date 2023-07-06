@@ -32,4 +32,21 @@ class AllOfRefSchemaTest < Minitest::Test
     - The property '#/name' of type string did not match the following type: integer"''
     assert_equal(expected_message, errors[0])
   end
+
+  def test_all_of_ref_message_with_one_attribute_wrong
+    errors = JSON::Validator.fully_validate(schema, data)
+    expected_message = ''"The property '#/' of type object did not match all of the required schemas. The schema specific errors were:
+
+- allOf #0:
+    - The property '#/name' of type string did not match the following type: integer"''
+    assert_equal(expected_message, errors[0])
+  end
+
+  def test_all_of_ref_validate_messgae
+    exception = assert_raises JSON::Schema::ValidationError do
+      JSON::Validator.validate!(schema, data)
+    end
+    expected_error_message = "The property '#/name' of type string did not match the following type: integer"
+    assert_equal expected_error_message, exception.message
+  end
 end
