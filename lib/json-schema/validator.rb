@@ -30,6 +30,7 @@ module JSON
       allPropertiesRequired: false,
       noAdditionalProperties: false,
       parse_data: true,
+      parse_integer: true
     }
     @@validators = {}
     @@default_validator = nil
@@ -44,7 +45,6 @@ module JSON
 
       configured_validator = self.class.validator_for_name(@options[:version])
       @options[:schema_reader] ||= self.class.schema_reader
-      @options[:parse_integer] = true if @options[:parse_integer].nil?
 
       @validation_options = @options[:record_errors] ? { record_errors: true } : {}
       @validation_options[:insert_defaults] = true if @options[:insert_defaults]
