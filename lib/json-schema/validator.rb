@@ -44,6 +44,7 @@ module JSON
 
       configured_validator = self.class.validator_for_name(@options[:version])
       @options[:schema_reader] ||= self.class.schema_reader
+      @options[:parse_integer] = true if @options[:parse_integer].nil?
 
       @validation_options = @options[:record_errors] ? { record_errors: true } : {}
       @validation_options[:insert_defaults] = true if @options[:insert_defaults]
@@ -578,7 +579,8 @@ module JSON
         elsif data.is_a?(String)
           begin
             # Check if the string is valid integer
-            data = data.match?(/\A[+-]?\d+\z/) ? data : self.class.parse(data)
+            strict_convert = data.match?(/\A[+-]?\d+\z/) && !@options[:parse_integer]
+            data = strict_convert ? data : self.class.parse(data)
           rescue JSON::Schema::JsonParseError
             begin
               json_uri = Util::URI.normalized_uri(data)
