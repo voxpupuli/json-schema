@@ -30,7 +30,7 @@ module JSON
       allPropertiesRequired: false,
       noAdditionalProperties: false,
       parse_data: true,
-      parse_integer: true
+      parse_integer: true,
     }
     @@validators = {}
     @@default_validator = nil
