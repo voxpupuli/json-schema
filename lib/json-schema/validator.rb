@@ -577,7 +577,8 @@ module JSON
           data = self.class.parse(custom_open(json_uri))
         elsif data.is_a?(String)
           begin
-            data = self.class.parse(data)
+            # Check if the string is valid integer
+            data = data.match?(/\A[+-]?\d+\z/) ? data : self.class.parse(data)
           rescue JSON::Schema::JsonParseError
             begin
               json_uri = Util::URI.normalized_uri(data)
