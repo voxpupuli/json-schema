@@ -242,6 +242,19 @@ JSON::Validator.validate(schema, { "a" => 1 }, :parse_data => false)
 JSON::Validator.validate(schema, '{ "a": 1 }', :parse_data => false)
 
 #
+# with the `:parse_integer` option set to false, the integer value given as string will not be parsed.
+#
+
+# => true
+JSON::Validator.validate({type: "integer"}, "23")
+# => false
+JSON::Validator.validate({type: "integer"}, "23", parse_integer: false)
+# => true
+JSON::Validator.validate({type: "string"}, "123", parse_integer: false)
+# => false
+JSON::Validator.validate({type: "string"}, "123")
+
+#
 # with the `:json` option, the json must be an unparsed json text (not a hash, a uri or a file path)
 #
 

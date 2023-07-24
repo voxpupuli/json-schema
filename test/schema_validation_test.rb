@@ -181,4 +181,15 @@ class SchemaValidationTest < Minitest::Test
     }
     assert(JSON::Validator.validate!(symbolized_schema, data, validate_schema: true))
   end
+
+  def test_validate_schema_no_additional_properties
+    errors = JSON::Validator.fully_validate_schema(symbolized_schema, noAdditionalProperties: true)
+    assert_equal 1, errors.size
+    assert_match(/the property .* contained undefined properties: .*relationships/i, errors.first)
+
+    schema_without_additional_properties = symbolized_schema
+    schema_without_additional_properties.delete(:relationships)
+    errors = JSON::Validator.fully_validate_schema(schema_without_additional_properties, noAdditionalProperties: true)
+    assert_equal 0, errors.size
+  end
 end
