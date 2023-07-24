@@ -373,4 +373,26 @@ class InitializeDataTest < Minitest::Test
     assert_raises(TypeError) { v.validate(data) }
     assert_raises(TypeError) { v.validate(data) }
   end
+
+  def test_nullable_param
+    schema = {
+      "type": "object",
+      "properties": {
+          "github_url": { "type": "string", "nullable": true }
+        }
+    }
+    data = { "github_url" => nil }
+
+    assert(JSON::Validator.validate(schema, data))
+
+    schema = {
+      "type": "object",
+      "properties": {
+          "github_url": { "type": "string"}
+        }
+    }
+    refute(JSON::Validator.validate(schema, data))
+  
+  end
+
 end
