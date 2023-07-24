@@ -381,24 +381,14 @@ class InitializeDataTest < Minitest::Test
   end
 
   def test_nullable_param
-    schema = {
-      "type": "object",
-      "properties": {
-          "github_url": { "type": "string", "nullable": true }
-        }
-    }
-    data = { "github_url" => nil }
-
+    schema = { 'type' => 'object', 'properties' => { 'a' => { 'type' => 'string', 'nullable' => true } } }
+    data = { 'a' => nil }
+    
     assert(JSON::Validator.validate(schema, data))
 
-    schema = {
-      "type": "object",
-      "properties": {
-          "github_url": { "type": "string"}
-        }
-    }
+    schema = { 'type' => 'object', 'properties' => { 'a' => { 'type' => 'string' } } }
+    
     refute(JSON::Validator.validate(schema, data))
-  
   end
 
 end
