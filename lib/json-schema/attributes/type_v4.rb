@@ -6,12 +6,13 @@ module JSON
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         union = true
         types = current_schema.schema['type']
+        nullable = current_schema.schema['nullable']
         if !types.is_a?(Array)
           types = [types]
           union = false
         end
 
-        return if types.any? { |type| data_valid_for_type?(data, type) }
+        return if types.any? { |type| data_valid_for_type?(data, type, nullable) }
 
         types = types.map { |type| type.is_a?(String) ? type : '(schema)' }.join(', ')
         message = format(
