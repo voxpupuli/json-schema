@@ -27,7 +27,10 @@ module JSON
       insert_defaults: false,
       clear_cache: false,
       strict: false,
+      allPropertiesRequired: false,
+      noAdditionalProperties: false,
       parse_data: true,
+      parse_integer: true,
     }
     @@validators = {}
     @@default_validator = nil
@@ -45,7 +48,13 @@ module JSON
 
       @validation_options = @options[:record_errors] ? { record_errors: true } : {}
       @validation_options[:insert_defaults] = true if @options[:insert_defaults]
-      @validation_options[:strict] = true if @options[:strict] == true
+      if @options[:strict] == true
+        @validation_options[:allPropertiesRequired] = true
+        @validation_options[:noAdditionalProperties] = true
+      else
+        @validation_options[:allPropertiesRequired] = true if @options[:allPropertiesRequired]
+        @validation_options[:noAdditionalProperties] = true if @options[:noAdditionalProperties]
+      end
       @validation_options[:clear_cache] = true if !@@cache_schemas || @options[:clear_cache]
 
       @@mutex.synchronize { @base_schema = initialize_schema(schema_data, configured_validator) }
@@ -569,7 +578,9 @@ module JSON
           data = self.class.parse(custom_open(json_uri))
         elsif data.is_a?(String)
           begin
-            data = self.class.parse(data)
+            # Check if the string is valid integer
+            strict_convert = data.match?(/\A[+-]?\d+\z/) && !@options[:parse_integer]
+            data = strict_convert ? data : self.class.parse(data)
           rescue JSON::Schema::JsonParseError
             begin
               json_uri = Util::URI.normalized_uri(data)

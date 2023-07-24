@@ -23,16 +23,11 @@ desc 'Update meta-schemas to the latest version'
 task :update_meta_schemas do
   puts 'Updating meta-schemas...'
 
-  id_mappings = {
-    'http://json-schema.org/draft/schema#' => 'https://raw.githubusercontent.com/json-schema-org/json-schema-spec/master/schema.json',
-  }
-
   require 'open-uri'
   require 'thwait'
 
   download_threads = Dir['resources/*.json'].map do |path|
-    schema_id = File.read(path)[/"\$?id"\s*:\s*"(.*?)"/, 1]
-    schema_uri = id_mappings[schema_id] || schema_id
+    schema_uri = File.read(path)[/"\$?id"\s*:\s*"(.*?)"/, 1]
 
     Thread.new(schema_uri) do |uri|
       Thread.current[:uri] = uri

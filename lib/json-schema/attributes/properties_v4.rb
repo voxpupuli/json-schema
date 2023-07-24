@@ -6,7 +6,7 @@ module JSON
       # draft4 relies on its own RequiredAttribute validation at a higher level, rather than
       # as an attribute of individual properties.
       def self.required?(schema, options)
-        options[:strict] == true
+        options[:allPropertiesRequired] == true
       end
     end
   end

@@ -24,6 +24,8 @@ class InitializeDataTest < Minitest::Test
 
     refute(JSON::Validator.validate(schema, data, parse_data: false))
 
+    refute(JSON::Validator.validate(schema, data, parse_integer: false))
+
     assert(JSON::Validator.validate(schema, data, json: true))
 
     assert_raises(JSON::Schema::JsonLoadError) { JSON::Validator.validate(schema, data, uri: true) }
@@ -181,6 +183,10 @@ class InitializeDataTest < Minitest::Test
     assert(v.validate(data))
 
     v = JSON::Validator.new(schema, { parse_data: false })
+    assert_raises(JSON::Schema::ValidationError) { v.validate(data) }
+    assert_raises(JSON::Schema::ValidationError) { v.validate(data) }
+
+    v = JSON::Validator.new(schema, { parse_integer: false })
     assert_raises(JSON::Schema::ValidationError) { v.validate(data) }
     assert_raises(JSON::Schema::ValidationError) { v.validate(data) }
 
