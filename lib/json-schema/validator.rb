@@ -30,6 +30,7 @@ module JSON
       allPropertiesRequired: false,
       noAdditionalProperties: false,
       parse_data: true,
+      parse_integer: true,
     }
     @@validators = {}
     @@default_validator = nil
@@ -577,7 +578,9 @@ module JSON
           data = self.class.parse(custom_open(json_uri))
         elsif data.is_a?(String)
           begin
-            data = self.class.parse(data)
+            # Check if the string is valid integer
+            strict_convert = data.match?(/\A[+-]?\d+\z/) && !@options[:parse_integer]
+            data = strict_convert ? data : self.class.parse(data)
           rescue JSON::Schema::JsonParseError
             begin
               json_uri = Util::URI.normalized_uri(data)
