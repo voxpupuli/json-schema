@@ -24,7 +24,7 @@ module JSON
 
         types.each_with_index do |type, type_index|
           if type.is_a?(String)
-            valid = data_valid_for_type?(data, type, nullable)
+            valid = data_valid_for_type?(data, type, nullable: nullable)
           elsif type.is_a?(Hash) && union
             # Validate as a schema
             schema = JSON::Schema.new(type, current_schema.uri, validator)

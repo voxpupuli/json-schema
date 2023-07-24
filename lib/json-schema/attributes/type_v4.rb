@@ -12,7 +12,7 @@ module JSON
           union = false
         end
 
-        return if types.any? { |type| data_valid_for_type?(data, type, nullable) }
+        return if types.any? { |type| data_valid_for_type?(data, type, nullable: nullable) }
 
         types = types.map { |type| type.is_a?(String) ? type : '(schema)' }.join(', ')
         message = format(
