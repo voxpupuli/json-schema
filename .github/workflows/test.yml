@@ -30,7 +30,7 @@ jobs:
     env:
       COVERAGE: ${{ matrix.coverage }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Ruby ${{ matrix.ruby }}
         uses: ruby/setup-ruby@v1
         with:
