@@ -40,3 +40,10 @@ jobs:
         run: bundle exec rake ${{ matrix.rake_task }}
       - name: Build gem
         run: gem build *.gemspec
+  tests:
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    name: Test suite
+    steps:
+      - run: echo Test suite completed
