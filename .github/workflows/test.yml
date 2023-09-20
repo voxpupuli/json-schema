@@ -30,7 +30,7 @@ jobs:
     env:
       COVERAGE: ${{ matrix.coverage }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install Ruby ${{ matrix.ruby }}
         uses: ruby/setup-ruby@v1
         with:
@@ -40,3 +40,10 @@ jobs:
         run: bundle exec rake ${{ matrix.rake_task }}
       - name: Build gem
         run: gem build *.gemspec
+  tests:
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    name: Test suite
+    steps:
+      - run: echo Test suite completed

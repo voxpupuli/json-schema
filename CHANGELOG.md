@@ -1,5 +1,28 @@
 # Changelog
 
+## [v4.1.1](https://github.com/voxpupuli/json-schema/tree/v4.1.1) (2023-09-15)
+
+[Full Changelog](https://github.com/voxpupuli/json-schema/compare/v4.1.0...v4.1.1)
+
+**Merged pull requests:**
+
+- Add dummy CI job we can depend on [\#503](https://github.com/voxpupuli/json-schema/pull/503) ([bastelfreak](https://github.com/bastelfreak))
+- build\(deps\): bump actions/checkout from 2 to 4 [\#502](https://github.com/voxpupuli/json-schema/pull/502) ([dependabot[bot]](https://github.com/apps/dependabot))
+- dependabot: check for github actions and gems [\#501](https://github.com/voxpupuli/json-schema/pull/501) ([bastelfreak](https://github.com/bastelfreak))
+
+## [v4.1.0](https://github.com/voxpupuli/json-schema/tree/v4.1.0) (2023-07-24)
+
+[Full Changelog](https://github.com/voxpupuli/json-schema/compare/v4.0.0...v4.1.0)
+
+**Implemented enhancements:**
+
+- Add `allPropertiesRequired` and `noAdditionalProperties` options [\#494](https://github.com/voxpupuli/json-schema/pull/494) ([a-lavis](https://github.com/a-lavis))
+
+**Fixed bugs:**
+
+- Integer as string should be defined as string [\#497](https://github.com/voxpupuli/json-schema/pull/497) ([mohanapriya2308](https://github.com/mohanapriya2308))
+- Handling allOf error message [\#495](https://github.com/voxpupuli/json-schema/pull/495) ([anupama-kumari](https://github.com/anupama-kumari))
+
 ## [v4.0.0](https://github.com/voxpupuli/json-schema/tree/v4.0.0) (2023-04-24)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v3.0.0...v4.0.0)
