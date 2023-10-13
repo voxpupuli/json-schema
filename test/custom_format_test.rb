@@ -113,7 +113,7 @@ class CustomFormatTest < Minitest::Test
 
       data['a'] = '42'
       JSON::Validator.register_format_validator('ipv6', @format_proc, [version])
-      assert(JSON::Validator.validate(schema, data), "#{prefix} succeeds with overriden default format and correct data")
+      assert(JSON::Validator.validate(schema, data), "#{prefix} succeeds with overridden default format and correct data")
 
       JSON::Validator.deregister_format_validator('ipv6', [version])
       data['a'] = '2001:db8:85a3:0:0:8a2e:370:7334'
