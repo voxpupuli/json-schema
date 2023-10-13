@@ -260,7 +260,7 @@ module JSON
       end
 
       # Two  UUIDs  are  said  to  be  equal if  and  only  if  their  (byte-order
-      # canonicalized) integer representations are equivallent.  Refer RFC4122 for
+      # canonicalized) integer representations are equivalent.  Refer RFC4122 for
       # details.
       def == other
         to_i == other.to_i

@@ -505,7 +505,7 @@ Existing pull requests and issues were transferred, please fork and continue to 
 
 # License
 
-This gem is licensed unter the [MIT license](LICENSE.md).
+This gem is licensed under the [MIT license](LICENSE.md).
 
 ## Release information
 

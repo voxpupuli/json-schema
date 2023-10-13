@@ -196,7 +196,7 @@ class UriUtilTest < Minitest::Test
     assert_equal Addressable::URI.parse('http://www.example.com/hello/world'), JSON::Util::URI.absolutize_ref(uri, base)
   end
 
-  def test_ref_addressable_uri_with_shceme_host_and_path
+  def test_ref_addressable_uri_with_scheme_host_and_path
     uri = Addressable::URI.new(scheme: 'https', host: 'foo-bar.com', path: '/hello/world')
     base = 'http://www.example.com/a/#b'
 
