@@ -23,7 +23,7 @@ jobs:
           - ruby: jruby
             rubygems: default
           - ruby: "2.5"
-            rubygems: "2.6.9"
+            rubygems: "2.7.11"
             rake_task: "rubocop test"
           - ruby: "2.6"
             rubygems: default
