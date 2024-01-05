@@ -28,6 +28,7 @@ jobs:
             coverage: "yes"
           - ruby: "3.2"
     env:
+      RUBYOPT: --enable-frozen-string-literal
       COVERAGE: ${{ matrix.coverage }}
     steps:
       - uses: actions/checkout@v4
