@@ -17,16 +17,25 @@ jobs:
       matrix:
         include:
           - ruby: truffleruby
+            rubygems: default
           - ruby: truffleruby+graalvm
+            rubygems: default
           - ruby: jruby
+            rubygems: default
           - ruby: "2.5"
+            rubygems: "2.6.9"
             rake_task: "rubocop test"
           - ruby: "2.6"
+            rubygems: default
           - ruby: "2.7"
+            rubygems: default
           - ruby: "3.0"
+            rubygems: default
           - ruby: "3.1"
+            rubygems: default
             coverage: "yes"
           - ruby: "3.2"
+            rubygems: default
     env:
       RUBYOPT: --enable-frozen-string-literal
       COVERAGE: ${{ matrix.coverage }}
@@ -36,6 +45,7 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+          rubygems: ${{ matrix.rubygems }}
           bundler-cache: true
       - name: Run tests
         run: bundle exec rake ${{ matrix.rake_task }}
