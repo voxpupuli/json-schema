@@ -46,7 +46,7 @@ module JSON
           # nstr[7] |= 0b01010000
           nstr[8] &= 0b00111111
           nstr[8] |= 0b10000000
-          str = ''
+          str = +''
           nstr.each { |s| str << s.chr }
           str
         end
