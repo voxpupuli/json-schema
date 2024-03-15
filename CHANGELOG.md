@@ -1,5 +1,13 @@
 # Changelog
 
+## [v4.2.0](https://github.com/voxpupuli/json-schema/tree/v4.2.0) (2024-03-15)
+
+[Full Changelog](https://github.com/voxpupuli/json-schema/compare/v4.1.1...v4.2.0)
+
+**Implemented enhancements:**
+
+- Ensure compatibility with `ruby --enable-frozen-string-literal` [\#508](https://github.com/voxpupuli/json-schema/pull/508) ([casperisfine](https://github.com/casperisfine))
+
 ## [v4.1.1](https://github.com/voxpupuli/json-schema/tree/v4.1.1) (2023-09-15)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v4.1.0...v4.1.1)
@@ -10,7 +18,7 @@
 - build\(deps\): bump actions/checkout from 2 to 4 [\#502](https://github.com/voxpupuli/json-schema/pull/502) ([dependabot[bot]](https://github.com/apps/dependabot))
 - dependabot: check for github actions and gems [\#501](https://github.com/voxpupuli/json-schema/pull/501) ([bastelfreak](https://github.com/bastelfreak))
 
-## [v4.1.0](https://github.com/voxpupuli/json-schema/tree/v4.1.0) (2023-07-24)
+## [v4.1.0](https://github.com/voxpupuli/json-schema/tree/v4.1.0) (2023-09-15)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v4.0.0...v4.1.0)
 
