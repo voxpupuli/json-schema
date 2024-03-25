@@ -9,7 +9,13 @@ Gem::Specification.new do |s|
   s.version = version
   s.authors = ['Kenny Hoxworth', 'Vox Pupuli']
   s.email = 'voxpupuli@groups.io'
-  s.homepage = 'http://github.com/voxpupuli/json-schema/'
+  s.homepage = 'https://github.com/voxpupuli/json-schema/'
+  s.metadata = {
+    "source_code_uri" => s.homepage,
+    "changelog_uri" => "#{s.homepage}/blob/master/CHANGELOG.md",
+    "homepage_uri" => s.homepage,
+    "bug_tracker_uri" => "#{s.homepage}/issues",
+  }
   s.summary = 'Ruby JSON Schema Validator'
   s.files = Dir['lib/**/*', 'resources/*.json']
   s.require_path = 'lib'
