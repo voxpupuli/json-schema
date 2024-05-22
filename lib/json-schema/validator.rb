@@ -5,6 +5,7 @@ require 'digest/sha1'
 require 'date'
 require 'thread'
 require 'timeout'
+require 'stringio'
 require 'yaml'
 
 require 'json-schema/schema/reader'
