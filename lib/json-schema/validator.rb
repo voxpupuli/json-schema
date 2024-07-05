@@ -139,7 +139,7 @@ module JSON
       return true if self.class.schema_loaded?(schema_uri)
 
       validator = self.class.validator_for_uri(schema_uri, false)
-      schema_uri = JSON::Util::URI.file_uri(validator.metaschema) if validator
+      schema_uri = JSON::Util::URI2.file_uri(validator.metaschema) if validator
 
       schema = @options[:schema_reader].read(schema_uri)
       self.class.add_schema(schema)
