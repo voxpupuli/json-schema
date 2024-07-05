@@ -87,7 +87,7 @@ module JSON
       def read(location)
         uri  = JSON::Util::URI.parse(location.to_s)
         body = if uri.scheme.nil? || uri.scheme == 'file'
-                 uri = JSON::Util::URI.file_uri(uri)
+                 uri = JSON::Util::URI2.file_uri(uri)
                  read_file(Pathname.new(uri.path).expand_path)
                else
                  read_uri(uri)

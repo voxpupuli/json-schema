@@ -6,6 +6,8 @@ module JSON
   module Util
     class URI2 < Addressable::URI
       class << self
+        alias file_uri convert_path
+
         # @param uri [String, Addressable::URI
         # @return [String]
         def unescape_path(uri)
