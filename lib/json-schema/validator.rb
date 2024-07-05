@@ -605,7 +605,7 @@ module JSON
         end
       else
         begin
-          File.read(JSON::Util::URI.unescaped_path(uri))
+          File.read(JSON::Util::URI2.unescape_path(uri))
         rescue SystemCallError => e
           raise JSON::Schema::JsonLoadError, e.message
         end

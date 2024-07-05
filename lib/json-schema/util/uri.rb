@@ -7,7 +7,6 @@ module JSON
       SUPPORTED_PROTOCOLS = %w(http https ftp tftp sftp ssh svn+ssh telnet nntp gopher wais ldap prospero)
 
       @cache_mutex = Mutex.new
-      @unescaped_path_cache = Concurrent::Map.new
       @file_uri_cache = Concurrent::Map.new
 
       class << self
@@ -101,19 +100,8 @@ module JSON
           end
         end
 
-        # @param uri [Addressable::URI, String]
-        # @return [String]
-        def unescaped_path(uri)
-          unescaped_path_cache.compute_if_absent(uri) do
-            path = Addressable::URI.parse(uri).path
-
-            Addressable::URI.unescape(path)
-          end
-        end
-
         def clear_cache
           cache_mutex.synchronize do
-            @unescaped_path_cache = Concurrent::Map.new
             @parse_cache = {}
             @normalize_cache = {}
           end
@@ -124,10 +112,6 @@ module JSON
         # @!attribute cache_mutex
         #   @return [Mutex]
         attr_reader :cache_mutex
-
-        # @!attribute unescaped_path_cache
-        #   @return [Concurrent::Map<Addressable::URI, String>]
-        attr_reader :unescaped_path_cache
 
         # @attribute file_uri_cache
         #   @return [Concurrent::Map<Addressable::URI, String>]
