@@ -16,7 +16,7 @@ module JSON
         end
         @uri = temp_uri
       end
-      @uri = JSON::Util::URI.strip_fragment(@uri)
+      @uri = JSON::Util::URI2.strip_fragment(@uri)
 
       # If there is a $schema on this schema, use it to determine which validator to use
       if @schema['$schema']

@@ -28,12 +28,18 @@ module JSON
         end
 
         def absolutize_ref(ref, base)
-          ref_uri = strip_fragment(ref.dup)
+          parsed_ref = parse(ref.dup)
+          # Like URI2.strip_fragment but with wired caching inside parse
+          ref_uri = if parsed_ref.fragment.nil? || parsed_ref.fragment.empty?
+                      parsed_ref
+                    else
+                      parsed_ref.merge(fragment: '')
+                    end
 
           return ref_uri if ref_uri.absolute?
           return parse(base) if ref_uri.path.empty?
 
-          uri = strip_fragment(base.dup).join(ref_uri.path)
+          uri = URI2.strip_fragment(base).join(ref_uri.path)
           normalized_uri(uri)
         end
 
@@ -78,15 +84,6 @@ module JSON
           end
         rescue Addressable::URI::InvalidURIError => e
           raise JSON::Schema::UriError, e.message
-        end
-
-        def strip_fragment(uri)
-          parsed_uri = parse(uri)
-          if parsed_uri.fragment.nil? || parsed_uri.fragment.empty?
-            parsed_uri
-          else
-            parsed_uri.merge(fragment: '')
-          end
         end
 
         def clear_cache
