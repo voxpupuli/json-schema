@@ -101,18 +101,13 @@ module JSON
           end
         end
 
-        # @return [String]
-        def unescape_uri(uri)
-          Addressable::URI.unescape(uri)
-        end
-
         # @param uri [Addressable::URI, String]
         # @return [String]
         def unescaped_path(uri)
           unescaped_path_cache.compute_if_absent(uri) do
             path = Addressable::URI.parse(uri).path
 
-            unescape_uri(path)
+            Addressable::URI.unescape(path)
           end
         end
 
