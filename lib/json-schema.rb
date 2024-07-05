@@ -10,6 +10,7 @@ end
 
 require 'json-schema/util/array_set'
 require 'json-schema/util/uri'
+require 'json-schema/util/uri2'
 require 'json-schema/schema'
 require 'json-schema/schema/reader'
 require 'json-schema/validator'
