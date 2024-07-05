@@ -205,7 +205,7 @@ class UriUtilTest < Minitest::Test
   end
 
   def test_normalize_ref_cache
-    assert_equal Addressable::URI.parse('http://www.example.com/#foo'), JSON::Util::URI.normalize_ref("#foo", 'http://www.example.com')
-    assert_equal Addressable::URI.parse('http://www.example.net/#foo'), JSON::Util::URI.normalize_ref("#foo", 'http://www.example.net')
+    assert_equal Addressable::URI.parse('http://www.example.com/#foo'), JSON::Util::URI.normalize_ref('#foo', 'http://www.example.com')
+    assert_equal Addressable::URI.parse('http://www.example.net/#foo'), JSON::Util::URI.normalize_ref('#foo', 'http://www.example.net')
   end
 end
