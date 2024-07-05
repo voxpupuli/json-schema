@@ -1,9 +1,13 @@
 require 'addressable/uri'
+require 'concurrent'
 
 module JSON
   module Util
     module URI
       SUPPORTED_PROTOCOLS = %w(http https ftp tftp sftp ssh svn+ssh telnet nntp gopher wais ldap prospero)
+
+      @cache_mutex = Mutex.new
+      @unescaped_path_cache = Concurrent::Map.new
 
       class << self
         def normalized_uri(uri, base_path = Dir.pwd)
@@ -92,20 +96,38 @@ module JSON
           Addressable::URI.convert_path(parsed_uri.path)
         end
 
+        # @return [String]
         def unescape_uri(uri)
           Addressable::URI.unescape(uri)
         end
 
+        # @param uri [Addressable::URI, String]
+        # @return [String]
         def unescaped_path(uri)
-          parsed_uri = parse(uri)
+          unescaped_path_cache.compute_if_absent(uri) do
+            path = Addressable::URI.parse(uri).path
 
-          Addressable::URI.unescape(parsed_uri.path)
+            unescape_uri(path)
+          end
         end
 
         def clear_cache
-          @parse_cache = {}
-          @normalize_cache = {}
+          cache_mutex.synchronize do
+            @unescaped_path_cache = Concurrent::Map.new
+            @parse_cache = {}
+            @normalize_cache = {}
+          end
         end
+
+        private
+
+        # @!attribute cache_mutex
+        #   @return [Mutex]
+        attr_reader :cache_mutex
+
+        # @!attribute unescaped_path_cache
+        #   @return [Concurrent::Map<Addressable::URI, String>]
+        attr_reader :unescaped_path_cache
       end
     end
   end
