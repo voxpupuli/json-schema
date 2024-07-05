@@ -8,6 +8,7 @@ module JSON
 
       @cache_mutex = Mutex.new
       @unescaped_path_cache = Concurrent::Map.new
+      @file_uri_cache = Concurrent::Map.new
 
       class << self
         def normalized_uri(uri, base_path = Dir.pwd)
@@ -90,10 +91,14 @@ module JSON
           end
         end
 
+        # @param uri [Addressable::URI, String]
+        # @return [String]
         def file_uri(uri)
-          parsed_uri = parse(uri)
+          file_uri_cache.compute_if_absent(uri) do
+            path = Addressable::URI.parse(uri).path
 
-          Addressable::URI.convert_path(parsed_uri.path)
+            Addressable::URI.convert_path(path)
+          end
         end
 
         # @return [String]
@@ -128,6 +133,10 @@ module JSON
         # @!attribute unescaped_path_cache
         #   @return [Concurrent::Map<Addressable::URI, String>]
         attr_reader :unescaped_path_cache
+
+        # @attribute file_uri_cache
+        #   @return [Concurrent::Map<Addressable::URI, String>]
+        attr_reader :file_uri_cache
       end
     end
   end
