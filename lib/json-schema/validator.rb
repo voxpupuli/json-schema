@@ -300,7 +300,6 @@ module JSON
 
       def clear_cache
         @@schemas = {}
-        JSON::Util::URI.clear_cache
       end
 
       def schemas
@@ -342,7 +341,7 @@ module JSON
       def validator_for_uri(schema_uri, raise_not_found = true)
         return default_validator unless schema_uri
 
-        u = JSON::Util::URI.parse(schema_uri)
+        u = JSON::Util::URI2.parse(schema_uri)
         validator = validators["#{u.scheme}://#{u.host}#{u.path}"]
         if validator.nil? && raise_not_found
           raise JSON::Schema::SchemaError, "Schema not found: #{schema_uri}"
@@ -527,7 +526,7 @@ module JSON
       if schema.is_a?(String)
         begin
           # Build a fake URI for this
-          schema_uri = JSON::Util::URI.parse(fake_uuid(schema))
+          schema_uri = JSON::Util::URI2.parse(fake_uuid(schema))
           schema = JSON::Schema.new(JSON::Validator.parse(schema), schema_uri, default_validator)
           if @options[:list] && @options[:fragment].nil?
             schema = schema.to_array_schema
@@ -549,14 +548,14 @@ module JSON
             schema = self.class.schema_for_uri(schema_uri)
             if @options[:list] && @options[:fragment].nil?
               schema = schema.to_array_schema
-              schema.uri = JSON::Util::URI.parse(fake_uuid(serialize(schema.schema)))
+              schema.uri = JSON::Util::URI2.parse(fake_uuid(serialize(schema.schema)))
               self.class.add_schema(schema)
             end
             schema
           end
         end
       elsif schema.is_a?(Hash)
-        schema_uri = JSON::Util::URI.parse(fake_uuid(serialize(schema)))
+        schema_uri = JSON::Util::URI2.parse(fake_uuid(serialize(schema)))
         schema = JSON::Schema.stringify(schema)
         schema = JSON::Schema.new(schema, schema_uri, default_validator)
         if @options[:list] && @options[:fragment].nil?

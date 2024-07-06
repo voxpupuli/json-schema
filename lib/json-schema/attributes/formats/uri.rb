@@ -9,7 +9,7 @@ module JSON
 
         error_message = "The property '#{build_fragment(fragments)}' must be a valid URI"
         begin
-          JSON::Util::URI.parse(data)
+          JSON::Util::URI2.parse(data)
         rescue JSON::Schema::UriError
           validation_error(processor, error_message, fragments, current_schema, self, options[:record_errors])
         end
