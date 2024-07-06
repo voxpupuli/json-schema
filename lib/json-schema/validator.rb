@@ -135,11 +135,11 @@ module JSON
     end
 
     def load_ref_schema(parent_schema, ref)
-      schema_uri = JSON::Util::URI2.absolutize_ref(ref, parent_schema.uri)
+      schema_uri = JSON::Util::URI.absolutize_ref(ref, parent_schema.uri)
       return true if self.class.schema_loaded?(schema_uri)
 
       validator = self.class.validator_for_uri(schema_uri, false)
-      schema_uri = JSON::Util::URI2.file_uri(validator.metaschema) if validator
+      schema_uri = JSON::Util::URI.file_uri(validator.metaschema) if validator
 
       schema = @options[:schema_reader].read(schema_uri)
       self.class.add_schema(schema)
@@ -321,7 +321,7 @@ module JSON
       end
 
       def schema_key_for(uri)
-        key = Util::URI2.normalize_uri(uri).to_s
+        key = Util::URI.normalize_uri(uri).to_s
         key.end_with?('#') ? key : "#{key}#"
       end
 
@@ -341,7 +341,7 @@ module JSON
       def validator_for_uri(schema_uri, raise_not_found = true)
         return default_validator unless schema_uri
 
-        u = JSON::Util::URI2.parse(schema_uri)
+        u = JSON::Util::URI.parse(schema_uri)
         validator = validators["#{u.scheme}://#{u.host}#{u.path}"]
         if validator.nil? && raise_not_found
           raise JSON::Schema::SchemaError, "Schema not found: #{schema_uri}"
@@ -526,7 +526,7 @@ module JSON
       if schema.is_a?(String)
         begin
           # Build a fake URI for this
-          schema_uri = JSON::Util::URI2.parse(fake_uuid(schema))
+          schema_uri = JSON::Util::URI.parse(fake_uuid(schema))
           schema = JSON::Schema.new(JSON::Validator.parse(schema), schema_uri, default_validator)
           if @options[:list] && @options[:fragment].nil?
             schema = schema.to_array_schema
@@ -534,7 +534,7 @@ module JSON
           self.class.add_schema(schema)
         rescue JSON::Schema::JsonParseError
           # Build a uri for it
-          schema_uri = Util::URI2.normalize_uri(schema)
+          schema_uri = Util::URI.normalize_uri(schema)
           if !self.class.schema_loaded?(schema_uri)
             schema = @options[:schema_reader].read(schema_uri)
             schema = JSON::Schema.stringify(schema)
@@ -548,14 +548,14 @@ module JSON
             schema = self.class.schema_for_uri(schema_uri)
             if @options[:list] && @options[:fragment].nil?
               schema = schema.to_array_schema
-              schema.uri = JSON::Util::URI2.parse(fake_uuid(serialize(schema.schema)))
+              schema.uri = JSON::Util::URI.parse(fake_uuid(serialize(schema.schema)))
               self.class.add_schema(schema)
             end
             schema
           end
         end
       elsif schema.is_a?(Hash)
-        schema_uri = JSON::Util::URI2.parse(fake_uuid(serialize(schema)))
+        schema_uri = JSON::Util::URI.parse(fake_uuid(serialize(schema)))
         schema = JSON::Schema.stringify(schema)
         schema = JSON::Schema.new(schema, schema_uri, default_validator)
         if @options[:list] && @options[:fragment].nil?
@@ -574,7 +574,7 @@ module JSON
         if @options[:json]
           data = self.class.parse(data)
         elsif @options[:uri]
-          json_uri = Util::URI2.normalize_uri(data)
+          json_uri = Util::URI.normalize_uri(data)
           data = self.class.parse(custom_open(json_uri))
         elsif data.is_a?(String)
           begin
@@ -583,7 +583,7 @@ module JSON
             data = strict_convert ? data : self.class.parse(data)
           rescue JSON::Schema::JsonParseError
             begin
-              json_uri = Util::URI2.normalize_uri(data)
+              json_uri = Util::URI.normalize_uri(data)
               data = self.class.parse(custom_open(json_uri))
             rescue JSON::Schema::JsonLoadError, JSON::Schema::UriError
               # Silently discard the error - use the data as-is
@@ -595,7 +595,7 @@ module JSON
     end
 
     def custom_open(uri)
-      uri = Util::URI2.normalize_uri(uri) if uri.is_a?(String)
+      uri = Util::URI.normalize_uri(uri) if uri.is_a?(String)
       if uri.absolute? && Util::URI::SUPPORTED_PROTOCOLS.include?(uri.scheme)
         begin
           URI.open(uri.to_s).read
@@ -604,7 +604,7 @@ module JSON
         end
       else
         begin
-          File.read(JSON::Util::URI2.unescape_path(uri))
+          File.read(JSON::Util::URI.unescape_path(uri))
         rescue SystemCallError => e
           raise JSON::Schema::JsonLoadError, e.message
         end

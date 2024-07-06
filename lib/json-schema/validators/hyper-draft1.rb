@@ -3,7 +3,7 @@ module JSON
     class HyperDraft1 < Draft1
       def initialize
         super
-        @uri = JSON::Util::URI2.parse('http://json-schema.org/draft-01/hyper-schema#')
+        @uri = JSON::Util::URI.parse('http://json-schema.org/draft-01/hyper-schema#')
       end
 
       JSON::Validator.register_validator(new)

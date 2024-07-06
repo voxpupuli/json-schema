@@ -22,7 +22,7 @@ module JSON
       def self.get_referenced_uri_and_schema(s, current_schema, validator)
         uri, schema = nil, nil
 
-        temp_uri = JSON::Util::URI2.normalize_ref(s['$ref'], current_schema.uri)
+        temp_uri = JSON::Util::URI.normalize_ref(s['$ref'], current_schema.uri)
 
         # Grab the parent schema from the schema list
         schema_key = temp_uri.to_s.split('#')[0] + '#'
@@ -32,7 +32,7 @@ module JSON
         if ref_schema
           # Perform fragment resolution to retrieve the appropriate level for the schema
           target_schema = ref_schema.schema
-          fragments = JSON::Util::URI2.parse(JSON::Util::URI2.unescape(temp_uri)).fragment.split('/')
+          fragments = JSON::Util::URI.parse(JSON::Util::URI.unescape(temp_uri)).fragment.split('/')
           fragment_path = ''
           fragments.each do |fragment|
             if fragment && fragment != ''
