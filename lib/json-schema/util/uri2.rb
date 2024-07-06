@@ -38,6 +38,15 @@ module JSON
         def normalize_uri(uri, base_path = Dir.pwd)
           parse(uri).normalize_uri(base_path)
         end
+
+        # Normalizes the reference URI based on the provided base URI
+        #
+        # @param ref [String, Addressable::URI]
+        # @param base [String, Addressable::URI]
+        # @return [Addressable::URI]
+        def normalize_ref(ref, base)
+          parse(ref).normalize_ref(base)
+        end
       end
 
       # Unencodes any percent encoded characters within a path component.
@@ -71,6 +80,33 @@ module JSON
         else
           dup
         end
+      end
+
+      # @param base [Addressable::URI, String]
+      # @return [Addressable::URI]
+      def normalize_ref(base)
+        base_uri = self.class.parse(base)
+        defer_validation do
+          if relative?
+            # Check for absolute path
+            path, fragment = to_s.split('#')
+            merge!(base_uri)
+
+            if path.nil? || path == ''
+              self.path = base_uri.path
+            elsif path[0, 1] == '/'
+              self.path = Pathname.new(path).cleanpath.to_s
+            else
+              join!(path)
+            end
+
+            self.fragment = fragment
+          end
+
+          self.fragment = '' if self.fragment.nil? || self.fragment.empty?
+        end
+
+        self
       end
     end
   end
