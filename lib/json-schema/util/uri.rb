@@ -9,22 +9,6 @@ module JSON
       @cache_mutex = Mutex.new
 
       class << self
-        def absolutize_ref(ref, base)
-          parsed_ref = parse(ref.dup)
-          # Like URI2.strip_fragment but with wired caching inside parse
-          ref_uri = if parsed_ref.fragment.nil? || parsed_ref.fragment.empty?
-                      parsed_ref
-                    else
-                      parsed_ref.merge(fragment: '')
-                    end
-
-          return ref_uri if ref_uri.absolute?
-          return parse(base) if ref_uri.path.empty?
-
-          uri = URI2.strip_fragment(base).join(ref_uri.path)
-          URI2.normalize_uri(uri)
-        end
-
         def parse(uri)
           if uri.is_a?(Addressable::URI)
             uri.dup

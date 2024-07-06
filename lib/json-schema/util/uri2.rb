@@ -47,6 +47,10 @@ module JSON
         def normalize_ref(ref, base)
           parse(ref).normalize_ref(base)
         end
+
+        def absolutize_ref(ref, base)
+          parse(ref).absolutize_ref(base)
+        end
       end
 
       # Unencodes any percent encoded characters within a path component.
@@ -60,7 +64,7 @@ module JSON
       # @return [Addressable::URI] a new instance of URI without a fragment
       def strip_fragment
         if fragment.nil? || fragment.empty?
-          dup
+          self
         else
           merge(fragment: '')
         end
@@ -78,7 +82,7 @@ module JSON
             self.class.file_uri(File.join(base_path, self))
           end
         else
-          dup
+          self
         end
       end
 
@@ -107,6 +111,17 @@ module JSON
         end
 
         self
+      end
+
+      # @param base [Addressable::URI, String]
+      # @return [Addressable::URI]
+      def absolutize_ref(base)
+        ref = strip_fragment
+        if ref.absolute?
+          ref
+        else
+          self.class.strip_fragment(base).join(ref.path).normalize_uri
+        end
       end
     end
   end

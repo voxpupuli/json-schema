@@ -135,7 +135,7 @@ module JSON
     end
 
     def load_ref_schema(parent_schema, ref)
-      schema_uri = JSON::Util::URI.absolutize_ref(ref, parent_schema.uri)
+      schema_uri = JSON::Util::URI2.absolutize_ref(ref, parent_schema.uri)
       return true if self.class.schema_loaded?(schema_uri)
 
       validator = self.class.validator_for_uri(schema_uri, false)
