@@ -24,5 +24,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'webmock'
 
   s.add_runtime_dependency 'addressable', '>= 2.8'
-  s.add_runtime_dependency 'concurrent-ruby'
 end

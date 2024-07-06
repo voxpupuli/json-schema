@@ -85,9 +85,9 @@ module JSON
       # @raise [JSON::Schema::ReadFailed] if reading the location was acceptable but the
       #   attempt to retrieve it failed
       def read(location)
-        uri  = JSON::Util::URI2.parse(location.to_s)
+        uri  = JSON::Util::URI.parse(location.to_s)
         body = if uri.scheme.nil? || uri.scheme == 'file'
-                 uri = JSON::Util::URI2.file_uri(uri)
+                 uri = JSON::Util::URI.file_uri(uri)
                  read_file(Pathname.new(uri.path).expand_path)
                else
                  read_uri(uri)
@@ -130,7 +130,7 @@ module JSON
 
       def read_file(pathname)
         if accept_file?(pathname)
-          File.read(JSON::Util::URI2.unescape_path(pathname.to_s))
+          File.read(JSON::Util::URI.unescape_path(pathname.to_s))
         else
           raise JSON::Schema::ReadRefused.new(pathname.to_s, :file)
         end
