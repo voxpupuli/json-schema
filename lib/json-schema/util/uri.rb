@@ -8,6 +8,8 @@ module JSON
       SUPPORTED_PROTOCOLS = %w(http https ftp tftp sftp ssh svn+ssh telnet nntp gopher wais ldap prospero)
 
       class << self
+        alias unescape_uri unescape
+
         # @param uri [String, Addressable::URI]
         # @return [Addressable::URI, nil]
         def parse(uri)
@@ -24,8 +26,8 @@ module JSON
 
         # @param uri [String, Addressable::URI
         # @return [String]
-        def unescape_path(uri)
-          parse(uri).unescape_path
+        def unescaped_path(uri)
+          parse(uri).unescaped_path
         end
 
         # Strips the fragment from the URI.
@@ -37,8 +39,8 @@ module JSON
 
         # @param uri [String, Addressable::URI]
         # @return [Addressable::URI]
-        def normalize_uri(uri, base_path = Dir.pwd)
-          parse(uri).normalize_uri(base_path)
+        def normalized_uri(uri, base_path = Dir.pwd)
+          parse(uri).normalized_uri(base_path)
         end
 
         # Normalizes the reference URI based on the provided base URI
@@ -58,7 +60,7 @@ module JSON
       # Unencodes any percent encoded characters within a path component.
       #
       # @return [String]
-      def unescape_path
+      def unescaped_path
         self.class.unescape_component(path)
       end
 
@@ -76,7 +78,7 @@ module JSON
       #
       # @param base_path [String] the base path to use for relative URIs. Defaults to the current working directory.
       # @return [Addressable::URI] the normalized URI or nil
-      def normalize_uri(base_path = Dir.pwd)
+      def normalized_uri(base_path = Dir.pwd)
         if relative?
           if path[0, 1] == '/'
             self.class.file_uri(self)
@@ -122,7 +124,7 @@ module JSON
         if ref.absolute?
           ref
         else
-          self.class.strip_fragment(base).join(ref.path).normalize_uri
+          self.class.strip_fragment(base).join(ref.path).normalized_uri
         end
       end
     end
