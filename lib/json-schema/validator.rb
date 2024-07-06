@@ -322,7 +322,7 @@ module JSON
       end
 
       def schema_key_for(uri)
-        key = Util::URI.normalized_uri(uri).to_s
+        key = Util::URI2.normalize_uri(uri).to_s
         key.end_with?('#') ? key : "#{key}#"
       end
 
@@ -535,7 +535,7 @@ module JSON
           self.class.add_schema(schema)
         rescue JSON::Schema::JsonParseError
           # Build a uri for it
-          schema_uri = Util::URI.normalized_uri(schema)
+          schema_uri = Util::URI2.normalize_uri(schema)
           if !self.class.schema_loaded?(schema_uri)
             schema = @options[:schema_reader].read(schema_uri)
             schema = JSON::Schema.stringify(schema)
@@ -575,7 +575,7 @@ module JSON
         if @options[:json]
           data = self.class.parse(data)
         elsif @options[:uri]
-          json_uri = Util::URI.normalized_uri(data)
+          json_uri = Util::URI2.normalize_uri(data)
           data = self.class.parse(custom_open(json_uri))
         elsif data.is_a?(String)
           begin
@@ -584,7 +584,7 @@ module JSON
             data = strict_convert ? data : self.class.parse(data)
           rescue JSON::Schema::JsonParseError
             begin
-              json_uri = Util::URI.normalized_uri(data)
+              json_uri = Util::URI2.normalize_uri(data)
               data = self.class.parse(custom_open(json_uri))
             rescue JSON::Schema::JsonLoadError, JSON::Schema::UriError
               # Silently discard the error - use the data as-is
@@ -596,7 +596,7 @@ module JSON
     end
 
     def custom_open(uri)
-      uri = Util::URI.normalized_uri(uri) if uri.is_a?(String)
+      uri = Util::URI2.normalize_uri(uri) if uri.is_a?(String)
       if uri.absolute? && Util::URI::SUPPORTED_PROTOCOLS.include?(uri.scheme)
         begin
           URI.open(uri.to_s).read

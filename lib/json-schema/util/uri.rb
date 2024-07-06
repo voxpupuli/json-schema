@@ -9,24 +9,6 @@ module JSON
       @cache_mutex = Mutex.new
 
       class << self
-        def normalized_uri(uri, base_path = Dir.pwd)
-          @normalize_cache ||= {}
-          normalized_uri = @normalize_cache[uri]
-
-          if !normalized_uri
-            normalized_uri = parse(uri)
-            # Check for absolute path
-            if normalized_uri.relative?
-              data = normalized_uri
-              data = File.join(base_path, data) if data.path[0, 1] != '/'
-              normalized_uri = URI2.file_uri(data)
-            end
-            @normalize_cache[uri] = normalized_uri.freeze
-          end
-
-          normalized_uri
-        end
-
         def absolutize_ref(ref, base)
           parsed_ref = parse(ref.dup)
           # Like URI2.strip_fragment but with wired caching inside parse
@@ -40,7 +22,7 @@ module JSON
           return parse(base) if ref_uri.path.empty?
 
           uri = URI2.strip_fragment(base).join(ref_uri.path)
-          normalized_uri(uri)
+          URI2.normalize_uri(uri)
         end
 
         def normalize_ref(ref, base)
@@ -89,7 +71,6 @@ module JSON
         def clear_cache
           cache_mutex.synchronize do
             @parse_cache = {}
-            @normalize_cache = {}
           end
         end
 
