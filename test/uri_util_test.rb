@@ -6,7 +6,7 @@ class UriUtilTest < Minitest::Test
     uri = Addressable::URI.new(scheme: 'https',
                                host: 'www.google.com',
                                path: 'search',)
-    assert_equal uri, JSON::Util::URI.normalize_uri(str, '/home')
+    assert_equal uri, JSON::Util::URI.normalized_uri(str, '/home')
   end
 
   def test_normalized_uri_with_empty_fragment
@@ -15,7 +15,7 @@ class UriUtilTest < Minitest::Test
                                host: 'www.google.com',
                                path: 'search',
                                fragment: nil,)
-    assert_equal uri, JSON::Util::URI.normalize_uri(str, '/home')
+    assert_equal uri, JSON::Util::URI.normalized_uri(str, '/home')
   end
 
   def test_normalized_uri_with_fragment
@@ -24,7 +24,7 @@ class UriUtilTest < Minitest::Test
                                host: 'www.google.com',
                                path: 'search',
                                fragment: 'foo',)
-    assert_equal uri, JSON::Util::URI.normalize_uri(str, '/home')
+    assert_equal uri, JSON::Util::URI.normalized_uri(str, '/home')
   end
 
   def test_normalized_uri_for_absolute_path
@@ -32,7 +32,7 @@ class UriUtilTest < Minitest::Test
     uri = Addressable::URI.new(scheme: 'file',
                                host: '',
                                path: '/foo/bar.json',)
-    assert_equal uri, JSON::Util::URI.normalize_uri(str, '/home')
+    assert_equal uri, JSON::Util::URI.normalized_uri(str, '/home')
   end
 
   def test_normalized_uri_for_relative_path
@@ -40,7 +40,7 @@ class UriUtilTest < Minitest::Test
     uri = Addressable::URI.new(scheme: 'file',
                                host: '',
                                path: '/home/foo/bar.json',)
-    assert_equal uri, JSON::Util::URI.normalize_uri(str, '/home')
+    assert_equal uri, JSON::Util::URI.normalized_uri(str, '/home')
   end
 
   def test_normalized_uri_for_file_path_with_host
@@ -48,7 +48,7 @@ class UriUtilTest < Minitest::Test
     uri = Addressable::URI.new(scheme: 'file',
                                host: 'localhost',
                                path: '/foo/bar.json',)
-    assert_equal uri, JSON::Util::URI.normalize_uri(str, '/home')
+    assert_equal uri, JSON::Util::URI.normalized_uri(str, '/home')
   end
 
   def test_uri_parse
