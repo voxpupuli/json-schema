@@ -6,7 +6,19 @@ module JSON
   module Util
     class URI2 < Addressable::URI
       class << self
-        alias file_uri convert_path
+        # @param uri [String, Addressable::URI]
+        # @return [Addressable::URI, nil]
+        def parse(uri)
+          super(uri)
+        rescue Addressable::URI::InvalidURIError => e
+          raise JSON::Schema::UriError, e.message
+        end
+
+        # @param uri [String, Addressable::URI]
+        # @return [Addressable::URI, nil]
+        def file_uri(uri)
+          convert_path(parse(uri).path)
+        end
 
         # @param uri [String, Addressable::URI
         # @return [String]
@@ -18,7 +30,13 @@ module JSON
         # @param uri [String, Addressable::URI]
         # @return [Addressable::URI]
         def strip_fragment(uri)
-          parse(uri).without_fragment
+          parse(uri).strip_fragment
+        end
+
+        # @param uri [String, Addressable::URI]
+        # @return [Addressable::URI]
+        def normalize_uri(uri, base_path = Dir.pwd)
+          parse(uri).normalize_uri(base_path)
         end
       end
 
@@ -31,11 +49,27 @@ module JSON
 
       # Strips the fragment from the URI.
       # @return [Addressable::URI] a new instance of URI without a fragment
-      def without_fragment
+      def strip_fragment
         if fragment.nil? || fragment.empty?
           dup
         else
           merge(fragment: '')
+        end
+      end
+
+      # Normalizes the URI based on the provided base path.
+      #
+      # @param base_path [String] the base path to use for relative URIs. Defaults to the current working directory.
+      # @return [Addressable::URI] the normalized URI or nil
+      def normalize_uri(base_path = Dir.pwd)
+        if relative?
+          if path[0, 1] == '/'
+            self.class.file_uri(self)
+          else
+            self.class.file_uri(File.join(base_path, self))
+          end
+        else
+          dup
         end
       end
     end
