@@ -37,7 +37,7 @@ module JSON
           'uri' => UriFormat,
         }
         @formats = @default_formats.clone
-        @uri = JSON::Util::URI.parse('http://json-schema.org/draft-03/schema#')
+        @uri = JSON::Util::URI2.parse('http://json-schema.org/draft-03/schema#')
         @names = ['draft3', 'http://json-schema.org/draft-03/schema#']
         @metaschema_name = 'draft-03.json'
       end
