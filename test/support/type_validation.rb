@@ -19,6 +19,7 @@ module TypeValidation
         schema = {
           'properties' => { 'a' => { 'type' => name } },
         }
+
         assert_valid schema, { 'a' => value }
 
         other_values.each do |other_value|
@@ -28,10 +29,12 @@ module TypeValidation
 
       define_method(:"test_#{name}_type_value") do
         schema = { 'type' => name }
+
         assert_valid schema, value
 
         other_values.each do |other_value|
           schema = { 'type' => name }
+
           refute_valid schema, other_value
         end
       end
@@ -39,6 +42,7 @@ module TypeValidation
 
     def test_type_union
       schema = { 'type' => %w[integer string] }
+
       assert_valid schema, 5
       assert_valid schema, 'str'
       refute_valid schema, nil

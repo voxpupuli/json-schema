@@ -16,6 +16,7 @@ class FragmentResolutionTest < Minitest::Test
     }
 
     data = { 'b' => 5 }
+
     refute_valid schema, data
     assert_valid schema, data, fragment: '#/properties/a'
 

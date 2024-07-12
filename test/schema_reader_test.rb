@@ -27,11 +27,13 @@ class SchemaReaderTest < Minitest::Test
 
   def test_refuse_all_uris
     reader = JSON::Schema::Reader.new(accept_uri: false)
+
     refute reader.accept_uri?(Addressable::URI.parse('http://foo.com'))
   end
 
   def test_refuse_all_files
     reader = JSON::Schema::Reader.new(accept_file: false)
+
     refute reader.accept_file?(Pathname.new('/foo/bar/baz'))
   end
 

@@ -17,9 +17,11 @@ class Draft6Test < Minitest::Test
     }
 
     data = { a: 'foo', b: 6 }
+
     assert_valid schema, data
 
     data = { a: 6, b: 'foo' }
+
     refute_valid schema, data
   end
 
@@ -30,9 +32,11 @@ class Draft6Test < Minitest::Test
     }
 
     data = { 'foo' => 'value' }
+
     assert_valid schema, data
 
     data = { 'bar' => 'value' }
+
     refute_valid schema, data
 
     schema = {
@@ -41,9 +45,11 @@ class Draft6Test < Minitest::Test
     }
 
     data = {}
+
     assert_valid schema, data
 
     data = { 'foo' => 'value' }
+
     refute_valid schema, data
   end
 end

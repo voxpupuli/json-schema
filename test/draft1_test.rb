@@ -43,6 +43,7 @@ class Draft1Test < Minitest::Test
 
     refute_valid schema, data
     data['a'] = 'Hello'
+
     assert_valid schema, data
 
     schema = {
@@ -52,6 +53,7 @@ class Draft1Test < Minitest::Test
     }
 
     data = {}
+
     assert_valid schema, data
   end
 
@@ -68,20 +70,25 @@ class Draft1Test < Minitest::Test
     }
 
     data['a'] = 3.35
+
     assert_valid schema, data
 
     data['a'] = 3.455
+
     refute_valid schema, data
 
     schema['properties']['a']['maxDecimal'] = 0
 
     data['a'] = 4.0
+
     refute_valid schema, data
 
     data['a'] = 'boo'
+
     assert_valid schema, data
 
     data['a'] = 5
+
     assert_valid schema, data
   end
 
@@ -98,19 +105,24 @@ class Draft1Test < Minitest::Test
     }
 
     data['a'] = 'string'
+
     assert_valid schema, data
 
     data['a'] = 5
+
     refute_valid schema, data
 
     schema['properties']['a']['disallow'] = %w[integer string]
     data['a'] = 'string'
+
     refute_valid schema, data
 
     data['a'] = 5
+
     refute_valid schema, data
 
     data['a'] = false
+
     assert_valid schema, data
   end
 
