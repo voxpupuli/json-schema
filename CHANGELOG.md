@@ -1,5 +1,13 @@
 # Changelog
 
+## [v4.3.1](https://github.com/voxpupuli/json-schema/tree/v4.3.1) (2024-07-12)
+
+[Full Changelog](https://github.com/voxpupuli/json-schema/compare/v4.3.0...v4.3.1)
+
+**Fixed bugs:**
+
+- Add missing require 'stringio' [\#512](https://github.com/voxpupuli/json-schema/pull/512) ([jmarrec](https://github.com/jmarrec))
+
 ## [v4.3.0](https://github.com/voxpupuli/json-schema/tree/v4.3.0) (2024-03-26)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v4.2.0...v4.3.0)
