@@ -36,8 +36,7 @@ module JSON
       private_class_method :new
 
       class << self
-        # :nodoc
-        def mask19 v, str
+        def mask v, str
           nstr = str.bytes.to_a
           version = [0, 16, 32, 48, 64, 80][v]
           nstr[6] &= 0b00001111
@@ -51,26 +50,7 @@ module JSON
           str
         end
 
-        # :nodoc
-        def mask18 v, str
-          version = [0, 16, 32, 48, 64, 80][v]
-          str[6] &= 0b00001111
-          str[6] |= version
-          # str[7] &= 0b00001111
-          # str[7] |= 0b01010000
-          str[8] &= 0b00111111
-          str[8] |= 0b10000000
-          str
-        end
-
-        def mask v, str
-          if RUBY_VERSION >= '1.9.0'
-            mask19 v, str
-          else
-            mask18 v, str
-          end
-        end
-        private :mask, :mask18, :mask19
+        private :mask
 
         # UUID generation using SHA1. Recommended over create_md5.
         # Namespace object is another UUID, some of them are pre-defined below.
@@ -153,14 +133,10 @@ module JSON
               str = sha1.digest
               r = rand 14 # 20-6
               node = str[r, 6] || str
-              if RUBY_VERSION >= '1.9.0'
-                nnode = node.bytes.to_a
-                nnode[0] |= 0x01
-                node = ''
-                nnode.each { |s| node << s.chr }
-              else
-                node[0] |= 0x01 # multicast bit
-              end
+              nnode = node.bytes.to_a
+              nnode[0] |= 0x01
+              node = ''
+              nnode.each { |s| node << s.chr }
               k = rand 0x40000
               open STATE_FILE, 'w' do |fp|
                 fp.flock IO::LOCK_EX
