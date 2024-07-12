@@ -4,6 +4,7 @@ require 'addressable/uri'
 
 module JSON
   module Util
+    # @api private
     class URI < Addressable::URI
       SUPPORTED_PROTOCOLS = %w(http https ftp tftp sftp ssh svn+ssh telnet nntp gopher wais ldap prospero)
 
