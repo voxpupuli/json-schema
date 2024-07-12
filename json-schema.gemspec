@@ -1,12 +1,6 @@
-require 'yaml'
-
-version_yaml = YAML.load(File.open(File.expand_path('../VERSION.yml', __FILE__)).read)
-version = "#{version_yaml['major']}.#{version_yaml['minor']}.#{version_yaml['patch']}"
-gem_name = 'json-schema'
-
 Gem::Specification.new do |s|
-  s.name = gem_name
-  s.version = version
+  s.name = 'json-schema'
+  s.version = '4.3.1'
   s.authors = ['Kenny Hoxworth', 'Vox Pupuli']
   s.email = 'voxpupuli@groups.io'
   s.homepage = 'https://github.com/voxpupuli/json-schema/'
