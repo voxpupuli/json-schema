@@ -1,16 +1,6 @@
 require File.expand_path('../support/test_helper', __FILE__)
 
 class UriUtilTest < Minitest::Test
-  def populate_cache_with(str, &blk)
-    cached_uri = Addressable::URI.parse(str)
-    Addressable::URI.stub(:parse, cached_uri, &blk)
-    cached_uri
-  end
-
-  def teardown
-    JSON::Util::URI.clear_cache
-  end
-
   def test_normalized_uri
     str = 'https://www.google.com/search'
     uri = Addressable::URI.new(scheme: 'https',
@@ -76,54 +66,6 @@ class UriUtilTest < Minitest::Test
     end
   end
 
-  def test_normalization_cache
-    cached_uri = populate_cache_with('www.google.com') do
-      JSON::Util::URI.normalized_uri('foo')
-    end
-
-    assert_equal(cached_uri, JSON::Util::URI.normalized_uri('foo'))
-
-    JSON::Util::URI.clear_cache
-
-    refute_equal(cached_uri, JSON::Util::URI.normalized_uri('foo'))
-  end
-
-  def test_parse_cache
-    cached_uri = populate_cache_with('www.google.com') do
-      JSON::Util::URI.parse('foo')
-    end
-
-    assert_equal(cached_uri, JSON::Util::URI.parse('foo'))
-
-    JSON::Util::URI.clear_cache
-
-    refute_equal(cached_uri, JSON::Util::URI.parse('foo'))
-  end
-
-  def test_validator_clear_cache_for_normalized_uri
-    cached_uri = populate_cache_with('www.google.com') do
-      JSON::Util::URI.normalized_uri('foo')
-    end
-
-    assert_equal(cached_uri, JSON::Util::URI.normalized_uri('foo'))
-
-    validation_errors({ 'type' => 'string' }, 'foo', clear_cache: true)
-
-    refute_equal(cached_uri, JSON::Util::URI.normalized_uri('foo'))
-  end
-
-  def test_validator_clear_cache_for_parse
-    cached_uri = populate_cache_with('www.google.com') do
-      JSON::Util::URI.parse('foo')
-    end
-
-    assert_equal(cached_uri, JSON::Util::URI.parse('foo'))
-
-    validation_errors({ 'type' => 'string' }, 'foo', clear_cache: true)
-
-    refute_equal(cached_uri, JSON::Util::URI.parse('foo'))
-  end
-
   def test_ref_fragment_path
     uri = '#some-thing'
     base = 'http://www.example.com/foo/#bar'
@@ -185,7 +127,7 @@ class UriUtilTest < Minitest::Test
     base = 'http://www.example.com/hello/#world'
 
     assert_equal Addressable::URI.parse('http://www.example.com/foo-bar.com#'), JSON::Util::URI.normalize_ref(uri, base)
-    assert_equal Addressable::URI.parse('http://www.example.com/hello/#world'), JSON::Util::URI.absolutize_ref(uri, base)
+    assert_equal Addressable::URI.parse('http://www.example.com/hello/#'), JSON::Util::URI.absolutize_ref(uri, base)
   end
 
   def test_ref_addressable_uri_with_host_and_path

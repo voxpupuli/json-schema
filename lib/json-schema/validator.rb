@@ -300,7 +300,6 @@ module JSON
 
       def clear_cache
         @@schemas = {}
-        JSON::Util::URI.clear_cache
       end
 
       def schemas
