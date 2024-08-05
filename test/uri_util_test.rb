@@ -129,6 +129,7 @@ class UriUtilTest < Minitest::Test
     base = 'http://www.example.com/foo/#bar'
 
     assert_equal Addressable::URI.parse('http://www.example.com/foo/#some-thing'), JSON::Util::URI.normalize_ref(uri, base)
+    JSON::Util::URI.clear_cache
     assert_equal Addressable::URI.parse('http://www.example.com/foo/#'), JSON::Util::URI.absolutize_ref(uri, base)
   end
 
@@ -137,6 +138,7 @@ class UriUtilTest < Minitest::Test
     base = 'http://www.example.com/foo/#bar'
 
     assert_equal Addressable::URI.parse('http://www.example.com/some/thing#'), JSON::Util::URI.normalize_ref(uri, base)
+    JSON::Util::URI.clear_cache
     assert_equal Addressable::URI.parse('http://www.example.com/some/thing#'), JSON::Util::URI.absolutize_ref(uri, base)
   end
 
@@ -145,6 +147,7 @@ class UriUtilTest < Minitest::Test
     base = 'http://www.example.com/foo/#bar'
 
     assert_equal Addressable::URI.parse('http://foo-bar.com/#'), JSON::Util::URI.normalize_ref(uri, base)
+    JSON::Util::URI.clear_cache
     assert_equal Addressable::URI.parse('http://foo-bar.com/#'), JSON::Util::URI.absolutize_ref(uri, base)
   end
 
@@ -153,6 +156,7 @@ class UriUtilTest < Minitest::Test
     base = 'http://www.example.com/foo/#bar'
 
     assert_equal Addressable::URI.parse('http://foo-bar.com/some/thing#'), JSON::Util::URI.normalize_ref(uri, base)
+    JSON::Util::URI.clear_cache
     assert_equal Addressable::URI.parse('http://foo-bar.com/some/thing#'), JSON::Util::URI.absolutize_ref(uri, base)
   end
 
@@ -161,6 +165,7 @@ class UriUtilTest < Minitest::Test
     base = 'http://www.example.com/hello/#world'
 
     assert_equal Addressable::URI.parse('http://foo-bar.com/some/thing#foo'), JSON::Util::URI.normalize_ref(uri, base)
+    JSON::Util::URI.clear_cache
     assert_equal Addressable::URI.parse('http://foo-bar.com/some/thing#'), JSON::Util::URI.absolutize_ref(uri, base)
   end
 
@@ -169,6 +174,7 @@ class UriUtilTest < Minitest::Test
     base = 'http://www.example.com/hello'
 
     assert_equal Addressable::URI.parse('http://foo-bar.com/some/thing#foo'), JSON::Util::URI.normalize_ref(uri, base)
+    JSON::Util::URI.clear_cache
     assert_equal Addressable::URI.parse('http://foo-bar.com/some/thing#'), JSON::Util::URI.absolutize_ref(uri, base)
   end
 
@@ -177,6 +183,7 @@ class UriUtilTest < Minitest::Test
     base = 'http://www.example.com/foo/#bar'
 
     assert_equal Addressable::URI.parse('http://www.example.com/foo/hello/world#'), JSON::Util::URI.normalize_ref(uri, base)
+    JSON::Util::URI.clear_cache
     assert_equal Addressable::URI.parse('http://www.example.com/foo/hello/world#'), JSON::Util::URI.absolutize_ref(uri, base)
   end
 
@@ -185,6 +192,7 @@ class UriUtilTest < Minitest::Test
     base = 'http://www.example.com/hello/#world'
 
     assert_equal Addressable::URI.parse('http://www.example.com/foo-bar.com#'), JSON::Util::URI.normalize_ref(uri, base)
+    JSON::Util::URI.clear_cache
     assert_equal Addressable::URI.parse('http://www.example.com/hello/#world'), JSON::Util::URI.absolutize_ref(uri, base)
   end
 
@@ -193,6 +201,7 @@ class UriUtilTest < Minitest::Test
     base = 'http://www.example.com/a/#b'
 
     assert_equal Addressable::URI.parse('http://www.example.com/foo-bar.com/hello/world#'), JSON::Util::URI.normalize_ref(uri, base)
+    JSON::Util::URI.clear_cache
     assert_equal Addressable::URI.parse('http://www.example.com/hello/world'), JSON::Util::URI.absolutize_ref(uri, base)
   end
 
@@ -201,6 +210,7 @@ class UriUtilTest < Minitest::Test
     base = 'http://www.example.com/a/#b'
 
     assert_equal Addressable::URI.parse('https://foo-bar.com/hello/world#'), JSON::Util::URI.normalize_ref(uri, base)
+    JSON::Util::URI.clear_cache
     assert_equal Addressable::URI.parse('https://foo-bar.com/hello/world'), JSON::Util::URI.absolutize_ref(uri, base)
   end
 end
