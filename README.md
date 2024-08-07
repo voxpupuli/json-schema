@@ -80,7 +80,7 @@ that the `$schema` attribute takes precedence over the `:version` option during
 parsing and validation.
 
 For further information on json schema itself refer to <a
-href="http://spacetelescope.github.io/understanding-json-schema/">Understanding
+href="https://json-schema.org/understanding-json-schema">Understanding
 JSON Schema</a>.
 
 Basic Usage
