@@ -16,7 +16,7 @@ jobs:
         with:
           ruby-version: '3.1'
       - name: Build gem
-        run: gem build *.gemspec
+        run: gem build --strict --verbose *.gemspec
       - name: Publish gem to rubygems.org
         run: gem push *.gem
         env:
