@@ -1,8 +1,5 @@
-require 'bundler'
 require 'rake'
 require 'rake/testtask'
-
-Bundler::GemHelper.install_tasks
 
 desc 'Updates the json-schema common test suite to the latest version'
 task :update_common_tests do
