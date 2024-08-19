@@ -1,5 +1,27 @@
 # Changelog
 
+## [v5.0.0](https://github.com/voxpupuli/json-schema/tree/v5.0.0) (2024-08-19)
+
+[Full Changelog](https://github.com/voxpupuli/json-schema/compare/v4.3.1...v5.0.0)
+
+**Breaking changes:**
+
+- Drop Ruby 2.5/2.6 support [\#521](https://github.com/voxpupuli/json-schema/pull/521) ([bastelfreak](https://github.com/bastelfreak))
+- Fix caching issues in JSON::Util::URI [\#515](https://github.com/voxpupuli/json-schema/pull/515) ([bolshakov](https://github.com/bolshakov))
+
+**Implemented enhancements:**
+
+- Drop Ruby 1.8 leftovers [\#519](https://github.com/voxpupuli/json-schema/pull/519) ([bastelfreak](https://github.com/bastelfreak))
+- Switch to latest voxpupuli-rubocop [\#478](https://github.com/voxpupuli/json-schema/pull/478) ([bastelfreak](https://github.com/bastelfreak))
+
+**Merged pull requests:**
+
+- dev deps: Add strict version contraints & CI: build gem with strict mode & CI: Use Ruby 3.3 for releases [\#525](https://github.com/voxpupuli/json-schema/pull/525) ([bastelfreak](https://github.com/bastelfreak))
+- Drop bundler dev dependency [\#524](https://github.com/voxpupuli/json-schema/pull/524) ([bastelfreak](https://github.com/bastelfreak))
+- .gitignore: Add vendor dirs from bundler [\#523](https://github.com/voxpupuli/json-schema/pull/523) ([bastelfreak](https://github.com/bastelfreak))
+- Update "Understanding JSON Schemas" URL in README.md [\#522](https://github.com/voxpupuli/json-schema/pull/522) ([yohasebe](https://github.com/yohasebe))
+- Remove VERSION.yml [\#520](https://github.com/voxpupuli/json-schema/pull/520) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v4.3.1](https://github.com/voxpupuli/json-schema/tree/v4.3.1) (2024-07-12)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v4.3.0...v4.3.1)
