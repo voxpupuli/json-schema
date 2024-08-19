@@ -11,10 +11,10 @@ jobs:
     if: github.repository_owner == 'voxpupuli'
     steps:
       - uses: actions/checkout@v4
-      - name: Install Ruby 3.1
+      - name: Install Ruby 3.3
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.1'
+          ruby-version: '3.3'
       - name: Build gem
         run: gem build --strict --verbose *.gemspec
       - name: Publish gem to rubygems.org
