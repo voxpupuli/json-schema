@@ -9,7 +9,8 @@ class MinItemsTest < Minitest::Test
     }
 
     errors = JSON::Validator.fully_validate(schema, [nil])
-    assert_equal(errors.length, 1)
+
+    assert_equal(1, errors.length)
     assert(errors[0] !~ /minimum/)
     assert(errors[0] =~ /null/)
   end

@@ -49,6 +49,7 @@ class Draft2Test < Minitest::Test
 
     refute_valid schema, data
     data['a'] = 'Hello'
+
     assert_valid schema, data
 
     schema = {
@@ -58,6 +59,7 @@ class Draft2Test < Minitest::Test
     }
 
     data = {}
+
     assert_valid schema, data
   end
 
@@ -74,19 +76,24 @@ class Draft2Test < Minitest::Test
     }
 
     data['a'] = 'string'
+
     assert_valid schema, data
 
     data['a'] = 5
+
     refute_valid schema, data
 
     schema['properties']['a']['disallow'] = %w[integer string]
     data['a'] = 'string'
+
     refute_valid schema, data
 
     data['a'] = 5
+
     refute_valid schema, data
 
     data['a'] = false
+
     assert_valid schema, data
   end
 

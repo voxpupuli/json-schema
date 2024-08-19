@@ -2,14 +2,14 @@ require File.expand_path('../support/test_helper', __FILE__)
 
 class TypeAttributeTest < Minitest::Test
   def test_type_of_data
-    assert_equal(type_of_data(String.new), 'string')
-    assert_equal(type_of_data(Numeric.new), 'number')
-    assert_equal(type_of_data(1), 'integer')
-    assert_equal(type_of_data(true), 'boolean')
-    assert_equal(type_of_data(false), 'boolean')
-    assert_equal(type_of_data(Hash.new), 'object')
-    assert_equal(type_of_data(nil), 'null')
-    assert_equal(type_of_data(Object.new), 'any')
+    assert_equal('string', type_of_data(String.new))
+    assert_equal('number', type_of_data(Numeric.new))
+    assert_equal('integer', type_of_data(1))
+    assert_equal('boolean', type_of_data(true))
+    assert_equal('boolean', type_of_data(false))
+    assert_equal('object', type_of_data(Hash.new))
+    assert_equal('null', type_of_data(nil))
+    assert_equal('any', type_of_data(Object.new))
   end
 
   private

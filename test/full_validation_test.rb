@@ -7,21 +7,20 @@ class FullValidationTest < Minitest::Test
       'type' => 'object',
       'required' => ['b'],
       'properties' => {
-        'b' => {
-        },
+        'b' => {},
       },
     }
 
     errors = JSON::Validator.fully_validate(schema, data)
-    assert(errors.empty?)
+
+    assert_empty(errors)
 
     data = { 'c' => 5 }
     schema = {
       'type' => 'object',
       'required' => ['b'],
       'properties' => {
-        'b' => {
-        },
+        'b' => {},
         'c' => {
           'type' => 'string',
         },
@@ -29,7 +28,8 @@ class FullValidationTest < Minitest::Test
     }
 
     errors = JSON::Validator.fully_validate(schema, data)
-    assert(errors.length == 2)
+
+    assert_equal(2, errors.length)
   end
 
   def test_full_validation_with_instantiated_validator
@@ -38,23 +38,22 @@ class FullValidationTest < Minitest::Test
       'type' => 'object',
       'required' => ['b'],
       'properties' => {
-        'b' => {
-        },
+        'b' => {},
       },
     }
 
     validator = JSON::Validator.new(schema, { record_errors: true })
-    assert(validator.validate(data).empty?)
-    assert(validator.validate(data).empty?)
-    assert(validator.validate(data).empty?)
+
+    assert_empty(validator.validate(data))
+    assert_empty(validator.validate(data))
+    assert_empty(validator.validate(data))
 
     data = { 'c' => 5 }
     schema = {
       'type' => 'object',
       'required' => ['b'],
       'properties' => {
-        'b' => {
-        },
+        'b' => {},
         'c' => {
           'type' => 'string',
         },
@@ -62,9 +61,10 @@ class FullValidationTest < Minitest::Test
     }
 
     validator = JSON::Validator.new(schema, { record_errors: true })
-    assert(validator.validate(data).length == 2)
-    assert(validator.validate(data).length == 2)
-    assert(validator.validate(data).length == 2)
+
+    assert_equal(2, validator.validate(data).length)
+    assert_equal(2, validator.validate(data).length)
+    assert_equal(2, validator.validate(data).length)
   end
 
   def test_full_validation_with_union_types
@@ -79,7 +79,8 @@ class FullValidationTest < Minitest::Test
     }
 
     errors = JSON::Validator.fully_validate(schema, data)
-    assert(errors.empty?)
+
+    assert_empty(errors)
 
     schema = {
       'type' => 'object',
@@ -91,12 +92,14 @@ class FullValidationTest < Minitest::Test
     }
 
     errors = JSON::Validator.fully_validate(schema, data)
-    assert(errors.empty?)
+
+    assert_empty(errors)
 
     data = { 'b' => 'a string' }
 
     errors = JSON::Validator.fully_validate(schema, data)
-    assert(errors.length == 1)
+
+    assert_equal(1, errors.length)
 
     schema = {
       '$schema' => 'http://json-schema.org/draft-03/schema#',
@@ -124,17 +127,20 @@ class FullValidationTest < Minitest::Test
     data = { 'b' => { 'c' => 'taco' } }
 
     errors = JSON::Validator.fully_validate(schema, data)
-    assert(errors.empty?)
+
+    assert_empty(errors)
 
     data = { 'b' => { 'd' => 6 } }
 
     errors = JSON::Validator.fully_validate(schema, data)
-    assert(errors.empty?)
+
+    assert_empty(errors)
 
     data = { 'b' => { 'c' => 6, 'd' => 'OH GOD' } }
 
     errors = JSON::Validator.fully_validate(schema, data)
-    assert(errors.length == 1)
+
+    assert_equal(1, errors.length)
   end
 
   def test_full_validation_with_object_errors
@@ -143,21 +149,20 @@ class FullValidationTest < Minitest::Test
       'type' => 'object',
       'required' => ['b'],
       'properties' => {
-        'b' => {
-        },
+        'b' => {},
       },
     }
 
     errors = JSON::Validator.fully_validate(schema, data, errors_as_objects: true)
-    assert(errors.empty?)
+
+    assert_empty(errors)
 
     data = { 'c' => 5 }
     schema = {
       'type' => 'object',
       'required' => ['b'],
       'properties' => {
-        'b' => {
-        },
+        'b' => {},
         'c' => {
           'type' => 'string',
         },
@@ -166,11 +171,11 @@ class FullValidationTest < Minitest::Test
 
     errors = JSON::Validator.fully_validate(schema, data, errors_as_objects: true)
 
-    assert(errors.length == 2)
-    assert(errors[0][:failed_attribute] == 'Required')
-    assert(errors[0][:fragment] == '#/')
-    assert(errors[1][:failed_attribute] == 'TypeV4')
-    assert(errors[1][:fragment] == '#/c')
+    assert_equal(2, errors.length)
+    assert_equal('Required', errors[0][:failed_attribute])
+    assert_equal('#/', errors[0][:fragment])
+    assert_equal('TypeV4', errors[1][:failed_attribute])
+    assert_equal('#/c', errors[1][:fragment])
   end
 
   def test_full_validation_with_nested_required_properties
@@ -194,6 +199,7 @@ class FullValidationTest < Minitest::Test
     data = { 'x' => { 'a' => 5, 'd' => 5, 'e' => 'what?' } }
 
     errors = JSON::Validator.fully_validate(schema, data, errors_as_objects: true)
+
     assert_equal 2, errors.length
     assert_equal '#/x', errors[0][:fragment]
     assert_equal 'Required', errors[0][:failed_attribute]
@@ -227,6 +233,7 @@ class FullValidationTest < Minitest::Test
     data = { 'x' => [missing_b, e_is_wrong_type] }
 
     errors = JSON::Validator.fully_validate(schema, data, errors_as_objects: true)
+
     assert_equal 2, errors.length
     assert_equal '#/x/0', errors[0][:fragment]
     assert_equal 'Required', errors[0][:failed_attribute]
