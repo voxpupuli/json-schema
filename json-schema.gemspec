@@ -7,7 +7,6 @@ Gem::Specification.new do |s|
   s.metadata = {
     'source_code_uri' => s.homepage,
     'changelog_uri' => "#{s.homepage}/blob/master/CHANGELOG.md",
-    'homepage_uri' => s.homepage,
     'bug_tracker_uri' => "#{s.homepage}/issues",
   }
   s.summary = 'Ruby JSON Schema Validator'
@@ -18,9 +17,9 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
 
   s.add_development_dependency 'minitest', '~> 5.0'
-  s.add_development_dependency 'rake'
+  s.add_development_dependency 'rake', '~> 13.0'
   s.add_development_dependency 'voxpupuli-rubocop', '~> 2.8.0'
-  s.add_development_dependency 'webmock'
+  s.add_development_dependency 'webmock', '~> 3.23'
 
-  s.add_runtime_dependency 'addressable', '>= 2.8'
+  s.add_runtime_dependency 'addressable', '~> 2.8'
 end
