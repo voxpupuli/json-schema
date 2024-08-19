@@ -1,109 +1,132 @@
+# frozen_string_literal: true
+
 require 'addressable/uri'
 
 module JSON
   module Util
-    module URI
+    # @api private
+    class URI < Addressable::URI
       SUPPORTED_PROTOCOLS = %w(http https ftp tftp sftp ssh svn+ssh telnet nntp gopher wais ldap prospero)
 
-      def self.normalized_uri(uri, base_path = Dir.pwd)
-        @normalize_cache ||= {}
-        normalized_uri = @normalize_cache[uri]
+      class << self
+        alias unescape_uri unescape
 
-        if !normalized_uri
-          normalized_uri = parse(uri)
-          # Check for absolute path
-          if normalized_uri.relative?
-            data = normalized_uri
-            data = File.join(base_path, data) if data.path[0, 1] != '/'
-            normalized_uri = file_uri(data)
-          end
-          @normalize_cache[uri] = normalized_uri.freeze
+        # @param uri [String, Addressable::URI]
+        # @return [Addressable::URI, nil]
+        def parse(uri)
+          super(uri)
+        rescue Addressable::URI::InvalidURIError => e
+          raise JSON::Schema::UriError, e.message
         end
 
-        normalized_uri
+        # @param uri [String, Addressable::URI]
+        # @return [Addressable::URI, nil]
+        def file_uri(uri)
+          convert_path(parse(uri).path)
+        end
+
+        # @param uri [String, Addressable::URI
+        # @return [String]
+        def unescaped_path(uri)
+          parse(uri).unescaped_path
+        end
+
+        # Strips the fragment from the URI.
+        # @param uri [String, Addressable::URI]
+        # @return [Addressable::URI]
+        def strip_fragment(uri)
+          parse(uri).strip_fragment
+        end
+
+        # @param uri [String, Addressable::URI]
+        # @return [Addressable::URI]
+        def normalized_uri(uri, base_path = Dir.pwd)
+          parse(uri).normalized_uri(base_path)
+        end
+
+        # Normalizes the reference URI based on the provided base URI
+        #
+        # @param ref [String, Addressable::URI]
+        # @param base [String, Addressable::URI]
+        # @return [Addressable::URI]
+        def normalize_ref(ref, base)
+          parse(ref).normalize_ref(base)
+        end
+
+        def absolutize_ref(ref, base)
+          parse(ref).absolutize_ref(base)
+        end
       end
 
-      def self.absolutize_ref(ref, base)
-        ref_uri = strip_fragment(ref.dup)
-
-        return ref_uri if ref_uri.absolute?
-        return parse(base) if ref_uri.path.empty?
-
-        uri = strip_fragment(base.dup).join(ref_uri.path)
-        normalized_uri(uri)
+      # Unencodes any percent encoded characters within a path component.
+      #
+      # @return [String]
+      def unescaped_path
+        self.class.unescape_component(path)
       end
 
-      def self.normalize_ref(ref, base)
-        ref_uri = parse(ref)
-        base_uri = parse(base)
+      # Strips the fragment from the URI.
+      # @return [Addressable::URI] a new instance of URI without a fragment
+      def strip_fragment
+        if fragment.nil? || fragment.empty?
+          self
+        else
+          merge(fragment: '')
+        end
+      end
 
-        ref_uri.defer_validation do
-          if ref_uri.relative?
-            ref_uri.merge!(base_uri)
+      # Normalizes the URI based on the provided base path.
+      #
+      # @param base_path [String] the base path to use for relative URIs. Defaults to the current working directory.
+      # @return [Addressable::URI] the normalized URI or nil
+      def normalized_uri(base_path = Dir.pwd)
+        if relative?
+          if path[0, 1] == '/'
+            self.class.file_uri(self)
+          else
+            self.class.file_uri(File.join(base_path, self))
+          end
+        else
+          self
+        end
+      end
 
+      # @param base [Addressable::URI, String]
+      # @return [Addressable::URI]
+      def normalize_ref(base)
+        base_uri = self.class.parse(base)
+        defer_validation do
+          if relative?
             # Check for absolute path
-            path, fragment = ref.to_s.split('#')
+            path, fragment = to_s.split('#')
+            merge!(base_uri)
+
             if path.nil? || path == ''
-              ref_uri.path = base_uri.path
+              self.path = base_uri.path
             elsif path[0, 1] == '/'
-              ref_uri.path = Pathname.new(path).cleanpath.to_s
+              self.path = Pathname.new(path).cleanpath.to_s
             else
-              ref_uri.join!(path)
+              join!(path)
             end
 
-            ref_uri.fragment = fragment
+            self.fragment = fragment
           end
 
-          ref_uri.fragment = '' if ref_uri.fragment.nil? || ref_uri.fragment.empty?
+          self.fragment = '' if self.fragment.nil? || self.fragment.empty?
         end
 
-        ref_uri
+        self
       end
 
-      def self.parse(uri)
-        if uri.is_a?(Addressable::URI)
-          uri.dup
+      # @param base [Addressable::URI, String]
+      # @return [Addressable::URI]
+      def absolutize_ref(base)
+        ref = strip_fragment
+        if ref.absolute?
+          ref
         else
-          @parse_cache ||= {}
-          parsed_uri = @parse_cache[uri]
-          if parsed_uri
-            parsed_uri.dup
-          else
-            @parse_cache[uri] = Addressable::URI.parse(uri)
-          end
+          self.class.strip_fragment(base).join(ref.path).normalized_uri
         end
-      rescue Addressable::URI::InvalidURIError => e
-        raise JSON::Schema::UriError, e.message
-      end
-
-      def self.strip_fragment(uri)
-        parsed_uri = parse(uri)
-        if parsed_uri.fragment.nil? || parsed_uri.fragment.empty?
-          parsed_uri
-        else
-          parsed_uri.merge(fragment: '')
-        end
-      end
-
-      def self.file_uri(uri)
-        parsed_uri = parse(uri)
-
-        Addressable::URI.convert_path(parsed_uri.path)
-      end
-
-      def self.unescape_uri(uri)
-        Addressable::URI.unescape(uri)
-      end
-
-      def self.unescaped_path(uri)
-        parsed_uri = parse(uri)
-
-        Addressable::URI.unescape(parsed_uri.path)
-      end
-
-      def self.clear_cache
-        @parse_cache = {}
-        @normalize_cache = {}
       end
     end
   end
