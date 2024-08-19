@@ -6,3 +6,5 @@ pkg
 .bundle
 .idea
 /coverage
+/vendor
+/.vendor
