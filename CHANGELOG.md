@@ -1,5 +1,13 @@
 # Changelog
 
+## [v5.0.1](https://github.com/voxpupuli/json-schema/tree/v5.0.1) (2024-10-03)
+
+[Full Changelog](https://github.com/voxpupuli/json-schema/compare/v5.0.0...v5.0.1)
+
+**Fixed bugs:**
+
+- Load rake tasks from voxpupuli-rubocop [\#527](https://github.com/voxpupuli/json-schema/pull/527) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v5.0.0](https://github.com/voxpupuli/json-schema/tree/v5.0.0) (2024-08-19)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v4.3.1...v5.0.0)
