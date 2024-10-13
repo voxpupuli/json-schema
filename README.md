@@ -1,6 +1,6 @@
 # Ruby JSON Schema Validator
 
-[![License](https://img.shields.io/github/license/voxpupuli/json-schema.svg)](https://github.com/voxpupuli/json-schema/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/voxpupuli/json-schema.svg)](https://github.com/voxpupuli/json-schema/blob/master/LICENSE.md)
 [![Test](https://github.com/voxpupuli/json-schema/actions/workflows/test.yml/badge.svg)](https://github.com/voxpupuli/json-schema/actions/workflows/test.yml)
 [![Release](https://github.com/voxpupuli/json-schema/actions/workflows/release.yml/badge.svg)](https://github.com/voxpupuli/json-schema/actions/workflows/release.yml)
 [![RubyGem Version](https://img.shields.io/gem/v/json-schema.svg)](https://rubygems.org/gems/json-schema)
