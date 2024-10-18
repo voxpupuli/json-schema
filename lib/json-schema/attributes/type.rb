@@ -5,10 +5,12 @@ module JSON
     class TypeAttribute < Attribute
       def self.validate(current_schema, data, fragments, processor, validator, options = {})
         union = true
+        nullable = false
         if options[:disallow]
           types = current_schema.schema['disallow']
         else
           types = current_schema.schema['type']
+          nullable = current_schema.schema['nullable']
         end
 
         if !types.is_a?(Array)
@@ -22,7 +24,7 @@ module JSON
 
         types.each_with_index do |type, type_index|
           if type.is_a?(String)
-            valid = data_valid_for_type?(data, type)
+            valid = data_valid_for_type?(data, type, nullable: nullable)
           elsif type.is_a?(Hash) && union
             # Validate as a schema
             schema = JSON::Schema.new(type, current_schema.uri, validator)

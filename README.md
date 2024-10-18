@@ -242,6 +242,18 @@ JSON::Validator.validate(schema, { "a" => 1 }, :parse_data => false)
 JSON::Validator.validate(schema, '{ "a": 1 }', :parse_data => false)
 
 #
+# with the `:nullable` option set to true, any key with null value will be evaluated to true
+#
+schema = {
+  "type": "object",
+  "properties": {
+      "github_url": { "type": "string", "nullable": true }
+    }
+}
+# => true
+JSON::Validator.validate!(schema, { "github_url" => null })
+
+#
 # with the `:parse_integer` option set to false, the integer value given as string will not be parsed.
 #
 
