@@ -8,6 +8,7 @@ Gem::Specification.new do |s|
     'source_code_uri' => s.homepage,
     'changelog_uri' => "#{s.homepage}/blob/master/CHANGELOG.md",
     'bug_tracker_uri' => "#{s.homepage}/issues",
+    'funding_uri' => 'https://github.com/sponsors/voxpupuli',
   }
   s.summary = 'Ruby JSON Schema Validator'
   s.files = Dir['lib/**/*', 'resources/*.json']
