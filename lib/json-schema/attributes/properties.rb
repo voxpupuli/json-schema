@@ -36,12 +36,12 @@ module JSON
         # When noAdditionalProperties is true, ensure no undefined properties exist in the data
         return unless options[:noAdditionalProperties] == true && !schema.key?('additionalProperties')
 
-        diff = data.select do |k, v|
+        diff = data.select do |k, _v|
           k = k.to_s
 
           if schema.has_key?('patternProperties')
             match = false
-            schema['patternProperties'].each do |property, property_schema|
+            schema['patternProperties'].each do |property, _property_schema|
               regexp = Regexp.new(property)
               if regexp.match(k)
                 match = true

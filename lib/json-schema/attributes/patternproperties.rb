@@ -10,7 +10,7 @@ module JSON
           regexp = Regexp.new(property)
 
           # Check each key in the data hash to see if it matches the regex
-          data.each do |key, value|
+          data.each do |key, _value|
             next unless regexp.match(key)
 
             schema = JSON::Schema.new(property_schema, current_schema.uri, validator)

@@ -180,7 +180,7 @@ module JSON
       %w[definitions properties patternProperties].each do |key|
         next unless value = schema[key]
 
-        value.each do |k, inner_schema|
+        value.each do |_k, inner_schema|
           handle_schema(parent_schema, inner_schema)
         end
       end
@@ -377,7 +377,7 @@ module JSON
         @@default_validator = v
       end
 
-      def register_format_validator(format, validation_proc, versions = (@@validators.flat_map { |k, v| v.names.first } + [nil]))
+      def register_format_validator(format, validation_proc, versions = (@@validators.flat_map { |_k, v| v.names.first } + [nil]))
         custom_format_validator = JSON::Schema::CustomFormat.new(validation_proc)
         versions.each do |version|
           validator = validator_for_name(version)
@@ -385,14 +385,14 @@ module JSON
         end
       end
 
-      def deregister_format_validator(format, versions = (@@validators.flat_map { |k, v| v.names.first } + [nil]))
+      def deregister_format_validator(format, versions = (@@validators.flat_map { |_k, v| v.names.first } + [nil]))
         versions.each do |version|
           validator = validator_for_name(version)
           validator.formats[format.to_s] = validator.default_formats[format.to_s]
         end
       end
 
-      def restore_default_formats(versions = (@@validators.flat_map { |k, v| v.names.first } + [nil]))
+      def restore_default_formats(versions = (@@validators.flat_map { |_k, v| v.names.first } + [nil]))
         versions.each do |version|
           validator = validator_for_name(version)
           validator.formats = validator.default_formats.clone

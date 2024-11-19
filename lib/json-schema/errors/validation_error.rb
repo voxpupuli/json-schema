@@ -20,7 +20,7 @@ module JSON
           messages = ["#{message}. The schema specific errors were:\n"]
           @sub_errors.each do |subschema, errors|
             messages.push "- #{subschema}:"
-            messages.concat Array(errors).map { |e| "#{INDENT}- #{e.to_string(subschema_level + 1)}" }
+            messages.concat(Array(errors).map { |e| "#{INDENT}- #{e.to_string(subschema_level + 1)}" })
           end
           messages.map { |m| (INDENT * subschema_level) + m }.join("\n")
         end

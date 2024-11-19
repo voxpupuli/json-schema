@@ -12,7 +12,7 @@ module JSON
           if schema
             schema.validate(data, fragments, processor, options)
           elsif uri
-            message = "The extended schema '#{uri.to_s}' cannot be found"
+            message = "The extended schema '#{uri}' cannot be found"
             validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
           else
             message = "The property '#{build_fragment(fragments)}' was not a valid schema"

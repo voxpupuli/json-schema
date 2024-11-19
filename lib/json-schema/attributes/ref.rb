@@ -11,7 +11,7 @@ module JSON
         if schema
           schema.validate(data, fragments, processor, options)
         elsif uri
-          message = "The referenced schema '#{uri.to_s}' cannot be found"
+          message = "The referenced schema '#{uri}' cannot be found"
           validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
         else
           message = "The property '#{build_fragment(fragments)}' was not a valid schema"
@@ -44,7 +44,7 @@ module JSON
               end
               fragment_path = fragment_path + "/#{fragment}"
               if target_schema.nil?
-                raise SchemaError, "The fragment '#{fragment_path}' does not exist on schema #{ref_schema.uri.to_s}"
+                raise SchemaError, "The fragment '#{fragment_path}' does not exist on schema #{ref_schema.uri}"
               end
             end
           end

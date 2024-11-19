@@ -71,14 +71,14 @@ class OneOfTest < Minitest::Test
     }
 
     errors = JSON::Validator.fully_validate(schema, { 'a' => 5 })
-    expected_message = ''"The property '#/' of type object did not match any of the required schemas. The schema specific errors were:
+    expected_message = "The property '#/' of type object did not match any of the required schemas. The schema specific errors were:
 
 - oneOf #0:
     - The property '#/a' of type integer did not match the following type: string
 - oneOf #1:
     - The property '#/a' of type integer did not match the following type: string
 - oneOf #2:
-    - The property '#/a' did not have a minimum value of 10, inclusively"''
+    - The property '#/a' did not have a minimum value of 10, inclusively"
 
     assert_equal(expected_message, errors[0])
   end
