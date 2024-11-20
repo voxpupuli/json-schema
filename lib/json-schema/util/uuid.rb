@@ -153,7 +153,7 @@ module JSON
               if t.nil? then
                 # UUID epoch is 1582/Oct/15
                 tt = Time.now
-                t = tt.to_i * 10000000 + tt.tv_usec * 10 + 0x01B21DD213814000
+                t = (tt.to_i * 10000000) + (tt.tv_usec * 10) + 0x01B21DD213814000
               end
               c = c.succ # important; increment here
               write_state fp, c, m
@@ -220,7 +220,7 @@ module JSON
       def to_int
         tmp = raw_bytes.unpack 'C*'
         tmp.inject do |r, i|
-          r * 256 | i
+          (r * 256) | i
         end
       end
       alias to_i to_int

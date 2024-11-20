@@ -35,7 +35,7 @@ module JSON
     def self.stringify(schema)
       case schema
       when Hash then
-        schema.map { |key, value| [key.to_s, stringify(schema[key])] }.to_h
+        schema.map { |key, _value| [key.to_s, stringify(schema[key])] }.to_h
       when Array then
         schema.map do |schema_item|
           stringify(schema_item)
