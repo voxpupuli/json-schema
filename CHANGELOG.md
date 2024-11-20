@@ -1,5 +1,21 @@
 # Changelog
 
+## [v5.1.0](https://github.com/voxpupuli/json-schema/tree/v5.1.0) (2024-11-20)
+
+[Full Changelog](https://github.com/voxpupuli/json-schema/compare/v5.0.1...v5.1.0)
+
+**Implemented enhancements:**
+
+- Add funding\_uri to gemspec [\#530](https://github.com/voxpupuli/json-schema/pull/530) ([andrew](https://github.com/andrew))
+
+**Fixed bugs:**
+
+- Update license reference [\#529](https://github.com/voxpupuli/json-schema/pull/529) ([emmanuel-ferdman](https://github.com/emmanuel-ferdman))
+
+**Merged pull requests:**
+
+- voxpupuli-rubocop: Update 2.8.0-\>3.0.0 & rubocop: autofix [\#531](https://github.com/voxpupuli/json-schema/pull/531) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v5.0.1](https://github.com/voxpupuli/json-schema/tree/v5.0.1) (2024-10-03)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v5.0.0...v5.0.1)
