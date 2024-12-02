@@ -1,5 +1,13 @@
 # Changelog
 
+## [v5.1.1](https://github.com/voxpupuli/json-schema/tree/v5.1.1) (2024-12-02)
+
+[Full Changelog](https://github.com/voxpupuli/json-schema/compare/v5.1.0...v5.1.1)
+
+**Fixed bugs:**
+
+- Add bigdecimal dependency to fix deprecation warning for Ruby 3.4 [\#533](https://github.com/voxpupuli/json-schema/pull/533) ([jamiecobbett](https://github.com/jamiecobbett))
+
 ## [v5.1.0](https://github.com/voxpupuli/json-schema/tree/v5.1.0) (2024-11-20)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v5.0.1...v5.1.0)
