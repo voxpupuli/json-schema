@@ -33,8 +33,10 @@ module JSON
         'any' => Object,
       }
 
-      def self.data_valid_for_type?(data, type)
+      def self.data_valid_for_type?(data, type, nullable: false)
         valid_classes = TYPE_CLASS_MAPPINGS.fetch(type) { return true }
+        valid_classes = [valid_classes, NilClass] if nullable
+        valid_classes.flatten! if valid_classes.is_a?(Array)
         Array(valid_classes).any? { |c| data.is_a?(c) }
       end
 
