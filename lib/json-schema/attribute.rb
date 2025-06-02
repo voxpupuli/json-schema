@@ -9,8 +9,8 @@ module JSON
         "#/#{fragments.join('/')}"
       end
 
-      def self.validation_error(processor, message, fragments, current_schema, failed_attribute, record_errors)
-        error = ValidationError.new(message, fragments, failed_attribute, current_schema)
+      def self.validation_error(processor, message, fragments, current_schema, failed_attribute, record_errors, properties = [])
+        error = ValidationError.new(message, fragments, failed_attribute, current_schema, properties)
         if record_errors
           processor.validation_error(error)
         else
