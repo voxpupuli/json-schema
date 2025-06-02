@@ -36,6 +36,18 @@ class NoAdditionalPropertiesAllOfTest < Minitest::Test
   end
 
   def test_all_of_ref_message
-    assert_valid schema, data, { noAdditionalProperties: true }
+     assert_valid schema, data, { noAdditionalProperties: true }
+  end
+
+  def test_all_of_failure
+    data = {
+      a: 1,
+      b: 'hello',
+      c: 'something',
+    }
+
+    assert_raises JSON::Schema::ValidationError do
+      JSON::Validator.validate!(schema, data, noAdditionalProperties: true)
+    end
   end
 end
