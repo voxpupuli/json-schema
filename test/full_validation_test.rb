@@ -1,6 +1,23 @@
 require File.expand_path('../support/test_helper', __FILE__)
 
 class FullValidationTest < Minitest::Test
+  def test_frozen_validator
+    data = { 'c' => 'a' }.freeze
+    schema = {
+      'type' => 'object',
+      'required' => ['b'],
+      'properties' => {
+        'b' => {},
+      },
+    }.freeze
+
+    assert_raises JSON::Schema::ValidationError do
+      JSON::Validator.new(schema, { record_errors: false }).freeze.validate(data)
+    end
+
+    JSON::Validator.new(schema, { record_errors: true }).freeze.validate(data)
+  end
+
   def test_full_validation
     data = { 'b' => { 'a' => 5 } }
     schema = {
