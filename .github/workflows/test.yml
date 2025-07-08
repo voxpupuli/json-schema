@@ -23,13 +23,11 @@ jobs:
             rake_task: "rubocop test"
           - ruby: "3.0"
           - ruby: "3.1"
-            coverage: "yes"
           - ruby: "3.2"
           - ruby: "3.3"
           - ruby: "3.3"
             rubyopt: "--enable-frozen-string-literal"
-    env:
-      COVERAGE: ${{ matrix.coverage }}
+          - ruby: "3.4"
     steps:
       - uses: actions/checkout@v4
       - name: Install Ruby ${{ matrix.ruby }}
