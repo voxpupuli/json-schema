@@ -1,8 +1,8 @@
-require File.expand_path('../support/test_helper', __FILE__)
+require File.expand_path('support/test_helper', __dir__)
 
 class SchemaReaderTest < Minitest::Test
   ADDRESS_SCHEMA_URI  = 'http://json-schema.org/address'
-  ADDRESS_SCHEMA_PATH = File.expand_path('../schemas/address_microformat.json', __FILE__)
+  ADDRESS_SCHEMA_PATH = File.expand_path('schemas/address_microformat.json', __dir__)
 
   def stub_address_request(body = File.read(ADDRESS_SCHEMA_PATH))
     stub_request(:get, ADDRESS_SCHEMA_URI)

@@ -8,7 +8,7 @@ module JSON
         @validation_proc = validation_proc
       end
 
-      def validate(current_schema, data, fragments, processor, validator, options = {})
+      def validate(current_schema, data, fragments, processor, _validator, options = {})
         begin
           @validation_proc.call data
         rescue JSON::Schema::CustomFormatError => e

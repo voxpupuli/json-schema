@@ -1,6 +1,6 @@
 require 'rubygems'
 
-if Gem::Specification::find_all_by_name('multi_json').any?
+if Gem::Specification.find_all_by_name('multi_json').any?
   require 'multi_json'
 
   # Force MultiJson to load an engine before we define the JSON constant here; otherwise,

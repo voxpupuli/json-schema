@@ -1,4 +1,4 @@
-require File.expand_path('../support/test_helper', __FILE__)
+require File.expand_path('support/test_helper', __dir__)
 
 class MinItemsTest < Minitest::Test
   def test_minitems_nils
@@ -11,7 +11,7 @@ class MinItemsTest < Minitest::Test
     errors = JSON::Validator.fully_validate(schema, [nil])
 
     assert_equal(1, errors.length)
-    assert(errors[0] !~ /minimum/)
-    assert(errors[0] =~ /null/)
+    refute_match(/minimum/, errors[0])
+    assert_match(/null/, errors[0])
   end
 end

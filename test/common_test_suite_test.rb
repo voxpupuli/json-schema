@@ -1,10 +1,10 @@
-require File.expand_path('../support/test_helper', __FILE__)
+require File.expand_path('support/test_helper', __dir__)
 require 'json'
 
 class CommonTestSuiteTest < Minitest::Test
-  TEST_DIR = File.expand_path('../test-suite/tests', __FILE__)
+  TEST_DIR = File.expand_path('test-suite/tests', __dir__)
 
-  IGNORED_TESTS = YAML.load_file(File.expand_path('../support/test_suite_ignored_tests.yml', __FILE__))
+  IGNORED_TESTS = YAML.load_file(File.expand_path('support/test_suite_ignored_tests.yml', __dir__))
 
   def setup
     Dir["#{TEST_DIR}/../remotes/**/*.json"].each do |path|

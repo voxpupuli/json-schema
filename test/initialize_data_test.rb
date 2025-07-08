@@ -1,4 +1,4 @@
-require File.expand_path('../support/test_helper', __FILE__)
+require File.expand_path('support/test_helper', __dir__)
 
 class InitializeDataTest < Minitest::Test
   def test_parse_character_string

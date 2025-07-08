@@ -1,8 +1,8 @@
-require File.expand_path('../support/test_helper', __FILE__)
+require File.expand_path('support/test_helper', __dir__)
 
 class ExtendedSchemaTest < Minitest::Test
   class BitwiseAndAttribute < JSON::Schema::Attribute
-    def self.validate(current_schema, data, fragments, processor, validator, options = {})
+    def self.validate(current_schema, data, fragments, processor, _validator, options = {})
       return unless data.is_a?(Integer)
 
       if data & current_schema.schema['bitwise-and'].to_i == 0

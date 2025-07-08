@@ -19,13 +19,13 @@ module JSON
       @uri = JSON::Util::URI.strip_fragment(@uri)
 
       # If there is a $schema on this schema, use it to determine which validator to use
-      if @schema['$schema']
-        @validator = JSON::Validator.validator_for_uri(@schema['$schema'])
-      elsif parent_validator
-        @validator = parent_validator
-      else
-        @validator = JSON::Validator.default_validator
-      end
+      @validator = if @schema['$schema']
+                     JSON::Validator.validator_for_uri(@schema['$schema'])
+                   elsif parent_validator
+                     parent_validator
+                   else
+                     JSON::Validator.default_validator
+                   end
     end
 
     def validate(data, fragments, processor, options = {})

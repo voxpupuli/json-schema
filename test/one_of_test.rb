@@ -1,4 +1,4 @@
-require File.expand_path('../support/test_helper', __FILE__)
+require File.expand_path('support/test_helper', __dir__)
 
 class OneOfTest < Minitest::Test
   def test_one_of_links_schema

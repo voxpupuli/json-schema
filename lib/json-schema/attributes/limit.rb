@@ -3,7 +3,7 @@ require 'json-schema/attribute'
 module JSON
   class Schema
     class LimitAttribute < Attribute
-      def self.validate(current_schema, data, fragments, processor, validator, options = {})
+      def self.validate(current_schema, data, fragments, processor, _validator, options = {})
         schema = current_schema.schema
         return unless data.is_a?(acceptable_type) && invalid?(schema, value(data))
 
@@ -28,7 +28,7 @@ module JSON
         schema[limit_name]
       end
 
-      def self.exclusive?(schema)
+      def self.exclusive?(_schema)
         false
       end
 

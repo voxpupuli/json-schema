@@ -1,6 +1,4 @@
-# encoding: utf-8
-
-require File.expand_path('../support/test_helper', __FILE__)
+require File.expand_path('support/test_helper', __dir__)
 
 module StrictValidationV4
   def test_strict_properties
@@ -133,7 +131,7 @@ module StrictValidationV4
 end
 
 class Draft4Test < Minitest::Test
-  def validation_errors(schema, data, options)
+  def validation_errors(schema, data, _options)
     super(schema, data, version: :draft4)
   end
 
