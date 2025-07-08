@@ -37,11 +37,11 @@ module JSON
           fragments.each do |fragment|
             if fragment && fragment != ''
               fragment = fragment.gsub('~0', '~').gsub('~1', '/')
-              if target_schema.is_a?(Array)
-                target_schema = target_schema[fragment.to_i]
-              else
-                target_schema = target_schema[fragment]
-              end
+              target_schema = if target_schema.is_a?(Array)
+                                target_schema[fragment.to_i]
+                              else
+                                target_schema[fragment]
+                              end
               fragment_path = fragment_path + "/#{fragment}"
               if target_schema.nil?
                 raise SchemaError, "The fragment '#{fragment_path}' does not exist on schema #{ref_schema.uri}"

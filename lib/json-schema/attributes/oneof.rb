@@ -40,11 +40,11 @@ module JSON
           return
         end
 
-        if validation_error_count == one_of.length
-          message = "The property '#{build_fragment(fragments)}' of type #{type_of_data(data)} did not match any of the required schemas"
-        else
-          message = "The property '#{build_fragment(fragments)}' of type #{type_of_data(data)} matched more than one of the required schemas"
-        end
+        message = if validation_error_count == one_of.length
+                    "The property '#{build_fragment(fragments)}' of type #{type_of_data(data)} did not match any of the required schemas"
+                  else
+                    "The property '#{build_fragment(fragments)}' of type #{type_of_data(data)} matched more than one of the required schemas"
+                  end
 
         validation_error(processor, message, fragments, current_schema, self, options[:record_errors]) if message
         validation_errors(processor).last.sub_errors = errors if message

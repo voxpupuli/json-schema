@@ -1,4 +1,4 @@
-require File.expand_path('../support/test_helper', __FILE__)
+require File.expand_path('support/test_helper', __dir__)
 require 'socket'
 
 class BadSchemaRefTest < Minitest::Test
@@ -22,7 +22,7 @@ class BadSchemaRefTest < Minitest::Test
       JSON::Validator.validate(schema, data)
     end
 
-    expanded_path = File.expand_path('../../google.json', __FILE__)
+    expanded_path = File.expand_path('../google.json', __dir__)
 
     assert_equal(:file, error.type)
     assert_equal(expanded_path, error.location)

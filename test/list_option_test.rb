@@ -1,4 +1,4 @@
-require File.expand_path('../support/test_helper', __FILE__)
+require File.expand_path('support/test_helper', __dir__)
 
 class ListOptionTest < Minitest::Test
   def test_list_option_reusing_schemas

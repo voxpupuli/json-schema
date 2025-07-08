@@ -3,7 +3,6 @@ require 'pathname'
 require 'bigdecimal'
 require 'digest/sha1'
 require 'date'
-require 'thread'
 require 'timeout'
 require 'stringio'
 require 'yaml'
@@ -484,7 +483,7 @@ module JSON
       end
 
       if !defined?(MultiJson)
-        if Gem::Specification::find_all_by_name('json').any?
+        if Gem::Specification.find_all_by_name('json').any?
           require 'json'
           @@available_json_backends << 'json'
           @@json_backend = 'json'
@@ -498,25 +497,25 @@ module JSON
           end
         end
 
-        if Gem::Specification::find_all_by_name('yajl-ruby').any?
+        if Gem::Specification.find_all_by_name('yajl-ruby').any?
           require 'yajl'
           @@available_json_backends << 'yajl'
           @@json_backend = 'yajl'
         end
 
-        if @@json_backend == 'yajl'
-          @@serializer = lambda { |o| Yajl::Encoder.encode(o) }
-        elsif @@json_backend == 'json'
-          @@serializer = lambda { |o| JSON.dump(o) }
-        else
-          @@serializer = lambda { |o| YAML.dump(o) }
-        end
+        @@serializer = if @@json_backend == 'yajl'
+                         lambda { |o| Yajl::Encoder.encode(o) }
+                       elsif @@json_backend == 'json'
+                         lambda { |o| JSON.dump(o) }
+                       else
+                         lambda { |o| YAML.dump(o) }
+                       end
       end
     end
 
     private
 
-    if Gem::Specification::find_all_by_name('uuidtools').any?
+    if Gem::Specification.find_all_by_name('uuidtools').any?
       require 'uuidtools'
       @@fake_uuid_generator = lambda { |s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
     else

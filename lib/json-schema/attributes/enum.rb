@@ -3,7 +3,7 @@ require 'json-schema/attribute'
 module JSON
   class Schema
     class EnumAttribute < Attribute
-      def self.validate(current_schema, data, fragments, processor, validator, options = {})
+      def self.validate(current_schema, data, fragments, processor, _validator, options = {})
         enum = current_schema.schema['enum']
         return if enum.include?(data)
 

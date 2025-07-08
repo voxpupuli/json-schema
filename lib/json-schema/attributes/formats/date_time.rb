@@ -5,7 +5,7 @@ module JSON
     class DateTimeFormat < FormatAttribute
       REGEXP = /\A\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})([\.,]\d+)?(Z|[+-](\d{2})(:?\d{2})?)?\z/
 
-      def self.validate(current_schema, data, fragments, processor, validator, options = {})
+      def self.validate(current_schema, data, fragments, processor, _validator, options = {})
         # Timestamp in restricted ISO-8601 YYYY-MM-DDThh:mm:ssZ with optional decimal fraction of the second
         if data.is_a?(String)
           error_message = "The property '#{build_fragment(fragments)}' must be a date/time in the ISO-8601 format of YYYY-MM-DDThh:mm:ssZ or YYYY-MM-DDThh:mm:ss.ssZ"

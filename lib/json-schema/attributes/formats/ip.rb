@@ -5,7 +5,7 @@ require 'socket'
 module JSON
   class Schema
     class IPFormat < FormatAttribute
-      def self.validate(current_schema, data, fragments, processor, validator, options = {})
+      def self.validate(current_schema, data, fragments, processor, _validator, options = {})
         return unless data.is_a?(String)
 
         begin

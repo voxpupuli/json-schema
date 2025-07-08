@@ -5,7 +5,7 @@ module JSON
     class PropertiesV4Attribute < PropertiesAttribute
       # draft4 relies on its own RequiredAttribute validation at a higher level, rather than
       # as an attribute of individual properties.
-      def self.required?(schema, options)
+      def self.required?(_schema, options)
         options[:allPropertiesRequired] == true
       end
     end

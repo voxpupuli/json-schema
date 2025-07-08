@@ -64,7 +64,7 @@ module JSON
           ret.freeze
           ret
         end
-        alias :create_v5 :create_sha1
+        alias create_v5 create_sha1
 
         # UUID generation using MD5 (for backward compat.)
         def create_md5 str, namespace
@@ -77,7 +77,7 @@ module JSON
           ret.freeze
           ret
         end
-        alias :create_v3 :create_md5
+        alias create_v3 create_md5
 
         # UUID  generation  using  random-number  generator.   From  it's  random
         # nature, there's  no warranty that  the created ID is  really universaly
@@ -94,7 +94,7 @@ module JSON
           ret.freeze
           ret
         end
-        alias :create_v4 :create_random
+        alias create_v4 create_random
 
         def read_state fp # :nodoc:
           fp.rewind
@@ -172,7 +172,7 @@ module JSON
           ch = ch | 0x80
           pack tl, tm, th, cl, ch, m
         end
-        alias :create_v1 :create
+        alias create_v1 create
 
         # A  simple GUID  parser:  just ignores  unknown  characters and  convert
         # hexadecimal dump into 16-octet object.

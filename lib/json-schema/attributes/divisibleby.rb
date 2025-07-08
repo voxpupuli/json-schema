@@ -7,7 +7,7 @@ module JSON
         'divisibleBy'
       end
 
-      def self.validate(current_schema, data, fragments, processor, validator, options = {})
+      def self.validate(current_schema, data, fragments, processor, _validator, options = {})
         return unless data.is_a?(Numeric)
 
         factor = current_schema.schema[keyword]

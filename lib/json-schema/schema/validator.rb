@@ -29,7 +29,7 @@ module JSON
       end
 
       def metaschema
-        resources = File.expand_path('../../../../resources', __FILE__)
+        resources = File.expand_path('../../../resources', __dir__)
         File.join(resources, @metaschema_name)
       end
     end

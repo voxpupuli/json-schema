@@ -1,6 +1,4 @@
-# encoding: utf-8
-
-require File.expand_path('../support/test_helper', __FILE__)
+require File.expand_path('support/test_helper', __dir__)
 
 class CustomFormatTest < Minitest::Test
   def setup
@@ -41,7 +39,7 @@ class CustomFormatTest < Minitest::Test
       assert_nil(JSON::Validator.validator_for_name(version).formats['custom'], "Format 'custom' for #{version || 'default'} should be nil")
       JSON::Validator.register_format_validator('custom', @format_proc, [version])
 
-      assert(JSON::Validator.validator_for_name(version).formats['custom'].is_a?(JSON::Schema::CustomFormat), "Format 'custom' should be registered for #{version || 'default'}")
+      assert_kind_of(JSON::Schema::CustomFormat, JSON::Validator.validator_for_name(version).formats['custom'], "Format 'custom' should be registered for #{version || 'default'}")
       (@all_versions - [version]).each do |other_version|
         assert_nil(JSON::Validator.validator_for_name(other_version).formats['custom'], "Format 'custom' should still be nil for #{other_version || 'default'}")
       end
@@ -55,7 +53,7 @@ class CustomFormatTest < Minitest::Test
     JSON::Validator.register_format_validator('custom', @format_proc)
 
     @all_versions.each do |version|
-      assert(JSON::Validator.validator_for_name(version).formats['custom'].is_a?(JSON::Schema::CustomFormat), "Format 'custom' should be registered for #{version || 'default'}")
+      assert_kind_of(JSON::Schema::CustomFormat, JSON::Validator.validator_for_name(version).formats['custom'], "Format 'custom' should be registered for #{version || 'default'}")
     end
     JSON::Validator.restore_default_formats
 
@@ -69,7 +67,7 @@ class CustomFormatTest < Minitest::Test
     JSON::Validator.register_format_validator('custom', @format_proc, @all_versions)
 
     @all_versions.each do |version|
-      assert(JSON::Validator.validator_for_name(version).formats['custom'].is_a?(JSON::Schema::CustomFormat), "Format 'custom' should be registered for #{version || 'default'}")
+      assert_kind_of(JSON::Schema::CustomFormat, JSON::Validator.validator_for_name(version).formats['custom'], "Format 'custom' should be registered for #{version || 'default'}")
     end
     assert_nil(JSON::Validator.validator_for_name(unregistered_version).formats['custom'], "Format 'custom' should still be nil for #{unregistered_version}")
   end

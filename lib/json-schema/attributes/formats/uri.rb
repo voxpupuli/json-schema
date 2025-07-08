@@ -4,7 +4,7 @@ require 'json-schema/errors/uri_error'
 module JSON
   class Schema
     class UriFormat < FormatAttribute
-      def self.validate(current_schema, data, fragments, processor, validator, options = {})
+      def self.validate(current_schema, data, fragments, processor, _validator, options = {})
         return unless data.is_a?(String)
 
         error_message = "The property '#{build_fragment(fragments)}' must be a valid URI"
