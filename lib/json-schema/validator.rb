@@ -42,7 +42,6 @@ module JSON
 
     def initialize(schema_data, opts = {})
       @options = @@default_opts.clone.merge(opts)
-      @errors = []
 
       configured_validator = self.class.validator_for_name(@options[:version])
       @options[:schema_reader] ||= self.class.schema_reader
@@ -108,24 +107,47 @@ module JSON
       end
     end
 
+    class ErrorRecorder < SimpleDelegator
+      def initialize(sub)
+        @errors = []
+
+        super
+      end
+
+      def validation_error(error)
+        @errors.push(error)
+      end
+
+      def validation_errors
+        @errors
+      end
+
+      def with_errors
+        self
+      end
+    end
+
+    def with_errors
+      ErrorRecorder.new(self)
+    end
+
     # Run a simple true/false validation of data against a schema
     def validate(data)
       original_data = data
       data = initialize_data(data)
-      @base_schema.validate(data, [], self, @validation_options)
+      error_recorder = with_errors
+      @base_schema.validate(data, [], error_recorder, @validation_options)
 
       if @options[:record_errors]
         if @options[:errors_as_objects]
-          @errors.map { |e| e.to_hash }
+          error_recorder.validation_errors.map { |e| e.to_hash }
         else
-          @errors.map { |e| e.to_string }
+          error_recorder.validation_errors.map { |e| e.to_string }
         end
       else
         true
       end
     ensure
-      @errors = []
-
       if @validation_options[:clear_cache] == true
         self.class.clear_cache
       end
@@ -227,14 +249,6 @@ module JSON
         end
         build_schemas(schema)
       end
-    end
-
-    def validation_error(error)
-      @errors.push(error)
-    end
-
-    def validation_errors
-      @errors
     end
 
     class << self
