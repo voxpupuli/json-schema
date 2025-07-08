@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'minitest', '~> 5.0'
   s.add_development_dependency 'rake', '~> 13.0'
-  s.add_development_dependency 'voxpupuli-rubocop', '~> 3.0.0'
+  s.add_development_dependency 'voxpupuli-rubocop', '~> 3.1.0'
   s.add_development_dependency 'webmock', '~> 3.23'
 
   s.add_dependency 'addressable', '~> 2.8'
