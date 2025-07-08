@@ -28,6 +28,7 @@ jobs:
           - ruby: "3.3"
           - ruby: "3.3"
             rubyopt: "--enable-frozen-string-literal"
+          - ruby: "3.4"
     env:
       COVERAGE: ${{ matrix.coverage }}
     steps:
