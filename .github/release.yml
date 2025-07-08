@@ -1,0 +1,41 @@
+---
+# https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes
+
+changelog:
+  exclude:
+    labels:
+      - duplicate
+      - invalid
+      - modulesync
+      - question
+      - skip-changelog
+      - wont-fix
+      - wontfix
+      - github_actions
+
+  categories:
+    - title: Breaking Changes 🛠
+      labels:
+        - backwards-incompatible
+
+    - title: New Features 🎉
+      labels:
+        - enhancement
+
+    - title: Bug Fixes 🐛
+      labels:
+        - bug
+        - bugfix
+
+    - title: Documentation Updates 📚
+      labels:
+        - documentation
+        - docs
+
+    - title: Dependency Updates ⬆️
+      labels:
+        - dependencies
+
+    - title: Other Changes
+      labels:
+        - "*"
