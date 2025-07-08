@@ -2,14 +2,15 @@ module JSON
   class Schema
     class ValidationError < StandardError
       INDENT = '    '
-      attr_accessor :fragments, :schema, :failed_attribute, :sub_errors, :message
+      attr_accessor :fragments, :schema, :failed_attribute, :sub_errors, :message, :properties
 
-      def initialize(message, fragments, failed_attribute, schema)
+      def initialize(message, fragments, failed_attribute, schema, properties = [])
         @fragments = fragments.clone
         @schema = schema
         @sub_errors = {}
         @failed_attribute = failed_attribute
         @message = message
+        @properties = properties
         super(message_with_schema)
       end
 

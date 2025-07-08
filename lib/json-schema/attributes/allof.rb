@@ -17,20 +17,45 @@ module JSON
           pre_validation_error_count = validation_errors(processor).count
 
           begin
-            schema.validate(data, fragments, processor, options)
+            # Cannot raise if noAdditionalProperties is true, we need to
+            # evaluate each sub schema within the allOf, before raising.
+            if options[:noAdditionalProperties] == true
+              schema.validate(data, fragments, processor, options.merge(record_errors: true))
+            else
+              schema.validate(data, fragments, processor, options)
+            end
           rescue ValidationError => e
             valid = false
             message = e.message
           end
 
           diff = validation_errors(processor).count - pre_validation_error_count
+
           while diff > 0
             diff = diff - 1
             errors["allOf ##{schema_index}"].push(validation_errors(processor).pop)
           end
         end
 
-        if !valid || !errors.empty?
+        # Find any properties that are missing across all subschemas.
+        common_missing_properties = {}
+        if options[:noAdditionalProperties] == true && !errors.empty?
+          all_property_errors = errors.values.flatten.map(&:properties)
+          common_missing_properties = (all_property_errors.first || []).to_set
+
+          all_property_errors[1..].each do |curr_property_errors|
+            common_missing_properties = common_missing_properties & curr_property_errors.to_set
+          end
+        end
+
+        # PropertiesV4Attribute represents errors that would indicate an
+        # additional property was detected. If we filter these out, we should
+        # be left with errors that are not dependent on any other sub schema.
+        non_missing_property_errors = errors.values.flatten.reject do |error|
+          error.failed_attribute == JSON::Schema::PropertiesV4Attribute
+        end
+
+        if !valid || !non_missing_property_errors.empty? || !common_missing_properties.empty?
           message ||= "The property '#{build_fragment(fragments)}' of type #{type_of_data(data)} did not match all of the required schemas"
           validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
           validation_errors(processor).last.sub_errors = errors
