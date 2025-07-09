@@ -1,5 +1,13 @@
 # Changelog
 
+## [v5.2.1](https://github.com/voxpupuli/json-schema/tree/v5.2.1) (2025-07-09)
+
+[Full Changelog](https://github.com/voxpupuli/json-schema/compare/v5.2.0...v5.2.1)
+
+**Fixed bugs:**
+
+- Require delegate library in validator [\#542](https://github.com/voxpupuli/json-schema/pull/542) ([beechtom](https://github.com/beechtom))
+
 ## [v5.2.0](https://github.com/voxpupuli/json-schema/tree/v5.2.0) (2025-07-09)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v5.1.1...v5.2.0)
