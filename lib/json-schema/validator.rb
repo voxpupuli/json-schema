@@ -6,6 +6,7 @@ require 'date'
 require 'timeout'
 require 'stringio'
 require 'yaml'
+require 'delegate'
 
 require 'json-schema/schema/reader'
 require 'json-schema/errors/schema_error'
