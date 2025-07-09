@@ -1,30 +1,106 @@
-name: Release
+---
+name: Gem Release
 
 on:
   push:
     tags:
       - '*'
 
+permissions: {}
+
 jobs:
-  release:
-    runs-on: ubuntu-latest
+  build-release:
+    # Prevent releases from forked repositories
     if: github.repository_owner == 'voxpupuli'
+    name: Build the gem
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: Install Ruby 3.3
+      - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.3'
+          ruby-version: 'ruby'
       - name: Build gem
-        run: gem build --strict --verbose *.gemspec
-      - name: Publish gem to rubygems.org
-        run: gem push *.gem
+        shell: bash
+        run: gem build --verbose *.gemspec
+      - name: Upload gem to GitHub cache
+        uses: actions/upload-artifact@v4
+        with:
+          name: gem-artifact
+          path: '*.gem'
+          retention-days: 1
+          compression-level: 0
+
+  create-github-release:
+    needs: build-release
+    name: Create GitHub release
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write # clone repo and create release
+    steps:
+      - name: Download gem from GitHub cache
+        uses: actions/download-artifact@v4
+        with:
+          name: gem-artifact
+      - name: Create Release
+        shell: bash
         env:
-          GEM_HOST_API_KEY: '${{ secrets.RUBYGEMS_AUTH_TOKEN }}'
-      - name: Setup GitHub packages access
-        run: |
-          mkdir -p ~/.gem
-          echo ":github: Bearer ${{ secrets.GITHUB_TOKEN }}" >> ~/.gem/credentials
-          chmod 0600 ~/.gem/credentials
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create --repo ${{ github.repository }} ${{ github.ref_name }} --generate-notes *.gem
+
+  release-to-github:
+    needs: build-release
+    name: Release to GitHub
+    runs-on: ubuntu-24.04
+    permissions:
+      packages: write # publish to rubygems.pkg.github.com
+    steps:
+      - name: Download gem from GitHub cache
+        uses: actions/download-artifact@v4
+        with:
+          name: gem-artifact
       - name: Publish gem to GitHub packages
-        run: gem push --key github --host https://rubygems.pkg.github.com/${{ github.repository_owner }} *.gem
+        run: gem push --host https://rubygems.pkg.github.com/${{ github.repository_owner }} *.gem
+        env:
+          GEM_HOST_API_KEY: ${{ secrets.GITHUB_TOKEN }}
+
+  release-to-rubygems:
+    needs: build-release
+    name: Release gem to rubygems.org
+    runs-on: ubuntu-24.04
+    environment: release # recommended by rubygems.org
+    permissions:
+      id-token: write # rubygems.org authentication
+    steps:
+      - name: Download gem from GitHub cache
+        uses: actions/download-artifact@v4
+        with:
+          name: gem-artifact
+      - uses: rubygems/configure-rubygems-credentials@v1.0.0
+      - name: Publish gem to rubygems.org
+        shell: bash
+        run: gem push *.gem
+
+  release-verification:
+    name: Check that all releases are done
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read # minimal permissions that we have to grant
+    needs:
+      - create-github-release
+      - release-to-github
+      - release-to-rubygems
+    steps:
+      - name: Download gem from GitHub cache
+        uses: actions/download-artifact@v4
+        with:
+          name: gem-artifact
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 'ruby'
+      - name: Wait for release to propagate
+        shell: bash
+        run: |
+          gem install rubygems-await
+          gem await *.gem

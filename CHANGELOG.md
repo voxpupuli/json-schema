@@ -1,5 +1,18 @@
 # Changelog
 
+## [v5.2.0](https://github.com/voxpupuli/json-schema/tree/v5.2.0) (2025-07-09)
+
+[Full Changelog](https://github.com/voxpupuli/json-schema/compare/v5.1.1...v5.2.0)
+
+**Implemented enhancements:**
+
+- Add Ruby 3.4 to CI & drop coverage reporting [\#539](https://github.com/voxpupuli/json-schema/pull/539) ([bastelfreak](https://github.com/bastelfreak))
+- Make JSON::Validator freezable [\#537](https://github.com/voxpupuli/json-schema/pull/537) ([hugopeixoto](https://github.com/hugopeixoto))
+
+**Fixed bugs:**
+
+- Fixes `allOf` bug when using `noAdditionalProperties` option [\#535](https://github.com/voxpupuli/json-schema/pull/535) ([azrosen92](https://github.com/azrosen92))
+
 ## [v5.1.1](https://github.com/voxpupuli/json-schema/tree/v5.1.1) (2024-12-02)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v5.1.0...v5.1.1)
@@ -283,7 +296,7 @@
 
 **Merged pull requests:**
 
-- Update README.md [\#308](https://github.com/voxpupuli/json-schema/pull/308) ([cassidycodes](https://github.com/cassidycodes))
+- Update README.md [\#308](https://github.com/voxpupuli/json-schema/pull/308) ([cassiascheffer](https://github.com/cassiascheffer))
 - Convert readme to markdown [\#302](https://github.com/voxpupuli/json-schema/pull/302) ([lencioni](https://github.com/lencioni))
 - Made sure we include the module name for SchemaParseErrors [\#293](https://github.com/voxpupuli/json-schema/pull/293) ([iainbeeston](https://github.com/iainbeeston))
 
