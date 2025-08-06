@@ -52,4 +52,9 @@ class FilesTest < Minitest::Test
     assert_valid schema_fixture_path('good_schema_extends1.json'), { 'a' => 5 }
     assert_valid schema_fixture_path('good_schema_extends2.json'), { 'a' => 5, 'b' => { 'a' => 5 } }
   end
+
+  def test_internal_ref_schema
+    assert_valid schema_fixture_path('internal_ref_schema.json'), { 'top_level_attribute' => true }
+    assert_valid schema_fixture_path('internal_ref_schema.json'), data_fixture_path('internal_ref_schema_data.json'), uri: true
+  end
 end
