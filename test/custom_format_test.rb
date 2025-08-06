@@ -96,6 +96,10 @@ class CustomFormatTest < Minitest::Test
       assert_equal(1, errors.count)
       assert_match(%r{The property '#/a' must be 42 in schema}, errors.first, "#{prefix} records format error")
 
+      errors_as_objects = JSON::Validator.fully_validate(schema, data, errors_as_objects: true)
+
+      assert_match('CustomFormat', errors_as_objects.first[:failed_attribute], "#{prefix} tags failed attribute")
+
       data['a'] = 23
       errors = JSON::Validator.fully_validate(schema, data)
 
