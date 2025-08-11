@@ -1,3 +1,4 @@
+---
 name: Test
 
 on:
@@ -6,8 +7,8 @@ on:
     branches:
       - master
 
-env:
-  BUNDLE_WITHOUT: release
+permissions:
+  contents: read
 
 jobs:
   test:
@@ -39,10 +40,15 @@ jobs:
         run: bundle exec rake ${{ matrix.rake_task }} RUBYOPT="${{ matrix.rubyopt }}"
       - name: Build gem
         run: gem build --strict --verbose *.gemspec
+
   tests:
+    if: always()
     needs:
       - test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Test suite
     steps:
-      - run: echo Test suite completed
+      - name: Decide whether the needed jobs succeeded or failed
+        uses: re-actors/alls-green@release/v1
+        with:
+          jobs: ${{ toJSON(needs) }}
