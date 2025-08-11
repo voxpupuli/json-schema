@@ -15,7 +15,7 @@ jobs:
     name: Build the gem
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
