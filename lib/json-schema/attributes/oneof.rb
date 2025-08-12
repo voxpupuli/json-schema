@@ -27,9 +27,9 @@ module JSON
 
           diff = validation_errors(processor).count - pre_validation_error_count
           valid = false if diff > 0
-          validation_error_count += 1 if !valid
+          validation_error_count += 1 unless valid
           while diff > 0
-            diff = diff - 1
+            diff -= 1
             errors["oneOf ##{schema_index}"].push(validation_errors(processor).pop)
           end
           data = original_data

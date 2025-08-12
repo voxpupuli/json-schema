@@ -188,11 +188,11 @@ module JSON
 
       # Check for schemas in union types
       %w[type disallow].each do |key|
-        if schema[key].is_a?(Array)
-          schema[key].each do |type|
-            if type.is_a?(Hash)
-              handle_schema(parent_schema, type)
-            end
+        next unless schema[key].is_a?(Array)
+
+        schema[key].each do |type|
+          if type.is_a?(Hash)
+            handle_schema(parent_schema, type)
           end
         end
       end
@@ -253,11 +253,9 @@ module JSON
 
     class << self
       def validate(schema, data, opts = {})
-        begin
-          validate!(schema, data, opts)
-        rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
-          false
-        end
+        validate!(schema, data, opts)
+      rescue JSON::Schema::ValidationError, JSON::Schema::SchemaError
+        false
       end
 
       def validate_json(schema, data, opts = {})
@@ -341,7 +339,7 @@ module JSON
 
       def cache_schemas=(val)
         warn '[DEPRECATION NOTICE] Schema caching is now a validation option. Schemas will still be cached if this is set to true, but this method will be removed in version >= 3. Please use the :clear_cache validation option instead.'
-        @@cache_schemas = val == true ? true : false
+        @@cache_schemas = val == true
       end
 
       def validators
@@ -423,7 +421,7 @@ module JSON
 
       def json_backend=(backend)
         if defined?(MultiJson)
-          backend = backend == 'json' ? 'json_gem' : backend
+          backend = 'json_gem' if backend == 'json'
           MultiJson.respond_to?(:use) ? MultiJson.use(backend) : MultiJson.engine = backend
         else
           backend = backend.to_s
@@ -483,7 +481,7 @@ module JSON
         end
       end
 
-      if !defined?(MultiJson)
+      unless defined?(MultiJson)
         if Gem::Specification.find_all_by_name('json').any?
           require 'json'
           @@available_json_backends << 'json'
@@ -505,11 +503,11 @@ module JSON
         end
 
         @@serializer = if @@json_backend == 'yajl'
-                         lambda { |o| Yajl::Encoder.encode(o) }
+                         ->(o) { Yajl::Encoder.encode(o) }
                        elsif @@json_backend == 'json'
-                         lambda { |o| JSON.dump(o) }
+                         ->(o) { JSON.dump(o) }
                        else
-                         lambda { |o| YAML.dump(o) }
+                         ->(o) { YAML.dump(o) }
                        end
       end
     end
@@ -518,13 +516,13 @@ module JSON
 
     if Gem::Specification.find_all_by_name('uuidtools').any?
       require 'uuidtools'
-      @@fake_uuid_generator = lambda { |s| UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
+      @@fake_uuid_generator = ->(s) { UUIDTools::UUID.sha1_create(UUIDTools::UUID_URL_NAMESPACE, s).to_s }
     else
       require 'json-schema/util/uuid'
-      @@fake_uuid_generator = lambda { |s| JSON::Util::UUID.create_v5(s, JSON::Util::UUID::Nil).to_s }
+      @@fake_uuid_generator = ->(s) { JSON::Util::UUID.create_v5(s, JSON::Util::UUID::Nil).to_s }
     end
 
-    def serialize schema
+    def serialize(schema)
       if defined?(MultiJson)
         MultiJson.respond_to?(:dump) ? MultiJson.dump(schema) : MultiJson.encode(schema)
       else
@@ -532,7 +530,7 @@ module JSON
       end
     end
 
-    def fake_uuid schema
+    def fake_uuid(schema)
       @@fake_uuid_generator.call(schema)
     end
 
@@ -549,7 +547,15 @@ module JSON
         rescue JSON::Schema::JsonParseError
           # Build a uri for it
           schema_uri = Util::URI.normalized_uri(schema)
-          if !self.class.schema_loaded?(schema_uri)
+          if self.class.schema_loaded?(schema_uri)
+            schema = self.class.schema_for_uri(schema_uri)
+            if @options[:list] && @options[:fragment].nil?
+              schema = schema.to_array_schema
+              schema.uri = JSON::Util::URI.parse(fake_uuid(serialize(schema.schema)))
+              self.class.add_schema(schema)
+            end
+            schema
+          else
             schema = @options[:schema_reader].read(schema_uri)
             schema = JSON::Schema.stringify(schema)
 
@@ -558,14 +564,6 @@ module JSON
             end
 
             self.class.add_schema(schema)
-          else
-            schema = self.class.schema_for_uri(schema_uri)
-            if @options[:list] && @options[:fragment].nil?
-              schema = schema.to_array_schema
-              schema.uri = JSON::Util::URI.parse(fake_uuid(serialize(schema.schema)))
-              self.class.add_schema(schema)
-            end
-            schema
           end
         end
       elsif schema.is_a?(Hash)
@@ -594,7 +592,7 @@ module JSON
           begin
             # Check if the string is valid integer
             strict_convert = data.match?(/\A[+-]?\d+\z/) && !@options[:parse_integer]
-            data = strict_convert ? data : self.class.parse(data)
+            data = self.class.parse(data) unless strict_convert
           rescue JSON::Schema::JsonParseError
             begin
               json_uri = Util::URI.normalized_uri(data)

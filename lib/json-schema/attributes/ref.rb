@@ -20,7 +20,8 @@ module JSON
       end
 
       def self.get_referenced_uri_and_schema(s, current_schema, validator)
-        uri, schema = nil, nil
+        uri = nil
+        schema = nil
 
         temp_uri = JSON::Util::URI.normalize_ref(s['$ref'], current_schema.uri)
 
@@ -35,17 +36,17 @@ module JSON
           fragments = JSON::Util::URI.parse(JSON::Util::URI.unescape_uri(temp_uri)).fragment.split('/')
           fragment_path = ''
           fragments.each do |fragment|
-            if fragment && fragment != ''
-              fragment = fragment.gsub('~0', '~').gsub('~1', '/')
-              target_schema = if target_schema.is_a?(Array)
-                                target_schema[fragment.to_i]
-                              else
-                                target_schema[fragment]
-                              end
-              fragment_path = fragment_path + "/#{fragment}"
-              if target_schema.nil?
-                raise SchemaError, "The fragment '#{fragment_path}' does not exist on schema #{ref_schema.uri}"
-              end
+            next unless fragment && fragment != ''
+
+            fragment = fragment.gsub('~0', '~').gsub('~1', '/')
+            target_schema = if target_schema.is_a?(Array)
+                              target_schema[fragment.to_i]
+                            else
+                              target_schema[fragment]
+                            end
+            fragment_path += "/#{fragment}"
+            if target_schema.nil?
+              raise SchemaError, "The fragment '#{fragment_path}' does not exist on schema #{ref_schema.uri}"
             end
           end
 

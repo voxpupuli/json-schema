@@ -6,7 +6,7 @@ module JSON
       def self.validate(current_schema, data, fragments, processor, _validator, options = {})
         union = true
         types = current_schema.schema['type']
-        if !types.is_a?(Array)
+        unless types.is_a?(Array)
           types = [types]
           union = false
         end

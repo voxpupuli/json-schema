@@ -34,13 +34,13 @@ module JSON
 
     def self.stringify(schema)
       case schema
-      when Hash then
+      when Hash
         schema.map { |key, _value| [key.to_s, stringify(schema[key])] }.to_h
-      when Array then
+      when Array
         schema.map do |schema_item|
           stringify(schema_item)
         end
-      when Symbol then
+      when Symbol
         schema.to_s
       else
         schema

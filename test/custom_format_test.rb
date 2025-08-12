@@ -3,7 +3,7 @@ require File.expand_path('support/test_helper', __dir__)
 class CustomFormatTest < Minitest::Test
   def setup
     @all_versions = ['draft1', 'draft2', 'draft3', 'draft4', 'draft6', nil]
-    @format_proc = lambda { |value| raise JSON::Schema::CustomFormatError, 'must be 42' unless value == '42' }
+    @format_proc = ->(value) { raise JSON::Schema::CustomFormatError, 'must be 42' unless value == '42' }
     @schema_6 = {
       '$schema' => 'http://json-schema.org/draft-06/schema#',
       'properties' => {

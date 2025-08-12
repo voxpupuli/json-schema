@@ -36,7 +36,7 @@ module JSON
       private_class_method :new
 
       class << self
-        def mask v, str
+        def mask(v, str)
           nstr = str.bytes.to_a
           version = [0, 16, 32, 48, 64, 80][v]
           nstr[6] &= 0b00001111
@@ -54,7 +54,7 @@ module JSON
 
         # UUID generation using SHA1. Recommended over create_md5.
         # Namespace object is another UUID, some of them are pre-defined below.
-        def create_sha1 str, namespace
+        def create_sha1(str, namespace)
           sha1 = Digest::SHA1.new
           sha1.update namespace.raw_bytes
           sha1.update str
@@ -67,7 +67,7 @@ module JSON
         alias create_v5 create_sha1
 
         # UUID generation using MD5 (for backward compat.)
-        def create_md5 str, namespace
+        def create_md5(str, namespace)
           md5 = Digest::MD5.new
           md5.update namespace.raw_bytes
           md5.update str
@@ -96,12 +96,12 @@ module JSON
         end
         alias create_v4 create_random
 
-        def read_state fp # :nodoc:
+        def read_state(fp) # :nodoc:
           fp.rewind
           Marshal.load fp.read
         end
 
-        def write_state fp, c, m # :nodoc:
+        def write_state(fp, c, m) # :nodoc:
           fp.rewind
           str = Marshal.dump [c, m]
           fp.write str
@@ -117,10 +117,10 @@ module JSON
         # invokation. If you want to speed  this up, try remounting tmpdir with a
         # memory based filesystem  (such as tmpfs).  STILL slow?  then no way but
         # rewrite it with c :)
-        def create clock = nil, time = nil, mac_addr = nil
+        def create(clock = nil, time = nil, mac_addr = nil)
           c = t = m = nil
           Dir.chdir Dir.tmpdir do
-            unless FileTest.exist? STATE_FILE then
+            unless FileTest.exist? STATE_FILE
               # Generate a pseudo MAC address because we have no pure-ruby way
               # to know  the MAC  address of the  NIC this system  uses.  Note
               # that cheating  with pseudo arresses here  is completely legal:
@@ -150,10 +150,10 @@ module JSON
               c = clock % 0x4000 if clock
               m = mac_addr if mac_addr
               t = time
-              if t.nil? then
+              if t.nil?
                 # UUID epoch is 1582/Oct/15
                 tt = Time.now
-                t = (tt.to_i * 10000000) + (tt.tv_usec * 10) + 0x01B21DD213814000
+                t = (tt.to_i * 10_000_000) + (tt.tv_usec * 10) + 0x01B21DD213814000
               end
               c = c.succ # important; increment here
               write_state fp, c, m
@@ -162,21 +162,21 @@ module JSON
 
           tl = t & 0xFFFF_FFFF
           tm = t >> 32
-          tm = tm & 0xFFFF
+          tm &= 0xFFFF
           th = t >> 48
-          th = th & 0x0FFF
-          th = th | 0x1000
+          th &= 0x0FFF
+          th |= 0x1000
           cl = c & 0xFF
           ch = c & 0x3F00
-          ch = ch >> 8
-          ch = ch | 0x80
+          ch >>= 8
+          ch |= 0x80
           pack tl, tm, th, cl, ch, m
         end
         alias create_v1 create
 
         # A  simple GUID  parser:  just ignores  unknown  characters and  convert
         # hexadecimal dump into 16-octet object.
-        def parse obj
+        def parse(obj)
           str = obj.to_s.sub(/\Aurn:uuid:/, '')
           str.gsub!(/[^0-9A-Fa-f]/, '')
           raw = str[0..31].lines.to_a.pack 'H*'
@@ -187,7 +187,7 @@ module JSON
 
         # The 'primitive constructor' of this class
         # Note UUID.pack(uuid.unpack) == uuid
-        def pack tl, tm, th, ch, cl, n
+        def pack(tl, tm, th, ch, cl, n)
           raw = [tl, tm, th, ch, cl, n].pack 'NnnCCa6'
           ret = new raw
           ret.freeze
@@ -238,13 +238,14 @@ module JSON
       # Two  UUIDs  are  said  to  be  equal if  and  only  if  their  (byte-order
       # canonicalized) integer representations are equivalent.  Refer RFC4122 for
       # details.
-      def == other
+      def ==(other)
         to_i == other.to_i
       end
 
       include Comparable
+
       # UUIDs are comparable (don't know what benefits are there, though).
-      def <=> other
+      def <=>(other)
         to_s <=> other.to_s
       end
 

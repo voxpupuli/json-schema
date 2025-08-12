@@ -20,7 +20,7 @@ module JSON
       private
 
       def type_string
-        type == :uri ? 'URI' : type.to_s
+        (type == :uri) ? 'URI' : type.to_s
       end
     end
 

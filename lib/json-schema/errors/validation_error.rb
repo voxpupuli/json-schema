@@ -16,7 +16,7 @@ module JSON
 
       def to_string(subschema_level = 0)
         if @sub_errors.empty?
-          subschema_level == 0 ? message_with_schema : message
+          (subschema_level == 0) ? message_with_schema : message
         else
           messages = ["#{message}. The schema specific errors were:\n"]
           @sub_errors.each do |subschema, errors|
@@ -29,7 +29,7 @@ module JSON
 
       def to_hash
         base = { schema: @schema.uri, fragment: ::JSON::Schema::Attribute.build_fragment(fragments), message: message_with_schema, failed_attribute: @failed_attribute.to_s.split(':').last.split('Attribute').first }
-        if !@sub_errors.empty?
+        unless @sub_errors.empty?
           base[:errors] = @sub_errors.each_with_object({}) do |(subschema, errors), hsh|
             subschema_sym = subschema.downcase.gsub(/\W+/, '_').to_sym
             hsh[subschema_sym] = Array(errors).map { |e| e.to_hash }

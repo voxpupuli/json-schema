@@ -8,3 +8,6 @@ plugins:
   - rubocop-rspec
   - rubocop-performance
   - rubocop-minitest
+
+AllCops:
+  TargetRubyVersion: 3.2

@@ -564,7 +564,7 @@ class Draft4Test < Minitest::Test
     }
     data = {
       'name' => 'John Doe',
-      'credit_card' => 5555555555555555,
+      'credit_card' => 5_555_555_555_555_555,
     }
 
     assert(!JSON::Validator.validate(schema, data), 'test schema dependency with invalid data')
