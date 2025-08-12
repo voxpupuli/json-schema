@@ -1,5 +1,13 @@
 # Changelog
 
+## [v6.0.0](https://github.com/voxpupuli/json-schema/tree/v6.0.0) (2025-08-12)
+
+[Full Changelog](https://github.com/voxpupuli/json-schema/compare/v5.2.2...v6.0.0)
+
+**Breaking changes:**
+
+- Require Ruby 3.2 or newer [\#549](https://github.com/voxpupuli/json-schema/pull/549) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v5.2.2](https://github.com/voxpupuli/json-schema/tree/v5.2.2) (2025-08-12)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v5.2.1...v5.2.2)
