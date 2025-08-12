@@ -20,11 +20,8 @@ jobs:
           - ruby: truffleruby
           - ruby: truffleruby+graalvm
           - ruby: jruby
-          - ruby: "2.7"
-            rake_task: "rubocop test"
-          - ruby: "3.0"
-          - ruby: "3.1"
           - ruby: "3.2"
+            rake_task: "rubocop test"
           - ruby: "3.3"
           - ruby: "3.3"
             rubyopt: "--enable-frozen-string-literal"

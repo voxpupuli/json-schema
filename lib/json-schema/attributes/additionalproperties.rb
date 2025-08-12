@@ -30,7 +30,7 @@ module JSON
         schema = current_schema.schema
 
         if schema['properties']
-          extra_properties = extra_properties - schema['properties'].keys
+          extra_properties -= schema['properties'].keys
         end
 
         schema['patternProperties']&.each_key do |key|

@@ -177,7 +177,7 @@ class SchemaValidationTest < Minitest::Test
   def test_validate_schema_with_symbol_keys
     data = {
       'created_at' => '2014-01-25T00:58:33-08:00',
-      'id' => 8517194300913402149003,
+      'id' => 8_517_194_300_913_402_149_003,
       'name' => 'chelsey',
       'real_name' => 'Mekhi Hegmann',
       'website' => nil,

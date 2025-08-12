@@ -71,7 +71,7 @@ begin
 rescue LoadError
 else
   GitHubChangelogGenerator::RakeTask.new :changelog do |config|
-    config.exclude_labels = %w{duplicate question invalid wontfix wont-fix skip-changelog dependencies}
+    config.exclude_labels = %w[duplicate question invalid wontfix wont-fix skip-changelog dependencies]
     config.user = 'voxpupuli'
     config.project = 'json-schema'
     gem_version = Gem::Specification.load("#{config.project}.gemspec").version

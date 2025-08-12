@@ -9,12 +9,10 @@ module JSON
       end
 
       def validate(current_schema, data, fragments, processor, _validator, options = {})
-        begin
-          @validation_proc.call data
-        rescue JSON::Schema::CustomFormatError => e
-          message = "The property '#{self.class.build_fragment(fragments)}' #{e.message}"
-          self.class.validation_error(processor, message, fragments, current_schema, self.class, options[:record_errors])
-        end
+        @validation_proc.call data
+      rescue JSON::Schema::CustomFormatError => e
+        message = "The property '#{self.class.build_fragment(fragments)}' #{e.message}"
+        self.class.validation_error(processor, message, fragments, current_schema, self.class, options[:record_errors])
       end
     end
   end

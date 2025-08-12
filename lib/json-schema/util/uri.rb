@@ -6,7 +6,7 @@ module JSON
   module Util
     # @api private
     class URI < Addressable::URI
-      SUPPORTED_PROTOCOLS = %w(http https ftp tftp sftp ssh svn+ssh telnet nntp gopher wais ldap prospero)
+      SUPPORTED_PROTOCOLS = %w[http https ftp tftp sftp ssh svn+ssh telnet nntp gopher wais ldap prospero]
 
       class << self
         alias unescape_uri unescape
@@ -14,7 +14,7 @@ module JSON
         # @param uri [String, Addressable::URI]
         # @return [Addressable::URI, nil]
         def parse(uri)
-          super(uri)
+          super
         rescue Addressable::URI::InvalidURIError => e
           raise JSON::Schema::UriError, e.message
         end

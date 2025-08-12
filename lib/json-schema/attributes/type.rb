@@ -11,7 +11,7 @@ module JSON
                   current_schema.schema['type']
                 end
 
-        if !types.is_a?(Array)
+        unless types.is_a?(Array)
           types = [types]
           union = false
         end
@@ -41,7 +41,7 @@ module JSON
             diff = validation_errors(processor).count - pre_validation_error_count
             valid = false if diff > 0
             while diff > 0
-              diff = diff - 1
+              diff -= 1
               union_errors["type ##{type_index}"].push(validation_errors(processor).pop)
             end
           end
@@ -50,7 +50,7 @@ module JSON
         end
 
         if options[:disallow]
-          return if !valid
+          return unless valid
 
           message = "The property '#{build_fragment(fragments)}' matched one or more of the following types: #{list_types(types)}"
           validation_error(processor, message, fragments, current_schema, self, options[:record_errors])

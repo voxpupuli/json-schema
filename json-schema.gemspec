@@ -14,12 +14,12 @@ Gem::Specification.new do |s|
   s.files = Dir['lib/**/*', 'resources/*.json']
   s.require_path = 'lib'
   s.extra_rdoc_files = ['README.md', 'LICENSE.md']
-  s.required_ruby_version = '>= 2.7'
+  s.required_ruby_version = '>= 3.2'
   s.license = 'MIT'
 
   s.add_development_dependency 'minitest', '~> 5.0'
   s.add_development_dependency 'rake', '~> 13.0'
-  s.add_development_dependency 'voxpupuli-rubocop', '~> 3.1.0'
+  s.add_development_dependency 'voxpupuli-rubocop', '~> 4.2.0'
   s.add_development_dependency 'webmock', '~> 3.23'
 
   s.add_dependency 'addressable', '~> 2.8'

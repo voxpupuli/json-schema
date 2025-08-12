@@ -27,7 +27,7 @@ module JSON
           diff = validation_errors(processor).count - pre_validation_error_count
           valid = false if diff > 0
           while diff > 0
-            diff = diff - 1
+            diff -= 1
             errors["anyOf ##{schema_index}"].push(validation_errors(processor).pop)
           end
 
@@ -36,7 +36,7 @@ module JSON
           data = original_data
         end
 
-        if !valid
+        unless valid
           message = "The property '#{build_fragment(fragments)}' of type #{type_of_data(data)} did not match one or more of the required schemas"
           validation_error(processor, message, fragments, current_schema, self, options[:record_errors])
           validation_errors(processor).last.sub_errors = errors

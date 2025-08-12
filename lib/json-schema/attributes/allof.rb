@@ -32,7 +32,7 @@ module JSON
           diff = validation_errors(processor).count - pre_validation_error_count
 
           while diff > 0
-            diff = diff - 1
+            diff -= 1
             errors["allOf ##{schema_index}"].push(validation_errors(processor).pop)
           end
         end
@@ -44,7 +44,7 @@ module JSON
           common_missing_properties = (all_property_errors.first || []).to_set
 
           all_property_errors[1..].each do |curr_property_errors|
-            common_missing_properties = common_missing_properties & curr_property_errors.to_set
+            common_missing_properties &= curr_property_errors.to_set
           end
         end
 
