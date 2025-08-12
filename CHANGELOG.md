@@ -1,5 +1,13 @@
 # Changelog
 
+## [v5.2.2](https://github.com/voxpupuli/json-schema/tree/v5.2.2) (2025-08-12)
+
+[Full Changelog](https://github.com/voxpupuli/json-schema/compare/v5.2.1...v5.2.2)
+
+**Fixed bugs:**
+
+- Improve :failed\_attribute value for custom formats [\#545](https://github.com/voxpupuli/json-schema/pull/545) ([bmdelaune](https://github.com/bmdelaune))
+
 ## [v5.2.1](https://github.com/voxpupuli/json-schema/tree/v5.2.1) (2025-07-09)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v5.2.0...v5.2.1)
@@ -106,7 +114,6 @@
 **Merged pull requests:**
 
 - Add dummy CI job we can depend on [\#503](https://github.com/voxpupuli/json-schema/pull/503) ([bastelfreak](https://github.com/bastelfreak))
-- build\(deps\): bump actions/checkout from 2 to 4 [\#502](https://github.com/voxpupuli/json-schema/pull/502) ([dependabot[bot]](https://github.com/apps/dependabot))
 - dependabot: check for github actions and gems [\#501](https://github.com/voxpupuli/json-schema/pull/501) ([bastelfreak](https://github.com/bastelfreak))
 
 ## [v4.1.0](https://github.com/voxpupuli/json-schema/tree/v4.1.0) (2023-09-15)
