@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'json-schema'
-  s.version = '5.2.2'
+  s.version = '6.0.0'
   s.authors = ['Kenny Hoxworth', 'Vox Pupuli']
   s.email = 'voxpupuli@groups.io'
   s.homepage = 'https://github.com/voxpupuli/json-schema/'
