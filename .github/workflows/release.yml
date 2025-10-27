@@ -24,7 +24,7 @@ jobs:
         shell: bash
         run: gem build --verbose *.gemspec
       - name: Upload gem to GitHub cache
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: gem-artifact
           path: '*.gem'
