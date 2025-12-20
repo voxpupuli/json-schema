@@ -23,5 +23,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'webmock', '~> 3.23'
 
   s.add_dependency 'addressable', '~> 2.8'
-  s.add_dependency 'bigdecimal', '~> 3.1'
+  s.add_dependency 'bigdecimal', '>= 3.1', '< 5'
 end
