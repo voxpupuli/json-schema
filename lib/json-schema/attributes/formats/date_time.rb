@@ -3,7 +3,7 @@ require 'json-schema/attributes/format'
 module JSON
   class Schema
     class DateTimeFormat < FormatAttribute
-      REGEXP = /\A\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})([\.,]\d+)?(Z|[+-](\d{2})(:?\d{2})?)?\z/
+      REGEXP = /\A\d{4}-\d{2}-\d{2}T(\d{2}):(\d{2}):(\d{2})([.,]\d+)?(Z|[+-](\d{2})(:?\d{2})?)?\z/
 
       def self.validate(current_schema, data, fragments, processor, _validator, options = {})
         # Timestamp in restricted ISO-8601 YYYY-MM-DDThh:mm:ssZ with optional decimal fraction of the second
