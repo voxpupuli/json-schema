@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 3.2'
   s.license = 'MIT'
 
-  s.add_development_dependency 'minitest', '~> 5.0'
+  s.add_development_dependency 'minitest', '>= 5.0', '< 7'
   s.add_development_dependency 'rake', '~> 13.0'
   s.add_development_dependency 'voxpupuli-rubocop', '~> 4.2.0'
   s.add_development_dependency 'webmock', '~> 3.23'
