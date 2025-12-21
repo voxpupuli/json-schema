@@ -1,5 +1,15 @@
 # Changelog
 
+## [v6.1.0](https://github.com/voxpupuli/json-schema/tree/v6.1.0) (2025-12-21)
+
+[Full Changelog](https://github.com/voxpupuli/json-schema/compare/v6.0.0...v6.1.0)
+
+**Implemented enhancements:**
+
+- voxpupuli-rubocop: Update 4.2.0-\>5.1.0 [\#559](https://github.com/voxpupuli/json-schema/pull/559) ([bastelfreak](https://github.com/bastelfreak))
+- minitest: Allow 6.x [\#558](https://github.com/voxpupuli/json-schema/pull/558) ([bastelfreak](https://github.com/bastelfreak))
+- bigdecimal: Allow 4.x [\#557](https://github.com/voxpupuli/json-schema/pull/557) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v6.0.0](https://github.com/voxpupuli/json-schema/tree/v6.0.0) (2025-08-12)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v5.2.2...v6.0.0)
