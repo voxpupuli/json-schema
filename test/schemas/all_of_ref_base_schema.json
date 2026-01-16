@@ -4,4 +4,3 @@
    		"name" : { "type": "integer" },
    		"id" : { "type": "string" }
  	}
-}

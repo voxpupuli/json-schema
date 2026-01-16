@@ -22,7 +22,7 @@ class AllOfRefSchemaTest < Minitest::Test
     nested_errors = errors[0][:errors]
 
     assert_equal([:allof_0], nested_errors.keys, 'should have nested errors for each allOf subschema')
-    assert_match(%r{the property '#/name' of type string did not match the following type: integer}i, nested_errors[:allof_0][0][:message])
+    assert_match(%r{the '#/name' of type string did not match the following type: integer}i, nested_errors[:allof_0][0][:message])
   end
 
   def test_all_of_ref_message
