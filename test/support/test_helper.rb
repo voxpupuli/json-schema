@@ -3,6 +3,16 @@
 require 'minitest/autorun'
 require 'webmock/minitest'
 
+Minitest.load_plugins
+require 'minitest/reporters'
+
+if ENV['GITHUB_ACTIONS'] == 'true'
+  require 'minitest_reporters_github'
+  Minitest::Reporters.use!([MinitestReportersGithub.new])
+else
+  Minitest::Reporters.use!
+end
+
 $LOAD_PATH.unshift(File.expand_path('../../lib', __dir__))
 require 'json-schema'
 
