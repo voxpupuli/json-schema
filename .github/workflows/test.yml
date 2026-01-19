@@ -26,6 +26,7 @@ jobs:
           - ruby: "3.3"
             rubyopt: "--enable-frozen-string-literal"
           - ruby: "3.4"
+          - ruby: "4.0"
     steps:
       - uses: actions/checkout@v6
       - name: Install Ruby ${{ matrix.ruby }}
