@@ -3,7 +3,7 @@ require 'json-schema/attributes/format'
 module JSON
   class Schema
     class DateFormat < FormatAttribute
-      REGEXP = /\A\d{4}-\d{2}-\d{2}\z/
+      REGEXP = /\A\d{4}-\d{2}-\d{2}\z/.freeze
 
       def self.validate(current_schema, data, fragments, processor, _validator, options = {})
         if data.is_a?(String)
