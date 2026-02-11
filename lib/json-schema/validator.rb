@@ -412,53 +412,36 @@ module JSON
       end
 
       def json_backend
-        if defined?(MultiJson)
-          MultiJson.respond_to?(:adapter) ? MultiJson.adapter : MultiJson.engine
-        else
-          @@json_backend
-        end
+        @@json_backend
       end
 
       def json_backend=(backend)
-        if defined?(MultiJson)
-          backend = 'json_gem' if backend == 'json'
-          MultiJson.respond_to?(:use) ? MultiJson.use(backend) : MultiJson.engine = backend
+        backend = backend.to_s
+        if @@available_json_backends.include?(backend)
+          @@json_backend = backend
         else
-          backend = backend.to_s
-          if @@available_json_backends.include?(backend)
-            @@json_backend = backend
-          else
-            raise JSON::Schema::JsonParseError, "The JSON backend '#{backend}' could not be found."
-          end
+          raise JSON::Schema::JsonParseError, "The JSON backend '#{backend}' could not be found."
         end
       end
 
       def parse(s)
-        if defined?(MultiJson)
+        case @@json_backend.to_s
+        when 'json'
           begin
-            MultiJson.respond_to?(:adapter) ? MultiJson.load(s) : MultiJson.decode(s)
-          rescue MultiJson::ParseError => e
+            JSON.parse(s, quirks_mode: true)
+          rescue JSON::ParserError => e
+            raise JSON::Schema::JsonParseError, e.message
+          end
+        when 'yajl'
+          begin
+            json = StringIO.new(s)
+            parser = Yajl::Parser.new
+            parser.parse(json) or raise(JSON::Schema::JsonParseError, 'The JSON could not be parsed by yajl')
+          rescue Yajl::ParseError => e
             raise JSON::Schema::JsonParseError, e.message
           end
         else
-          case @@json_backend.to_s
-          when 'json'
-            begin
-              JSON.parse(s, quirks_mode: true)
-            rescue JSON::ParserError => e
-              raise JSON::Schema::JsonParseError, e.message
-            end
-          when 'yajl'
-            begin
-              json = StringIO.new(s)
-              parser = Yajl::Parser.new
-              parser.parse(json) or raise(JSON::Schema::JsonParseError, 'The JSON could not be parsed by yajl')
-            rescue Yajl::ParseError => e
-              raise JSON::Schema::JsonParseError, e.message
-            end
-          else
-            raise JSON::Schema::JsonParseError, "No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json"
-          end
+          raise JSON::Schema::JsonParseError, "No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json"
         end
       end
 
@@ -481,35 +464,33 @@ module JSON
         end
       end
 
-      unless defined?(MultiJson)
-        if Gem::Specification.find_all_by_name('json').any?
+      if Gem::Specification.find_all_by_name('json').any?
+        require 'json'
+        @@available_json_backends << 'json'
+        @@json_backend = 'json'
+      else
+        # Try force-loading json for rubies > 1.9.2
+        begin
           require 'json'
           @@available_json_backends << 'json'
           @@json_backend = 'json'
-        else
-          # Try force-loading json for rubies > 1.9.2
-          begin
-            require 'json'
-            @@available_json_backends << 'json'
-            @@json_backend = 'json'
-          rescue LoadError
-          end
+        rescue LoadError
         end
-
-        if Gem::Specification.find_all_by_name('yajl-ruby').any?
-          require 'yajl'
-          @@available_json_backends << 'yajl'
-          @@json_backend = 'yajl'
-        end
-
-        @@serializer = if @@json_backend == 'yajl'
-                         ->(o) { Yajl::Encoder.encode(o) }
-                       elsif @@json_backend == 'json'
-                         ->(o) { JSON.dump(o) }
-                       else
-                         ->(o) { YAML.dump(o) }
-                       end
       end
+
+      if Gem::Specification.find_all_by_name('yajl-ruby').any?
+        require 'yajl'
+        @@available_json_backends << 'yajl'
+        @@json_backend = 'yajl'
+      end
+
+      @@serializer = if @@json_backend == 'yajl'
+                       ->(o) { Yajl::Encoder.encode(o) }
+                     elsif @@json_backend == 'json'
+                       ->(o) { JSON.dump(o) }
+                     else
+                       ->(o) { YAML.dump(o) }
+                     end
     end
 
     private
@@ -523,11 +504,7 @@ module JSON
     end
 
     def serialize(schema)
-      if defined?(MultiJson)
-        MultiJson.respond_to?(:dump) ? MultiJson.dump(schema) : MultiJson.encode(schema)
-      else
-        @@serializer.call(schema)
-      end
+      @@serializer.call(schema)
     end
 
     def fake_uuid(schema)

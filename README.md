@@ -474,10 +474,6 @@ validation:
 JSON::Validator.json_backend = :json
 ```
 
-Optionally, the JSON Schema library supports using the MultiJSON library for
-selecting JSON backends. If the MultiJSON library is installed, it will be
-autoloaded.
-
 Notes
 -----
 
