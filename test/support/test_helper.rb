@@ -4,12 +4,22 @@ require 'minitest/autorun'
 require 'webmock/minitest'
 
 Minitest.load_plugins
-require 'minitest/reporters'
+has_minitest_reporters = true
+begin
+  require 'minitest/reporters'
+rescue LoadError
+  has_minitest_reporters = false
+end
 
-if ENV['GITHUB_ACTIONS'] == 'true'
-  require 'minitest_reporters_github'
-  Minitest::Reporters.use!([MinitestReportersGithub.new])
-else
+if ENV['GITHUB_ACTIONS'] == 'true' && has_minitest_reporters
+  begin
+    require 'minitest_reporters_github'
+    Minitest::Reporters.use!([MinitestReportersGithub.new])
+  rescue LoadError
+    # Temporary fallback for Ruby 4 until the first minitest_reporters_github release after v1.1.0.
+    Minitest::Reporters.use!
+  end
+elsif has_minitest_reporters
   Minitest::Reporters.use!
 end
 

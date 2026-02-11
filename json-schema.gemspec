@@ -18,7 +18,10 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
 
   s.add_development_dependency 'minitest', '>= 5.0', '< 7'
-  s.add_development_dependency 'minitest_reporters_github', '~> 1.0', '>= 1.0.1'
+  if Gem.ruby_version < Gem::Version.new('4.0')
+    # Temporary: remove this guard after the first minitest_reporters_github release after v1.1.0.
+    s.add_development_dependency 'minitest_reporters_github', '~> 1.0', '>= 1.0.1'
+  end
   s.add_development_dependency 'rake', '~> 13.0'
   s.add_development_dependency 'voxpupuli-rubocop', '~> 5.1.0'
   s.add_development_dependency 'webmock', '~> 3.23'
