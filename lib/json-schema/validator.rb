@@ -38,8 +38,6 @@ module JSON
     @@available_json_backends = []
     @@json_backend = nil
     @@serializer = nil
-    @@use_multi_json = defined?(MultiJson) ? true : false
-    @@multi_json_warned = false
     @@mutex = Mutex.new
 
     def initialize(schema_data, opts = {})
@@ -413,68 +411,45 @@ module JSON
         end
       end
 
-      def use_multi_json?
-        @@use_multi_json
-      end
-
-      def use_multi_json=(value)
-        @@use_multi_json = value ? true : false
-        if use_multi_json? == false
-          ensure_ruby_json_backends!
-        end
+      # MultiJSON support has been removed. This setter remains only to give a
+      # clear error to apps that still call it. It will be removed in a future version.
+      def use_multi_json=(_value)
+        raise ArgumentError,
+              'json-schema no longer supports MultiJSON, so `JSON::Validator.use_multi_json=` has been removed. ' \
+              'Remove the call from your code; json-schema now always uses the json gem (or yajl-ruby, if installed).'
       end
 
       def json_backend
-        if use_multi_json?
-          multi_json_deprecation_warning!
-          MultiJson.respond_to?(:adapter) ? MultiJson.adapter : MultiJson.engine
-        else
-          @@json_backend
-        end
+        @@json_backend
       end
 
       def json_backend=(backend)
-        if use_multi_json?
-          multi_json_deprecation_warning!
-          backend = 'json_gem' if backend == 'json'
-          MultiJson.respond_to?(:use) ? MultiJson.use(backend) : MultiJson.engine = backend
+        backend = backend.to_s
+        if @@available_json_backends.include?(backend)
+          @@json_backend = backend
         else
-          backend = backend.to_s
-          if @@available_json_backends.include?(backend)
-            @@json_backend = backend
-          else
-            raise JSON::Schema::JsonParseError, "The JSON backend '#{backend}' could not be found."
-          end
+          raise JSON::Schema::JsonParseError, "The JSON backend '#{backend}' could not be found."
         end
       end
 
       def parse(s)
-        if use_multi_json?
-          multi_json_deprecation_warning!
+        case @@json_backend.to_s
+        when 'json'
           begin
-            MultiJson.respond_to?(:adapter) ? MultiJson.load(s) : MultiJson.decode(s)
-          rescue MultiJson::ParseError => e
+            JSON.parse(s)
+          rescue JSON::ParserError => e
+            raise JSON::Schema::JsonParseError, e.message
+          end
+        when 'yajl'
+          begin
+            json = StringIO.new(s)
+            parser = Yajl::Parser.new
+            parser.parse(json) or raise(JSON::Schema::JsonParseError, 'The JSON could not be parsed by yajl')
+          rescue Yajl::ParseError => e
             raise JSON::Schema::JsonParseError, e.message
           end
         else
-          case @@json_backend.to_s
-          when 'json'
-            begin
-              JSON.parse(s)
-            rescue JSON::ParserError => e
-              raise JSON::Schema::JsonParseError, e.message
-            end
-          when 'yajl'
-            begin
-              json = StringIO.new(s)
-              parser = Yajl::Parser.new
-              parser.parse(json) or raise(JSON::Schema::JsonParseError, 'The JSON could not be parsed by yajl')
-            rescue Yajl::ParseError => e
-              raise JSON::Schema::JsonParseError, e.message
-            end
-          else
-            raise JSON::Schema::JsonParseError, "No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json"
-          end
+          raise JSON::Schema::JsonParseError, "No supported JSON parsers found. The following parsers are suported:\n * yajl-ruby\n * json"
         end
       end
 
@@ -497,58 +472,33 @@ module JSON
         end
       end
 
-      def ensure_ruby_json_backends!
-        if !@@available_json_backends.empty? || !@@serializer.nil?
-          return
-        end
-
-        if Gem::Specification.find_all_by_name('json').any?
+      if Gem::Specification.find_all_by_name('json').any?
+        require 'json'
+        @@available_json_backends << 'json'
+        @@json_backend = 'json'
+      else
+        # Try force-loading json for rubies > 1.9.2
+        begin
           require 'json'
           @@available_json_backends << 'json'
           @@json_backend = 'json'
-        else
-          # Try force-loading json for rubies > 1.9.2
-          begin
-            require 'json'
-            @@available_json_backends << 'json'
-            @@json_backend = 'json'
-          rescue LoadError
-          end
-        end
-
-        if Gem::Specification.find_all_by_name('yajl-ruby').any?
-          require 'yajl'
-          @@available_json_backends << 'yajl'
-          @@json_backend = 'yajl'
-        end
-
-        @@serializer = if @@json_backend == 'yajl'
-                         ->(o) { Yajl::Encoder.encode(o) }
-                       elsif @@json_backend == 'json'
-                         ->(o) { JSON.dump(o) }
-                       else
-                         ->(o) { YAML.dump(o) }
-                       end
-      end
-
-      def multi_json_deprecation_warning!
-        unless @@multi_json_warned
-          @@multi_json_warned = true
-          warn '[DEPRECATION NOTICE] json-schema support for MultiJSON is deprecated and will be removed in a future version. ' \
-               'To stop using MultiJSON, add `JSON::Validator.use_multi_json = false` to your application\'s initialization code.'
+        rescue LoadError
         end
       end
 
-      private
-
-      # for test usage only
-      def reset_multi_json_deprecation_warning!
-        @@multi_json_warned = false
+      if Gem::Specification.find_all_by_name('yajl-ruby').any?
+        require 'yajl'
+        @@available_json_backends << 'yajl'
+        @@json_backend = 'yajl'
       end
-    end
 
-    if use_multi_json? == false
-      ensure_ruby_json_backends!
+      @@serializer = if @@json_backend == 'yajl'
+                       ->(o) { Yajl::Encoder.encode(o) }
+                     elsif @@json_backend == 'json'
+                       ->(o) { JSON.dump(o) }
+                     else
+                       ->(o) { YAML.dump(o) }
+                     end
     end
 
     private
@@ -562,12 +512,7 @@ module JSON
     end
 
     def serialize(schema)
-      if self.class.use_multi_json?
-        self.class.multi_json_deprecation_warning!
-        MultiJson.respond_to?(:dump) ? MultiJson.dump(schema) : MultiJson.encode(schema)
-      else
-        @@serializer.call(schema)
-      end
+      @@serializer.call(schema)
     end
 
     def fake_uuid(schema)
