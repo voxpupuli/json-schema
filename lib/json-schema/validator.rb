@@ -38,7 +38,7 @@ module JSON
     @@available_json_backends = []
     @@json_backend = nil
     @@serializer = nil
-    @@use_multi_json = !!defined?(MultiJson)
+    @@use_multi_json = defined?(MultiJson) ? true : false
     @@mutex = Mutex.new
 
     def initialize(schema_data, opts = {})
@@ -417,8 +417,8 @@ module JSON
       end
 
       def use_multi_json=(value)
-        @@use_multi_json = !!value
-        if !use_multi_json?
+        @@use_multi_json = value ? true : false
+        if use_multi_json? == false
           ensure_ruby_json_backends!
         end
       end
@@ -528,7 +528,7 @@ module JSON
       end
     end
 
-    if !use_multi_json?
+    if use_multi_json? == false
       ensure_ruby_json_backends!
     end
 
