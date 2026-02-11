@@ -478,6 +478,12 @@ Optionally, the JSON Schema library supports using the MultiJSON library for
 selecting JSON backends. If the MultiJSON library is installed, it will be
 autoloaded.
 
+To disable using MultiJSON (even when it is installed):
+
+```ruby
+JSON::Validator.use_multi_json = false
+```
+
 Notes
 -----
 
