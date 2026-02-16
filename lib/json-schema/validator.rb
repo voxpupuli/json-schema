@@ -39,6 +39,7 @@ module JSON
     @@json_backend = nil
     @@serializer = nil
     @@use_multi_json = defined?(MultiJson) ? true : false
+    @@multi_json_warned = false
     @@mutex = Mutex.new
 
     def initialize(schema_data, opts = {})
@@ -425,6 +426,7 @@ module JSON
 
       def json_backend
         if use_multi_json?
+          multi_json_deprecation_warning!
           MultiJson.respond_to?(:adapter) ? MultiJson.adapter : MultiJson.engine
         else
           @@json_backend
@@ -433,6 +435,7 @@ module JSON
 
       def json_backend=(backend)
         if use_multi_json?
+          multi_json_deprecation_warning!
           backend = 'json_gem' if backend == 'json'
           MultiJson.respond_to?(:use) ? MultiJson.use(backend) : MultiJson.engine = backend
         else
@@ -447,6 +450,7 @@ module JSON
 
       def parse(s)
         if use_multi_json?
+          multi_json_deprecation_warning!
           begin
             MultiJson.respond_to?(:adapter) ? MultiJson.load(s) : MultiJson.decode(s)
           rescue MultiJson::ParseError => e
@@ -526,6 +530,21 @@ module JSON
                          ->(o) { YAML.dump(o) }
                        end
       end
+
+      def multi_json_deprecation_warning!
+        unless @@multi_json_warned
+          @@multi_json_warned = true
+          warn '[DEPRECATION NOTICE] json-schema support for MultiJSON is deprecated and will be removed in a future version. ' \
+               'To stop using MultiJSON, add `JSON::Validator.use_multi_json = false` to your application\'s initialization code.'
+        end
+      end
+
+      private
+
+      # for test usage only
+      def reset_multi_json_deprecation_warning!
+        @@multi_json_warned = false
+      end
     end
 
     if use_multi_json? == false
@@ -544,6 +563,7 @@ module JSON
 
     def serialize(schema)
       if self.class.use_multi_json?
+        self.class.multi_json_deprecation_warning!
         MultiJson.respond_to?(:dump) ? MultiJson.dump(schema) : MultiJson.encode(schema)
       else
         @@serializer.call(schema)
