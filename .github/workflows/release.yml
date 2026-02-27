@@ -39,7 +39,7 @@ jobs:
       contents: write # clone repo and create release
     steps:
       - name: Download gem from GitHub cache
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: gem-artifact
       - name: Create Release
@@ -56,7 +56,7 @@ jobs:
       packages: write # publish to rubygems.pkg.github.com
     steps:
       - name: Download gem from GitHub cache
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: gem-artifact
       - name: Publish gem to GitHub packages
@@ -73,7 +73,7 @@ jobs:
       id-token: write # rubygems.org authentication
     steps:
       - name: Download gem from GitHub cache
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: gem-artifact
       - uses: rubygems/configure-rubygems-credentials@v1.0.0
@@ -92,7 +92,7 @@ jobs:
       - release-to-rubygems
     steps:
       - name: Download gem from GitHub cache
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: gem-artifact
       - name: Install Ruby
