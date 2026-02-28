@@ -15,6 +15,7 @@ end
 
 $LOAD_PATH.unshift(File.expand_path('../../lib', __dir__))
 require 'json-schema'
+JSON::Validator.use_multi_json = false
 
 Dir[File.join(File.expand_path(__dir__), '*.rb')].sort.each do |support_file|
   require support_file unless support_file == __FILE__
