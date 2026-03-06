@@ -1,5 +1,15 @@
 # Changelog
 
+## [v6.2.0](https://github.com/voxpupuli/json-schema/tree/v6.2.0) (2026-03-06)
+
+[Full Changelog](https://github.com/voxpupuli/json-schema/compare/v6.1.0...v6.2.0)
+
+**Implemented enhancements:**
+
+- Allow disabling MultiJSON even when it is installed [\#566](https://github.com/voxpupuli/json-schema/pull/566) ([jordan-brough](https://github.com/jordan-brough))
+- Add Ruby 4.0 support [\#564](https://github.com/voxpupuli/json-schema/pull/564) ([bastelfreak](https://github.com/bastelfreak))
+- Restore support for Ruby 2.7 – Ruby 3.1 [\#561](https://github.com/voxpupuli/json-schema/pull/561) ([koic](https://github.com/koic))
+
 ## [v6.1.0](https://github.com/voxpupuli/json-schema/tree/v6.1.0) (2025-12-21)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v6.0.0...v6.1.0)
