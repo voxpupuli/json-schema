@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'json-schema'
-  s.version = '6.0.0'
+  s.version = '6.2.0'
   s.authors = ['Kenny Hoxworth', 'Vox Pupuli']
   s.email = 'voxpupuli@groups.io'
   s.homepage = 'https://github.com/voxpupuli/json-schema/'
@@ -14,14 +14,9 @@ Gem::Specification.new do |s|
   s.files = Dir['lib/**/*', 'resources/*.json']
   s.require_path = 'lib'
   s.extra_rdoc_files = ['README.md', 'LICENSE.md']
-  s.required_ruby_version = '>= 3.2'
+  s.required_ruby_version = '>= 2.7'
   s.license = 'MIT'
 
-  s.add_development_dependency 'minitest', '~> 5.0'
-  s.add_development_dependency 'rake', '~> 13.0'
-  s.add_development_dependency 'voxpupuli-rubocop', '~> 4.2.0'
-  s.add_development_dependency 'webmock', '~> 3.23'
-
   s.add_dependency 'addressable', '~> 2.8'
-  s.add_dependency 'bigdecimal', '~> 3.1'
+  s.add_dependency 'bigdecimal', '>= 3.1', '< 5'
 end

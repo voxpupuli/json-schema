@@ -38,6 +38,8 @@ module JSON
     @@available_json_backends = []
     @@json_backend = nil
     @@serializer = nil
+    @@use_multi_json = defined?(MultiJson) ? true : false
+    @@multi_json_warned = false
     @@mutex = Mutex.new
 
     def initialize(schema_data, opts = {})
@@ -411,8 +413,20 @@ module JSON
         end
       end
 
+      def use_multi_json?
+        @@use_multi_json
+      end
+
+      def use_multi_json=(value)
+        @@use_multi_json = value ? true : false
+        if use_multi_json? == false
+          ensure_ruby_json_backends!
+        end
+      end
+
       def json_backend
-        if defined?(MultiJson)
+        if use_multi_json?
+          multi_json_deprecation_warning!
           MultiJson.respond_to?(:adapter) ? MultiJson.adapter : MultiJson.engine
         else
           @@json_backend
@@ -420,7 +434,8 @@ module JSON
       end
 
       def json_backend=(backend)
-        if defined?(MultiJson)
+        if use_multi_json?
+          multi_json_deprecation_warning!
           backend = 'json_gem' if backend == 'json'
           MultiJson.respond_to?(:use) ? MultiJson.use(backend) : MultiJson.engine = backend
         else
@@ -434,7 +449,8 @@ module JSON
       end
 
       def parse(s)
-        if defined?(MultiJson)
+        if use_multi_json?
+          multi_json_deprecation_warning!
           begin
             MultiJson.respond_to?(:adapter) ? MultiJson.load(s) : MultiJson.decode(s)
           rescue MultiJson::ParseError => e
@@ -481,7 +497,11 @@ module JSON
         end
       end
 
-      unless defined?(MultiJson)
+      def ensure_ruby_json_backends!
+        if !@@available_json_backends.empty? || !@@serializer.nil?
+          return
+        end
+
         if Gem::Specification.find_all_by_name('json').any?
           require 'json'
           @@available_json_backends << 'json'
@@ -510,6 +530,25 @@ module JSON
                          ->(o) { YAML.dump(o) }
                        end
       end
+
+      def multi_json_deprecation_warning!
+        unless @@multi_json_warned
+          @@multi_json_warned = true
+          warn '[DEPRECATION NOTICE] json-schema support for MultiJSON is deprecated and will be removed in a future version. ' \
+               'To stop using MultiJSON, add `JSON::Validator.use_multi_json = false` to your application\'s initialization code.'
+        end
+      end
+
+      private
+
+      # for test usage only
+      def reset_multi_json_deprecation_warning!
+        @@multi_json_warned = false
+      end
+    end
+
+    if use_multi_json? == false
+      ensure_ruby_json_backends!
     end
 
     private
@@ -523,7 +562,8 @@ module JSON
     end
 
     def serialize(schema)
-      if defined?(MultiJson)
+      if self.class.use_multi_json?
+        self.class.multi_json_deprecation_warning!
         MultiJson.respond_to?(:dump) ? MultiJson.dump(schema) : MultiJson.encode(schema)
       else
         @@serializer.call(schema)

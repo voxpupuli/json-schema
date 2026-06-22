@@ -478,6 +478,14 @@ Optionally, the JSON Schema library supports using the MultiJSON library for
 selecting JSON backends. If the MultiJSON library is installed, it will be
 autoloaded.
 
+**Deprecation notice:** MultiJSON support is deprecated and will be removed in a
+future version. To stop using MultiJSON, add the following to your application's
+initialization code:
+
+```ruby
+JSON::Validator.use_multi_json = false
+```
+
 Notes
 -----
 
