@@ -460,7 +460,7 @@ module JSON
           case @@json_backend.to_s
           when 'json'
             begin
-              JSON.parse(s, quirks_mode: true)
+              JSON.parse(s)
             rescue JSON::ParserError => e
               raise JSON::Schema::JsonParseError, e.message
             end
