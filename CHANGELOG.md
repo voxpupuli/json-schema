@@ -1,5 +1,13 @@
 # Changelog
 
+## [v6.2.1](https://github.com/voxpupuli/json-schema/tree/v6.2.1) (2026-10-03)
+
+[Full Changelog](https://github.com/voxpupuli/json-schema/compare/v6.2.0...v6.2.1)
+
+**Fixed bugs:**
+
+- Stop passing `quirks_mode: true` to JSON.parse [\#578](https://github.com/voxpupuli/json-schema/pull/578) ([byroot](https://github.com/byroot))
+
 ## [v6.2.0](https://github.com/voxpupuli/json-schema/tree/v6.2.0) (2026-03-06)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v6.1.0...v6.2.0)
@@ -744,6 +752,10 @@
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/1.0.4...2.0.0)
 
+**Implemented enhancements:**
+
+- Support \(optional\) adding of default values to input data while validating [\#48](https://github.com/voxpupuli/json-schema/pull/48) ([goodsimon](https://github.com/goodsimon))
+
 **Closed issues:**
 
 - json\_schema with old multi\_json in Rails context [\#39](https://github.com/voxpupuli/json-schema/issues/39)
@@ -756,7 +768,6 @@
 **Merged pull requests:**
 
 - More descriptive error message for PatternAttribute [\#49](https://github.com/voxpupuli/json-schema/pull/49) ([quoideneuf](https://github.com/quoideneuf))
-- Support \(optional\) adding of default values to input data while validating [\#48](https://github.com/voxpupuli/json-schema/pull/48) ([goodsimon](https://github.com/goodsimon))
 - Restore 1.8.7 compatibility. [\#46](https://github.com/voxpupuli/json-schema/pull/46) ([myronmarston](https://github.com/myronmarston))
 - Extends and additional properties take 2 [\#41](https://github.com/voxpupuli/json-schema/pull/41) ([japgolly](https://github.com/japgolly))
 - Fix Issue with MultiJson Feature Detection [\#40](https://github.com/voxpupuli/json-schema/pull/40) ([tylerhunt](https://github.com/tylerhunt))
