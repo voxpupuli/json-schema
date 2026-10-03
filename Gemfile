@@ -7,7 +7,7 @@ group :development do
   gem 'minitest_reporters_github', '~> 1.0', '>= 1.0.1'
   gem 'multi_json', '~> 1.15'
   gem 'rake', '~> 13.0'
-  gem 'voxpupuli-rubocop', '~> 5.2.0' if RUBY_VERSION >= '3.2'
+  gem 'voxpupuli-rubocop', '~> 5.3.0' if RUBY_VERSION >= '3.2'
   gem 'webmock', '~> 3.23'
 end
 
