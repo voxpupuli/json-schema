@@ -70,14 +70,28 @@ An optional third options argument is also accepted; available options are used
 in the examples below.
 
 By default, the validator uses the [JSON Schema Draft
-4](http://tools.ietf.org/html/draft-zyp-json-schema-04) specification for
+6](https://tools.ietf.org/html/draft-wright-json-schema-01) specification for
 validation; however, the user is free to specify additional specifications or
-extend existing ones. Legacy support for Draft 1, Draft 2, and Draft 3 is
+extend existing ones. Legacy support for Draft 1, Draft 2, Draft 3, and Draft 4 is
 included by either passing an optional `:version` parameter to the `validate`
-method (set either as `:draft1` or `draft2`), or by declaring the `$schema`
+method (for example, `:draft4`), or by declaring the `$schema`
 attribute in the schema and referencing the appropriate specification URI. Note
 that the `$schema` attribute takes precedence over the `:version` option during
 parsing and validation.
+
+```ruby
+# Explicitly select Draft 4 with the :version option.
+JSON::Validator.validate({ "type" => "integer" }, 5, :version => :draft4)
+# => true
+
+# Or declare Draft 4 in the schema itself.
+schema = {
+  "$schema" => "http://json-schema.org/draft-04/schema#",
+  "type" => "integer"
+}
+JSON::Validator.validate(schema, 5)
+# => true
+```
 
 For further information on json schema itself refer to <a
 href="https://json-schema.org/understanding-json-schema">Understanding
