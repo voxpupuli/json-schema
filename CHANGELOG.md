@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+**Documentation:**
+
+- Correct the documented default to Draft 6 and show how to select Draft 4 explicitly.
+
 ## [v6.2.1](https://github.com/voxpupuli/json-schema/tree/v6.2.1) (2026-10-03)
 
 [Full Changelog](https://github.com/voxpupuli/json-schema/compare/v6.2.0...v6.2.1)
