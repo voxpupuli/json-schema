@@ -57,6 +57,23 @@ class SchemaReaderTest < Minitest::Test
     refute reader.accept_file?(test_root.join('..', 'anything.json'))
   end
 
+  def test_accept_file_proc_sees_decoded_path
+    test_root = Pathname.new(__FILE__).expand_path.dirname
+    fence = test_root.join('schemas')
+    seen = []
+    reader = JSON::Schema::Reader.new(
+      accept_file: proc do |path|
+        seen << path.to_s
+        path.to_s.start_with?("#{fence}/")
+      end,
+    )
+
+    assert_raises(JSON::Schema::ReadRefused) do
+      reader.read("file://#{fence}/.%2F..%2F#{File.basename(__FILE__)}")
+    end
+    assert_equal [test_root.join(File.basename(__FILE__)).to_s], seen
+  end
+
   def test_file_scheme
     reader = JSON::Schema::Reader.new(accept_uri: true, accept_file: false)
     error = assert_raises(JSON::Schema::ReadRefused) do
