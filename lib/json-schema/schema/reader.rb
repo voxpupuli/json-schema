@@ -88,7 +88,8 @@ module JSON
         uri  = JSON::Util::URI.parse(location.to_s)
         body = if uri.scheme.nil? || uri.scheme == 'file'
                  uri = JSON::Util::URI.file_uri(uri)
-                 read_file(Pathname.new(uri.path).expand_path)
+                 # Decode before expanding so accept_file sees the path File.read opens
+                 read_file(Pathname.new(uri.unescaped_path).expand_path)
                else
                  read_uri(uri)
                end
@@ -130,7 +131,7 @@ module JSON
 
       def read_file(pathname)
         if accept_file?(pathname)
-          File.read(JSON::Util::URI.unescaped_path(pathname.to_s))
+          File.read(pathname.to_s)
         else
           raise JSON::Schema::ReadRefused.new(pathname.to_s, :file)
         end
