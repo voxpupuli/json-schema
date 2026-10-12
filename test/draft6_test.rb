@@ -5,6 +5,8 @@ class Draft6Test < Minitest::Test
     super(schema, data, version: :draft6)
   end
 
+  include ArrayValidation::UniqueItemsTests
+
   def test_const_attribute
     schema = {
       'type' => 'object',

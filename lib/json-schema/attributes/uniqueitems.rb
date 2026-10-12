@@ -5,6 +5,8 @@ module JSON
     class UniqueItemsAttribute < Attribute
       def self.validate(current_schema, data, fragments, processor, _validator, options = {})
         return unless data.is_a?(Array)
+        # Attributes are dispatched on key presence, so a false value must be checked here.
+        return unless current_schema.schema['uniqueItems']
 
         if data.clone.uniq!
           message = "The property '#{build_fragment(fragments)}' contained duplicated array values"
