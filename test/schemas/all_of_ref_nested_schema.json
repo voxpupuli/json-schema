@@ -1,0 +1,39 @@
+{
+  "definitions": {
+    "alpha": {
+      "type": "object",
+      "properties": {
+        "a": { "type": "string" }
+      },
+      "required": ["a"]
+    },
+    "bravo": {
+      "allOf": [
+        { "$ref": "#/definitions/alpha" },
+        {
+          "type": "object",
+          "properties": {
+            "b": { "type": "string" }
+          },
+          "required": ["b"]
+        }
+      ]
+    },
+    "charlie": {
+      "allOf": [
+        { "$ref": "#/definitions/bravo" },
+        {
+          "type": "object",
+          "properties": {
+            "c": { "type": "string" }
+          },
+          "required": ["c"]
+        }
+      ]
+    }
+  },
+  "type": "object",
+  "properties": {
+    "nested": { "$ref": "#/definitions/charlie" }
+  }
+}
