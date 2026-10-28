@@ -427,7 +427,7 @@ module JSON
       def json_backend
         if use_multi_json?
           multi_json_deprecation_warning!
-          MultiJson.respond_to?(:adapter) ? MultiJson.adapter : MultiJson.engine
+          multi_json_module.respond_to?(:adapter) ? multi_json_module.adapter : multi_json_module.engine
         else
           @@json_backend
         end
@@ -437,7 +437,7 @@ module JSON
         if use_multi_json?
           multi_json_deprecation_warning!
           backend = 'json_gem' if backend == 'json'
-          MultiJson.respond_to?(:use) ? MultiJson.use(backend) : MultiJson.engine = backend
+          multi_json_module.respond_to?(:use) ? multi_json_module.use(backend) : multi_json_module.engine = backend
         else
           backend = backend.to_s
           if @@available_json_backends.include?(backend)
@@ -452,8 +452,13 @@ module JSON
         if use_multi_json?
           multi_json_deprecation_warning!
           begin
-            MultiJson.respond_to?(:adapter) ? MultiJson.load(s) : MultiJson.decode(s)
-          rescue MultiJson::ParseError => e
+            multi_json = multi_json_module
+            if multi_json.respond_to?(:parse)
+              multi_json.parse(s)
+            else
+              multi_json.respond_to?(:adapter) ? multi_json.load(s) : multi_json.decode(s)
+            end
+          rescue multi_json::ParseError => e
             raise JSON::Schema::JsonParseError, e.message
           end
         else
@@ -531,6 +536,11 @@ module JSON
                        end
       end
 
+      # multi_json 1.21 renamed MultiJson to MultiJSON, and load/dump to parse/generate, and warns on the old names.
+      def multi_json_module
+        defined?(::MultiJSON) ? ::MultiJSON : ::MultiJson
+      end
+
       def multi_json_deprecation_warning!
         unless @@multi_json_warned
           @@multi_json_warned = true
@@ -564,7 +574,12 @@ module JSON
     def serialize(schema)
       if self.class.use_multi_json?
         self.class.multi_json_deprecation_warning!
-        MultiJson.respond_to?(:dump) ? MultiJson.dump(schema) : MultiJson.encode(schema)
+        multi_json = self.class.multi_json_module
+        if multi_json.respond_to?(:generate)
+          multi_json.generate(schema)
+        else
+          multi_json.respond_to?(:dump) ? multi_json.dump(schema) : multi_json.encode(schema)
+        end
       else
         @@serializer.call(schema)
       end
