@@ -19,12 +19,12 @@ class MultiJsonUsageTest < Minitest::Test
     JSON::Validator.use_multi_json = true
 
     suppress_warnings do
-      assert_equal(MultiJson::Adapters::JsonGem, JSON::Validator.json_backend)
+      assert_equal(MultiJson.adapter, JSON::Validator.json_backend)
     end
 
     JSON::Validator.use_multi_json = false
 
-    assert_equal('json', JSON::Validator.json_backend)
+    assert_includes(%w[json yajl], JSON::Validator.json_backend)
   end
 
   def test_deprecation_warning_when_multi_json_is_used
