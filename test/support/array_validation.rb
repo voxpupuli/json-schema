@@ -108,5 +108,54 @@ module ArrayValidation
       assert_valid schema, [{ 'b' => 1 }, { 'c' => 1 }]
       refute_valid schema, [{ 'b' => 1 }, { 'b' => 1 }]
     end
+
+    # uniqueItems is false by default, so omitting it must impose no constraint.
+    def test_unique_items_omitted
+      schema = { 'type' => 'array' }
+
+      assert_valid schema, [nil, nil]
+      assert_valid schema, [4, 4]
+      assert_valid schema, %w[a a]
+      assert_valid schema, [{ 'b' => 1 }, { 'b' => 1 }]
+    end
+
+    # An explicit false is the default restated, so it must impose no constraint either.
+    def test_unique_items_false
+      schema = { 'uniqueItems' => false }
+
+      assert_valid schema, [nil, 5]
+      assert_valid schema, [nil, nil]
+
+      assert_valid schema, [true, false]
+      assert_valid schema, [true, true]
+
+      assert_valid schema, [4, 4.1]
+      assert_valid schema, [4, 4]
+      assert_valid schema, [1.0, 1.00, 1]
+
+      assert_valid schema, %w[a ab]
+      assert_valid schema, %w[a a]
+
+      assert_valid schema, [[1], [2]]
+      assert_valid schema, [[1], [1]]
+
+      assert_valid schema, [{ 'b' => 1 }, { 'c' => 2 }]
+      assert_valid schema, [{ 'b' => 1 }, { 'b' => 1 }]
+      assert_valid schema, [{ 'a' => { 'b' => { 'c' => 1 } } }, { 'a' => { 'b' => { 'c' => 1 } } }]
+
+      assert_valid schema, [{}, [1], true, nil, {}, 1]
+    end
+
+    # The guard must survive the tuple form, where items also constrains the data.
+    def test_unique_items_false_with_items_array
+      schema = {
+        'items' => [{ 'type' => 'boolean' }, { 'type' => 'boolean' }],
+        'uniqueItems' => false,
+      }
+
+      assert_valid schema, [true, true]
+      assert_valid schema, [false, false]
+      refute_valid schema, [true, 'not a boolean']
+    end
   end
 end
