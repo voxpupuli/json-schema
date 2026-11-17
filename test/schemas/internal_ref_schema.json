@@ -1,0 +1,37 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "$ref": "#/definitions/Toplevel",
+    "definitions": {
+        "Toplevel": {
+            "properties": {
+                "top_level_attribute": {
+                    "type": "boolean",
+                    "description": "A toplevel boolean attribute"
+                },
+                "objects_of_subtypes": {
+                    "additionalProperties": {
+                        "$ref": "#/definitions/some.Subtype",
+                        "additionalProperties": false
+                    },
+                    "type": "object"
+                }
+            },
+            "additionalProperties": false,
+            "type": "object",
+            "title": "Toplevel",
+            "description": "Toplevel type with some attributes and objects of subtypes."
+        },
+        "some.Subtype": {
+            "properties": {
+                "some_attribute": {
+                    "type": "string",
+                    "description": "A string attribute for the sub type"
+                }
+            },
+            "additionalProperties": false,
+            "type": "object",
+            "title": "Subtype",
+            "description": "Subtype can be used inside toplevel."
+        }
+    }
+}

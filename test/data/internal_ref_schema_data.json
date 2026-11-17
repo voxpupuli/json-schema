@@ -1,0 +1,8 @@
+{
+  "top_level_attribute": false,
+  "objects_of_subtypes": {
+    "name_of_subtype": {
+      "some_attribute": "value"
+    }
+  }
+}
